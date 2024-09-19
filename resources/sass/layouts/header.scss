@@ -1,0 +1,71 @@
+.form-search {
+    position: relative;
+    display: flex;
+    width: 420px;
+}
+
+.form-search i {
+    position: absolute;
+    top: 50%;
+    left: 30px;
+    transform: translateY(-50%);
+    color: #999;
+}
+
+.form-search input {
+    text-indent: 35px;
+    width: 100%;
+    height: 40px;
+    border: 2px solid rgb(232, 232, 232);
+    border-radius: 20px;
+    outline: none;
+    transition: opacity 0.2s ease-in-out;
+    -webkit-transition: opacity 0.2s ease-in-out;
+    -moz-transition: opacity 0.2s ease-in-out;
+    -ms-transition: opacity 0.2s ease-in-out;
+    -o-transition: opacity 0.2s ease-in-out;
+}
+
+.form-search input:focus {
+    width: 100%;
+    height: 40px;
+    border: 2px solid black;
+    border-radius: 20px;
+    outline: none;
+}
+
+.header-my-coin {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid rgb(232,232,232);
+    padding: 1px 10px;
+    border-radius: 15px;
+    gap: 10px;
+    box-sizing: border-box;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+}
+
+.header-my-coin a {
+    text-decoration: none;
+    color: #000000;
+}
+
+.header-my-coin img {
+    height: 20px;
+}
+
+.header-notification-img {
+    height: 100px;
+    width: 100px;
+    margin-right: 10px;
+}
+
+.header-course-img {
+    height: 100px;
+    width: 100px;
+    margin-right: 10px;
+}
