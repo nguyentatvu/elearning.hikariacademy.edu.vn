@@ -14,10 +14,16 @@
 @import 'reset';
 
 // // Bootstrap
-// @import '~bootstrap/scss/bootstrap';
-// @import '~bootstrap-icons/font/bootstrap-icons';
+@import '~bootstrap/scss/bootstrap';
+@import '~bootstrap-icons/font/bootstrap-icons';
+
+// Custom
+
 
 //Layout
 @import 'layouts/footer.scss';
 @import 'layouts/header.scss';
 @import 'layouts/sidebar.scss';
+
+// Page
+@import 'pages/home.scss';

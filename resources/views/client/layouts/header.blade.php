@@ -135,12 +135,13 @@
                     <hr class="dropdown-divider">
                 </li>
                 <li><a class="dropdown-item" href="#">Trang cá nhân</a></li>
-                <li><a class="dropdown-item" href="#">Điểm tích luỹ</a></li>
-                <li><a class="dropdown-item" href="#">Khoá học</a></li>
+                <li><a class="dropdown-item" href="{{ route('mypage.leaderboard') }}">Điểm tích luỹ</a></li>
+                <li><a class="dropdown-item" href="{{ route('mypage.reward-point') }}">Khoá học</a></li>
                 <li><a class="dropdown-item" href="#">Khoá luyện thi</a></li>
                 <li><a class="dropdown-item" href="#">Phòng thi</a></li>
                 <li><a class="dropdown-item" href="#">Kết quả thi</a></li>
                 <li><a class="dropdown-item" href="#">Đổi mật khẩu</a></li>
+                <li><a class="dropdown-item" href="#">Nạp</a></li>
                 <li>
                     <hr class="dropdown-divider">
                 </li>

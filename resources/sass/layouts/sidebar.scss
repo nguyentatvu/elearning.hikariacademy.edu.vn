@@ -1,0 +1,19 @@
+.sidebar a{
+    color: #000;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.sidebar-item {
+    margin: 10px;
+    gap: 20px;
+}
+
+.sidebar-item.active {
+    background-color: #E8EBED;
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+}

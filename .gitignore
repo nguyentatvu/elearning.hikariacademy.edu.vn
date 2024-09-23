@@ -12,3 +12,4 @@ yarn-error.log
 .env
 package-lock.json
 public/mix-manifest.json
+public/app.css

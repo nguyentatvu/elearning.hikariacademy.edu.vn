@@ -1,5 +1,5 @@
-.hello {
-    color: green;
+.text-primary-color {
+    color: var(--primary);
 }
 
 .p-60px {
@@ -22,6 +22,9 @@
     width: 450px;
 }
 
+.w-100px {
+    width: 100px;
+}
 .text-primary {
     color: var(--primary) !important;
 }
