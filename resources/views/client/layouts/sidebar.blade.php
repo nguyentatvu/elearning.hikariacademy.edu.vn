@@ -19,7 +19,7 @@
                 <a href="#" class="nav-link d-flex flex-column justify-content-center align-items-center w-100" title="" data-bs-toggle="tooltip"
                     data-bs-placement="right" data-bs-original-title="Orders">
                     <img src="{{ asset('images/icons/News.jpg') }}" alt="" srcset="">
-                    <span>Bài viết  </span>
+                    <span>Bài viết</span>
                 </a>
             </li>
             <li class="sidebar-item nav-item">

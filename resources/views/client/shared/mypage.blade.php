@@ -1,13 +1,13 @@
-@extends('app')
+@extends('client.app')
 
 @section('styles')
-    <link href="{{ mix('css/pages/mypage.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/pages/mypage.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
     <div class="w-100">
         <div class="container pb-5">
-            <a href="#" class="navigate-back">
+            <a href="/" class="navigate-back">
                 <i class="bi bi-chevron-left fs-4"></i>
                 <span class="fs-3">Điểm tích lũy</span>
             </a>

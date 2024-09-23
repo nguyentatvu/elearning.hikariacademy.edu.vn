@@ -1,5 +1,5 @@
 {{-- resources/views/home.blade.php --}}
-@extends('app')
+@extends('client.app')
 
 @section('styles')
 @endsection

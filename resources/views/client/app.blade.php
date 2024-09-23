@@ -35,15 +35,18 @@
         }
     </style>
 </head>
+
 <body>
     <div class="layout-wrapper">
         <header id="header">
-            @include('layouts.header')
+            @include('client.layouts.header')
         </header>
         <div class="d-flex">
-            <aside class="sidebar" id="sidebar" style="height: 100%">
-                @include('layouts.sidebar')
-            </aside>
+            @if (strpos(request()->path(), 'mypage') === false)
+                <aside class="sidebar" id="sidebar" style="height: 100%">
+                    @include('client.layouts.sidebar')
+                </aside>
+            @endif
             <div class="container-fluid main-content">
                 <div id="main-wrapper">
                     @yield('content')
@@ -53,14 +56,12 @@
     </div>
 
     <footer id="footer">
-        @include('layouts.footer')
+        @include('client.layouts.footer')
     </footer>
 
     <script src="{{ asset('js/app.js') }}"></script>
     @yield('scripts')
-    <script>
-
-    </script>
+    <script></script>
 </body>
 
 </html>
