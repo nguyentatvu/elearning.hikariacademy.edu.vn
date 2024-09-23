@@ -35,7 +35,6 @@
         }
     </style>
 </head>
-
 <body>
     <div class="layout-wrapper">
         <header id="header">
