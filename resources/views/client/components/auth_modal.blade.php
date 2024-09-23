@@ -1,7 +1,7 @@
 <div class="modal auth-modal" id="modal_{{ $id }}">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="login-content auth-content" id="login_content">
+            <div class="login-content auth-content animate__animated" id="login_content">
                 <div class="login-form">
                     <h1>Cùng<span> HIKARI </span> khám phá bài học mới mỗi ngày!</h1>
                     <p>“Chinh phục tiếng Nhật dễ dàng cùng <span> HIKARI </span> Hệ sinh thái Nhật ngữ hàng đầu tại Việt Nam!”</p>
@@ -30,7 +30,7 @@
                     <img src="{{ asset('images/no-image.png') }}" alt="no image">
                 </div>
             </div>
-            <div class="register-content auth-content d-none" id="register_content">
+            <div class="register-content auth-content animate__animated d-none" id="register_content">
                 <div class="register-form">
                     <h1>Cùng<span> HIKARI </span> khám phá bài học mới mỗi ngày!</h1>
                     <p>“Chinh phục tiếng Nhật dễ dàng cùng <span> HIKARI </span> Hệ sinh thái Nhật ngữ hàng đầu tại Việt Nam!”</p>
@@ -60,18 +60,26 @@
                     <img src="{{ asset('images/no-image.png') }}" alt="no iamge">
                 </div>
             </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
     </div>
 </div>
+
+@section('scripts')
 <script>
     $(function () {
         $('a[data-tab]').on('click', function () {
             event.preventDefault();
-            $('a[data-tab]').removeClass('active');
-            $(this).addClass('active');
-            $('#login_content').addClass('d-none');
-            $('#register_content').addClass('d-none');
-            $('#' + $(this).data('tab')).removeClass('d-none');
+
+            const activeTabName = $(this).data('tab');
+            const activeTab = $(`${activeTabName}`);
+            const hiddenTab = $(this).closest('.auth-content');
+            hiddenTab.addClass('animate__animated animate__fadeOut');
+            setTimeout(() => {
+                hiddenTab.addClass('d-none').removeClass('animate__fadeOut');
+                activeTab.removeClass('d-none').addClass('animate__fadeIn');
+            }, 250);
         });
     });
 </script>
+@endsection

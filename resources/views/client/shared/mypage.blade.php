@@ -11,7 +11,7 @@
                 <i class="bi bi-chevron-left fs-4"></i>
                 <span class="fs-3">Điểm tích lũy</span>
             </a>
-            <button data-bs-target="#modal_test" data-bs-toggle="modal">test</button>
+            <button data-bs-target="#modal_test" data-bs-toggle="modal" class="">test</button>
             <div class="mypage-navigation">
                 <nav class="mypage-navigation__list">
                     <ul>

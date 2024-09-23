@@ -7,13 +7,27 @@
         min-width: 1100px;
     }
 
+    .modal-content {
+        position: relative;
+    }
+
+    .btn-close {
+        position: absolute;
+        top: 13px;
+        right: 13px;
+    }
+
     .login-content, .register-content {
         display: flex;
         flex-direction: row !important;
         gap: 40px;
         padding: 40px;
         align-items: center;
-        transition: all 0.5s ease-in-out;
+        transition: opacity 0.25s ease-in-out;
+    }
+
+    .animate__animated.animate__fadeOut {
+        --animate-duration: 0.25s;
     }
 
     .register-content {
