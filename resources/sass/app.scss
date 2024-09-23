@@ -1,5 +1,5 @@
 // Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
 
 // Variables
 @import '_variables';
@@ -17,7 +17,13 @@
 @import '~bootstrap/scss/bootstrap';
 @import '~bootstrap-icons/font/bootstrap-icons';
 
+// Custom
+
+
 //Layout
 @import 'layouts/footer.scss';
 @import 'layouts/header.scss';
 @import 'layouts/sidebar.scss';
+
+// Page
+@import 'pages/home.scss';
