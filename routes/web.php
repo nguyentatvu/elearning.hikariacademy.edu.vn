@@ -18,6 +18,26 @@ Route::get('/', function () {
     return view('client.pages.home');
 });
 
+Route::group([], function () {
+    Route::get('/login', function () {
+        return view('client.auth.login');
+    })->name('login');
+
+    Route::get('/register', function () {
+        return view('client.auth.register');
+    })->name('register');
+});
+
+Route::group([], function () {
+    Route::get('/login', function () {
+        return view('client.auth.login');
+    })->name('login');
+
+    Route::get('/register', function () {
+        return view('client.auth.register');
+    })->name('register');
+});
+
 // My page (Client)
 Route::get('/mypage/leaderboard', function () {
     return view('client.mypage.leaderboard');

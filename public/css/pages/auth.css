@@ -1,0 +1,89 @@
+.auth-modal {
+  display: flex;
+  gap: 60px;
+}
+.auth-modal .side-photo {
+  width: 55%;
+  max-height: 540px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.auth-modal .side-photo img {
+  width: 100%;
+  max-height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.auth-modal input {
+  background-color: #f7faff !important;
+}
+.auth-modal input::-moz-placeholder {
+  color: #8897AD;
+}
+.auth-modal input::placeholder {
+  color: #8897AD;
+}
+.auth-modal h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.auth-modal h1 span {
+  color: var(--primary);
+}
+.auth-modal p {
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+.auth-modal p span {
+  color: var(--primary);
+}
+.auth-modal .form-control {
+  margin-bottom: 1rem;
+}
+.auth-modal .btn-primary {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+.auth-modal .forgot-password {
+  text-align: right;
+  font-size: 0.875rem;
+}
+.auth-modal .forgot-password a {
+  color: var(--secondary);
+}
+.auth-modal .social-login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.auth-modal .social-login a {
+  margin: 0 0.5rem;
+}
+.auth-modal .register, .auth-modal .login {
+  text-align: center;
+  font-size: 1rem;
+}
+.auth-modal .register a, .auth-modal .login a {
+  color: var(--primary);
+}
+.auth-modal .image-container {
+  margin-left: 2rem;
+}
+.auth-modal .image-container img {
+  border-radius: 0.5rem;
+}
+.auth-modal .submit-button {
+  padding: 12px 0;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.auth-modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: white;
+  width: 45%;
+  padding: 20px 0px;
+}

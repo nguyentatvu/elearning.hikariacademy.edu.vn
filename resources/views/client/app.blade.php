@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Hikari elearning</title>
+    <link href="{{ asset('/css/bootstrap.css') }}" rel="stylesheet">
     <link href="{{ asset('/css/app.css') }}" rel="stylesheet">
     @yield('styles')
 
@@ -15,7 +16,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            z-index: 100000000000;
+            z-index: 99999;
             background: #ffffff;
         }
 
@@ -51,6 +52,8 @@
                 <div id="main-wrapper">
                     @yield('content')
                 </div>
+                @component('client.components.auth_modal', ['id' => 'test'])
+                @endcomponent
             </div>
         </div>
     </div>

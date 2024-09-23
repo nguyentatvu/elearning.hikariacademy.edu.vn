@@ -1,24 +1,9 @@
+$color_2: #6c757d;
+$background-color_1: #fff;
+
 .auth-modal {
-    $color_2: #6c757d;
-
-    .modal-dialog {
-        margin-top: 100px;
-        width: 1100px;
-        min-width: 1100px;
-    }
-
-    .login-content, .register-content {
-        display: flex;
-        flex-direction: row !important;
-        gap: 40px;
-        padding: 40px;
-        align-items: center;
-        transition: all 0.5s ease-in-out;
-    }
-
-    .register-content {
-        flex-direction: row-reverse !important;
-    }
+    display: flex;
+    gap: 60px;
 
     .side-photo {
         width: 55%;
@@ -114,4 +99,13 @@
         font-weight: 600;
         font-size: 1rem;
     }
+}
+
+.auth-modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;;
+    background-color: white;
+    width: 45%;
+    padding: 20px 0px ;
 }
