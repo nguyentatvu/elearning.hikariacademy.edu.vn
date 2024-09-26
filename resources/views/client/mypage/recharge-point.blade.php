@@ -34,7 +34,7 @@
                             </td>
                             <td>
                                 <span class="coin">
-                                    <img src="{{ asset('images/coin.jpg') }}" class="rounded-circle coin-size">
+                                    <img src="{{ asset('images/icons/coin.svg') }}" class="rounded-circle coin-size">
                                 </span>
                                 Coin x 10&#32;
                             </td>
@@ -46,7 +46,7 @@
                             </td>
                             <td>
                                 <span class="coin">
-                                    <img src="{{ asset('images/coin.jpg') }}" class="rounded-circle coin-size">
+                                    <img src="{{ asset('images/icons/coin.svg') }}" class="rounded-circle coin-size">
                                 </span>
                                 Coin x 55&#32;
                                 <small><span class="fw-bold">(+10%)</span></small>
@@ -59,7 +59,7 @@
                             </td>
                             <td>
                                 <span class="coin">
-                                    <img src="{{ asset('images/coin.jpg') }}" class="rounded-circle coin-size">
+                                    <img src="{{ asset('images/icons/coin.svg') }}" class="rounded-circle coin-size">
                                 </span>
                                 Coin x 120&#32;
                                 <small><span class="fw-bold">(+20%)</span></small>
@@ -76,7 +76,7 @@
             <div class="detail-row">
                 <span>Sản phẩm được chọn</span>
                 <span>
-                    <img src="{{ asset('images/coin.jpg') }}" class="rounded-circle coin-size">
+                    <img src="{{ asset('images/icons/coin.svg') }}" class="rounded-circle coin-size">
                     Coin x <span class="coin-cost">10 000VND</span>
                 </span>
             </div>

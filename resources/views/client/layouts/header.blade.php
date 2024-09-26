@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light">
     <div class="w-100 px-5 d-flex align-items-center justify-conten-center">
         <div class="me-auto">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="/">
                 <img src="{{ asset('images/Logo-hikari.png') }}" alt="Logo" class="d-inline-block align-text-top">
             </a>
         </div>
@@ -19,7 +19,7 @@
                 <a href="{{ route('mypage.reward-point') }}">
                     {{ formatNumber(Auth::user()->reward_point + Auth::user()->recharge_point) }}
                 </a>
-                <img src="{{ asset('images/coin.jpg') }}" class="rounded-circle object-fit-cover">
+                <img src="{{ asset('images/icons/coin.svg') }}" class="rounded-circle object-fit-cover">
             </div>
 
             <div class="btn-group mx-2">
@@ -68,6 +68,47 @@
                     </li>
                 </ul>
             </div>
+            <ul class="dropdown-menu dropdown-menu-end w-600px p-3">
+                <li>
+                    <b>Thông báo</b>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li class="mt-2">
+                    <div class="d-flex">
+                        <img src="{{ asset('images/logo-N1.png') }}" class="header-notification-img" alt=""
+                            srcset="">
+                        <div>
+                            <div class="mb-2">
+                                Chào [Tên học viên], chúng tôi nhận thấy bạn chưa hoàn thành bài học tuần này.
+                                Đừng để tiến độ học của mình bị chậm lại, hãy cố gắng hoàn thành bài học trong thời gian
+                                sớm nhất nhé!
+                            </div>
+                            <b>26/8/2021 - 14:23</b>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li class="mt-2">
+                    <div class="d-flex align-items-center">
+                        <img src="{{ asset('images/logo-N1.png') }}" class="header-notification-img" alt=""
+                            srcset="">
+                        <div>
+                            <div class="mb-2">
+                                Chúng tôi nhận thấy rằng tiến độ học tập của bạn đang chậm hơn so với lộ trình học đề
+                                ra.
+                                Để đạt được kết quả tốt nhất và hoàn thành khóa học đúng hạn, bạn cần nỗ lực hơn nữa
+                                trong việc hoàn thành các bài học và bài tập được giao.
+                            </div>
+                            <b>26/8/2021 - 14:23</b>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
 
             <div class="btn-group mx-2">
                 <div type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -136,14 +177,15 @@
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="#">Trang cá nhân</a></li>
-                    <li><a class="dropdown-item" href="{{ route('mypage.leaderboard') }}">Điểm tích luỹ</a></li>
-                    <li><a class="dropdown-item" href="{{ route('mypage.reward-point') }}">Khoá học</a></li>
-                    <li><a class="dropdown-item" href="#">Khoá luyện thi</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.personal') }}">Trang cá nhân</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.leaderboard') }}">Bảng xếp hạng</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.reward-point') }}">Điễm tích luỹ</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.courses') }}">Khoá học</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.exams') }}">Khoá luyện thi</a></li>
                     <li><a class="dropdown-item" href="#">Phòng thi</a></li>
-                    <li><a class="dropdown-item" href="#">Kết quả thi</a></li>
-                    <li><a class="dropdown-item" href="#">Đổi mật khẩu</a></li>
-                    <li><a class="dropdown-item" href="#">Nạp</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.my-result-exam') }}">Kết quả thi</a></li>
+                    <li><a class="dropdown-item" data-toggle="modal" data-target="#loginModal">Đổi mật khẩu</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.recharge-point') }}">Nạp</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
