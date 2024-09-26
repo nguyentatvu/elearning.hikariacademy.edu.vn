@@ -1,6 +1,5 @@
 @include('emails.template_header')
 
-
 <div class="block">
    <!-- Full + text -->
    <table width="100%" bgcolor="#f6f4f5" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="fullimage">
@@ -35,7 +34,7 @@
                                  <tr>
                                     <td width="100%" height="10"></td>
                                  </tr>
-                                 
+
                                  <!-- Spacing -->
                                  <tr>
                                     <td width="100%" height="10"></td>
@@ -73,20 +72,4 @@
    </table>
 </div>
 
-
 @include('emails.template_footer')
-
-{{--
-<html>
-    <head>
-    </head>
-    <body style="background: black; color: white">
-        <h1>
-            {{$title}}
-        </h1>
-        <p>
-            {{$content}}
-        </p>
-    </body>
-</html>
---}}
