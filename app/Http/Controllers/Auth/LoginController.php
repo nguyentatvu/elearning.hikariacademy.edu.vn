@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
@@ -35,5 +39,68 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    /**
+     * Login user
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function login(Request $request)
+    {
+        //Kiểm tra CAPTCHA
+        //  $columns = array(
+        // 	// 'g-recaptcha-response' => 'required|captcha',
+        //  );
+        //  $messsages = array(
+        // 	// 'g-recaptcha-response.required'=>'Hãy đánh dấu vào ô kiểm tra robot!',
+        //  );
+        //  $this->validate($request,$columns,$messsages);
+
+        $login_status = false;
+        if (Auth::attempt(['username' => $request->email, 'password' => $request->password])) {
+            $login_status = true;
+        } elseif (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            $login_status = true;
+        } elseif (Auth::attempt(['hid' => $request->email, 'password' => $request->password])) {
+            $login_status = true;
+        }
+        if (!$login_status) {
+            return response()->json([
+                'success' => false
+            ], 422);
+        }
+
+        if ($login_status) {
+            // Prevent multiple login
+            if (!env('LOGIN_MULTI')) {
+                $previous_session = Auth::user()->last_session;
+                if ($previous_session) {
+                    Session::getHandler()->destroy($previous_session);
+                }
+            }
+
+            $user_update_session = User::find(Auth::user()->id);
+            $user_update_session->last_session = Session()->getId();
+            $user_update_session->save();
+
+            return response()->json([
+                'success' => true
+            ], 200);
+        }
+    }
+
+    /**
+     * Logout user
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function logout()
+    {
+        if (Auth::check()) {
+            Auth::logout();
+        }
+        return redirect('/');
     }
 }

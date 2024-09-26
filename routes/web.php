@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,23 +21,9 @@ Route::get('/', function () {
 });
 
 Route::group([], function () {
-    Route::get('/login', function () {
-        return view('client.auth.login');
-    })->name('login');
-
-    Route::get('/register', function () {
-        return view('client.auth.register');
-    })->name('register');
-});
-
-Route::group([], function () {
-    Route::get('/login', function () {
-        return view('client.auth.login');
-    })->name('login');
-
-    Route::get('/register', function () {
-        return view('client.auth.register');
-    })->name('register');
+    Route::post('/login', 'Auth\LoginController@login')->name('login');
+    Route::post('/register', 'Auth\RegisterController@register')->name('register');
+    Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 });
 
 // My page (Client)
