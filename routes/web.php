@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +18,12 @@ use Illuminate\Support\Facades\Route;
 // Page (Client)
 Route::get('/', function () {
     return view('client.pages.home');
+});
+
+Route::group([], function () {
+    Route::post('/login', 'Auth\LoginController@login')->name('login');
+    Route::post('/register', 'Auth\RegisterController@register')->name('register');
+    Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 });
 
 // My page (Client)
