@@ -152,7 +152,7 @@
                                 <span>
                                     Bước 2: Chuyển khoản với nội dung&#32;
                                     <strong class="text-primary">"HID-349343 NAP-COIN"</strong>
-                                    &#32;đến tài khoản ngân hàng của trungtâm.
+                                    &#32;đến tài khoản ngân hàng của trung tâm.
                                 </span>
                             </li>
                             <li class="">

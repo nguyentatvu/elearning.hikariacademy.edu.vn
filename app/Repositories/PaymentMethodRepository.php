@@ -36,7 +36,7 @@ class PaymentMethodRepository extends BaseRepository
      * @return \Illuminate\Database\Eloquent\Collection | null
      */
     public function getAllCoinTransferOrders()
-    {.
+    {
         return $this->model->with('user')
             ->whereNotNull('recharge_coin_amount')
             ->where('orderType', 'transfer')

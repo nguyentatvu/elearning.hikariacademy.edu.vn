@@ -1,3 +1,7 @@
+/************************
+ * COMMON FUNCTIONS
+ ***********************/
+
 const showSuccessAlert = (message = 'Thành công', title = "Thông báo", callback = null, timer = 1700) => {
     Swal.fire({
         title: title,
@@ -25,6 +29,11 @@ const showErrorAlert = (message = 'Thất bại', title = "Thông báo", callbac
 // Reload page
 const reloadPage = () => {
     location.reload();
+}
+
+// Redirect to home base
+const redirectHomeBase = () => {
+    location.href = "/";
 }
 
 // Toggle loading overlay
@@ -134,7 +143,7 @@ const submitLogin = () => {
         data: formData + "&_method=POST",
         success: function (response) {
             $(".modal.auth-modal").modal("hide");
-            showSuccessAlert("Đăng nhập thành công", "Thông báo", reloadPage);
+            showSuccessAlert("Đăng nhập thành công", "Thông báo", redirectHomeBase);
         },
         error: function (error) {
             showErrorAlert("Đăng nhập thất bại");
