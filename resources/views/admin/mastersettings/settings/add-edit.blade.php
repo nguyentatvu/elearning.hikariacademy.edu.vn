@@ -17,7 +17,7 @@
 						</ol>
 					</div>
 				</div>
-					@include('errors.errors')
+					@include('admin.errors.errors')
 				<!-- /.row -->
 				
 			 <div class="panel panel-custom col-lg-8 col-lg-offset-2">
@@ -39,7 +39,7 @@
 						'novalidate'=>'','name'=>'formSettings ', 'files'=>'true')) !!}
 					@endif
 
-					 @include('mastersettings.settings.form_elements', 
+					 @include('admin.mastersettings.settings.form_elements', 
 					 array('button_name'=> $button_name));
 					 
 					{!! Form::close() !!}
@@ -53,8 +53,8 @@
 		<!-- /#page-wrapper -->
 @stop
 @section('footer_scripts')
-	{{-- @include('mastersettings.topics.scripts.js-scripts'); --}}
-	@include('common.validations' );
+	{{-- @include('admin.mastersettings.topics.scripts.js-scripts'); --}}
+	@include('admin.common.validations' );
 	
 @stop
  

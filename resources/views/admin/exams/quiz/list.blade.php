@@ -96,6 +96,6 @@
 			'title', 'dueration', 'category', 'type', 'total_marks', 'action'
 		];
 		@endphp
-		@include('common.datatables', array('route'=>URL_QUIZ_GETLIST, 'route_as_url' => TRUE, 'table_columns' => $defaultColumns))
-		@include('common.deletescript', array('route'=>URL_QUIZ_DELETE))
+		@include('admin.common.datatables', array('route'=>URL_QUIZ_GETLIST, 'route_as_url' => TRUE, 'table_columns' => $defaultColumns))
+		@include('admin.common.deletescript', array('route'=>URL_QUIZ_DELETE))
 		@stop

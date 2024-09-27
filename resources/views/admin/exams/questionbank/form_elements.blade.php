@@ -110,7 +110,7 @@
 				<div class="col-md-6">
 					@if($record)
 					@if($record->question_file)  
-					@include('exams.questionbank.question_partial_audio_preview', array('record'=>$record))
+					@include('admin.exams.questionbank.question_partial_audio_preview', array('record'=>$record))
 					@endif
 					@endif
 				</div>
@@ -126,7 +126,7 @@
 				<div class="col-md-6">
 					@if($record)
 					@if($record->question_photo)  
-					@include('exams.questionbank.question_partial_image_preview', array('record'=>$record))
+					@include('admin.exams.questionbank.question_partial_image_preview', array('record'=>$record))
 					@endif
 					@endif
 				</div>
@@ -149,7 +149,7 @@
 					<fieldset class="form-group">
 						<label></label>
 						@if($record->question_file)  
-							@include('exams.questionbank.question_partial_audio_preview', array('record'=>$record))
+							@include('admin.exams.questionbank.question_partial_audio_preview', array('record'=>$record))
 						@endif
 					</fieldset>
 					@endif
@@ -238,9 +238,9 @@
 				<!-- Load the files start as independent -->
 			<?php	
 			$image_path = ($record) ? PREFIX.(new ImageSettings())->getExamImagePath(): ''; ?>
-			@include('exams.questionbank.form_elements_radio', array('image_path'=>$image_path))
-			@include('exams.questionbank.form_elements_checkbox')
-			@include('exams.questionbank.form_elements_blanks')
+			@include('admin.exams.questionbank.form_elements_radio', array('image_path'=>$image_path))
+			@include('admin.exams.questionbank.form_elements_checkbox')
+			@include('admin.exams.questionbank.form_elements_blanks')
 			<?php 
 			$show = TRUE;
 			if($record) {
@@ -249,7 +249,7 @@
 			} 
 			?>
 			@if($show)
-			@include('exams.questionbank.form_elements_para', array('record'=>$record))
+			@include('admin.exams.questionbank.form_elements_para', array('record'=>$record))
 			@endif
 			<!-- Load the files end as independent -->
 			@if(!$record)
@@ -330,7 +330,7 @@
 				font-size: 18px;
 			}
 		</style>
-		<script src="{{themes('js/jquery-1.12.1.min.js')}}"></script>
+		<script src="{{admin_asset('js/jquery-1.12.1.min.js')}}"></script>
 		<script type="text/javascript">
 			CKEDITOR.replace( 'editor1' );
 		</script>

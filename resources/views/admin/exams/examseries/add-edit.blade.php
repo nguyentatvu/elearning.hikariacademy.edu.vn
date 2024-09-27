@@ -28,7 +28,7 @@
 
 				</div>
 
-					@include('errors.errors')
+					@include('admin.errors.errors')
 
 				<!-- /.row -->
 
@@ -72,7 +72,7 @@
 
 
 
-					 @include('exams.examseries.form_elements', 
+					 @include('admin.exams.examseries.form_elements', 
 
 					 array('button_name'=> $button_name),
 
@@ -102,11 +102,11 @@
 
 @section('footer_scripts')
 
- @include('common.validations');
+ @include('admin.common.validations');
 
- @include('common.editor');
+ @include('admin.common.editor');
 
- @include('common.alertify')
+ @include('admin.common.alertify')
 
 
 

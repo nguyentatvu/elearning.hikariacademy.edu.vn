@@ -61,6 +61,6 @@
 	];
 	@endphp
 
-	@include('common.datatables', array('route'=>'lmscategories.dataTable', 'table_columns' => $defaultColumns))
-	@include('common.deletescript', array('route'=>URL_LMS_CATEGORIES_DELETE))
+	@include('admin.common.datatables', array('route'=>'lmscategories.dataTable', 'table_columns' => $defaultColumns))
+	@include('admin.common.deletescript', array('route'=>URL_LMS_CATEGORIES_DELETE))
 @stop

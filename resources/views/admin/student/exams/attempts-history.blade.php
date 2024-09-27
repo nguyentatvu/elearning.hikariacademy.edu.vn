@@ -14,7 +14,7 @@
 
 <div id="page-wrapper">
 
-			<div class="container-fluid dip">
+			<div class="container-fluid">
 
 				<!-- Page Heading -->
 
@@ -90,7 +90,7 @@
 
 						</div>
 
-						<!-- <div class="row">
+						<div class="row">
 
 							<div class="col-md-6 col-md-offset-3">
 
@@ -98,7 +98,7 @@
 
 							</div>
 
-						</div> -->
+						</div>
 
 					</div>
 
@@ -128,7 +128,7 @@
 
  @endif
 
- 
+ @include('common.chart', array($chart_data,'ids' => array('myChart1')));
 
 @stop
 

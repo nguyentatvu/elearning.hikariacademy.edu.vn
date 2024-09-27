@@ -1,7 +1,7 @@
 <?php
 
-$server_name = $server_name ?? '127.0.0.1';
-$http_host = isset($_SERVER['HTTP_HOST']) ?? 'localhost:8000';
+$server_name = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '127.0.0.1';
+$http_host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost:8000';
 $base_http = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
 
 $base = $base_http . '://'. $http_host . str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
@@ -12,6 +12,8 @@ define('BASE_PATH', $base.'/');
 
 define('PREFIX', $base);
 
+define('ADMIN_ASSET_PREFIX', PREFIX.'assets/admin/');
+
 define('URL_HOME', PREFIX.'home');
 
 define('SITE_URL', $base_home);
@@ -21,11 +23,11 @@ define('URL_USERS_DASHBOARD', $base_home);
 
 //Design Source File Paths
 
-define('CSS', PREFIX.'css/');
+define('CSS', ADMIN_ASSET_PREFIX.'css/');
 
-define('JS', PREFIX.'js/');
+define('JS', ADMIN_ASSET_PREFIX.'js/');
 
-define('FONTAWSOME', PREFIX.'font-awesome/css/');
+define('FONTAWSOME', ADMIN_ASSET_PREFIX.'font-awesome/css/');
 
 define('IMAGES', PREFIX.'images/');
 
@@ -326,7 +328,7 @@ define('URL_USERS_LOGOUT', PREFIX.'logout');
 
 define('URL_PARENT_LOGOUT', PREFIX.'parent-logout');
 
-define('URL_USERS_REGISTER', PREFIX.'registeruser');
+define('URL_USERS_REGISTER', PREFIX.'register');
 
 define('URL_USERS_LOGIN', PREFIX.'login');
 

@@ -14,7 +14,7 @@
 						</ol>
 					</div>
 				</div>
-				@include('errors.errors')	
+				@include('admin.errors.errors')	
 				<div class="panel panel-custom col-lg-6 col-lg-offset-3">
 					<div class="panel-heading">
 						<div class="pull-right messages-buttons">
@@ -33,7 +33,7 @@
 						{!! Form::open(array('url' => URL_QUIZ_CATEGORY_ADD, 'method' => 'POST', 'files' => true, 'novalidate'=>'','name'=>'formCategories')) !!}
 					@endif
 
-					 @include('exams.quizcategories.form_elements', 
+					 @include('admin.exams.quizcategories.form_elements', 
 					 array('button_name'=> $button_name),
 					 array('record' => $record))
 					{!! Form::close() !!}
@@ -46,8 +46,8 @@
 		<!-- /#page-wrapper -->
 @stop
 @section('footer_scripts')
-  @include('common.validations');
-  @include('common.alertify')
+  @include('admin.common.validations');
+  @include('admin.common.alertify')
  <script>
  	var file = document.getElementById('image_input');
 

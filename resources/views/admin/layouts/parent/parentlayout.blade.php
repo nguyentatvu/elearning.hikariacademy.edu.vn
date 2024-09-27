@@ -11,28 +11,28 @@
 	<link rel="icon" href="/public/uploads/settings/favicon.png" type="image/x-icon" />
 	<title>@yield('title') {{ isset($title) ? $title : getSetting('site_title','site_settings') }}</title>
 	<!-- Bootstrap Core CSS -->
-	<link href="{{themes('css/bootstrap.min.css')}}" rel="stylesheet">
-	<link href="{{themes('css/sweetalert.css')}}" rel="stylesheet">
-	<link href="{{themes('css/sb-admin.css')}}" rel="stylesheet">
-	<link href="{{themes('css/custom-fonts.css')}}" rel="stylesheet">
-	<link href="{{themes('css/materialdesignicons.css')}}" rel="stylesheet">
-	<link href="{{themes('font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
-	<link href="{{themes('css/bootstrap-datepicker.min.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/bootstrap.min.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/sweetalert.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/sb-admin.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/custom-fonts.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/materialdesignicons.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/bootstrap-datepicker.min.css')}}" rel="stylesheet">
 	<!-- Morris Charts CSS -->
-	<link href="{{themes('css/plugins/morris.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/plugins/morris.css')}}" rel="stylesheet">
 	<?php
 	$theme_color  = getThemeColor();
 	?>
 	@if($theme_color == 'blueheader')      
-	<link href="{{themes('css/theme-colors/header-blue.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/theme-colors/header-blue.css')}}" rel="stylesheet">
 	@elseif($theme_color == 'bluenavbar')	 
-	<link href="{{themes('css/theme-colors/blue-sidebar.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/theme-colors/blue-sidebar.css')}}" rel="stylesheet">
 	@elseif($theme_color == 'darkheader')	 
-	<link href="{{themes('css/theme-colors/dark-header.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/theme-colors/dark-header.css')}}" rel="stylesheet">
 	@elseif($theme_color == 'darktheme')	 
-	<link href="{{themes('css/theme-colors/dark-theme.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/theme-colors/dark-theme.css')}}" rel="stylesheet">
 	@elseif($theme_color == 'whitecolor')	 
-	<link href="{{themes('css/theme-colors/white-theme.css')}}" rel="stylesheet">]
+	<link href="{{admin_asset('css/theme-colors/white-theme.css')}}" rel="stylesheet">]
 	@endif 
 	@yield('header_scripts')
 </head>
@@ -167,11 +167,11 @@ if(isset($block_navigation))
 </div>
 <!-- /#wrapper -->
 <!-- jQuery -->
-<script src="{{themes('js/jquery-1.12.1.min.js')}}"></script>
-<script src="{{themes('js/bootstrap.min.js')}}"></script>
-<script src="{{themes('js/main.js')}}"></script>
-<script src="{{themes('js/sweetalert-dev.js')}}"></script>
+<script src="{{admin_asset('js/jquery-1.12.1.min.js')}}"></script>
+<script src="{{admin_asset('js/bootstrap.min.js')}}"></script>
+<script src="{{admin_asset('js/main.js')}}"></script>
+<script src="{{admin_asset('js/sweetalert-dev.js')}}"></script>
 @yield('footer_scripts')
-@include('errors.formMessages')
+@include('admin.errors.formMessages')
 </body>
 </html>

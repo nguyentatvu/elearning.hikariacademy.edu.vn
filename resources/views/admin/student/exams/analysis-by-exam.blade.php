@@ -28,7 +28,7 @@
 
 							 
 
-							<li><!-- {{ $title}} --> Lịch sử bài thi</li>
+							<li>{{ $title}}</li>
 
 						</ol>
 
@@ -117,14 +117,18 @@
 
 
 @section('footer_scripts')
-	@php
-	// MAKE DEFAULT VALUE COLUMN
-	$defaultColumns = [
-		'title', 'is_paid', 'dueration', 'total_marks', 'attempts'
-	];
-	@endphp
 
-	@include('common.datatables', array('route'=>URL_STUDENT_EXAM_ANALYSIS_BYEXAM.$user->slug, 'route_as_url' => 'TRUE', 'table_columns' => $defaultColumns))
-	@include('common.chart', array($chart_data,'ids' => array('myChart1' )));
+  
+
+ @include('common.datatables', array('route'=>URL_STUDENT_EXAM_ANALYSIS_BYEXAM.$user->slug, 'route_as_url' => 'TRUE'))
+
+ 
+
+@include('common.chart', array($chart_data,'ids' => array('myChart1' )));
+
+
+
+
+
 @stop
 

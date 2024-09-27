@@ -1,6 +1,6 @@
 @extends('admin.front-exams.examlayout-front')
 @section('content')
-{{-- @include('student.exams.exam-leftbar-subjects', array('subjects' => $subjects)) --}}
+{{-- @include('admin.student.exams.exam-leftbar-subjects', array('subjects' => $subjects)) --}}
 <link href="{{CSS}}animate.css" rel="dns-prefetch"/>
 <div id="page-wrapper" class="examform" ng-controller="angExamScript" ng-init="initAngData({{json_encode($bookmarks)}})">
   <div class="container-fluid">
@@ -14,7 +14,7 @@
         <div class="panel panel-custom">
           <div class="panel-heading">
             <div class="pull-right exam-duration">
-              @include('student.exams.languages',['quiz'=>$quiz])
+              @include('admin.student.exams.languages',['quiz'=>$quiz])
             </div>
               <h1>
                 <span class="text-uppercase">
@@ -49,7 +49,7 @@
                         </div>
                         <div class="hikari_question_anwser"></div>
                           <?php  $image_path = PREFIX.(new App\ImageSettings())->getExamImagePath(); ?>
-                          @include('student.exams.question_'.$question->question_type, array('question', $question, 'image_path' => $image_path ))
+                          @include('admin.student.exams.question_'.$question->question_type, array('question', $question, 'image_path' => $image_path ))
                         </div>
                       <?php $index++; ?>
                       @endforeach
@@ -85,8 +85,8 @@
         <!-- /#page-wrapper -->
         @stop
         @section('footer_scripts')
-        @include('front-exams.scripts.js-scripts')
-        @include('common.editor')
+        @include('admin.front-exams.scripts.js-scripts')
+        @include('admin.common.editor')
         <script type="text/javascript">
           /**
            * intilizetimer(hours, minutes, seconds)

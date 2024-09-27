@@ -8,7 +8,7 @@
   //var app = angular.module('academia', []);
   var app = angular.module('academia', ['ui.sortable']);
 </script>
-@include('common.angular-factory',array('load_module'=> FALSE))
+@include('admin.common.angular-factory',array('load_module'=> FALSE))
 <script>
   app.controller('prepareQuestions', function( $scope, $http, httpPreConfig,$sce) {
     $scope.trustAsHtml = $sce.trustAsHtml

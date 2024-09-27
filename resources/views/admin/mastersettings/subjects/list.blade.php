@@ -117,9 +117,9 @@ $defaultColumns = [
 ];
 @endphp
 
-@include('common.datatables', array('route'=>'subjects.dataTable', 'table_columns' => $defaultColumns))
+@include('admin.common.datatables', array('route'=>'subjects.dataTable', 'table_columns' => $defaultColumns))
 
-@include('common.deletescript', array('route'=>URL_SUBJECTS_DELETE))
+@include('admin.common.deletescript', array('route'=>URL_SUBJECTS_DELETE))
 
 @stop
 

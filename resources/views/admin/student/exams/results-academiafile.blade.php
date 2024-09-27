@@ -1,4 +1,4 @@
-@extends('admin.layouts.student.studentlayout')
+@extends('layouts.student.studentlayout')
 @section('header_scripts')
 @stop
 @section('content')

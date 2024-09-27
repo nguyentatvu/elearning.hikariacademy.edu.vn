@@ -12,28 +12,28 @@ $page_content  = getThemeSetting($key,$current_theme);
       
         @switch($key) 
           @case('privacy-policy')
-            @include('site.privacy')
+            @include('admin.site.privacy')
             @break;
           @case('terms-conditions')
-            @include('site.termsconditions')
+            @include('admin.site.termsconditions')
             @break;
           @case('courses')
-            @include('site.course')
+            @include('admin.site.course')
             @break;
           @case ('study')
-            @include('site.study')
+            @include('admin.site.study')
             @break;
           @case ('contact')
-            @include('site.contact')
+            @include('admin.site.contact')
             @break;
           @case ('payment-method')
-            @include('site.paymentmethod')
+            @include('admin.site.paymentmethod')
             @break;
           @case ('shop')
-            @include('site.price')
+            @include('admin.site.price')
             @break;
           @default:
-            @include('site.course')
+            @include('admin.site.course')
             @break;
         @endswitch
 

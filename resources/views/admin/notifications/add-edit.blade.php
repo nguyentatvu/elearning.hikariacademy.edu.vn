@@ -13,7 +13,7 @@
 						</ol>
 					</div>
 				</div>
-					@include('errors.errors')
+					@include('admin.errors.errors')
 				<!-- /.row -->
 				
 		 <div class="panel panel-custom col-lg-8 col-lg-offset-2">
@@ -36,7 +36,7 @@
 					@endif
 					
 
-					 @include('notifications.form_elements', 
+					 @include('admin.notifications.form_elements', 
 					 array('button_name'=> $button_name),
 					 array('record' 		=> $record))
 					 		
@@ -51,9 +51,9 @@
 @stop
 
 @section('footer_scripts')
-@include('common.validations');
+@include('admin.common.validations');
    {{-- <script src="{{JS}}bootstrap-datepicker.min.js"></script> --}}
-@include('common.editor');
+@include('admin.common.editor');
 <script src="{{JS}}datepicker.min.js"></script>
  <script>
  	  $('.input-daterange').datepicker({

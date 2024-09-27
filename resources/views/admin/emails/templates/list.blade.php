@@ -102,7 +102,7 @@
 			'title', 'subject', 'type', 'from_email', 'from_name', 'action'
 		];
 	@endphp
-	@include('common.datatables', array('route'=>'emailtemplates.dataTable', 'table_columns'=>$defaultColumns))
-	@include('common.deletescript', array('route'=>'/email/templates/delete/'))
+	@include('admin.common.datatables', array('route'=>'emailtemplates.dataTable', 'table_columns'=>$defaultColumns))
+	@include('admin.common.deletescript', array('route'=>'/email/templates/delete/'))
 @stop
 

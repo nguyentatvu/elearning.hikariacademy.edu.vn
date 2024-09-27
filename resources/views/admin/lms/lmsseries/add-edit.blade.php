@@ -25,7 +25,7 @@
             </div>
         </div>
 
-		@include('errors.errors')
+		@include('admin.errors.errors')
 
  	<div class="panel panel-custom col-lg-12">
  		<div class="panel-heading">
@@ -49,7 +49,7 @@
 					@else
 						{!! Form::open(array('url' => $URL_LMS_SERIES_ADD, 'method' => 'POST', 'files' => true, 'name'=>'formLms ', 'novalidate'=>'')) !!}
 					@endif
-					 @include('lms.lmsseries.form_element',
+					 @include('admin.lms.lmsseries.form_element',
 						 array('button_name'=> $button_name),
 						 array('record'=>$record, 
 						 'type_series' =>$type_series,
@@ -63,9 +63,9 @@
 		</div>
 @stop
 @section('footer_scripts')
- @include('common.validations');
- @include('common.editor');
- @include('common.alertify')
+ @include('admin.common.validations');
+ @include('admin.common.editor');
+ @include('admin.common.alertify')
   <script src="{{JS}}datepicker.min.js"></script>
     <script>
  	var file = document.getElementById('image_input');

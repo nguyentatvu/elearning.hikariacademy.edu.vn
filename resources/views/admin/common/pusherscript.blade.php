@@ -8,7 +8,7 @@
 
  <script src="{{JS}}alertify.js"></script>
 
- {{-- @include('common.alertify') --}}
+ {{-- @include('admin.common.alertify') --}}
 
  <script src="https://js.pusher.com/3.2/pusher.min.js"></script>
 

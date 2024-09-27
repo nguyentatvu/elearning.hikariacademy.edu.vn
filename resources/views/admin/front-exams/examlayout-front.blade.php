@@ -11,14 +11,14 @@
   <title>@yield('title') {{ isset($title) ? change_furigana_title($title) : getSetting('site_title','site_settings') }}</title>
   <!-- Bootstrap Core CSS -->
   @yield('header_scripts')
-  <link href="{{themes('site/css/main.css')}}" rel="stylesheet">
-  <link href="{{themes('css/notify.css')}}" rel="stylesheet">
-  <link href="{{themes('css/angular-validation.css')}}" rel="stylesheet">
+  <link href="{{admin_asset('site/css/main.css')}}" rel="stylesheet">
+  <link href="{{admin_asset('css/notify.css')}}" rel="stylesheet">
+  <link href="{{admin_asset('css/angular-validation.css')}}" rel="stylesheet">
   <!-- Bootstrap Core CSS -->
   <!--FontAwesome-->
   <link href="{{CSS}}sweetalert.css" rel="stylesheet" type="text/css">
-  <link href="{{themes('css/front-exam.css')}}" rel="stylesheet">
-  <link href="{{themes('css/plugins/morris.css')}}" rel="stylesheet">
+  <link href="{{admin_asset('css/front-exam.css')}}" rel="stylesheet">
+  <link href="{{admin_asset('css/plugins/morris.css')}}" rel="stylesheet">
   <link href="{{CSS}}materialdesignicons.css" rel="stylesheet" type="text/css">
   <style type="text/css" media="screen">
   .mt-51{
@@ -46,7 +46,7 @@
 </head>
 <body ng-app="academia" class="margin1">
   <div class="dis">
-    @include('site.header')
+    @include('admin.site.header')
   </div>
 
  @yield('custom_div')
@@ -81,18 +81,18 @@ if(isset($block_navigation))
   @yield('content')
 </div>
 <div class="dis">
-    @include('site.footer')
+    @include('admin.site.footer')
   </div>
 
 
-<script src="{{themes('site/js/jquery-3.1.1.min.js')}}"></script>
-<script src="{{themes('site/js/bootstrap.min.js')}}"></script>
-<script src="{{themes('site/js/slider/slick.min.js')}}"></script>
-<script src="{{themes('site/js/bootstrap.offcanvas.js')}}"></script>
-<script src="{{themes('site/js/jRate.min.js')}}"></script>
-<script src="{{themes('site/js/wow.min.js')}}"></script>
-<script src="{{themes('site/js/main.js')}}"></script>
-<script src="{{themes('js/notify.js')}}"></script>
+<script src="{{admin_asset('site/js/jquery-3.1.1.min.js')}}"></script>
+<script src="{{admin_asset('site/js/bootstrap.min.js')}}"></script>
+<script src="{{admin_asset('site/js/slider/slick.min.js')}}"></script>
+<script src="{{admin_asset('site/js/bootstrap.offcanvas.js')}}"></script>
+<script src="{{admin_asset('site/js/jRate.min.js')}}"></script>
+<script src="{{admin_asset('site/js/wow.min.js')}}"></script>
+<script src="{{admin_asset('site/js/main.js')}}"></script>
+<script src="{{admin_asset('js/notify.js')}}"></script>
 {{-- <script src="{{JS}}main.js"></script> --}}
 <script src="{{JS}}sweetalert-dev.js"></script>
 <script src="{{JS}}mousetrap.js"></script>
@@ -169,9 +169,9 @@ if(isset($block_navigation))
             }
             setInterval(refreshToken, 600000); // 1 hour 
   </script>
-          @include('common.alertify')
+          @include('admin.common.alertify')
           @yield('footer_scripts')
-          @include('errors.formMessages')
+          @include('admin.errors.formMessages')
           @yield('custom_div_end')
           {!!getSetting('google_analytics', 'seo_settings')!!}
   </body>

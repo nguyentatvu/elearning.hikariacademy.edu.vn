@@ -73,7 +73,7 @@
 
 @section('footer_scripts')
   
- {{-- @include('common.datatables', array('route'=>'mastersettings.dataTable')) --}}
- {{-- @include('common.deletescript', array('route'=>'/mastersettings/topics/delete/')) --}}
+ {{-- @include('admin.common.datatables', array('route'=>'mastersettings.dataTable')) --}}
+ {{-- @include('admin.common.deletescript', array('route'=>'/mastersettings/topics/delete/')) --}}
 
 @stop

@@ -13,7 +13,7 @@
 						</ol>
 					</div>
 				</div>
-					@include('errors.errors')
+					@include('admin.errors.errors')
 				<div class="alert alert-danger">
   							<strong>{{getPhrase('warning')}}!</strong>  &nbsp;{{getPhrase('do_not_refresh_this_page')}}
 					</div>
@@ -69,8 +69,8 @@ window.onpopstate = function(event) {
 };
 </script>
 
- @include('common.validations');
-  {{-- @include('common.editor'); --}}
+ @include('admin.common.validations');
+  {{-- @include('admin.common.editor'); --}}
     
 @stop
  

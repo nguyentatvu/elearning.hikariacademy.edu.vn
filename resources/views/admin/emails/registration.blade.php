@@ -1,4 +1,4 @@
-@include('emails.template_header')
+@include('admin.emails.template_header')
 
 
 <div class="block">
@@ -74,7 +74,7 @@
 </div>
 
 
-@include('emails.template_footer')
+@include('admin.emails.template_footer')
 
 {{--
 <html>

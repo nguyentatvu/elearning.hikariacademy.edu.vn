@@ -15,7 +15,7 @@
 						</ol>
 					</div>
 				</div>
-					@include('errors.errors')
+					@include('admin.errors.errors')
 				<!-- /.row -->
 							<div class="panel panel-custom col-lg-8 col-lg-offset-2">
 					<div class="panel-heading">
@@ -35,7 +35,7 @@
 						{!! Form::open(array('url' => URL_TOPICS_ADD, 'method' => 'POST', 
 						'novalidate'=>'','name'=>'formTopics ')) !!}
 					@endif
-					 @include('mastersettings.topics.form_elements', 
+					 @include('admin.mastersettings.topics.form_elements', 
 					 array('button_name'=> $button_name),
 					 array('subjects'=>$subjects, 'parent_topics'=>$parent_topics))
 					{!! Form::close() !!}
@@ -112,8 +112,8 @@
 		    filebrowserUploadUrl : "{{JS}}plugins/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images",
 		} );
 		</script>
-	@include('common.editor')
-	@include('mastersettings.topics.scripts.js-scripts');
-	@include('common.validations', array('isLoaded'=>TRUE));
+	@include('admin.common.editor')
+	@include('admin.mastersettings.topics.scripts.js-scripts');
+	@include('admin.common.validations', array('isLoaded'=>TRUE));
 @stop
  

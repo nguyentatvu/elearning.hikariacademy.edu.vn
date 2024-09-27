@@ -60,9 +60,9 @@
 
 					<ul class="nav nav-tabs add-student-tabs">
 
-							<li class="active"><a data-toggle="tab" href="#academic_details"><!-- {{getPhrase('marks')}} -->Điểm </a></li>
+							<li class="active"><a data-toggle="tab" href="#academic_details">{{getPhrase('marks')}}</a></li>
 
-							<li style="display: none;"><a data-toggle="tab" href="#personal_details">{{getPhrase('time')}}</a></li>
+							<li><a data-toggle="tab" href="#personal_details">{{getPhrase('time')}}</a></li>
 
 							 
 
@@ -84,15 +84,15 @@
 
 								 
 
-									<th><!-- {{ getPhrase('title')}} --> Tiêu đề</th>
+									<th>{{ getPhrase('title')}}</th>
 
-									<th><!-- {{ getPhrase('correct')}} -->Câu đúng</th>
+									<th>{{ getPhrase('correct')}}</th>
 
-									<th><!-- {{ getPhrase('wrong')}} -->Câu sai</th>
+									<th>{{ getPhrase('wrong')}}</th>
 
-									<th><!-- {{ getPhrase('not_answered')}} -->Câu chưa làm</th>
+									<th>{{ getPhrase('not_answered')}}</th>
 
-									<th><!-- {{ getPhrase('total')}} -->Tổng</th>
+									<th>{{ getPhrase('total')}}</th>
 
 									 
 

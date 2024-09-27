@@ -52,6 +52,6 @@
 		'title', 'image', 'action'
 	];
 	@endphp
- @include('common.datatables', array('route'=>URL_EXAM_SERIES_AJAXLIST, 'route_as_url' => TRUE, 'table_columns' => $defaultColumns))
- @include('common.deletescript', array('route'=>URL_EXAM_SERIES_DELETE))
+ @include('admin.common.datatables', array('route'=>URL_EXAM_SERIES_AJAXLIST, 'route_as_url' => TRUE, 'table_columns' => $defaultColumns))
+ @include('admin.common.deletescript', array('route'=>URL_EXAM_SERIES_DELETE))
 @stop

@@ -52,7 +52,7 @@
 
 @section('footer_scripts')
   
- @include('common.datatables', array('route'=>URL_FEEDBACKS_GETLIST, 'route_as_url' => TRUE))
- @include('common.deletescript', array('route'=>URL_FEEDBACK_DELETE))
+ @include('admin.common.datatables', array('route'=>URL_FEEDBACKS_GETLIST, 'route_as_url' => TRUE))
+ @include('admin.common.deletescript', array('route'=>URL_FEEDBACK_DELETE))
 
 @stop

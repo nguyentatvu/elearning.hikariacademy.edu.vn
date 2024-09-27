@@ -5,7 +5,7 @@
 <div class="login-content installation-page" >
 
 		<div class="logo text-center"><img src="{{IMAGES}}logo.png" alt=""></div>
-		@include('errors.errors')
+		@include('admin.errors.errors')
 		{!! Form::open(array('url' => URL_FIRST_USER_REGISTER, 'method' => 'POST', 'name'=>'registrationForm ', 'novalidate'=>'', 'class'=>"loginform", 'id'=>"install_form")) !!}
 	
 <div class="row" >
@@ -107,7 +107,7 @@
 
 @section('footer_scripts')
 
-	@include('common.validations');
+	@include('admin.common.validations');
 <script src="{{JS}}bootstrap-toggle.min.js"></script>
  <script>
  	function submitForm() {

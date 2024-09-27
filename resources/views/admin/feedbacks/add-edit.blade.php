@@ -13,7 +13,7 @@
 						</ol>
 					</div>
 				</div>
-					@include('errors.errors')
+					@include('admin.errors.errors')
 				<!-- /.row -->
 				
 <div class="panel panel-custom col-lg-6 col-lg-offset-3" >
@@ -95,7 +95,7 @@
 @stop
 
 @section('footer_scripts')
- @include('common.validations');
+ @include('admin.common.validations');
  
     
 @stop

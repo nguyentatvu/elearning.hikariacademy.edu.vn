@@ -12,7 +12,7 @@
 						</ol>
 					</div>
 				</div>
-				@include('errors.errors')	
+				@include('admin.errors.errors')	
 				<div class="panel panel-custom col-lg-9 col-md-offset-2">
 					<div class="panel-heading">
 						<div class="pull-right messages-buttons">
@@ -99,6 +99,6 @@
 
  @section('footer_scripts')
 
-  @include('common.validations')
+  @include('admin.common.validations')
  
 @stop

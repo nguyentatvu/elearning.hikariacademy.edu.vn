@@ -11,9 +11,11 @@
 
 <div class="series-video text-center">
 
-@if($content->content_type=='video' || $content->content_type=='video_url' || $content->content_type=='audio' || $content->content_type=='url')
+@if($content->content_type=='video' || $content->content_type=='video_url' || $content->content_type=='audio')
 
-     <video id="my-video" class="video-js vjs-big-play-centered" autoplay controls preload="auto" width="100%" height="560"
+ 
+
+     <video id="my-video" class="video-js vjs-big-play-centered" autoplay controls preload="auto" width="300" height="264"
 
           poster="" data-setup='{"aspectRatio":"640:267", "playbackRates": [1, 1.5, 2] }'>
 

@@ -78,13 +78,13 @@
 
     @yield('header_scripts')
 
-    <link href="{{themes('css/sweetalert.css')}}" rel="stylesheet">
+    <link href="{{admin_asset('css/sweetalert.css')}}" rel="stylesheet">
 
   </head>
 
   <body ng-app="academia" onload="initLoadingDialog();">
 
-	@include('common.loading-dialog')
+	@include('admin.common.loading-dialog')
     <!--Loader-->
 
     {{-- <div id="global-loader">
@@ -93,11 +93,11 @@
 
     </div> --}}<!--/Loader-->
 
-    @include('site.header')
+    @include('admin.site.header')
 
     @yield('content')
 
-    @include('site.footer') 
+    @include('admin.site.footer') 
 
     <script>
 
@@ -119,15 +119,15 @@
 
     </script>
 
-    <script src="{{themes('js/main.js')}}"></script>
+    <script src="{{admin_asset('js/main.js')}}"></script>
 
-    <script src="{{themes('js/sweetalert-dev.js')}}"></script>
+    <script src="{{admin_asset('js/sweetalert-dev.js')}}"></script>
 
-    @include('common.alertify')
+    @include('admin.common.alertify')
 
     @yield('footer_scripts')
 
-    @include('errors.formMessages')
+    @include('admin.errors.formMessages')
 
     @yield('custom_div_end')
 

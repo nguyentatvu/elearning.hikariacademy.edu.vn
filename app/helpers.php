@@ -74,10 +74,10 @@ function getPhrase($key = null)
  * @param  [type] $setting_type [description]
  * @return [type]               [description]
  */
-// function getSetting($key, $setting_type)
-// {
-//     return App\Settings::getSetting($key, $setting_type);
-// }
+function getSetting($key, $setting_type)
+{
+    return App\Settings::getSetting($key, $setting_type);
+}
 
 /**
  * This method fetches the specified key in the type of setting
@@ -85,10 +85,10 @@ function getPhrase($key = null)
  * @param  [type] $setting_type [description]
  * @return [type]               [description]
  */
-// function getThemeSetting($key, $setting_type)
-// {
-//     return App\SiteTheme::getSetting($key, $setting_type);
-// }
+function getThemeSetting($key, $setting_type)
+{
+    return App\SiteTheme::getSetting($key, $setting_type);
+}
 
 /**
  * Language Helper
@@ -333,21 +333,21 @@ function getUserGrade($grade = 5)
  */
 function getLayout()
 {
-    $layout = 'layouts.student.studentlayout';
+    $layout = 'admin.layouts.student.studentlayout';
     if (checkRole(getUserGrade(2))) {
-        $layout             = 'layouts.admin.adminlayout';
+        $layout             = 'admin.layouts.admin.adminlayout';
     }
     if (checkRole(['parent'])) {
-        $layout             = 'layouts.parent.parentlayout';
+        $layout             = 'admin.layouts.parent.parentlayout';
     }
     if (checkRole(['export'])) {
-        $layout             = 'layouts.export.exportlayout';
+        $layout             = 'admin.layouts.export.exportlayout';
     }
     if (checkRole(['input'])) {
-        $layout             = 'layouts.input.parentlayout';
+        $layout             = 'admin.layouts.input.parentlayout';
     }
     if (checkRole(['account'])) {
-        $layout             = 'layouts.account.accountlayout';
+        $layout             = 'admin.layouts.account.accountlayout';
     }
 
     return $layout;
@@ -663,26 +663,28 @@ function getRazorSecret()
 //     return Theme::current();
 // }
 
-// function getDefaultTheme()
-// {
-//     $current_theme  = App\SiteTheme::where('is_active', 1)->first();
+function getDefaultTheme()
+{
+    // $current_theme  = App\SiteTheme::where('is_active', 1)->first();
 
-//     if ($current_theme) {
+    // if ($current_theme) {
 
-//         $theme_name = $current_theme->theme_title_key;
-//         return $theme_name;
-//     }
-//     return FALSE;
-// }
+    //     $theme_name = $current_theme->theme_title_key;
+    //     return $theme_name;
+    // }
+    // return FALSE;
+
+    return 'themeone';
+}
 
 
-// function getThemeColor()
-// {
+function getThemeColor()
+{
+    // $current_theme  = App\SiteTheme::where('is_active', 1)->first();
+    // return $current_theme->theme_color;
 
-//     $current_theme  = App\SiteTheme::where('is_active', 1)->first();
-
-//     return $current_theme->theme_color;
-// }
+    return 'blueheader';
+}
 
 function getLangugesOptions()
 {
@@ -1479,4 +1481,15 @@ function formatCurrencyVND($amount, int $type = 1)
 function formatNumber($number, $seperator = ',')
 {
     return number_format($number, 0, '', $seperator);
+}
+
+/**
+ * Get admin asset path
+ *
+ * @param string $path
+ * @return string
+ */
+function admin_asset($path)
+{
+    return asset('assets/admin/' . $path);
 }

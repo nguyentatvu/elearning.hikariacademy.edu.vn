@@ -12,7 +12,7 @@
 						</ol>
 					</div>
 				</div>
-				@include('errors.errors')	
+				@include('admin.errors.errors')	
 				<div class="panel panel-custom" >
 					<div class="panel-heading">
 						<div class="pull-right messages-buttons">
@@ -31,7 +31,7 @@
 						{!! Form::open(array('url' => 'subscription/plans/add', 'method' => 'POST', 'files' => true)) !!}
 					@endif
 
-					 @include('plans.form_elements', 
+					 @include('admin.plans.form_elements', 
 					 array('button_name'=> $button_name),
 					 array('record' => $record))
 					{!! Form::close() !!}

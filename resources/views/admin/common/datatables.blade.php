@@ -2,11 +2,11 @@
 
 <link href="https://cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css" type="text/css">
 
-<script src="{{themes('js/bootstrap-toggle.min.js')}}"></script>
+<script src="{{admin_asset('js/bootstrap-toggle.min.js')}}"></script>
 
-<script src="{{themes('js/jquery.dataTables.min.js')}}"></script>
+<script src="{{admin_asset('js/jquery.dataTables.min.js')}}"></script>
 
-<script src="{{themes('js/dataTables.bootstrap.min.js')}}"></script>
+<script src="{{admin_asset('js/dataTables.bootstrap.min.js')}}"></script>
 
 <script src="https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
 
@@ -18,8 +18,8 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.3/vfs_fonts.js"></script>
 
 <!--
-<script src="{{themes('js/pdfmake/pdfmake.min.js')}}"></script>
-<script src="{{themes('js/pdfmake/vjs_fonts.js')}}"></script>
+<script src="{{admin_asset('js/pdfmake/pdfmake.min.js')}}"></script>
+<script src="{{admin_asset('js/pdfmake/vjs_fonts.js')}}"></script>
 -->
 
 <script src="//cdn.datatables.net/buttons/1.4.2/js/buttons.html5.min.js"></script>

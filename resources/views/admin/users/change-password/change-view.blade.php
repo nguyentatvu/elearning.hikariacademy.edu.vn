@@ -95,5 +95,5 @@
 </hr>
 @stop
 @section('footer_scripts')
-  @include('common.validations')
+  @include('admin.common.validations')
 @stop

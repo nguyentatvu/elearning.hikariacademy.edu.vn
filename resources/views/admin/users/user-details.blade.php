@@ -147,6 +147,6 @@ Lịch sử thi<!-- {{ getPhrase('exam_history')}} --></a>
 
 @section('footer_scripts')
  
- @include('common.chart', array($chart_data,'ids' =>$ids));
+ @include('admin.common.chart', array($chart_data,'ids' =>$ids));
 
 @stop

@@ -125,9 +125,9 @@
 	];
 	@endphp
 
- @include('common.datatables', array('route'=>'topics.dataTable', 'excel'=>'0,2,3', 'table_columns' => $defaultColumns))
+ @include('admin.common.datatables', array('route'=>'topics.dataTable', 'excel'=>'0,2,3', 'table_columns' => $defaultColumns))
 
- @include('common.deletescript', array('route'=>URL_TOPICS_DELETE))
+ @include('admin.common.deletescript', array('route'=>URL_TOPICS_DELETE))
 
 
 

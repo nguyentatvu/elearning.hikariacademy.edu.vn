@@ -29,7 +29,7 @@
                 </ol>
             </div>
         </div>
-        @include('errors.errors')
+        @include('admin.errors.errors')
         <!-- /.row -->
         <div class="panel panel-custom col-lg-6 col-lg-offset-3">
             <div class="panel-heading">
@@ -55,7 +55,7 @@ array('url' => URL_USERS_EDIT.$record->slug,
 {!! Form::open(array('url' => URL_USERS_ADD, 'method' => 'POST', 'novalidate'=>'','name'=>'formUsers ', 'files'=>'true')) !!}
 @endif
 
-@include('users.form_elements', array('button_name'=> $button_name, 'record' => $record))
+@include('admin.users.form_elements', array('button_name'=> $button_name, 'record' => $record))
 
 {!! Form::close() !!}
             </div>
@@ -67,8 +67,8 @@ array('url' => URL_USERS_EDIT.$record->slug,
 @endsection
 
 @section('footer_scripts')
-@include('common.validations')
-@include('common.alertify')
+@include('admin.common.validations')
+@include('admin.common.alertify')
 <script>
     var file = document.getElementById('image_input');
 

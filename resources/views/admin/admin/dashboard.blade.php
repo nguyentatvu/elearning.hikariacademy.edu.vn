@@ -308,12 +308,12 @@
  		@stop
  		@section('footer_scripts')
  		
- 		@include('common.chart', array('chart_data'=>$country_register_data,'ids'=>array('contry_register'), 'scale'=>TRUE))
-		@include('common.chart', array('chart_data'=>$chart_exam_free_data,'ids'=>array('chart_exam_free_chart'), 'scale'=>TRUE))
-		@include('common.chart', array('chart_data'=>$chart_usermonth_data,'ids'=>array('chart_usermonth_chart'), 'scale'=>TRUE))
-		@include('common.chart', array('chart_data'=>$chart_usercity_data,'ids'=>array('chart_usercity_chart'), 'scale'=>TRUE))
-		@include('common.chart', array('chart_data'=>$chart_usercityexam_data,'ids'=>array('chart_usercityexam_chart'), 'scale'=>TRUE))
-		@include('common.chart', array('chart_data'=>$chart_device_data,'ids'=>array('chart_device_chart'), 'scale'=>TRUE))
+ 		@include('admin.common.chart', array('chart_data'=>$country_register_data,'ids'=>array('contry_register'), 'scale'=>TRUE))
+		@include('admin.common.chart', array('chart_data'=>$chart_exam_free_data,'ids'=>array('chart_exam_free_chart'), 'scale'=>TRUE))
+		@include('admin.common.chart', array('chart_data'=>$chart_usermonth_data,'ids'=>array('chart_usermonth_chart'), 'scale'=>TRUE))
+		@include('admin.common.chart', array('chart_data'=>$chart_usercity_data,'ids'=>array('chart_usercity_chart'), 'scale'=>TRUE))
+		@include('admin.common.chart', array('chart_data'=>$chart_usercityexam_data,'ids'=>array('chart_usercityexam_chart'), 'scale'=>TRUE))
+		@include('admin.common.chart', array('chart_data'=>$chart_device_data,'ids'=>array('chart_device_chart'), 'scale'=>TRUE))
 
 
  		@stop

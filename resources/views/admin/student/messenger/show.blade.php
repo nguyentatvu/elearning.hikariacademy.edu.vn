@@ -1,4 +1,4 @@
-@extends('admin.layouts.student.studentlayout')
+@extends('layouts.student.studentlayout')
 @section('content')
 <div id="page-wrapper">
             <div class="container-fluid">

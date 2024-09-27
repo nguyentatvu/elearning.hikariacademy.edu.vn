@@ -17,7 +17,7 @@
 						</ol>
 					</div>
 				</div>
-					@include('errors.errors')
+					@include('admin.errors.errors')
 				<!-- /.row -->
 				
 							<div class="panel panel-custom col-lg-6 col-lg-offset-3">
@@ -71,8 +71,8 @@
 @endsection
 
 @section('footer_scripts')
- @include('common.validations')
-  @include('common.alertify')
+ @include('admin.common.validations')
+  @include('admin.common.alertify')
  <script>
  	var file = document.getElementById('excel_input');
 

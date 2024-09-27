@@ -16,8 +16,8 @@
             // print_r($option->options[0]);
             $sub_options = (array)$option->options;
              $optionsl2  = null;
-              // if(isset($option->optionsl2))
-              // $optionsl2 = (array) $option->optionsl2; 
+              if(isset($option->optionsl2))
+              $optionsl2 = (array) $option->optionsl2; 
 
             foreach($sub_options as $key => $value)
              $sub_options = $value;
@@ -26,11 +26,9 @@
                 <div class="question">
                     <h3>
                         <span class="language_l1">{!!$option->question !!}</span>
-                      {{--   @if(isset($option->questionl2))
+                        @if(isset($option->questionl2))
                         <span class="language_l2" style="display: none;">{!! $option->questionl2 !!}</span>
-                        @else --}}
-                        <span class="language_l2" style="display: none;">{!! $option->question !!}</span>
-                        {{-- @endif --}}
+                        @endif
                     </h3> 
                 </div>
                
@@ -59,10 +57,8 @@
                         <li class="col-md-6 {{$correct_answer_class}} answer_radio" >
                             <input type="radio" name="option{{$question->id.$outer_index}}" id="1radio1"  {{$submitted_value}} disabled="">
                             <label for="1radio1"> <span class="fa-stack radio-button"> <i class="mdi mdi-check active"></i> </span>  <span class="language_l1">{!!$value1!!}</span>
-                                 @if($optionsl2)
-                                <span class="language_l2" style="display: none;">{!! $value1 !!}</span>  </label>
-                                 @else
-                                <span class="language_l2" style="display: none;">{!! $value1 !!}</span>
+                                 @if($optionsl2 && isset($optionsl2[$key][$key1]))
+                                <span class="language_l2" style="display: none;">{!!$optionsl2[$key][$key1]!!}</span>  </label>
                                 @endif
                         </li>
                         <?php $index++; } ?>

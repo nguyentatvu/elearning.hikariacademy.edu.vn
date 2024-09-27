@@ -7,7 +7,7 @@
             <div class="single-page">
                 <div class="col-lg-5 col-xl-4 col-md-6 d-block mx-auto">
                     <div class="wrapper wrapper2">
-					    @include('errors.errors')
+					    @include('admin.errors.errors')
                         {!! Form::open(array('url' => URL_USERS_LOGIN, 'method' => 'POST', 'name'=>'formLanguage ', 'novalidate'=>'', 'class'=>"card-body", 'name'=>"loginForm", 'onsubmit'=>"showLoadingSpinner();")) !!}
                             <h3>Đăng nhập</h3>
                             <div class="mail">
@@ -80,5 +80,5 @@
 
 @stop
 @section('footer_scripts')
-@include('common.validations')
+@include('admin.common.validations')
 @stop

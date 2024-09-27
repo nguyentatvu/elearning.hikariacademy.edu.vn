@@ -13,7 +13,7 @@
 						</ol>
 					</div>
 				</div>
-					@include('errors.errors')
+					@include('admin.errors.errors')
 				<!-- /.row -->
 				
 				 <div class="panel panel-custom col-lg-6 col-lg-offset-3">
@@ -113,7 +113,7 @@
 @stop
 
 @section('footer_scripts')
- @include('sms.scripts.js-scripts');
+ @include('admin.sms.scripts.js-scripts');
 
 {{--   <script src="{{JS}}bootstrap-datepicker.min.js"></script>
  <script src="{{JS}}bootstrap-toggle.min.js"></script>  --}}  

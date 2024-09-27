@@ -18,7 +18,7 @@
 						</ol>
 					</div>
 				</div>
-					@include('errors.errors')
+					@include('admin.errors.errors')
 				<!-- /.row -->
 
 				<?php 
@@ -115,6 +115,6 @@
 @endsection
 
 @section('footer_scripts')
- @include('common.validations');
+ @include('admin.common.validations');
  <script src="{{JS}}bootstrap-toggle.min.js"></script>
 @stop

@@ -55,5 +55,5 @@
 	];
 	@endphp
 
- 	@include('common.datatables', array('route'=>'mastersettings.dataTable', 'table_columns' => $defaultColumns))
+ 	@include('admin.common.datatables', array('route'=>'mastersettings.dataTable', 'table_columns' => $defaultColumns))
 @stop

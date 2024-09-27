@@ -116,8 +116,8 @@
 	];
 	@endphp
 
-	@include('common.datatables', array('route'=>'quizcategories.dataTable', 'table_columns' => $defaultColumns))
+	@include('admin.common.datatables', array('route'=>'quizcategories.dataTable', 'table_columns' => $defaultColumns))
 
-	@include('common.deletescript', array('route'=>URL_QUIZ_CATEGORY_DELETE))
+	@include('admin.common.deletescript', array('route'=>URL_QUIZ_CATEGORY_DELETE))
 @stop
 

@@ -1,4 +1,4 @@
-@extends('admin.layouts.student.studentlayout')
+@extends('layouts.student.studentlayout')
 @section('header_scripts')
  <link href="http://vjs.zencdn.net/5.10.4/video-js.css" rel="stylesheet">
   <script src="http://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
@@ -34,7 +34,7 @@
 
 						 <div class="col-md-4">
 						 @if($record->image)
-						 <!-- <img height="100" width="100" src="/{{$settings->contentImagepath.'/'.$record->image}}" alt=""/> -->
+						 <img height="100" width="100" src="/{{$settings->contentImagepath.'/'.$record->image}}" alt=""/>
 						 @endif
 						</div> 
 						</div>

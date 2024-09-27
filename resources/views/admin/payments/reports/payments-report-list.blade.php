@@ -208,11 +208,11 @@
 
   
 
- @include('common.datatables', array('route'=>$ajax_url, 'route_as_url' => TRUE))
+ @include('admin.common.datatables', array('route'=>$ajax_url, 'route_as_url' => TRUE))
 
- @include('payments.scripts.js-scripts');
+ @include('admin.payments.scripts.js-scripts');
 
- {{-- @include('common.deletescript', array('route'=>URL_QUIZ_DELETE)) --}}
+ {{-- @include('admin.common.deletescript', array('route'=>URL_QUIZ_DELETE)) --}}
 
 <script>
 

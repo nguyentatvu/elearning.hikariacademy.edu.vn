@@ -12,32 +12,32 @@
 	<title>@yield('title') {{ isset($title) ? $title : getSetting('site_title','site_settings') }}</title>
 	<!-- Bootstrap Core CSS -->
 	@yield('header_scripts')
-	<link href="{{themes('css/bootstrap.min.css')}}" rel="stylesheet">
-	<link href="{{themes('css/sweetalert.css')}}" rel="stylesheet">
-	<link href="{{themes('css/metisMenu.min.css')}}" rel="stylesheet">
-	<link href="{{themes('css/custom-fonts.css')}}" rel="stylesheet">
-	<link href="{{themes('css/materialdesignicons.css')}}" rel="stylesheet">
-	<link href="{{themes('font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
-	<link href="{{themes('css/bootstrap-datepicker.min.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/bootstrap.min.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/sweetalert.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/metisMenu.min.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/custom-fonts.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/materialdesignicons.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/bootstrap-datepicker.min.css')}}" rel="stylesheet">
 	<!-- Morris Charts CSS -->
 	{{-- <link href="{{CSS}}plugins/morris.css" rel="stylesheet"> --}}
-	<link href="{{themes('css/plugins/morris.css')}}" rel="stylesheet">
-	<link href="{{themes('css/sb-admin.css')}}" rel="stylesheet">
-	{{-- <link href="{{themes('css/themeone-blue.css')}}" rel="stylesheet"> --}}
+	<link href="{{admin_asset('css/plugins/morris.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/sb-admin.css')}}" rel="stylesheet">
+	{{-- <link href="{{admin_asset('css/themeone-blue.css')}}" rel="stylesheet"> --}}
 	<?php
 	$theme_color  = getThemeColor();
     // dd($theme_color);
 	?>
 	@if($theme_color == 'blueheader')
-	<link href="{{themes('css/theme-colors/header-blue.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/theme-colors/header-blue.css')}}" rel="stylesheet">
 	@elseif($theme_color == 'bluenavbar')
-	<link href="{{themes('css/theme-colors/blue-sidebar.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/theme-colors/blue-sidebar.css')}}" rel="stylesheet">
 	@elseif($theme_color == 'darkheader')
-	<link href="{{themes('css/theme-colors/dark-header.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/theme-colors/dark-header.css')}}" rel="stylesheet">
 	@elseif($theme_color == 'darktheme')
-	<link href="{{themes('css/theme-colors/dark-theme.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/theme-colors/dark-theme.css')}}" rel="stylesheet">
 	@elseif($theme_color == 'whitecolor')
-	<link href="{{themes('css/theme-colors/white-theme.css')}}" rel="stylesheet">
+	<link href="{{admin_asset('css/theme-colors/white-theme.css')}}" rel="stylesheet">
 	@endif
 </head>
 <body ng-app="academia">
@@ -225,17 +225,17 @@
             setInterval(refreshToken, 600000); // 1 hour
         </script> --}}
         <!-- Bootstrap Core JavaScript -->
-        <script src="{{themes('js/jquery-1.12.1.min.js')}}"></script>
-        <script src="{{themes('js/bootstrap.min.js')}}"></script>
-        <script src="{{themes('js/main.js')}}"></script>
-        <script src="{{themes('js/metisMenu.min.js')}}"></script>
-        <script src="{{themes('js/sweetalert-dev.js')}}"></script>
+        <script src="{{admin_asset('js/jquery-1.12.1.min.js')}}"></script>
+        <script src="{{admin_asset('js/bootstrap.min.js')}}"></script>
+        <script src="{{admin_asset('js/main.js')}}"></script>
+        <script src="{{admin_asset('js/metisMenu.min.js')}}"></script>
+        <script src="{{admin_asset('js/sweetalert-dev.js')}}"></script>
         <script >
         	/*Sidebar Menu*/
         	$("#ag-menu").metisMenu();
         </script>
         @yield('footer_scripts')
-        @include('errors.formMessages')
+        @include('admin.errors.formMessages')
         @yield('custom_div_end')
         <div class="ajax-loader" style="display:none;" id="ajax_loader"><img src="{{AJAXLOADER}}"> {{getPhrase('please_wait')}}...</div>
     </body>

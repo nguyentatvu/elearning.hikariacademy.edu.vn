@@ -58,7 +58,7 @@
 
 @section('footer_scripts')
   
- @include('common.datatables', array('route'=>'plans.dataTable'))
- @include('common.deletescript', array('route'=>'/email/templates/delete/'))
+ @include('admin.common.datatables', array('route'=>'plans.dataTable'))
+ @include('admin.common.deletescript', array('route'=>'/email/templates/delete/'))
 
 @stop

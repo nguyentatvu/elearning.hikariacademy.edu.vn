@@ -15,7 +15,7 @@
 </ol>
 </div>
 </div>
-@include('errors.errors')
+@include('admin.errors.errors')
 <!-- /.row -->
 
 <div class="panel panel-custom " ng-controller="users_controller">
@@ -169,8 +169,8 @@
 @endsection
 
 @section('footer_scripts')
-@include('common.validations')
-@include('common.alertify')
-@include('users.scripts.js-scripts')
+@include('admin.common.validations')
+@include('admin.common.alertify')
+@include('admin.users.scripts.js-scripts')
 
 @stop

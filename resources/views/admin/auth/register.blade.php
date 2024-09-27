@@ -13,7 +13,7 @@
 
           <div class="wrapper wrapper2">
 
-            @include('errors.errors')
+            @include('admin.errors.errors')
 	
 			{!! Form::open(array('url' => URL_USERS_REGISTER, 'method' => 'POST', 'name'=>'formLanguage ', 'novalidate'=>'', 'class'=>"card-body", 'name'=>"registrationForm", 'onsubmit'=>"showLoadingSpinner();")) !!}
 
@@ -220,6 +220,6 @@
 
 @section('footer_scripts')
 
-@include('common.validations')
+@include('admin.common.validations')
 
 @stop

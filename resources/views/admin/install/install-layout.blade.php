@@ -56,7 +56,7 @@
 		<!--JS Control-->
 		<script src="{{JS}}main.js"></script>
 		<script src="{{JS}}sweetalert-dev.js"></script>
-		@include('errors.formMessages')
+		@include('admin.errors.formMessages')
 		@yield('footer_scripts')
 </body>
 

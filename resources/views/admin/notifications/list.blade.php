@@ -59,6 +59,6 @@
 	];
 	@endphp
 
-	@include('common.datatables', array('route'=>URL_ADMIN_NOTIFICATIONS_GETLIST, 'route_as_url' => TRUE, 'table_columns' => $defaultColumns))
-	@include('common.deletescript', array('route'=>URL_ADMIN_NOTIFICATIONS_DELETE))
+	@include('admin.common.datatables', array('route'=>URL_ADMIN_NOTIFICATIONS_GETLIST, 'route_as_url' => TRUE, 'table_columns' => $defaultColumns))
+	@include('admin.common.deletescript', array('route'=>URL_ADMIN_NOTIFICATIONS_DELETE))
 @stop

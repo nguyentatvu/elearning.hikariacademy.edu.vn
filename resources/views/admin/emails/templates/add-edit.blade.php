@@ -16,7 +16,7 @@
 						</ol>
 					</div>
 				</div>
-				@include('errors.errors')	
+				@include('admin.errors.errors')	
 			 <div class="panel panel-custom col-lg-6 col-lg-offset-3">				<div class="panel-heading">						<div class="pull-right messages-buttons">
 							<a href="{{URL_EMAIL_TEMPLATES}}" class="btn  btn-primary button" >{{ getPhrase('list')}}</a>
 						</div>
@@ -33,7 +33,7 @@
 						{!! Form::open(array('url' => URL_EMAIL_TEMPLATES_ADD, 'method' => 'POST', 'files' => true,'novalidate'=>'','name'=>'formEmails ')) !!}
 					@endif
 
-					 @include('emails.templates.form_elements', 
+					 @include('admin.emails.templates.form_elements', 
 					 array('button_name'=> $button_name),
 					 array('record' => $record))
 					{!! Form::close() !!}
@@ -47,7 +47,7 @@
 @stop
 @section('footer_scripts')
 
-	@include('common.validations')
-	@include('common.editor')
+	@include('admin.common.validations')
+	@include('admin.common.editor')
 @stop
  

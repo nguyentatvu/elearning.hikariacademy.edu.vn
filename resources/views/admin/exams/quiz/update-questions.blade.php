@@ -15,7 +15,7 @@
 					</ol>
 				</div>
 			</div>
-			@include('errors.errors')
+			@include('admin.errors.errors')
 			<?php $settings = ($record) ? $settings : ''; ?>
 			<div class="panel panel-custom" ng-init="initAngData({{$settings}});" >
 				<div class="panel-heading">
@@ -169,7 +169,7 @@
 					</div>
 				</div>
 				<div class="col-md-6">
-					@include('exams.quiz.questions-selection-block')
+					@include('admin.exams.quiz.questions-selection-block')
 				</div>
 			</div>
 		</div>
@@ -180,8 +180,8 @@
 <!-- /#page-wrapper -->
 @stop
 @section('footer_scripts')
-@include('exams.quiz.scripts.js-scripts', ['quiz_record' => $record])
-@include('common.alertify')
+@include('admin.exams.quiz.scripts.js-scripts', ['quiz_record' => $record])
+@include('admin.common.alertify')
 @stop
 @section('custom_div_end')
 </div>

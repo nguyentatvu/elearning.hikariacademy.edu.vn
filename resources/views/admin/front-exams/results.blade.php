@@ -74,10 +74,10 @@
 @section('footer_scripts')
 <script src="{{JS}}chart-vue.js"></script>
 @if(isset($marks_data))
-@include('common.chart', array('chart_data'=>$marks_data,'ids' => $mark_ids))
+@include('admin.common.chart', array('chart_data'=>$marks_data,'ids' => $mark_ids))
 @endif
 @if(isset($time_data))
-@include('common.chart', array('chart_data'=>$time_data,'ids' => $time_ids))
+@include('admin.common.chart', array('chart_data'=>$time_data,'ids' => $time_ids))
 @endif
 <script>
 	function setLocalItem(url) {

@@ -38,16 +38,16 @@
     <!-- Color Skin css -->
     <link id="theme" rel="stylesheet" type="text/css" media="all" href="/public/assets/color-skins/color6.css" />
     @yield('header_scripts')
-    <link href="{{themes('css/sweetalert.css')}}" rel="stylesheet">
+    <link href="{{admin_asset('css/sweetalert.css')}}" rel="stylesheet">
   </head>
   <body ng-app="academia">
     <!--Loader-->
     {{-- <div id="global-loader">
       <img src="/public/assets/images/loader.svg" class="loader-img" alt="img">
     </div> --}}<!--/Loader-->
-    @include('site.header')
+    @include('admin.site.header')
     @yield('content')
-    @include('site.footer') 
+    @include('admin.site.footer') 
     <script>
     var csrfToken = $('[name="csrf_token"]').attr('content');
       setInterval(refreshToken, 600000); // 1 hour 
@@ -58,11 +58,11 @@
       }
       setInterval(refreshToken, 600000); // 1 hour 
     </script>
-    <script src="{{themes('js/main.js')}}"></script>
-    <script src="{{themes('js/sweetalert-dev.js')}}"></script>
-    @include('common.alertify')
+    <script src="{{admin_asset('js/main.js')}}"></script>
+    <script src="{{admin_asset('js/sweetalert-dev.js')}}"></script>
+    @include('admin.common.alertify')
     @yield('footer_scripts')
-    @include('errors.formMessages')
+    @include('admin.errors.formMessages')
     @yield('custom_div_end')
   </body>
 

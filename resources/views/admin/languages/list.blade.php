@@ -62,6 +62,6 @@
 	];
 	@endphp
 
-	@include('common.datatables', array('route'=>'languages.dataTable', 'table_columns' => $defaultColumns))
-	@include('common.deletescript', array('route'=>URL_LANGUAGES_DELETE))
+	@include('admin.common.datatables', array('route'=>'languages.dataTable', 'table_columns' => $defaultColumns))
+	@include('admin.common.deletescript', array('route'=>URL_LANGUAGES_DELETE))
 @stop

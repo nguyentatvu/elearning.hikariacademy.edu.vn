@@ -60,5 +60,5 @@
 	];
 	@endphp
 
-  	@include('common.datatables', array('route'=>$url, 'route_as_url' => TRUE, 'table_columns' => $defaultColumns))
+  	@include('admin.common.datatables', array('route'=>$url, 'route_as_url' => TRUE, 'table_columns' => $defaultColumns))
 @stop

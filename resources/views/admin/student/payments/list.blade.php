@@ -111,14 +111,14 @@
 
 
 @section('footer_scripts')
-	@php
-		// MAKE DEFAULT VALUE COLUMN
-		$defaultColumns = [
-			'item_name', 'plan_type', 'start_date', 'end_date', 'payment_gateway', 'updated_at', 'payment_status'
-		];
-	@endphp
 
-	@include('common.datatables', array('route'=>URL_PAYPAL_PAYMENTS_AJAXLIST.$user->slug, 'route_as_url' => TRUE, 'table_columns' => $defaultColumns))
-	@include('common.deletescript', array('route'=>'/exams/quiz/delete/'))
+  
+
+ @include('common.datatables', array('route'=>URL_PAYPAL_PAYMENTS_AJAXLIST.$user->slug, 'route_as_url' => TRUE))
+
+ @include('common.deletescript', array('route'=>'/exams/quiz/delete/'))
+
+
+
 @stop
 

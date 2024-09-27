@@ -26,7 +26,7 @@
         </ol>
       </div>
     </div>
-    @include('errors.errors')
+    @include('admin.errors.errors')
     <!-- /.row -->
     <?php
     $settings = ($record) ? $settings : '';
@@ -51,7 +51,7 @@
           'novalidate'=>'','name'=>'formLms ',
           'method' => 'POST', 'files' => true)) !!}
           @endif
-          @include('lms.lmscontents.form_elements',
+          @include('admin.lms.lmscontents.form_elements',
           array('button_name'=> $button_name),
           array('record'=>$record,'series_slug'=>$series_slug))
 
@@ -73,10 +73,10 @@
   <!-- /#page-wrapper -->
   @stop
   @section('footer_scripts')
-  @include('lms.lmscontents.scripts.js-scripts')
-  @include('common.validations', array('isLoaded'=>'1'));
-  @include('common.editor');
-  @include('common.alertify')
+  @include('admin.lms.lmscontents.scripts.js-scripts')
+  @include('admin.common.validations', array('isLoaded'=>'1'));
+  @include('admin.common.editor');
+  @include('admin.common.alertify')
   <script>
   $('#submitForm').click(function(){
     $('#submitForm').css('display','none');

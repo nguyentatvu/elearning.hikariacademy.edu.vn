@@ -32,7 +32,7 @@
 
 			</div>
 
-			@include('errors.errors')
+			@include('admin.errors.errors')
 
 			<?php $settings = ($record) ? $settings : ''; ?>
 
@@ -138,7 +138,7 @@
 
 @section('footer_scripts')
 
-@include('exams.examseries.scripts.js-scripts')
+@include('admin.exams.examseries.scripts.js-scripts')
 
 @stop
 

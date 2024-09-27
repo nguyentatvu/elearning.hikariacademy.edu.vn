@@ -51,7 +51,8 @@
         },
         "files":[
             "app/constants.php",
-            "app/helpers.php"
+            "app/helpers.php",
+            "app/language_helper.php"
         ]
     },
     "autoload-dev": {

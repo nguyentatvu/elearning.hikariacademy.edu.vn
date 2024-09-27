@@ -28,7 +28,7 @@
 
 				</div>
 
-					@include('errors.errors')
+					@include('admin.errors.errors')
 
 				<!-- /.row -->
 
@@ -278,7 +278,7 @@
 
 @section('footer_scripts')
 
- @include('payments.scripts.js-scripts');
+ @include('admin.payments.scripts.js-scripts');
 
 
 

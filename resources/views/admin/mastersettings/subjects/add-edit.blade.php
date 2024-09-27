@@ -12,7 +12,7 @@
 						</ol>
 					</div>
 				</div>
-					@include('errors.errors')
+					@include('admin.errors.errors')
 				<!-- /.row -->
 				<div class="panel panel-custom col-lg-6 col-lg-offset-3">
 					<div class="panel-heading">
@@ -31,7 +31,7 @@
 					@else
 						{!! Form::open(array('url' => URL_SUBJECTS_ADD, 'method' => 'POST', 'name'=>'formSubjects ', 'novalidate'=>'')) !!}
 					@endif
-					 @include('mastersettings.subjects.form_elements', 
+					 @include('admin.mastersettings.subjects.form_elements', 
 					 array('button_name'=> $button_name),
 					 array())
 					{!! Form::close() !!}
@@ -82,5 +82,5 @@
  	}
  }
  </script>
-  @include('common.validations');
+  @include('admin.common.validations');
  @stop

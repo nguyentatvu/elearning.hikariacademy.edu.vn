@@ -139,8 +139,8 @@
 		'stt', 'title', 'type', 'import', 'hocthu', 'action'
 	];
 	@endphp
-    @include('common.datatables', array('route'=>$datatbl_url, 'route_as_url' => true, 'table_columns' => $defaultColumns))
-    @include('common.deletescript', array('route'=>URL_LMS_CONTENT_DELETE))
+    @include('admin.common.datatables', array('route'=>$datatbl_url, 'route_as_url' => true, 'table_columns' => $defaultColumns))
+    @include('admin.common.deletescript', array('route'=>URL_LMS_CONTENT_DELETE))
     <script >
         function update_try(id,try_type){
             $.ajaxSetup({

@@ -70,3 +70,18 @@
         </div>
     </div>
 </div>
+@if (Session::has('popup_login'))
+    <script type="text/javascript">
+        $(function () {
+            $('#btn_login').trigger('click');
+        });
+    </script>
+@endif
+
+@if (Session::has('popup_register'))
+    <script type="text/javascript">
+        $(function () {
+            $('#btn_register').trigger('click');
+        });
+    </script>
+@endif

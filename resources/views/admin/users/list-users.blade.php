@@ -59,6 +59,6 @@
 			'hid', 'name', 'email', 'image', 'display_name', 'action'
 		];
 	@endphp
-	@include('common.datatables', array('route'=>'users.dataTable', 'table_columns' => $defaultColumns))
-	@include('common.deletescript', array('route'=>URL_USERS_DELETE))
+	@include('admin.common.datatables', array('route'=>'users.dataTable', 'table_columns' => $defaultColumns))
+	@include('admin.common.deletescript', array('route'=>URL_USERS_DELETE))
 @stop

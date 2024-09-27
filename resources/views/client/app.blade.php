@@ -54,10 +54,7 @@
                 <div id="main-wrapper">
                     @yield('content')
                 </div>
-                @component('client.components.auth-modal') @endcomponent
-                <div class="loading-overlay">
-                    <div class="loading-spinner"></div>
-                </div>
+                @component('client.components.common-component') @endcomponent
             </div>
         </div>
     </div>

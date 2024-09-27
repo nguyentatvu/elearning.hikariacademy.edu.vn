@@ -8,14 +8,14 @@
 					<div class="col-lg-12">
 						<ol class="breadcrumb">
 							<li><a href="{{PREFIX}}"><i class="mdi mdi-home"></i></a> </li>
-							<li class="active"> <!-- {{ $title }} --> <?php change_furigana_text ($title); ?> </li>
+							<li class="active"> {{ $title }} </li>
 						</ol>
 					</div>
 				</div>
 				<!-- /.row -->
 				<div class="panel panel-custom">
 					<div class="panel-heading">
-						<h1><!-- {{$title}} --> <?php change_furigana_text ($title); ?></h1>
+						<h1>{{$title}}</h1>
 					</div>
 					<div class="panel-body packages">
 						 
@@ -40,7 +40,7 @@
 										
 										<div class="hover-content"> 
 										<div class="buttons">
- <a href="{{URL_STUDENT_LMS_SERIES_VIEW.$c->slug}}" class="btn btn-primary">   <!-- {{getPhrase('view_more')}} --> Xem thêm</a> 
+ <a href="{{URL_STUDENT_LMS_SERIES_VIEW.$c->slug}}" class="btn btn-primary">   {{getPhrase('view_more')}}</a> 
 										 
 											</div>
 										</div>

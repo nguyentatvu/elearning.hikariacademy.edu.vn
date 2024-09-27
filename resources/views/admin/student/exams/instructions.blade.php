@@ -1,134 +1,115 @@
-@extends('admin.layouts.examlayout')
+@extends('layouts.examlayout')
 @section('header_scripts')
+
 @stop
 @section('content')
-<div id="page-wrapper" ng-model="academia" ng-controller="instructions" onload="max()">
-	<div class="container-fluid" style="padding-top: 40px;">
-		<!-- Page Heading -->
-				<!-- <div class="row">
+
+
+<div id="page-wrapper" ng-model="academia" ng-controller="instructions">
+			<div class="container-fluid">
+				<!-- Page Heading -->
+				<div class="row">
 					<div class="col-lg-12">
 						<ol class="breadcrumb">
-							<li><?php change_furigana_text ( $title); ?></li>
+							<li><a href="{{PREFIX}}"><i class="mdi mdi-home"></i></a> </li>
+							<li><a href="{{URL_STUDENT_EXAM_CATEGORIES}}"> {{getPhrase('quiz_categories')}} </a> </li>
+							<li><a href="{{URL_STUDENT_EXAMS.$record->category->slug}}"> {{$record->category->category}} </a> </li>
+							<li>{{ $title }}</li>
 						</ol>
 					</div>
-				</div> -->
+				</div>
 				<!-- /.row -->
-				<div class="panel panel-custom col-lg-12" >
+	<div class="panel panel-custom col-lg-12" >
 					<div class="panel-heading">
-						<h1>Hướng dẫn<span class="pull-right text-italic"> Xin vui lòng đọc kỹ các hướng dẫn</span></h1>
+						<h1>{{getPhrase('Instructions')}} <span class="pull-right text-italic">{{getPhrase('please_read_the_instructions_carefully')}}</span></h1>
+
 					</div>
-					<div class="panel-body instruction no-arrow" style="padding: 0px 0px 30px 0px">
+					<div class="panel-body instruction no-arrow">
+
 						<div class="row">
 							<div class="col-md-12">
-								<h2 style="color: blue; display: none"><strong>{{change_furigana_text ($record->title)}} </strong></h2>
+								<h2>{{getPhrase('exam_name')}}:   {{$record->title}} </h2>
 								@if($instruction_data=='')	
 								<h3>{{getPhrase('general_instructions')}}:</h3>
 								@else
 								<h3>{{$instruction_title}}:</h3>
 								@endif
+								@if($instruction_data=='')			
+								<ol>
+									<li>Total of {{$record->dueration}} minutes duration will be given to attempt all the questions.</li>
+									<li>The clock has been set at the server and the countdown timer at the top right corner of your screen will display the time remaining for you to complete the exam. When the clock runs out the exam ends by default - you are not required to end or submit your exam.</li>
+									<li>The question palette at the right of screen shows one of the following statuses of each of the questions numbered:</li>
+								</ol>
+								@else 
 								{!! $instruction_data !!}
+								@endif
+
+								<ul class="guide">
+									<li>
+										<span class="answer"><i class="mdi mdi-check"></i></span> You have answered the question.
+									</li>
+									<li>
+										<span class="notanswer"><i class="mdi mdi-close"></i></span> You have not answered the question.
+									</li>
+									<li>
+										<span class="marked"><i class="mdi mdi-eye"></i></span> You have answered the question but have marked the question for review.
+									</li>
+									<li>
+										<span class="notvisited"><i class="mdi mdi-eye-off"></i></span> You have not visited the question yet.
+									</li>
+								</ul>
+
 							</div>
+
 						</div>
-						<hr style="margin: 10px 0">
+
+
+						<hr>
 						<?php
 						$paid_type =  false;
 						if($record->is_paid && !isItemPurchased($record->id, 'exam'))	
-							$paid_type = true;
+						$paid_type = true;
 						?>
 						<div class="form-group row">
-							{!! Form::open(array('url' => 'exams/student/start-exam/'.$record->slug, 'method' => 'POST')) !!}
+						{!! Form::open(array('url' => 'exams/student/start-exam/'.$record->slug, 'method' => 'POST')) !!}
 							<div class="col-md-12">
-								<input type="checkbox" name="option" id="free" checked="" ng-model="agreeTerms" >
-								<label for="free" > <span class="fa-stack checkbox-button"> <i class="mdi mdi-check active"></i> </span> Tôi đã đọc và hiểu các hướng dẫn nêu trên. </label>
-								<br><span class="text-danger" ng-show="!agreeTerms"><strong> Vui lòng click vào đây trước khi thi </strong></span> 
+							@if(!$paid_type)	
+								<input type="checkbox" name="option" id="free" checked="" ng-model="agreeTerms">
+								<label for="free" > <span class="fa-stack checkbox-button"> <i class="mdi mdi-check active"></i> </span> The computer provided to me is in proper working condition. I have read and understood the instructions given above. </label>
+								
+								<br><span class="text-danger" ng-show="!agreeTerms">{{ getPhrase('please_accept_terms_and_conditions')}}</span> 
+
+								@endif
 								<div class="text-center">
-									<button ng-if="agreeTerms" class="btn button btn-lg btn-success">Thi ngay</button>
+									@if($paid_type)	
+									<a href="{{URL_PAYMENTS_CHECKOUT.'exam/'.$record->slug}}" class="btn button btn-lg btn-success"><i class="icon-credit-card"></i> {{getPhrase('buy_now')}}</a>	
+									@else
+
+									<button ng-if="agreeTerms" class="btn button btn-lg btn-success">{{getPhrase('start_exam')}}</button>
+									@endif
 								</div>
+
 							</div>
-							{!! Form::close() !!}
+					{!! Form::close() !!}
+
 						</div>
+
+
 					</div>
 				</div>
 			</div>
+
 		</div>
-		@endsection
-		@section('footer_scripts')
-		<script src="{{JS}}angular.js"></script>
-		<script>
-			var app = angular.module('academia', []);
-			app.controller('instructions', function($scope, $http) {
-			});
-		</script>
-<!-- <script type="text/javascript">
-   $(document).on('keydown', function(event) {
-    $(document).off('keydown');
-    $(window).on('resize', function() {
-        if ($('body').hasClass('fullscreenOn')) {
-            $('body').removeClass('fullscreenOn');
-            // Do functions when exiting fullscreen
-            $(document).on('keydown'); // Turn keydown back on after functions
-            console.log("Exit F11");
-        } else {
-            $('body').addClass('fullscreenOn');
-            // Do functions when entering fullscreen
-            $(document).on('keydown'); // Turn keydown back on after functions
-            console.log("Enter F11");
-        }
-    });
+@endsection
+ 
+
+@section('footer_scripts')
+  <script src="{{JS}}angular.js"></script>
+  <script>
+ var app = angular.module('academia', []);
+app.controller('instructions', function($scope, $http) {
+	
 });
-</script>  -->
-<script type="text/javascript">
-    /*window.onload = maxWindow;
-    function maxWindow() {
-        window.moveTo(0, 0);
-        if (document.all) {
-            top.window.resizeTo(screen.availWidth, screen.availHeight);
-        }
-        else if (document.layers || document.getElementById) {
-            if (top.window.outerHeight < screen.availHeight || top.window.outerWidth < screen.availWidth) {
-                top.window.outerHeight = screen.availHeight;
-                top.window.outerWidth = screen.availWidth;
-            }
-        }
-    }*/
-    $(document).ready(function(){
-    	$.is_fs = false;
-    	$.requestFullScreen = function(calr)
-    	{
-    		var element = document.body;
-    // Supports most browsers and their versions.
-    var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
-    if (requestMethod) { // Native full screen.
-    	requestMethod.call(element);
-    } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
-    	var wscript = new ActiveXObject("WScript.Shell");
-    	if (wscript !== null) {
-    		wscript.SendKeys("{F11}");
-    	}
-    }
-    $.is_fs = true;    
-    $(calr).val('Exit Full Screen');
-}
-$.cancel_fs = function(calr)
-{
-    var element = document; //and NOT document.body!!
-    var requestMethod = element.exitFullScreen || element.mozCancelFullScreen || element.webkitExitFullScreen || element.mozExitFullScreen || element.msExitFullScreen || element.webkitCancelFullScreen;
-    if (requestMethod) { // Native full screen.
-    	requestMethod.call(element);
-    } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
-    	var wscript = new ActiveXObject("WScript.Shell");
-    	if (wscript !== null) {
-    		wscript.SendKeys("{F11}");
-    	}
-    }    
-    $(calr).val('Full Screen');    
-    $.is_fs = false;
-}
-$.toggleFS = function(calr)
-{    
-	$.is_fs == true? $.cancel_fs(calr):$.requestFullScreen(calr);
-}
-});
-    window.fullScreen = true;
-</script> 
+</script>
+
 @stop

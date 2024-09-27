@@ -425,10 +425,6 @@ $options  = array('1'=>'Yes',
 
 		</fieldset>
 
-		{{-- 	@component('fields.languages')
-
-		@endcomponent --}}
-
 	</fieldset>
 
 </div>

@@ -79,6 +79,10 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
+        if ($request->isMethod('get')) {
+            return redirect()->to('/');
+        }
+
         $validator = $this->validator($request->all());
         if ($validator->fails()) {
             $responseData =  [

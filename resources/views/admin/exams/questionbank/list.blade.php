@@ -93,8 +93,8 @@
 			];
 			@endphp
 
-			@include('common.datatables', array('route'=> URL_QUESTIONBANK_GETLIST, 'route_as_url' => 'TRUE', 'table_columns' => $defaultColumns))
+			@include('admin.common.datatables', array('route'=> URL_QUESTIONBANK_GETLIST, 'route_as_url' => 'TRUE', 'table_columns' => $defaultColumns))
 
-			@include('common.deletescript', array('route'=> URL_QUESTIONBANK_DELETE))
+			@include('admin.common.deletescript', array('route'=> URL_QUESTIONBANK_DELETE))
 
 			@stop

@@ -28,7 +28,7 @@
 
 				</div>
 
-				@include('errors.errors')
+				@include('admin.errors.errors')
 
 				<!-- /.row -->
 
@@ -72,7 +72,7 @@
 
 
 
-					 @include('exams.questionbank.form_elements', 
+					 @include('admin.exams.questionbank.form_elements', 
 
 					 array('button_name'=> $button_name),
 
@@ -194,9 +194,9 @@
 
 		</script>
 
-	@include('exams.questionbank.scripts.js-scripts')
+	@include('admin.exams.questionbank.scripts.js-scripts')
 
-	@include('common.validations', array('isLoaded'=>TRUE))
+	@include('admin.common.validations', array('isLoaded'=>TRUE))
 
 	<!-- include('common.editor') -->
 
@@ -206,7 +206,7 @@
 
 		@if($record->question_type=='video')
 
-			@include('common.video-scripts')
+			@include('admin.common.video-scripts')
 
 	 	@endif
 

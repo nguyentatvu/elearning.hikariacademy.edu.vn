@@ -15,7 +15,7 @@
 						</ol>
 					</div>
 				</div>
-				@include('errors.errors')	
+				@include('admin.errors.errors')	
 				<div class="panel panel-custom col-lg-6 col-lg-offset-3" >
 					<div class="panel-heading">
 						<div class="pull-right messages-buttons">
@@ -35,7 +35,7 @@
 						{!! Form::open(array('url' => URL_LANGUAGES_ADD, 'method' => 'POST', 'name'=>'formLanguage ', 'novalidate'=>'')) !!}
 					@endif
 
-					 @include('languages.form_elements', 
+					 @include('admin.languages.form_elements', 
 					 array('button_name'=> $button_name),
 					 array('record' => $record))
 					{!! Form::close() !!}
@@ -50,6 +50,6 @@
 
 @stop
 @section('footer_scripts')
- @include('common.validations');
+ @include('admin.common.validations');
 @stop
  

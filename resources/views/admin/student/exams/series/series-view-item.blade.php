@@ -1,50 +1,149 @@
-@extends('admin.layouts.student.studentsettinglayout')
+@extends($layout)
+
 @section('content')
-<?php $image_path = IMAGE_PATH_UPLOAD_SERIES.'n'.$item->category_id.'.png'; ?>
-<div class="card mb-10">
-  <div class="card-header">
-    <h3 class="card-title"><?php change_furigana_text ($item->title); ?></h3>
-  </div>
-  <div class="card-body">
-      @if(!$content_record)
-      <div class="row">
-        <?php 
-        $image_path = IMAGE_PATH_UPLOAD_SERIES.'n'.$item->category_id.'.png';
-        ?>
-        <div class="col-md-4"> 
-          <img src="{{$image_path}}" class="img-responsive center-block" alt="Bộ đề thi" width="100%"> 
-          </div>
-        <div class="col-md-8 ">
-          @include('student.exams.series.series-items-show', array('series'=>$item, 'content'=>$content_record))
+
+
+
+<div id="page-wrapper">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+
+               <div class="row">
+
+					<div class="col-lg-12">
+
+                        <ol class="breadcrumb">
+
+                            <li><a href="{{PREFIX}}"><i class="mdi mdi-home"></i></a> </li>
+
+                            <li> <a href="{{URL_STUDENT_EXAM_SERIES_LIST}}">{{getPhrase('exam_series')}} </a> </li>
+
+                            <li class="active"> {{ $title }} </li>
+
+                        </ol>
+
+                    </div>
+
+				</div>
+
+                <div class="panel panel-custom">
+ 
+
+                    <div class="panel-body">
+
+                        @if(!$content_record)
+
+                        <div class="row">
+                        
+                        <?php $image_path = IMAGE_PATH_UPLOAD_EXAMSERIES_DEFAULT;
+                    $image_path_thumb = IMAGE_PATH_UPLOAD_EXAMSERIES_DEFAULT;
+                    if($item->image)
+                    {
+                        $image_path = IMAGE_PATH_UPLOAD_SERIES.$item->image;
+                        $image_path_thumb = IMAGE_PATH_UPLOAD_SERIES_THUMB.$item->image;
+                    }
+                    ?>
+
+                            <div class="col-md-3"> <img src="{{$image_path}}" class="img-responsive center-block" alt=""> </div>
+
+                            <div class="col-md-8 col-md-offset-1">
+
+                                <div class="series-details">
+
+                                    <h2>{{$item->title}} </h2>
+
+
+
+                                    	{!! $item->description!!}
+                                    
+                                    @if($item->is_paid && !isItemPurchased($item->id, 'combo'))
+
+                                    <div class="buttons text-left">
+
+                                        <a href="{{URL_PAYMENTS_CHECKOUT.'combo/'.$item->slug}}" class="btn btn-dark text-uppercase">{{ getPhrase('buy_now')}}</a>
+
+                                    </div>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        
+
+                        @endif
+
+                        <hr>
+
+                      
+
+                       @include('student.exams.series.series-items', array('series'=>$item, 'content'=>$content_record))
+
+
+
+                    </div>
+
+                </div>
+
+                <!-- /.row -->
+
+            </div>
+
+            <!-- /.container-fluid -->
+
         </div>
-      </div>
-      @endif
-  </div>
-</div>  
+
+        
+
+		<!-- /#page-wrapper -->
+
+
+
 @stop
+
 @section('footer_scripts')
+
+
+
+@if($content_record)
+
+    @if($content_record->content_type == 'video' || $content_record->content_type == 'video_url')
+
+        @include('common.video-scripts')
+
+    @endif
+
+
+
+@endif
+
+@include('common.custom-message-alert')
 <script>
-  function showInstructions(url) {
-    var popup = window.open(url, "_blank", "type=fullWindow,fullscreen,minimizable=no,scrollbars=no,titlebar=no,location=no,dialog=yes,resizable=no");
-  //window.open(url, "_blank", ',type=fullWindow,fullscreen,scrollbars=yes');
-  if (popup.outerWidth < screen.availWidth || popup.outerHeight < screen.availHeight)
-  {
-    popup.moveTo(0,0);
-    popup.resizeTo(screen.availWidth, screen.availHeight);
-  }
-  localStorage.clear();
-  runner();
+function showInstructions(url) {
+  width = screen.availWidth;
+  height = screen.availHeight;
+  window.open(url,'_blank',"height="+height+",width="+width+", toolbar=no, top=0,left=0,location=no,menubar=no, directories=no, status=no, menubar=no, scrollbars=yes,resizable=no");
+
+    runner();
 }
+
 function runner()
 {
-  url = localStorage.getItem('redirect_url');
-  if(url) {
-    localStorage.clear();
-    window.location = url;
-  }
-  setTimeout(function() {
-    runner();
-  }, 500);
+    url = localStorage.getItem('redirect_url');
+    if(url) {
+      localStorage.clear();
+       window.location = url;
+    }
+    setTimeout(function() {
+          runner();
+    }, 500);
+
 }
 </script>
+ 
 @stop

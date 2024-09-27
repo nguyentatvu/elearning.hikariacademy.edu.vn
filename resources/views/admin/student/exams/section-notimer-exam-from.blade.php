@@ -1,4 +1,4 @@
-@extends('admin.layouts.examlayout')
+@extends('layouts.examlayout')
 
 @section('content')
 
@@ -22,7 +22,17 @@
 
                 <ol class="breadcrumb">
 
-                   
+                    <li>
+
+                        <a href="javascript:void(0);">
+
+                            <i class="mdi mdi-home">
+
+                            </i>
+
+                        </a>
+
+                    </li>
 
                     <li class="active">
 
@@ -45,42 +55,71 @@
             <div class="col-md-12">
 
                  <ul class="suggestions">
-                 
-                    <?php $section_data  = (array)json_decode($quiz->section_data); ?>
 
-                    @foreach($section_data as $key=>$value)
-             
-                      <li class="dropdown" id="{{$key}}">
+                    <li class="icon" id="subjectBar" title="{{getPhrase('click_here_to_list_subjects')}}">
 
-                       <a href="javascript:void(0);" 
-                          onclick="showSubjectQuestion('subject_{{$key}}','{{$value->section_name}}');" 
-                          data-psubject_title="{{$value->section_name}}"
-                          data-psubject_id="{{$key}}" 
-                          id="subject_section_{{$key}}"
-                          class="btn btn-success btn-sm st-exam-modules">
-                          {{ $value->section_name }} 
+                        <i class=" icon-books">
 
-                        <i class="fa fa-info-circle st-custom-angle" aria-hidden="true"></i></a>
+                        </i>
 
-                            
-                        </li>
+                    </li>  
 
-                  @endforeach
+                      <li>
 
-                          <li>
-                          
-                            @include('student.exams.languages',['quiz'=>$quiz])
+                        <a class="positive" data-placement="bottom" data-toggle="tooltip" href="#" 
 
-                        </li>
-                           
+                        title="Left Arrow for Previous Question">
 
-                        </ul>
+                            <i class="fa fa-arrow-left fa-2"></i> &nbsp;{{getPhrase('previous')}}
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a class="positive" data-placement="bottom" data-toggle="tooltip" href="#" 
+
+                        title="Right Arrow for Next Question">
+
+                           &nbsp;{{getPhrase('next')}} &nbsp;<i class="fa fa-arrow-right fa-2"></i> 
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a class="positive" data-placement="bottom" data-toggle="tooltip" href="#" title="Escape for Clear Answer ">
+
+                           ESCAPE {{getPhrase('clear_answer')}}
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a class="positive" data-placement="bottom" data-toggle="tooltip" href="#" title="Add/Remove Bookmark">
+
+                            SHIFT + <i class="fa fa-arrow-up fa-2"></i> <i class="fa fa-arrow-down fa-2"></i> {{getPhrase('bookmarks')}}
+
+                        </a>
+
+                    </li>  
+
+                   
+
+                </ul>
 
             </div>
 
         </div>
 
+         <div>
        
+         @include('student.exams.languages',['quiz'=>$quiz])
+          </div>
 
 
 
@@ -147,6 +186,41 @@
                     </div>
 
 
+          <div class="st-time-section st-category st-heading-panel st-english clearfix">
+
+            <?php
+
+               $section_data  = (array)json_decode($quiz->section_data);
+              
+           ?>
+             
+    <ul class="nav nav-pills st-currents">  
+
+           @foreach($section_data as $key=>$value)
+             
+            
+  
+        <li class="dropdown" id="{{$key}}">
+
+           <a href="javascript:void(0);" 
+              onclick="showSubjectQuestion('subject_{{$key}}','{{$value->section_name}}');" 
+              data-psubject_title="{{$value->section_name}}"
+              data-psubject_id="{{$key}}" 
+              id="subject_section_{{$key}}"
+              class="btn btn-success btn-sm st-exam-modules">
+              {{ $value->section_name }} 
+
+            <i class="fa fa-info-circle st-custom-angle" aria-hidden="true"></i></a>
+
+                
+            </li>
+            
+        
+          @endforeach
+
+                </ul>
+
+            </div>
 
                     <div class="panel-body question-ans-box">
 
@@ -250,15 +324,7 @@
                                 <div class="questions">
 
                                     <span class="language_l1">{!! $question->question !!}   </span>
-                                    @if($question->question_l2) 
-                                     @if($question->question_type == 'radio' || $question->question_type == 'checkbox' || $question->question_type == 'blanks' || $question->question_type == 'match')
-                                   <span class="language_l2" style="display: none;"> {!! $question->question_l2 !!}   </span>
-                                   @else
-                                   <span class="language_l2" style="display: none;"> {!! $question->question !!}   </span>
-                                     @endif
-                                   @else
-                                   <span class="language_l2" style="display: none;"> {!! $question->question !!}   </span>
-                                   @endif
+                                    <span class="language_l2" style="display: none;">{!! $question->question_l2 !!}   </span>
 
                                     <div class="row">
   <div class="col-md-8 text-center">

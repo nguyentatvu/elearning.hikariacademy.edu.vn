@@ -38,7 +38,7 @@
 
 				</div>
 
-					@include('errors.errors')
+					@include('admin.errors.errors')
 
 				<!-- /.row -->
 
@@ -84,7 +84,7 @@
 
 
 
-					 @include('exams.quiz.form_elements', 
+					 @include('admin.exams.quiz.form_elements', 
 
 					 array('button_name'=> $button_name),
 
@@ -122,7 +122,7 @@
 
 @section('footer_scripts')
 
- @include('common.validations')
+ @include('admin.common.validations')
  
 <script src="{{JS}}datepicker.min.js"></script>
  <script src="{{JS}}select2.js"></script>

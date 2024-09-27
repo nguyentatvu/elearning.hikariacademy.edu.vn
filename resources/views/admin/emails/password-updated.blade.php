@@ -1,4 +1,4 @@
-@include('emails.template_header')
+@include('admin.emails.template_header')
 
  <div class="row">
     <div class="col-lg-12" style="margin:65px 0px;">
@@ -31,7 +31,7 @@
 
 
 
-@include('emails.disclaimer')
+@include('admin.emails.disclaimer')
 
 
-@include('emails.template_footer')
+@include('admin.emails.template_footer')

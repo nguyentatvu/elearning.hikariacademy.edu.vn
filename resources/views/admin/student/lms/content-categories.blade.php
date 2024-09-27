@@ -1,4 +1,4 @@
-@extends('admin.layouts.student.studentlayout')
+@extends('layouts.student.studentlayout')
 @section('content')
 <?php $settings = getSettings('lms'); ?>
 <div id="page-wrapper">

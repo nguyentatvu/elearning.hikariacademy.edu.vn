@@ -17,17 +17,12 @@ $rightl2      =  $rightdata->optionsl2;
         <h4><span class="language_l1">{{ $leftdata->title  }}</span></h4>
         @if(isset($leftdata->titlel2))
         <h4><span class="language_l2" style="display: none;">{{ $leftdata->titlel2  }}</span></h4>
-        @else
-        <h4><span class="language_l2" style="display: none;">{{ $leftdata->title  }}</span></h4>
         @endif
     </div>
     <div class="col-md-6">
         <h4><span class="language_l1">{{ $rightdata->title  }}</span></h4>
          @if(isset($rightdata->titlel2))
         <h4><span class="language_l2" style="display: none;">{{ $rightdata->titlel2  }}</span></h4>
-        @else
-        <h4><span class="language_l2" style="display: none;">{{ $rightdata->title  }}</span></h4>
-
         @endif
     </div>
 
@@ -41,10 +36,8 @@ $rightl2      =  $rightdata->optionsl2;
                    {{ $i++ }}
                 </span>
                  <span class="language_l1">{!! $value !!} </span>
-                 @if($leftl2 && isset($leftl2[$key] ))
+                 @if($leftl2)
                  <span class="language_l2" style="display: none;">{!! $leftl2[$key] !!} </span>
-                 @else
-                 <span class="language_l2" style="display: none;">{!! $value !!} </span>
                  @endif
             </li>
          @endforeach
@@ -66,13 +59,9 @@ $rightl2      =  $rightdata->optionsl2;
                         <p class="language_l1">
                             {!! $value !!}
                         </p>
-                        @if($rightl2 && isset($rightl2[$key]))
+                        @if($rightl2)
                         <p class="language_l2" style="display: none;">
                           {!! $rightl2[$key] !!}
-                        </p>
-                        @else
-                         <p class="language_l2" style="display: none;">
-                          {!! $value !!}
                         </p>
                         @endif
                     </input>
