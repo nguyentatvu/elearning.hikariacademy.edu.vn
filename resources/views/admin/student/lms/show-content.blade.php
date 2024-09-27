@@ -34,7 +34,7 @@
 
 						 <div class="col-md-4">
 						 @if($record->image)
-						 <img height="100" width="100" src="/{{$settings->contentImagepath.'/'.$record->image}}" alt=""/>
+						 <!-- <img height="100" width="100" src="/{{$settings->contentImagepath.'/'.$record->image}}" alt=""/> -->
 						 @endif
 						</div> 
 						</div>

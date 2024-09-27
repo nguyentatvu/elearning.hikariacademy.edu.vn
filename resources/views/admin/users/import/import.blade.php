@@ -72,8 +72,8 @@
 @endsection
 
 @section('footer_scripts')
- @include('admin.common.validations')
-   @include('admin.common.alertify')
+ @include('common.validations')
+   @include('common.alertify')
  <script>
  	var file = document.getElementById('excel_input');
 

@@ -15,7 +15,7 @@
 					</div>
 				</div>
 				@include('errors.errors')	
-					<div class="panel panel-custom col-lg-6 col-lg-offset-3">
+					<div class="panel panel-custom col-lg-12">
 					<div class="panel-heading">
 						<div class="pull-right messages-buttons">
 							<a href="{{URL_LMS_CATEGORIES}}" class="btn  btn-primary button" >{{ getPhrase('list')}}</a>
@@ -46,8 +46,8 @@
 		<!-- /#page-wrapper -->
 @stop
 @section('footer_scripts')
-  @include('admin.common.validations')
-  @include('admin.common.alertify')
+  @include('common.validations')
+  @include('common.alertify')
  <script>
  	var file = document.getElementById('image_input');
 

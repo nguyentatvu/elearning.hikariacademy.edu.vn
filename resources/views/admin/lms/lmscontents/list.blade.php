@@ -3,56 +3,267 @@
 <link href="{{CSS}}ajax-datatables.css" rel="stylesheet">
 @stop
 @section('content')
-
-
 <div id="page-wrapper">
-			<div class="container-fluid">
-				<!-- Page Heading -->
-				<div class="row">
-					<div class="col-lg-12">
-						<ol class="breadcrumb">
-							<li><a href="{{url('/')}}"><i class="mdi mdi-home"></i></a> </li>
-							<li>{{ $title }}</li>
-						</ol>
-					</div>
+	<div class="container-fluid">
+		<!-- Page Heading -->
+		<div class="row">
+			<div class="col-lg-12">
+				<ol class="breadcrumb">
+					<li><a href="{{url('/')}}"><i class="mdi mdi-home"></i></a> </li>
+					<li>{{ $title }}</li>
+				</ol>
+			</div>
+		</div>
+		<!-- /.row -->
+		<div class="panel panel-custom">
+			<div class="panel-heading">
+				<!-- <div class="pull-right messages-buttons">
+					<button type="button" class="btn btn-primary btn-rounded btn-fw" data-toggle="modal" data-target="#import-exams">
+						<i class="mdi mdi-plus-circle"></i>	Import Exams
+					</button>
+				</div> -->
+				<div class="pull-right messages-buttons">
+					<button type="button" class="btn btn-primary btn-rounded btn-fw" data-toggle="modal" data-target="#import-mucluc">
+						<i class="mdi mdi-plus-circle"></i>	Import Mục lục
+					</button>
 				</div>
-								
-				<!-- /.row -->
-				<div class="panel panel-custom">
-					<div class="panel-heading">
-						
-						<div class="pull-right messages-buttons">
-							<a href="{{URL_LMS_CONTENT_ADD}}" class="btn  btn-primary button" >{{ getPhrase('create')}}</a>
-						</div>
-						<h1>{{ $title }}</h1>
-					</div>
-					<div class="panel-body packages">
-						<div> 
-						<table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
-							<thead>
-								<tr>
-									<th>{{ getPhrase('title')}}</th>
-									<th>{{ getPhrase('image')}}</th>
-									<th>{{ getPhrase('type')}}</th>
-									<th>{{ getPhrase('subject')}}</th>
-									<th>{{ getPhrase('action')}}</th>
-								</tr>
-							</thead>
-							 
-						</table>
-						</div>
-
-					</div>
+				<!-- <div class="pull-right messages-buttons">
+					<a href="{{$URL_LMS_CONTENT_ADD}}" class="btn  btn-primary button" >{{ getPhrase('create')}}</a>
+				</div> -->
+				<h1>{{ $title }}</h1>
+			</div>
+			<div class="panel-body packages">
+				<div>
+					<table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
+						<thead>
+							<tr>
+								<th>STT</th>
+								<th>Bài học</th>
+								<th>Loại</th>
+								<th>Trạng thái</th>
+								<th class="text-center">Học thử</th>
+								<th>{{ getPhrase('action')}}</th>
+							</tr>
+						</thead>
+					</table>
 				</div>
 			</div>
-			<!-- /.container-fluid -->
 		</div>
+	</div>
+	<!-- /.container-fluid -->
+</div>
+<div class="modal fade" id="import-exams" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel-2">Import exams excel</h5>
+			</div>
+			<form action="{{$URL_IMPORT_EXAMS}}" class="forms-sample" method="post" id="form-importExcel"  enctype="multipart/form-data">
+				{{ csrf_field() }}
+				<div class="modal-body">
+					<div class="card-body">
+						<input type="hidden" name="series_slug" value="{{$series_slug}}">
+						<label>File (.xlsx)</label>
+						<input type="file" name="file" class="form-control">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-dismiss="modal">Hủy bỏ</button>
+					<button type="submit" class="btn btn-success">Tải lên</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="import-mucluc" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel-2">Import exams excel</h5>
+			</div>
+			<form action="{{$URL_IMPORT_MUCLUC}}" class="forms-sample" method="post" enctype="multipart/form-data">
+				{{ csrf_field() }}
+				<div class="modal-body">
+					<div class="card-body">
+						<input type="hidden" name="series_slug" value="{{$series_slug}}">
+						<label>File (.xlsx)</label>
+						<input type="file" name="file" class="form-control">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-dismiss="modal">Hủy bỏ</button>
+					<button type="submit" class="btn btn-success">Tải lên</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="modal fade " id="Comment" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleCommentLongTitle">Chuyển bài học</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card-body p-0" id="comment_boby">
+                    </div>
+                    {{ Form::model(null,array('url' => url('lms/update/changeposition'),'method'=>'post', 'files' => false, 'name'=>'formComments', 'novalidate'=>'')) }}
+                    {{-- <input hidden name="user_id" value="{{Auth::id()}}"> --}}
+                    <input type="hidden" name="khoahoc" value="{{$series_slug}}">
+                    <input hidden name="baihoc" value="">
+                    <fieldset class="form-group col-md-12">
+
+						{{-- {{ Form::label('category_id', 'Thêm vào sau bài học') }} --}}
+
+						{{Form::select('saubaihoc', $baihoc, null, ['class'=>'form-control select2'])}}
+
+					</fieldset>
+                    
+                    {!! Form::close() !!}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    <button type="button" onclick="upBaihoc(event)" class="btn btn-success">Gửi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
- 
-
 @section('footer_scripts')
-  
- @include('admin.common.datatables', array('route'=>'lmscontent.dataTable'))
- @include('admin.common.deletescript', array('route'=>URL_LMS_CONTENT_DELETE))
-
+    @php
+	// MAKE DEFAULT VALUE COLUMN
+	$defaultColumns = [
+		'stt', 'title', 'type', 'import', 'hocthu', 'action'
+	];
+	@endphp
+    @include('common.datatables', array('route'=>$datatbl_url, 'route_as_url' => true, 'table_columns' => $defaultColumns))
+    @include('common.deletescript', array('route'=>URL_LMS_CONTENT_DELETE))
+    <script >
+        function update_try(id,try_type){
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}',
+                }
+            });
+            $.ajax({
+                url: "{{url('lms/content/ajax-update-try')}}",
+                method: 'post',
+                data: {
+                    'id': id,
+                },
+                success: function(response){
+                    console.log(response);
+                    $('.datatable').DataTable().ajax.reload(null,false);
+                },
+                error: function(response){
+                    console.log(response);
+                }
+            });
+        }
+        function myModal(id,slug,combo_slug){
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN':'{{csrf_token()}}'
+                    },
+                    url: '{{url('comments/getComments')}}',
+                    type: 'post',
+                    dataType: "json",
+                    data: {
+                        id : id,
+                    },
+                    beforeSend: function() {
+                        // setting a timeout
+                        /*swal({
+                            html:true,
+                            title: 'Đang xử lý vui lòng chờ',
+                            text: '<img style="position: relative;" src="/public/assets/images/loader.svg" class="loader-img" alt="img">',
+                            type: '',
+                            showConfirmButton: false,
+                            showCancelButton: false,
+                        });*/
+                    },
+                    success:  function(data){
+                        //console.log(data)
+                        if(data.error === 1) {
+                            $('#comment_boby').empty();
+                            $('#comment_boby').html(data.message)
+                        }
+                        $('input[name="baihoc"]').val(id);
+                        $('#Comment').modal('show')
+                        /*swal({
+                            title: 'Thông báo',
+                            text: 'Thành công',
+                            type: 'success',
+                            showConfirmButton: false,
+                            showCancelButton: false,
+                            timer: 1000,
+                        });*/
+                    }
+                })
+                $('.datatable').DataTable().ajax.reload();
+            }
+        function upBaihoc(e){
+                e.preventDefault();
+                let form = $('form[name="formComments"]');
+                let route = form.attr('action');
+                let data = form.serialize();
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN':'{{csrf_token()}}'
+                    },
+                    url: route,
+                    type: 'post',
+                    dataType: "json",
+                    data: data,
+                    beforeSend: function() {
+                        // setting a timeout
+                        // swal({
+                        //     html:true,
+                        //     title: 'Đang xử lý vui lòng chờ',
+                        //     text: '<img style="position: relative;" src="/public/assets/images/loader.svg" class="loader-img" alt="img">',
+                        //     type: '',
+                        //     showConfirmButton: false,
+                        //     showCancelButton: false,
+                        // });
+                    },
+                    success: function(data){
+                        console.log(data)
+                        if(data.error === 1){
+                            // $('textarea[name="body"]').val('');
+                            swal({
+                                title: 'Thông báo',
+                                text: data.message,
+                                type: 'success',
+                                showConfirmButton: false,
+                                showCancelButton: false,
+                                timer: 3000,
+                            });
+                        }else {
+                            swal({
+                                title: 'Thông báo',
+                                text: data.message,
+                                type: 'warning',
+                                showConfirmButton: false,
+                                showCancelButton: false,
+                                timer: 3000,
+                            });
+                        }
+                        $('#Comment').modal('hide');
+                        $('.datatable').DataTable().ajax.reload();
+                    }
+                })
+            }
+    </script>
+    <link rel="stylesheet" type="text/css" href="/public/css/select2.css">
+    <script src="/public/js/select2.js"></script>
+    <script>
+      $('.select2').select2({
+       placeholder: "Thêm vào sau khóa học",
+       dropdownAutoWidth : true,
+       width: '100%'
+    });
+    </script>
 @stop

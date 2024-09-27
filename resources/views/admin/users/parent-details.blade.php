@@ -24,7 +24,7 @@
 <div class="pull-right messages-buttons"><a href="{{URL_USERS}}" class="btn  btn-primary button" >{{ getPhrase('list')}}</a></div>
 @endif
 
-<h1>{{ $title }}  </h1>
+<h1>{{ $title }}</h1>
 </div>
 
 <div class="panel-body"> 
@@ -33,7 +33,7 @@
 {{ Form::model($record, 
             array('url' => ['users/parent-details/'.$record->slug], 
             'method'=>'patch')) }}
-        <h3>{{getPhrase('parent_login_details')}}</h3>
+        <h3>Chọn giáo viên</h3>
         <?php 
         $user_record = $record;
         ?>
@@ -41,16 +41,16 @@
         @if(!$user_record->parent_id) 
         
         <div class="row">
-                <fieldset class='col-sm-6'>
-                <label for="exampleInputEmail1">{{getPhrase('is_parent_account_available')}}</label>
+            <fieldset class='col-sm-6'>
+                <label for="exampleInputEmail1">Giáo viên đã được nhập</label>
                 <div class="form-group row">
                     <div class="col-md-6">
                         <input type="radio" checked="checked" id="available" name="account" value="1" ng-model="account_available" ng-init="account_available=1; accountAvailable(1);" ng-click="accountAvailable(1)">
-                        <label for="available"> <span class="fa-stack radio-button"> <i class="mdi mdi-check active"></i> </span> Yes </label>
+                        <label for="available"> <span class="fa-stack radio-button"> <i class="mdi mdi-check active"></i> </span> Có </label>
                     </div>
                     <div class="col-md-6">
                         <input type="radio" id="not_available" name="account" value="0" ng-model="account_not_available" ng-click="accountAvailable(0)">
-                        <label for="not_available"> <span class="fa-stack radio-button"> <i class="mdi mdi-check active"></i> </span> No </label>
+                        <label for="not_available"> <span class="fa-stack radio-button"> <i class="mdi mdi-check active"></i> </span> Không </label>
                     </div>
                 </div>
             </fieldset>
@@ -156,6 +156,9 @@
                                 @endif
 
 
+                                
+
+
 
 </div>
 </div>
@@ -166,8 +169,8 @@
 @endsection
 
 @section('footer_scripts')
-@include('admin.common.validations')
-@include('admin.common.alertify')
+@include('common.validations')
+@include('common.alertify')
 @include('users.scripts.js-scripts')
 
 @stop

@@ -11,17 +11,23 @@
              $options   = (array) $answer->options; 
              // dd($options);
               $optionsl2 = null;
-              if(isset($answer->optionsl2)) 
-             $optionsl2 = (array) $answer->optionsl2; 
+              // if(isset($answer->optionsl2)) 
+              //   $optionsl2 = (array) $answer->optionsl2; 
+            
 
              ?>
             <li>
                 <div class="question">
                     <h3>
-                        <span class="language_l1">{!!$answer->question !!}</span>
-                         @if(isset($answer->questionl2))
+                        <!-- <span class="language_l1">{!! $answer->question !!}</span> -->
+                        <span class="language_l1"><?php change_furigana_text($answer->question); ?></span>
+                        
+                        {{--  @if(isset($answer->questionl2))
                         <span class="language_l2" style="display: none;">{!! $answer->questionl2 !!}</span>
-                        @endif
+                        @else --}}
+                        <span class="language_l2" style="display: none;">{!!$answer->question !!}</span>
+
+                        {{-- @endif --}}
                     </h3>
                 </div>
                 <div class="select-answer">
@@ -38,9 +44,13 @@
                                     <i class="mdi mdi-check active">
                                     </i>
                                 </span>
-                                <span class="language_l1">{!!$value1!!}</span>
+                                <!-- <span class="language_l1">{!!$value1!!} </span> -->
+                                <span class="language_l1"> <?php change_furigana_text($value1) ?> </span>
                                 @if($optionsl2)
-                                <span class="language_l2" style="display: none;">{!!$optionsl2[$key][$key1]!!}</span>
+                                <span class="language_l2" style="display: none;">{!! $value1 !!}</span>
+                                @else
+                                <span class="language_l2" style="display: none;">{!!$value1!!}</span>
+                                
                                 @endif
                             </label>
                         </li>

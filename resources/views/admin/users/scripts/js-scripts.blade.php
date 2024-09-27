@@ -1,5 +1,5 @@
 
-@include('admin.common.angular-factory')
+@include('common.angular-factory')
 <script >
  
      app.controller('users_controller', function ($scope, $http, httpPreConfig) {

@@ -1,29 +1,15 @@
-	<script src="http://cdn.ckeditor.com/4.5.8/standard-all/ckeditor.js"></script>
-<script>
-  $(function() {
-  $('.ckeditor').each(function(){  
-CKEDITOR.replace($(this).attr('id'), {
-extraPlugins: 'mathjax',
-mathJaxLib: 'http://cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS_HTML',
-height: 320
-});
-});  
-  });  
-</script>
-<script type="text/x-mathjax-config">
-     MathJax.Hub.Config({tex2jax: {inlineMath: [['\\(','\\)']]}});
-   </script>
-   <script type="text/javascript"
-     src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-   </script>
-<script type="text/x-mathjax-config">
-MathJax.Hub.Register.StartupHook("End Jax",function () {
- var BROWSER = MathJax.Hub.Browser;
- var jax = "SVG";
- //var jax = "HTML-CSS";
- if (BROWSER.isMSIE && BROWSER.hasMathPlayer) jax = "NativeMML";
- if (BROWSER.isFirefox) jax = "SVG";
- if (BROWSER.isSafari && BROWSER.versionAtLeast("5.0")) jax = "NativeMML";
- return MathJax.Hub.setRenderer(jax);
-});
-</script>
+<!-- <script src="http://cdn.ckeditor.com/4.5.8/standard-all/ckeditor.js"></script> -->
+<!-- <script src="//cdn.ckeditor.com/4.11.2/full/ckeditor.js"></script>
+<script type="text/javascript">
+		CKEDITOR.replace( 'ckeditor',
+		{
+			filebrowserBrowseUrl : "{{JS}}plugins/ckfinder/ckfinder.html",
+			filebrowserImageBrowseUrl : "{{JS}}plugins/ckfinder/ckfinder.html?type=Images",
+			filebrowserFlashBrowseUrl : "{{JS}}plugins/ckfinder/ckfinder.html?type=Flash",
+			filebrowserUploadUrl : "{{JS}}plugins/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files",
+			filebrowserImageUploadUrl : "{{JS}}plugins/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images",
+			filebrowserFlashUploadUrl : "{{JS}}plugins/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash"
+		});
+</script> -->
+
+<script src="{{JS}}plugins/ckeditorv411/ckeditor.js"></script>

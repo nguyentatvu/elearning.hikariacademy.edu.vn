@@ -1,293 +1,225 @@
-@extends('admin.layouts.site')
-
+@extends('admin.layouts.sitelayout')
 @section('content')
 
-<div class="login-content">
+<section class="sptb">
 
-		<div class="logo text-center"><img src="{{IMAGE_PATH_SETTINGS.getSetting('site_logo', 'site_settings')}}" alt="" height="59" width="211"></div>
+  <div class="container customerpage">
 
-		
+    <div class="row">
 
-		  @include('admin.layouts.site-navigation')  
+      <div class="single-page">
 
+        <div class="col-lg-5 col-xl-4 col-md-6 d-block mx-auto">
 
+          <div class="wrapper wrapper2">
 
-		@include('errors.errors')
-
-		
-
-		{!! Form::open(array('url' => URL_USERS_REGISTER, 'method' => 'POST', 'name'=>'formLanguage ', 'novalidate'=>'', 'class'=>"loginform", 'name'=>"registrationForm")) !!}
-
-			<div class="input-group">
-
-				<span class="input-group-addon" id="basic-addon1"><i class="icon icon-user"></i></span>
-
-				 
-
-		{{ Form::text('name', $value = null , $attributes = array('class'=>'form-control',
-
-			'placeholder' => getPhrase("name"),
-
-			'ng-model'=>'name',
-
-			'ng-pattern' => getRegexPattern('name'),
-
-			'required'=> 'true', 
-
-			'ng-class'=>'{"has-error": registrationForm.name.$touched && registrationForm.name.$invalid}',
-
-			'ng-minlength' => '4',
-
-		)) }}
-
-	<div class="validation-error" ng-messages="registrationForm.name.$error" >
-
-		{!! getValidationMessage()!!}
-
-		{!! getValidationMessage('minlength')!!}
-
-		{!! getValidationMessage('pattern')!!}
-
-	</div>
-
+            @include('errors.errors')
 	
+			{!! Form::open(array('url' => URL_USERS_REGISTER, 'method' => 'POST', 'name'=>'formLanguage ', 'novalidate'=>'', 'class'=>"card-body", 'name'=>"registrationForm", 'onsubmit'=>"showLoadingSpinner();")) !!}
 
+              <h3>Đăng ký</h3>
 
+              <div class="name">
 
-			</div>
+                {{ Form::text('name', $value = null , $attributes = array('class'=>'form-control', 'autocomplete'=>'off',
 
+                  'placeholder' => '',
 
+                  'ng-model'=>'name',
 
-			<div class="input-group">
+                  'ng-pattern' => '',
 
-				<span class="input-group-addon" id="basic-addon1"><i class="icon icon-user"></i></span>
+                  'required'=> 'true', 
 
-				 
+                  'ng-class'=>'{"has-error": registrationForm.name.$touched && registrationForm.name.$invalid}',
 
-		{{ Form::text('username', $value = null , $attributes = array('class'=>'form-control',
+                  'ng-minlength' => '4',
 
-			'placeholder' => getPhrase("username"),
+                )) }}
 
-			'ng-model'=>'username',
+                <div class="validation-error" ng-messages="registrationForm.name.$error" >
 
-			 
+                {!! getValidationMessage()!!}
 
-			'required'=> 'true', 
+                {!! getValidationMessage('minlength')!!}
 
-			'ng-class'=>'{"has-error": registrationForm.username.$touched && registrationForm.username.$invalid}',
+              </div>
 
-			'ng-minlength' => '4',
+                <label>Họ tên</label>
 
-		)) }}
+              </div>
 
-	<div class="validation-error" ng-messages="registrationForm.username.$error" >
+              {{-- <div class="mail">
 
-		{!! getValidationMessage()!!}
+                {{ Form::text('username', $value = null , $attributes = array('class'=>'form-control', 'autocomplete'=>'off',
 
-		{!! getValidationMessage('minlength')!!}
+                    'placeholder' => '',
 
-		{!! getValidationMessage('pattern')!!}
+                    'ng-model'=>'username',
 
-	</div>
+                    'required'=> 'true', 
 
-	
+                    'ng-class'=>'{"has-error": registrationForm.username.$touched && registrationForm.username.$invalid}',
 
+                    'ng-minlength' => '4',
 
+                    )) }}
 
-			</div>
+                <div class="validation-error" ng-messages="registrationForm.username.$error" >
 
+                {!! getValidationMessage()!!}
 
+                {!! getValidationMessage('minlength')!!}
 
-			<div class="input-group">
+                {!! getValidationMessage('pattern')!!}
 
-				<span class="input-group-addon" id="basic-addon1"><i class="icon icon-email-resend"></i></span>
+                </div>
 
-			{{ Form::email('email', $value = null , $attributes = array('class'=>'form-control',
+                <label>Tên đăng nhập</label>
 
-			'placeholder' => getPhrase("email"),
+              </div> --}}
 
-			'ng-model'=>'email',
 
-			'required'=> 'true', 
 
-			'ng-class'=>'{"has-error": registrationForm.email.$touched && registrationForm.email.$invalid}',
+              <div class="mail">
 
-		)) }}
+                {{ Form::email('email', $value = null , $attributes = array('class'=>'form-control', 'autocomplete'=>'off',
 
-	<div class="validation-error" ng-messages="registrationForm.email.$error" >
+                            'placeholder' => '',
 
-		{!! getValidationMessage()!!}
+                            'ng-model'=>'email',
 
-		{!! getValidationMessage('email')!!}
+                            'required'=> 'true', 
 
-	</div>
+                            'ng-class'=>'{"has-error": registrationForm.email.$touched && registrationForm.email.$invalid}',
 
-				 
+                            )) }}
 
-	</div>
+                <div class="validation-error" ng-messages="registrationForm.email.$error" >
 
+                {!! getValidationMessage()!!}
 
+                {!! getValidationMessage('email')!!}
 
-			<div class="input-group">
+            </div>
 
-				<span class="input-group-addon" id="basic-addon1"><i class="icon icon-lock"></i></span>
+                <label>Email</label>
 
-				 
+              </div>
 
-		{{ Form::password('password', $attributes = array('class'=>'form-control instruction-call',
 
-			'placeholder' => getPhrase("password"),
 
-			'ng-model'=>'registration.password',
+              <div class="passwd">
 
-			'required'=> 'true', 
+                {{ Form::number('phone', $value = null , $attributes = array('class'=>'form-control', 'autocomplete'=>'off',
 
-			'ng-class'=>'{"has-error": registrationForm.password.$touched && registrationForm.password.$invalid}',
+                    'placeholder' => '',
 
-			'ng-minlength' => 5
+                    'ng-model'=>'phone',
 
-		)) }}
+                    'required'=> 'true', 
 
-	<div class="validation-error" ng-messages="registrationForm.password.$error" >
+                    'ng-class'=>'{"has-error": registrationForm.phone.$touched && registrationForm.phone.$invalid}',
 
-		{!! getValidationMessage()!!}
+                    'ng-pattern' => '',
 
-		{!! getValidationMessage('password')!!}
+                    'ng-minlength' => '10',
 
-	</div>
+                    'ng-maxlength' => '11',
 
+                    )) }}
 
+                <div class="validation-error" ng-messages="registrationForm.phone.$error" >
 
-			</div>
+                    {!! getValidationMessage()!!}
 
+                    {!! getValidationMessage('phone')!!}
 
+                    {!! getValidationMessage('minlength')!!}
 
-			<div class="input-group">
+                    {!! getValidationMessage('maxlength')!!}
 
-				<span class="input-group-addon" id="basic-addon1"><i class="icon icon-lock"></i></span>
+                </div>
 
-					{{ Form::password('password_confirmation', $attributes = array('class'=>'form-control instruction-call',
+                <label>Số điện thoại</label>
 
-			'placeholder' => getPhrase("password_confirmation"),
+              </div>
+			  <div>
+			      <!-- Trường CAPTCHA -->
+				{!! NoCaptcha::renderJs() !!}
+				{!! NoCaptcha::display() !!}
+			  </div>
 
-			'ng-model'=>'registration.password_confirmation',
+              <div class="submit">
 
-			'required'=> 'true', 
+                <button type="submit" class="btn btn-primary btn-block font-weight-medium auth-form-btn" ng-disabled='!registrationForm.$valid'>Đăng ký ngay</button>
 
-			'ng-class'=>'{"has-error": registrationForm.password_confirmation.$touched && registrationForm.password_confirmation.$invalid}',
 
-			'ng-minlength' => 5,
 
-			'compare-to' =>"registration.password"
+                {{-- <a  class="btn btn-primary btn-block" href="index.html">Register</a> --}}
 
-		)) }}
+              </div>
 
-	<div class="validation-error" ng-messages="registrationForm.password_confirmation.$error" >
+              <p class="text-dark mb-0">Bạn đã có tài khoản?<a href="{{URL_USERS_LOGIN}}" class="text-primary ml-1">Đăng nhập</a></p>
 
-		{!! getValidationMessage()!!}
+            </form>
 
-		{!! getValidationMessage('minlength')!!}
+            {{-- <hr class="divider"> --}}
 
-		{!! getValidationMessage('confirmPassword')!!}
+            {{-- <div class="card-body">
 
-	</div>
+              <div class="text-center">
 
-			</div>
+                <div class="btn-group">
 
-			
+                  <a href="https://www.facebook.com/" class="btn btn-icon mr-2 brround">
 
-			<br>
+                    <span class="fa fa-facebook"></span>
 
-	<?php $parent_module = getSetting('parent', 'module'); ?>
+                  </a>
 
-			@if(!$parent_module)
+                </div>
 
-		<input type="hidden" name="is_student" value="0">
+                <div class="btn-group">
 
-			@else
+                  <a href="https://www.google.com/gmail/" class="btn  mr-2 btn-icon brround">
 
-		<div class="row">
+                    <span class="fa fa-google"></span>
 
-			
+                  </a>
 
-			
+                </div>
 
-							<div class="col-md-6">
+                <div class="btn-group">
 
-							{{ Form::radio('is_student', 0, true, array('id'=>'free')) }}
+                  <a href="https://twitter.com/" class="btn  btn-icon brround">
 
-								
+                    <span class="fa fa-twitter"></span>
 
-								<label for="free"> <span class="fa-stack radio-button"> <i class="mdi mdi-check active"></i> </span> {{getPhrase('i_am_a_student')}}</label> 
+                  </a>
 
-							</div>
+                </div>
 
-							<div class="col-md-6">
+              </div>
 
-							{{ Form::radio('is_student', 1, false, array('id'=>'paid' )) }}
+            </div> --}}
 
-								<label for="paid"> 
+          </div>
 
-								<span class="fa-stack radio-button"> <i class="mdi mdi-check active"></i> </span> {{getPhrase('i_am_a_parent')}} </label>
+        </div>
 
-							</div>
+      </div>
 
-							
+    </div>
 
-			</div>
+  </div>
 
-		@endif
-
-             
-              @if($rechaptcha_status == 'yes')
-
-			<div class="input-group">
-
-                	 <label class="control-label">Captcha<span class="text-red">*</span></label>
-
-		          <div class="col-md-12 form-group{{ $errors->has('g-recaptcha-response') ? ' has-error' : '' }}">
-                           
-
-                            <div class="col-md-6 pull-center">
-                                {!! app('captcha')->display() !!}
-
-                            </div>
-                        </div>
-
-
-                    </div>
-
-                  @endif  
-
-
-			<div class="text-center buttons">
-
-				<button type="submit"  class="btn button btn-success btn-lg" 
-
-				ng-disabled='!registrationForm.$valid'>{{getPhrase('register_now')}}</button>
-
-			</div>
-
-		{!! Form::close() !!}
-
-		
-
-		<a href="{{URL_USERS_LOGIN}}"><p class="text-center">{{getPhrase('i_am_having_account')}} </a></p>
-
-		 
-
-	</div>
+</section>
 
 @stop
 
-
-
 @section('footer_scripts')
 
-	@include('admin.common.validations')
-		     	{{-- <script src="{{JS}}recaptcha.js"></script> --}}
-		     	      	<script src='https://www.google.com/recaptcha/api.js'></script>
-
-
+@include('common.validations')
 
 @stop

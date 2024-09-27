@@ -7,7 +7,6 @@ $checked = 'checked';
 				?>
 <div class="col-md-6">
 						   <fieldset class="form-group si setting-checkbox">
-						   {{-- {{ Form::label($key, getPhrase($key)) }} --}}
 						  <label data-toggle="tooltip" data-placement="top" title="{{$tool_tip}}">{{getPhrase($key)}}
 						   <input 
 					 		type="checkbox" 

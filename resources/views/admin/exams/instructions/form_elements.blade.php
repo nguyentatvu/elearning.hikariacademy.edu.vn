@@ -12,11 +12,11 @@
 
 						<span class="text-red">*</span>
 
-						{{ Form::text('title', $value = null , $attributes = array('class'=>'form-control', 'placeholder' => getPhrase('quiz_title'),
+						{{ Form::text('title', $value = null , $attributes = array('class'=>'form-control', 'placeholder' => '',
 
 							'ng-model'=>'title', 
 
-							'ng-pattern'=>getRegexPattern('name'), 
+							'ng-pattern'=>'', 
 
 							'required'=> 'true', 
 
@@ -52,7 +52,7 @@
 
 						
 
-						{{ Form::textarea('content', $value = null , $attributes = array('class'=>'form-control editor1', 'id'=>'editor1', 'rows'=>'5', 'placeholder' => getPhrase('content'))) }}
+						{{ Form::textarea('content', $value = null , $attributes = array('class'=>'form-control editor', 'id'=>'editor1', 'rows'=>'5', 'placeholder' => '')) }}
 
 					</fieldset>
 

@@ -55,7 +55,7 @@
 
 
 					<fieldset class="form-group col-md-6" >
-						{{ Form::label('status', 'Take exam with out registration') }}
+						{{ Form::label('status', getPhrase('is_active')) }}
 						<span class="text-red">*</span>
 						{{Form::select('status', $options, null, ['placeholder' => getPhrase('select'),'class'=>'form-control', 
 						'ng-model'=>'status',
@@ -99,6 +99,6 @@
 
  @section('footer_scripts')
 
-  @include('admin.common.validations')
+  @include('common.validations')
  
 @stop

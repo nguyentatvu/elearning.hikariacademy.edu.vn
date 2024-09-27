@@ -1,6 +1,6 @@
  				
 		 	<div class="panel-heading countdount-heading">
-					<h2>{{getPhrase('it_includes').' '.$item->total_exams.' '.getPhrase('exams')}}</h2>
+					<h2>{{$item->total_exams }}つのテスト</h2>
 				</div>
 				<?php 
 					$items_list = $item->itemsList();
@@ -9,8 +9,8 @@
 					<ul class="offer-list">
 					@foreach($items_list as $quizitem)
 						<li>
-						<i class="mdi mdi-star-circle"></i><h4>{{$quizitem->title}}</h4>
-						<p>{{$quizitem->total_questions.' '.getPhrase('questions')}}  </p>
+						<i class="mdi mdi-star-circle"></i><h4><?php change_furigana_text ($quizitem->title); ?></h4>
+						<p>{{$quizitem->total_questions}} の質問 </p>
 						
 						</li>
 					@endforeach

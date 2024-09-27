@@ -48,8 +48,12 @@
  
 
 @section('footer_scripts')
-  
- @include('admin.common.datatables', array('route'=>'mastersettings.dataTable'))
- {{-- @include('admin.common.deletescript', array('route'=>'/mastersettings/topics/delete/')) --}}
+	@php
+	// MAKE DEFAULT VALUE COLUMN
+	$defaultColumns = [
+		'title', 'key', 'description', 'action'
+	];
+	@endphp
 
+ 	@include('common.datatables', array('route'=>'mastersettings.dataTable', 'table_columns' => $defaultColumns))
 @stop

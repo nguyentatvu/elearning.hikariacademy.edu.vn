@@ -104,9 +104,9 @@
 
   
 
- @include('admin.common.datatables', array('route'=>URL_BOOKMARK_AJAXLIST.$user->slug, 'route_as_url'=>TRUE))
+ @include('common.datatables', array('route'=>URL_BOOKMARK_AJAXLIST.$user->slug, 'route_as_url'=>TRUE))
 
- @include('admin.common.deletescript', array('route'=>URL_BOOKMARK_DELETE_BY_ID))
+ @include('common.deletescript', array('route'=>URL_BOOKMARK_DELETE_BY_ID))
 
 
 

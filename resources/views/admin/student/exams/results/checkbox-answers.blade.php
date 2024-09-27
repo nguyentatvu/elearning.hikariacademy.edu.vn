@@ -48,6 +48,9 @@
                                             <label for="radio1"> <span class="fa-stack checkbox-button"> <i class="mdi mdi-check active"></i> </span>  <span class="language_l1">{!! $option->option_value !!}</span>
                                                   @if(isset($option->optionl2_value))
                                                      <span class="language_l2" style="display: none;">{!! $option->optionl2_value !!}</span>
+                                                       @else
+
+                                                 <span class="language_l2" style="display: none;">{!! $option->option_value !!}</span>
                                                     @endif 
                                                       </label>
                                         </li>

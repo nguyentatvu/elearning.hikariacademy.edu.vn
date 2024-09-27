@@ -54,8 +54,13 @@
  
 
 @section('footer_scripts')
-  
- @include('admin.common.datatables', array('route'=>'lmscategories.dataTable'))
- @include('admin.common.deletescript', array('route'=>URL_LMS_CATEGORIES_DELETE))
+	@php
+	// MAKE DEFAULT VALUE COLUMN
+	$defaultColumns = [
+		'category', 'image', 'description', 'action'
+	];
+	@endphp
 
+	@include('common.datatables', array('route'=>'lmscategories.dataTable', 'table_columns' => $defaultColumns))
+	@include('common.deletescript', array('route'=>URL_LMS_CATEGORIES_DELETE))
 @stop

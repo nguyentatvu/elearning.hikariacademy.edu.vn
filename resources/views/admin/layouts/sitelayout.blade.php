@@ -1,194 +1,140 @@
-<!DOCTYPE html>
+<!doctype html>
+
 <html lang="en">
 
-<head>
-    <meta charset="utf-8">
+  <head>
+
+    <!-- Meta data -->
+
+    <meta charset="UTF-8">
+
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="{{IMAGE_PATH_SETTINGS.getSetting('site_favicon', 'site_settings')}}" type="image/x-icon" />
+
+    <meta content="" name="description">
+
+    <meta content="" name="author">
+
+    <meta name="keywords" content=""/>
+
+     <meta name="csrf_token" content="{{ csrf_token() }}">
+
+    <!-- Favicon -->
+
+    <link rel="icon" href="/public/assets/images/brand/favicon.ico" type="image/x-icon"/>
+
+    <link rel="shortcut icon" type="image/x-icon" href="/public/uploads/settings/favicon.png" />
+
+    <!-- Title -->
+
     <title>@yield('title') {{ isset($title) ? $title : getSetting('site_title','site_settings') }}</title>
-    
-    <!-- Bootstrap Core CSS -->
-    <link href="{{admin_asset('front/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
-     <link href="{{admin_asset('front/css/bootstrap.offcanvas.css')}}" rel="stylesheet">
-    <!--Owl Carousel-->
-     <link href="{{admin_asset('front/vendor/owl.carousel/assets/owl.carousel.min.css')}}" rel="stylesheet">
-     <link href="{{admin_asset('front/vendor/owl.carousel/assets/owl.theme.default.min.css')}}" rel="stylesheet">
-     <link href="{{admin_asset('front/vendor/owl.carousel/assets/owl.theme.green.min.css')}}" rel="stylesheet">
-   
-    <!-- Custom CSS -->
-     <link href="{{admin_asset('front/fonts/proxima-nova/proximanova.css')}}" rel="stylesheet">
-     <link href="{{admin_asset('front/css/style.css')}}" rel="stylesheet">
-    
-    <!--FontAwesome-->
-     <link href="{{admin_asset('front/vendor/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
 
+    <!-- Bootstrap css -->
 
-    <!-- RESPONSIVE STYLES -->
-     <link href="{{admin_asset('css/landing-css/responsive.css')}}" rel="stylesheet">
-     <link href="{{admin_asset('css/landing-css/colors.css')}}" rel="stylesheet">
-     <link href="{{admin_asset('css/landing-css/custom.css')}}" rel="stylesheet">
-     <link href="{{admin_asset('css/landing-css/style.css')}}" rel="stylesheet">
-   
-    
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-</head>
-<!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
+    <link href="/public/assets/plugins/bootstrap-4.3.1/css/bootstrap.min.css" rel="stylesheet" />
 
-<body id="page-top">
-    <!-- Navigation -->
+    <!-- Style css -->
 
+    <link href="/public/assets/css/style.css" rel="stylesheet" />
 
-    <!-- NAVIGATION -->
-    <nav class="navbar navbar-default st-navbar-default navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <a class="navbar-brand page-scroll" href="{{PREFIX}}"><img src="{{IMAGE_PATH_SETTINGS.getSetting('site_logo', 'site_settings')}}" alt="{{getSetting('site_title','site_settings')}}"></a>
-                <button type="button" class="navbar-toggle offcanvas-toggle pull-right" data-toggle="offcanvas" data-target="#js-bootstrap-offcanvas">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span>
-                        <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    </span>
-                </button>
-            </div>
-            <div class="navbar-offcanvas navbar-offcanvas-touch" id="js-bootstrap-offcanvas">
-                <ul class="nav navbar-nav navbar-right">
+    <link href="/public/assets/css/skin-modes.css" rel="stylesheet" />
 
-                    <li> 
-                        <a
+    <!-- Font-awesome  css -->
 
-                        @if($active_class=='home')
-                            class="page-scroll active" 
-                        @else
-                            class="page-scroll" 
-                        @endif
+    <link href="/public/assets/css/icons.css" rel="stylesheet"/>
 
-                        href="{{PREFIX}}">Home</a> 
-                    </li>
+    <!--Horizontal Menu css-->
 
+    <link href="/public/assets/plugins/horizontal-menu/horizontal-menu.css" rel="stylesheet" />
 
-                     <li> 
-                        <a
+    <!--Select2 css -->
 
-                        @if($active_class=='exams')
-                            class="page-scroll active" 
-                        @else
-                            class="page-scroll" 
-                        @endif
+    <link href="/public/assets/plugins/select2/select2.min.css" rel="stylesheet" />
 
-                        href="{{URL_FRONTEND_EXAMS_LIST}}">{{getPhrase('practice_exams')}}</a> 
-                    </li>
+    <!-- Cookie css -->
 
-                    <li> 
-                        <a 
-                        @if($active_class=='terms-conditions')
-                            class="page-scroll active" 
-                        @else
-                            class="page-scroll" 
-                        @endif
+    {{-- <link href="/public/assets/plugins/cookie/cookie.css" rel="stylesheet"> --}}
 
-                        href="{{SITE_PAGES_TERMS}}">Terms and Conditions
-                        </a> 
-                    </li>
-                    <li> 
-                        <a 
-                        @if($active_class=='privacy-policy')
-                            class="page-scroll active" 
-                        @else
-                            class="page-scroll" 
-                        @endif
-                        href="{{SITE_PAGES_PRIVACY}}"
-                        >Privacy and Policy
-                    </a> </li>
-                    <li> 
-                        <a 
+    <!-- Owl Theme css-->
 
-                        @if($active_class=='login')
-                            class="page-scroll active" 
+    <link href="/public/assets/plugins/owl-carousel/owl.carousel.css" rel="stylesheet" />
 
-                        @else
-                            class="page-scroll" 
-                            
-                        @endif
-                         href="{{URL_USERS_LOGIN}}">Login</a> </li>
+    <!-- Custom scroll bar css-->
 
-                    <li> 
-                        <a 
+    <link href="/public/assets/plugins/scroll-bar/jquery.mCustomScrollbar.css" rel="stylesheet" />
 
-                        @if($active_class=='register')
-                            class="page-scroll active" 
+    <!-- Pscroll bar css-->
 
-                        @else
-                            class="page-scroll" 
+    <link href="/public/assets/plugins/pscrollbar/pscrollbar.css" rel="stylesheet" />
 
-                        @endif href="{{URL_USERS_REGISTER}}">Register</a> </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <!-- /NAVIGATION -->
-    
+    <!-- Switcher css -->
+
+    <link  href="/public/assets/switcher/css/switcher.css" rel="stylesheet" id="switcher-css" type="text/css" media="all"/>
+
+    <!-- Color Skin css -->
+
+    <link id="theme" rel="stylesheet" type="text/css" media="all" href="/public/assets/color-skins/color6.css" />
+
+    @yield('header_scripts')
+
+    <link href="{{themes('css/sweetalert.css')}}" rel="stylesheet">
+
+  </head>
+
+  <body ng-app="academia" onload="initLoadingDialog();">
+
+	@include('common.loading-dialog')
+    <!--Loader-->
+
+    {{-- <div id="global-loader">
+
+      <img src="/public/assets/images/loader.svg" class="loader-img" alt="img">
+
+    </div> --}}<!--/Loader-->
+
+    @include('site.header')
 
     @yield('content')
- 
- 
 
-   
-    <div class="st-copyright-section">
-        <div class="container">
-            <div class="clearfix text-center">
-                <div class="st-copyright">{{getSetting('copyrights','site_pages')}}</div>
-                <div class="st-social-links"> 
-                    <?php $social_url = getSetting('facebook','site_pages'); ?>
-                    @if($social_url && $social_url!='Invalid Setting')
-                    <a href="{{$social_url}}" target="_blank" ><i class="fa fa-facebook" aria-hidden="true"></i></a> 
-                    @endif
+    @include('site.footer') 
 
-                    <?php $social_url = getSetting('twitter','site_pages'); ?>
-                    @if($social_url && $social_url!='Invalid Setting')
-                    <a href="{{$social_url}}" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a> 
-                    @endif
-                    
-                    <?php $social_url = getSetting('twitter','site_pages'); ?>
-                    @if($social_url && $social_url!='Invalid Setting')
-                    <a href="{{$social_url}}" target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i></a> 
-                    @endif
-                    <?php $social_url = getSetting('twitter','site_pages'); ?>
-                    @if($social_url && $social_url!='Invalid Setting')
-                    <a href="{{$social_url}}" target="_blank"><i class="fa fa-google-plus" aria-hidden="true">
-                    @endif
-                    </i></a> 
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--scroll to top-->
-    <a href="javascript:void(0);" class="st-scrollToTop"><i class="fa fa-angle-up"></i></i></a>
-    <!-- /scroll to top-->
-    <!-- jQuery -->
-      <script src="{{admin_asset('front/js/jquery.min.js')}}"></script>
-      <script src="{{admin_asset('front/js/jquery.easing.min.js')}}"></script>
-      <script src="{{admin_asset('front/vendor/bootstrap/js/bootstrap.min.js')}}"></script>
-      <script src="{{admin_asset('front/vendor/owl.carousel/owl.carousel.min.js')}}"></script>
-      <script src="{{admin_asset('front/js/bootstrap.offcanvas.js')}}"></script>
-      <script src="{{admin_asset('front/js/main.js')}}"></script>
-      <script src="{{admin_asset('js/landing-js/all.js')}}"></script>
-      <script src="{{admin_asset('js/landing-js/custom.js')}}"></script>
-      <script src="{{admin_asset('js/landing-js/mason_03.js')}}"></script>
+    <script>
 
-     
+    var csrfToken = $('[name="csrf_token"]').attr('content');
 
-   
-    
-</body>
+      setInterval(refreshToken, 600000); // 1 hour 
+
+      function refreshToken(){
+
+        $.get('refresh-csrf').done(function(data){
+
+              csrfToken = data; // the new token
+
+          });
+
+      }
+
+      setInterval(refreshToken, 600000); // 1 hour 
+
+    </script>
+
+    <script src="{{themes('js/main.js')}}"></script>
+
+    <script src="{{themes('js/sweetalert-dev.js')}}"></script>
+
+    @include('common.alertify')
+
+    @yield('footer_scripts')
+
+    @include('errors.formMessages')
+
+    @yield('custom_div_end')
+
+  </body>
+
+
+
+
 
 </html>

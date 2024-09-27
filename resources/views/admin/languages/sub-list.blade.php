@@ -33,7 +33,7 @@
 						'novalidate'=>'','name'=>'formSettings ', 'files'=>'true')) !!}
 						<div class="table-responsive"> 
 						<ul class="list-group">
-						@if(count($language_data))
+						@if($language_data)
 						@foreach($language_data as $key=>$value)
 						 
 					 <div class="col-md-6">
@@ -56,7 +56,7 @@
 
 						</div>
 
-						@if(count($language_data))
+						@if($language_data)
 						<div class="buttons text-center">
 							<button class="btn btn-lg btn-success button" ng-disabled='!formTopics.$valid'
 							>{{ getPhrase('update') }}</button>
@@ -73,7 +73,7 @@
 
 @section('footer_scripts')
   
- {{-- @include('admin.common.datatables', array('route'=>'mastersettings.dataTable')) --}}
- {{-- @include('admin.common.deletescript', array('route'=>'/mastersettings/topics/delete/')) --}}
+ {{-- @include('common.datatables', array('route'=>'mastersettings.dataTable')) --}}
+ {{-- @include('common.deletescript', array('route'=>'/mastersettings/topics/delete/')) --}}
 
 @stop

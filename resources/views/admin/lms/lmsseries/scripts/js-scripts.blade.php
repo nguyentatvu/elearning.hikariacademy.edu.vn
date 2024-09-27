@@ -5,7 +5,7 @@
 <script >
   var app = angular.module('academia', ['ngMessages']);
 </script>
-@include('admin.common.angular-factory',array('load_module'=> FALSE))
+@include('common.angular-factory',array('load_module'=> FALSE))
 
 <script>
 app.controller('prepareQuestions', function( $scope, $http, httpPreConfig) {

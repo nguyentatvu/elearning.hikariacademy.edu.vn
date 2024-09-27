@@ -11,14 +11,14 @@
                     <div class="col-lg-12">
                         <ol class="breadcrumb">
                             <li><a href="{{PREFIX}}"><i class="mdi mdi-home"></i></a> </li>
-                            <li>{{$title}}</li>
+                            <li><!-- {{$title}} -->Thông báo</li>
                         </ol>
                     </div>
                 </div>
                 
                 <div class="panel panel-custom">
                     <div class="panel-heading">
-                        <h1>{{$title}}</h1> </div>
+                        <h1><!-- {{$title}} -->Thông báo</h1> </div>
                     <div class="panel-body">
                         <ul class="list-unstyled notification-list">
                             @foreach($notifications as $notification)

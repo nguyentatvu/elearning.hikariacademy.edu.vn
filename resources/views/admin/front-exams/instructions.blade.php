@@ -36,16 +36,16 @@
 
 								<ul class="guide">
 									<li>
-										<span class="answer"><i class="mdi mdi-check"></i></span> You have answered the question.
+										<span class="answer"><i class="mdi mdi-check"></i></span> Bạn đã trả lời câu hỏi.
 									</li>
 									<li>
-										<span class="notanswer"><i class="mdi mdi-close"></i></span> You have not answered the question.
+										<span class="notanswer"><i class="mdi mdi-close"></i></span> Bạn chưa trả lời câu hỏi.
 									</li>
 									<li>
-										<span class="marked"><i class="mdi mdi-eye"></i></span> You have answered the question but have marked the question for review.
+										<span class="marked"><i class="mdi mdi-eye"></i></span> Bạn đã trả lời câu hỏi nhưng đã đánh dấu câu hỏi để xem xét.
 									</li>
 									<li>
-										<span class="notvisited"><i class="mdi mdi-eye-off"></i></span> You have not visited the question yet.
+										<span class="notvisited"><i class="mdi mdi-eye-off"></i></span> Bạn chưa truy cập câu hỏi.
 									</li>
 								</ul>
 
@@ -61,7 +61,7 @@
 							<div class="col-md-12">
 
 								<input type="checkbox" name="option" id="free" checked="" ng-model="agreeTerms">
-								<label for="free" > <span class="fa-stack checkbox-button"> <i class="mdi mdi-check active"></i> </span> The computer provided to me is in proper working condition. I have read and understood the instructions given above. </label>
+								<label for="free" > <span class="fa-stack checkbox-button"> <i class="mdi mdi-check active"></i> </span> Tôi đã đọc và hiểu các hướng dẫn nêu trên. </label>
 								
 								<br><span class="text-danger" ng-show="!agreeTerms">{{ getPhrase('please_accept_terms_and_conditions')}}</span> 
 

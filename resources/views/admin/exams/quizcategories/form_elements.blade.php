@@ -5,7 +5,7 @@
 						<span class="text-red">*</span>
 						{{ Form::text('category', $value = null , $attributes = array('class'=>'form-control', 'placeholder' => getPhrase('enter_category_name'),
 							'ng-model'=>'category', 
-							'ng-pattern' => getRegexPattern('name'),
+							'ng-pattern' => '',
 							'ng-minlength' => '2',
 							'ng-maxlength' => '60',
 							'required'=> 'true', 

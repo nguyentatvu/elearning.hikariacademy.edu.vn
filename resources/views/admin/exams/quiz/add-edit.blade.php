@@ -1,5 +1,17 @@
 @extends('admin.layouts.admin.adminlayout')
 <link href="{{CSS}}bootstrap-datepicker.css" rel="stylesheet">	
+<link rel="stylesheet" type="text/css" href="{{CSS}}select2.css">
+
+<style>
+.select2-container--default .select2-selection--single {    border-color: #e1e8f8;
+    border-radius: 0;
+    box-shadow: none;
+    font-size: 13px;
+    min-height: 44px;
+    padding-left: 12px;
+    color: #353f4d;}
+</style>
+
 @section('content')
 
 <div id="page-wrapper">
@@ -110,17 +122,22 @@
 
 @section('footer_scripts')
 
- @include('admin.common.validations');
+ @include('common.validations')
+ 
+<script src="{{JS}}datepicker.min.js"></script>
+ <script src="{{JS}}select2.js"></script>
 
-
-
-  <script src="{{JS}}datepicker.min.js"></script>
+  
 
  <script>
  	  $('.input-daterange').datepicker({
         autoclose: true,
         startDate: "0d",
          format: '{{getDateFormat()}}',
+    });
+
+ 	   $('.select2').select2({
+       placeholder: "Select",
     });
  </script>
 

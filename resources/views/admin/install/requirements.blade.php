@@ -1,4 +1,4 @@
-@extends('install.install-layout')
+@extends('admin.install.install-layout')
 
 @section('content')
 
@@ -165,7 +165,7 @@
 
 @section('footer_scripts')
 
-	@include('admin.common.validations');
+	@include('common.validations');
 <script src="{{JS}}bootstrap-toggle.min.js"></script>
  <script>
  	function submitForm() {

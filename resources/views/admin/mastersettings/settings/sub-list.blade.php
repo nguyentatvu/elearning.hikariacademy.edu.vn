@@ -87,8 +87,7 @@
 
 @section('footer_scripts')
   
- {{-- @include('admin.common.datatables', array('route'=>'mastersettings.dataTable')) --}}
- {{-- @include('admin.common.deletescript', array('route'=>'/mastersettings/topics/delete/')) --}}
+ 
   <script src="{{JS}}bootstrap-toggle.min.js"></script>
 
 @stop

@@ -110,7 +110,7 @@
  
 @section('footer_scripts')
   
- {{-- @include('admin.common.datatables', array('route'=>'users.dataTable')) --}}
- {{-- @include('admin.common.deletescript', array('route'=>'/mastersettings/')) --}}
+ {{-- @include('common.datatables', array('route'=>'users.dataTable')) --}}
+ {{-- @include('common.deletescript', array('route'=>'/mastersettings/')) --}}
 
 @stop

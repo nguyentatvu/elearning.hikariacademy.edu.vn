@@ -21,3 +21,15 @@
         });
     </script>
 @endif
+
+@if (Session::has('flash_message_2'))
+    <script type="text/javascript">
+        Swal.fire({
+            title: "{{{ Session::get('flash_message_2.title') }}}",
+            text: "{{{ Session::get('flash_message_2.text') }}}",
+            icon: "{{{ Session::get('flash_message_2.type') }}}",
+            timer: 1700,
+            showConfirmButton: false,
+        });
+    </script>
+@endif

@@ -104,7 +104,8 @@
 	];
 	@endphp
 
-	@include('admin.common.datatables', array('route'=>URL_INSTRUCTIONS_GETLIST, 'route_as_url' => TRUE, 'table_columns' => $defaultColumns))
-	@include('admin.common.deletescript', array('route'=>URL_INSTRUCTIONS_DELETE))
+	@include('common.datatables', array('route'=>URL_INSTRUCTIONS_GETLIST, 'route_as_url' => TRUE, 'table_columns' => $defaultColumns))
+
+	@include('common.deletescript', array('route'=>URL_INSTRUCTIONS_DELETE))
 @stop
 

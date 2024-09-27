@@ -22,7 +22,7 @@
 						
 						<div class="pull-right messages-buttons">
 							 
-							<a href="{{URL_USERS_ADD}}" class="btn  btn-primary button" >{{ getPhrase('add_user')}}</a>
+							<a href="/parent/class" class="btn  btn-primary button" >Danh sách lớp</a>
 						</div>
 						<h1>{{ $title }}</h1>
 					</div>
@@ -34,7 +34,6 @@
 								 	<th>{{ getPhrase('name')}}</th>
 									<th>{{ getPhrase('email')}}</th>
 									<th>{{ getPhrase('image')}}</th>
-									 
 									<th>{{ getPhrase('action')}}</th>
 								</tr>
 							</thead>
@@ -50,11 +49,16 @@
 			<!-- /.container-fluid -->
 		</div>
 @endsection
- 
- <?php $url = URL_PARENT_CHILDREN_GETLIST.$user->slug;
- 
-  ?>
+
+<?php $url = URL_PARENT_CHILDREN_GETLIST.$slug; ?>
+
 @section('footer_scripts')
-  @include('admin.common.datatables', array('route'=>$url, 'route_as_url' => TRUE))
- 
+	@php
+	// MAKE DEFAULT VALUE COLUMN
+	$defaultColumns = [
+		'name', 'email', 'image', 'action'
+	];
+	@endphp
+
+  	@include('common.datatables', array('route'=>$url, 'route_as_url' => TRUE, 'table_columns' => $defaultColumns))
 @stop

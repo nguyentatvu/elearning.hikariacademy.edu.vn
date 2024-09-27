@@ -12,54 +12,92 @@
 					</div>
 				</div>
 				 <div class="row">
-					<div class="col-md-4">
-						<div class="card card-blue text-xs-center">
-							<div class="card-block">
-							<h4 class="card-title">{{ count(App\User::getUserSeleted('categories'))}}</h4>
-								<p class="card-text">{{ getPhrase('quiz_categories')}}</p>
-							</div>
-							<a class="card-footer text-muted" href="{{URL_STUDENT_EXAM_CATEGORIES}}">
-								{{ getPhrase('view_all')}}
-							</a>
-						</div>
-					</div>
+			
+ 
+		 			<!-- <div class="col-md-4 col-sm-6">
+		 							 		<div class="media state-media box-ws">
+		 							 			<div class="media-left">
+		 							 				<a href="{{URL_STUDENT_EXAM_CATEGORIES}}"><div class="state-icn bg-icon-info"><i class="fa fa-list-alt"></i></div></a>
+		 							 			</div>
+		 							 			<div class="media-body">
+		 							 				<h4 class="card-title">{{ count(App\User::getUserSeleted('categories'))}}</h4>
+		 											<a href="{{URL_STUDENT_EXAM_CATEGORIES}}">{{ getPhrase('quiz_categories')}}</a>
+		 							 			</div>
+		 							 		</div>
+		 							 	</div>    
+		 							 	<div class="col-md-4 col-sm-6">
+		 							 		<div class="media state-media box-ws">
+		 							 			<div class="media-left">
+		 							 				<a href="{{URL_STUDENT_EXAM_ALL}}"><div class="state-icn bg-icon-pink"><i class="fa fa-desktop"></i></div></a>
+		 							 			</div>
+		 							 			<div class="media-body">
+		 							 				<h4 class="card-title">{{ App\User::getUserSeleted('quizzes') }}</h4>
+		 											<a href="{{URL_STUDENT_EXAM_ALL}}">{{ getPhrase('quizzes')}}</a>
+		 							 			</div>
+		 							 		</div>
+		 							 	</div> 
+		 							 	<div class="col-md-4 col-sm-6">
+		 							 		<div class="media state-media box-ws">
+		 							 			<div class="media-left">
+		 							 				<a href="{{URL_PARENT_CHILDREN}}"><div class="state-icn bg-icon-purple"><i class="fa fa-user-circle"></i></div></a>
+		 							 			</div>
+		 							 			<div class="media-body">
+		 							 				<h4 class="card-title">{{ App\User::where('parent_id', '=', $user->id)->get()->count()}}</h4>
+		 											<a href="{{URL_PARENT_CHILDREN}}">{{ getPhrase('children')}}</a>
+		 							 			</div>
+		 							 		</div>
+		 							 	</div> -->
 
-					<div class="col-md-4">
-						<div class="card card-yellow text-xs-center">
-							<div class="card-block">
-								<h4 class="card-title">{{ App\User::getUserSeleted('quizzes') }}</h4>
-								<p class="card-text">{{ getPhrase('quizzes')}}</p>
-							</div>
-							<a class="card-footer text-muted" href="{{URL_STUDENT_EXAM_ALL}}">
-								{{ getPhrase('view_all')}}
-							</a>
-						</div>
-					</div>
+		 							 	
 
-					<div class="col-md-4">
-						<div class="card card-green text-xs-center">
-							<div class="card-block">
-								<h4 class="card-title">{{ App\User::where('parent_id', '=', $user->id)->get()->count()}}</h4>
-								<p class="card-text">{{ getPhrase('children')}}</p>
-							</div>
-							<a class="card-footer text-muted" href="{{URL_PARENT_CHILDREN}}">
-								{{ getPhrase('view_all')}}
-							</a>
-						</div>
-					</div>
+
+		 								<div class="col-md-4 col-sm-6">
+		 							 		<div class="media state-media box-ws">
+		 							 			<div class="media-left">
+		 							 				<a href="#"><div class="state-icn bg-icon-info"><i class="fa fa-list-alt"></i></div></a>
+		 							 			</div>
+		 							 			<div class="media-body">
+		 							 				<h4 class="card-title">{{ App\Classes::where('teacher_id', '=', $user->id)->get()->count() }}</h4>
+		 											<a href="/parent/class">Lớp học</a>
+		 							 			</div>
+		 							 		</div>
+		 							 	</div>    
+		 							 	<!-- <div class="col-md-4 col-sm-6">
+		 							 	 	<div class="media state-media box-ws">
+		 							 	 		<div class="media-left">
+		 							 	 			<a href="{{URL_STUDENT_EXAM_ALL}}"><div class="state-icn bg-icon-pink"><i class="fa fa-desktop"></i></div></a>
+		 							 	 		</div>
+		 							 	 		<div class="media-body">
+		 							 	 			<h4 class="card-title">{{ App\User::getUserSeleted('quizzes') }}</h4>
+		 							 	 		 											<a href="{{URL_STUDENT_EXAM_ALL}}">{{ getPhrase('quizzes')}}</a>
+		 							 	 		</div>
+		 							 	 	</div>
+		 							 	 </div> --> 
+		 							 	<!-- <div class="col-md-4 col-sm-6">
+		 							 		<div class="media state-media box-ws">
+		 							 			<div class="media-left">
+		 							 				<a href="#"><div class="state-icn bg-icon-purple"><i class="fa fa-user-circle"></i></div></a>
+		 							 			</div>
+		 							 			<div class="media-body">
+		 							 				<h4 class="card-title">12</h4>
+		 							 			 											<a href="#">Học viên</a>
+		 							 			</div>
+		 							 		</div>
+		 							 	</div> -->
+ 	
 
 				 
 				</div>
-				<div class="row">
+				<!-- <div class="row">
 					<div class="col-md-6">
-					     <div class="panel panel-primary">
+					     <div class="panel panel-custom">
 					      <div class="panel-heading">{{getPhrase('latest_quizzes')}}</div>
 					      @if(!count($latest_quizzes))
 					      <br>
 					 		 <p> &nbsp;&nbsp;&nbsp;{{getPhrase('no_quizzes_available')}}</p>
 					 		 <p> &nbsp;&nbsp;&nbsp; <a href="{{URL_USERS_SETTINGS.Auth::user()->slug}}">{{getPhrase('click_here')}}</a> {{getPhrase('to_change_your_settings')}}</p>
 					 	 @else
-
+				
 					    	<table class="table">	
 					    	<thead>
 					    		<tr>
@@ -83,14 +121,14 @@
 					 				</td>
 					 				<td>
 					 				@if($quiz->is_paid)
-					 					<a href="{{URL_PAYMENTS_CHECKOUT.'exam/'.$quiz->slug}}">{{getPhrase('buy_now')}}</a> 
+					 					<a class="btn btn-smoke" href="{{URL_PAYMENTS_CHECKOUT.'exam/'.$quiz->slug}}">{{getPhrase('buy_now')}}</a> 
 				 					@else
 				 					-
 				 					@endif
 					 				</td>
 					 			</tr>
 					 		@endforeach
-
+				
 					    	</tbody>
 					    	</table>  
 					    @endif
@@ -100,16 +138,16 @@
 					 	
 					 
 					</div>
-
+				
 						<div class="col-md-6">
-					     <div class="panel panel-primary">
+					     <div class="panel panel-custom">
 					      <div class="panel-heading">{{getPhrase('latest')}} LMS {{getPhrase('series')}}</div>
 					      @if(!count($latest_series))
 					      <br>
 					 		 <p> &nbsp;&nbsp;&nbsp;{{getPhrase('no_series_available')}}</p>
 					 		 <p> &nbsp;&nbsp;&nbsp; <a href="{{URL_USERS_SETTINGS.Auth::user()->slug}}">{{getPhrase('click_here')}}</a> {{getPhrase('to_change_your_settings')}}</p>
 					 	 @else
-
+				
 					    	<table class="table">	
 					    	<thead>
 					    		<tr>
@@ -133,14 +171,14 @@
 					 				</td>
 					 				<td>
 					 				@if($series->is_paid)
-					 					<a href="{{URL_PAYMENTS_CHECKOUT.'lms/'.$series->slug}}">{{getPhrase('buy_now')}}</a> 
+					 					<a class="btn btn-smoke" href="{{URL_PAYMENTS_CHECKOUT.'lms/'.$series->slug}}">{{getPhrase('buy_now')}}</a> 
 				 					@else
 				 					-
 				 					@endif
 					 				</td>
 					 			</tr>
 					 		@endforeach
-
+				
 					    	</tbody>
 					    	</table>  
 					    @endif
@@ -150,11 +188,11 @@
 					 	
 					 
 					</div>
-
+				
 					 
-
+				
 				 
-				</div>
+				</div> -->
 				 
 			 
 			</div>

@@ -95,7 +95,7 @@
 @stop
 
 @section('footer_scripts')
- @include('admin.common.validations');
+ @include('common.validations');
  
     
 @stop

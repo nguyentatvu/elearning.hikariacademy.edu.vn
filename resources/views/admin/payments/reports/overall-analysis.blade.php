@@ -142,9 +142,9 @@
 
 @section('footer_scripts')
  @if(isset($chart_data))
-	@include('admin.common.chart', array('chart_data'=>$chart_data,'ids' => $ids));
+	@include('common.chart', array('chart_data'=>$chart_data,'ids' => $ids));
 @endif
 @if(isset($time_data))
-	@include('admin.common.chart', array('chart_data'=>$time_data,'ids' => $timeids));
+	@include('common.chart', array('chart_data'=>$time_data,'ids' => $timeids));
 @endif
 @stop

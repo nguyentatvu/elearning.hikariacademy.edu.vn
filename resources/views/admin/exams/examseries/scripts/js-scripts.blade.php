@@ -9,12 +9,15 @@
   var app = angular.module('academia', ['ngMessages']);
 </script>
 
-@include('admin.common.angular-factory',array('load_module'=> FALSE))
+@include('common.angular-factory',array('load_module'=> FALSE))
+
 
 
 <script>
 
-app.controller('prepareQuestions', function( $scope, $http, httpPreConfig) {
+app.controller('prepareQuestions', function( $scope, $http, httpPreConfig,$rootScope) {
+
+  $rootScope.series_type  = 0;
 
    $scope.savedQuestions = [];
 
@@ -24,10 +27,13 @@ app.controller('prepareQuestions', function( $scope, $http, httpPreConfig) {
 
     $scope.total_questions = 0;
 
-   
+   $scope.recordData  = function(series_type){
+
+
+      $rootScope.series_type  = series_type;
+   }
 
     $scope.initAngData = function(data) {
-
         
 
         if(data === undefined)
@@ -69,6 +75,7 @@ app.controller('prepareQuestions', function( $scope, $http, httpPreConfig) {
     
 
      $scope.categoryChanged = function(selected_number) {
+      // console.log($rootScope.series_type);
         if(selected_number=='')
 
             selected_number = $scope.category_id;
@@ -81,11 +88,17 @@ app.controller('prepareQuestions', function( $scope, $http, httpPreConfig) {
 
         route = '{{URL_EXAM_SERIES_GET_EXAMS}}';  
 
-        data= {_method: 'post', '_token':httpPreConfig.getToken(), 'category_id': category_id};
+        data= {
+                _method: 'post', 
+               '_token':httpPreConfig.getToken(), 
+               'category_id': category_id,
+               'series_type' : $rootScope.series_type
+             };
 
          $scope.topics =[];
 
         httpPreConfig.webServiceCallPost(route, data).then(function(result){
+          // console.log(result.data);
             result = result.data;
         $scope.categoryExams = [];
 

@@ -96,7 +96,7 @@ app.directive("compareTo", compareTo);
  */
 
 var validImage = function($rootScope) {
-	var validFormats = ['jpg', 'png', 'jpeg'];
+	var validFormats = ['jpg', 'png', 'jpeg','JPG','PNG','JPEG' ];
  return {
         require: "ngModel",
         scope: {
@@ -136,5 +136,5 @@ var validImage = function($rootScope) {
         	}
     	};
 	};
-// app.directive("validImage", validImage);
+//app.directive("validImage", validImage);
     </script>

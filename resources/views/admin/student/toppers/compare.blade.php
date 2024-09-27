@@ -156,5 +156,5 @@
 @stop
 
 @section('footer_scripts')
-  {{-- @include('admin.common.chart', array($chart_data,'ids' =>$ids)); --}}
+  {{-- @include('common.chart', array($chart_data,'ids' =>$ids)); --}}
 @stop

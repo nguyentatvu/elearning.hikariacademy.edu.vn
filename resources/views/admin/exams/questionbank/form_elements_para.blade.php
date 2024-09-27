@@ -76,7 +76,7 @@
        </div>
     </div>
 
-
+{{-- 
     <h4>2nd Language</h4>
 
      <div class="row" data-ng-repeat="para in range(total_answers) track by $index" ng-if="total_answers > 0">
@@ -104,7 +104,7 @@
 
     
        </div>
-    </div>
+    </div> --}}
 
  
 

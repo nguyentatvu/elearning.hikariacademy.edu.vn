@@ -779,26 +779,40 @@ function updatePallet() {
 
     if(question_div_class=='undefined')
         return;
-    parts = question_div_class.split('_');
-    @if($quiz_record->exam_type!='NSNT')
-      parts = question_div_class.split(' ');
-    @endif
-    len = parts.length - 1;
-    subject_id = parts[len];
+  
+
     vid = $(CURRENT_SUBJECT_ID).attr('data-psubject_id');
+
     CURRENT_SUBJECT_ID = '.pallet_subject_'+vid;
-    subject_name = 
-    $('#subject_section_'+vid).attr('data-psubject_title');
+
+    subject_name = $('#subject_section_'+vid).attr('data-psubject_title');
     
     pallet_subjects_class = CURRENT_SUBJECT_ID;
     $('#subject_title').text(subject_name);
     $('.pallete-elements-item').hide();
-    $(CURRENT_SUBJECT_ID).show();
-    CURRENT_SUBJECT_ID = '.pallet_'+subject_id;
 
+//      current_section_key = SECTIONS[CURRENT_SECTION].section_key;
+// next_div = $(VISIBLE_ELEMENT).next('div');
+//     if(!next_div.hasClass('subject_'+current_section_key)) {
+//       return;
+//     }
     
-     $('#subject_section_'+vid).closest("li").prev('li').removeClass('active');
-     $('#subject_section_'+vid).closest("li").addClass('active');
+
+
+    $(CURRENT_SUBJECT_ID).show();
+    // CURRENT_SUBJECT_ID = '.pallet_'+subject_id;
+
+
+     //   $('#subject_section_'+vid).closest("li").prev('li').removeClass('active');
+     // $('#subject_section_'+vid).closest("li").addClass('active');
+     
+     $(".suggestions li").first().addClass("active");
+     var selector = '.suggestions li';
+
+        $(selector).on('click', function(){
+            $(selector).removeClass('active');
+            $(this).addClass('active');
+        });
 
 
 }

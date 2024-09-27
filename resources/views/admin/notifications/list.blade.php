@@ -52,8 +52,13 @@
  
 
 @section('footer_scripts')
-  
- @include('admin.common.datatables', array('route'=>URL_ADMIN_NOTIFICATIONS_GETLIST, 'route_as_url' => TRUE))
- @include('admin.common.deletescript', array('route'=>URL_ADMIN_NOTIFICATIONS_DELETE))
+	@php
+	// MAKE DEFAULT VALUE COLUMN
+	$defaultColumns = [
+		'title', 'valid_from', 'valid_to', 'url', 'action'
+	];
+	@endphp
 
+	@include('common.datatables', array('route'=>URL_ADMIN_NOTIFICATIONS_GETLIST, 'route_as_url' => TRUE, 'table_columns' => $defaultColumns))
+	@include('common.deletescript', array('route'=>URL_ADMIN_NOTIFICATIONS_DELETE))
 @stop

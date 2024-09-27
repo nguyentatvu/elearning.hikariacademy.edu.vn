@@ -54,7 +54,7 @@
 @stop
 @section('footer_scripts')
 	{{-- @include('mastersettings.topics.scripts.js-scripts'); --}}
-	@include('admin.common.validations' );
+	@include('common.validations' );
 	
 @stop
  

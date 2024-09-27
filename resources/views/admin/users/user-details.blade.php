@@ -25,9 +25,19 @@
 				</div>
 
 <div class="panel panel-custom">
-				 	<div class="panel-heading">						<h1>{{ getPhrase('details_of').' '.$record->name }}</h1>					</div>
+				 	<div class="panel-heading">					
+				 		<h1>CHI TIẾT CỦA {{$record->name }}</h1>		<!-- getPhrase('details_of').' '. -->			
+				 	</div>
 					<div class="panel-body">
-						<div class="profile-details text-center">
+						
+				
+						
+						<div class="row">
+               <div class="col-sm-6">
+               	<div class="row">
+               		<div class="col-sm-12">
+                         
+                         <div class="profile-details text-center">
 							<div class="profile-img"><img src="{{ getProfilePath($record->image,'profile')}}" alt=""></div>
 							<div class="aouther-school">
 								<h2>{{ $record->name}}</h2>
@@ -35,50 +45,94 @@
 								
 							</div>
 
-						</div>
-						<hr>
-						<h3 class="profile-details-title">{{ getPhrase('reports')}}</h3>
-						<div class="row">
-						<div class="col-lg-3 col-md-6">
-						<div class="card card-blue text-xs-center">
-						<div class="card-block">
-							<h4 class="card-title"><i class="fa fa-history"></i></h4>
-							<p class="card-text">{{ getPhrase('exam_history')}}</p>
-						</div>
-							<a class="card-footer text-muted" href="{{URL_STUDENT_EXAM_ATTEMPTS.$record->slug}}">{{ getPhrase('view_details')}}</a>
-						</div>
-					</div>
+						</div>               			
 
-					<div class="col-lg-3 col-md-6">
-						<div class="card card-yellow text-xs-center">
-							<div class="card-block">
-								<h4 class="card-title"><i class="fa fa-flag"></i></h4>
-								<p class="card-text">{{ getPhrase('by_exam')}}</p>
-							</div>
-								<a class="card-footer text-muted" href="{{URL_STUDENT_ANALYSIS_BY_EXAM.$record->slug}}">{{ getPhrase('view_details')}}</a>
-						</div>
-					</div>
+               		</div>
+               	</div>
+               	<div class="row">
+               <div class="col-md-6 col-sm-6">
+				 		<div class="media state-media box-ws">
+				 			<div class="media-left">
+				 				<a href="{{URL_STUDENT_EXAM_ATTEMPTS.$record->slug}}"><div class="state-icn bg-icon-info"><i class="fa fa-history"></i></div></a>
+				 			</div>
+				 			<div class="media-body">
+				 				
+								<a href="{{URL_STUDENT_EXAM_ATTEMPTS.$record->slug}}">
+Lịch sử thi<!-- {{ getPhrase('exam_history')}} --></a>
+				 			</div>
+				 		</div>
+				 	</div>
 
-					<div class="col-lg-3 col-md-6">
-					<div class="card card-green text-xs-center">
-							<div class="card-block">
-								<h4 class="card-title"><i class="fa fa-key"></i></h4>
-								<p class="card-text">{{ getPhrase('by_subject')}}</p>
-							</div>
-								<a class="card-footer text-muted" href="{{URL_STUDENT_ANALYSIS_SUBJECT.$record->slug}}">{{ getPhrase('view_details')}}</a>
-						</div>
-						</div>
-				<div class="col-lg-3 col-md-6">
-						<div class="card card-red text-xs-center">
-							<div class="card-block">
-								<h4 class="card-title"><i class="fa fa-credit-card"></i></h4>
-								<p class="card-text">{{ getPhrase('subscriptions')}}</p>
-							</div>
-								<a class="card-footer text-muted" href="{{URL_PAYMENTS_LIST.$record->slug}}">{{ getPhrase('view_details')}}</a>
-						</div>
-					</div>
-							
-						</div>
+				 	<div class="col-md-6 col-sm-6">
+				 		<div class="media state-media box-ws">
+				 			<div class="media-left">
+				 				<a href="{{URL_STUDENT_ANALYSIS_BY_EXAM.$record->slug}}"><div class="state-icn bg-icon-success"><i class="fa fa-flag"></i></div></a>
+				 			</div>
+				 			<div class="media-body">
+				 				
+								<a href="{{URL_STUDENT_ANALYSIS_BY_EXAM.$record->slug}}">Bài thi<!-- {{ getPhrase('by_exam')}} --></a>
+				 			</div>
+				 		</div>
+				 	</div>
+
+
+				 	 	<div class="col-md-6 col-sm-6">
+				 		<div class="media state-media box-ws">
+				 			<div class="media-left">
+				 				<a href="{{URL_STUDENT_ANALYSIS_SUBJECT.$record->slug}}"><div class="state-icn bg-icon-purple"><i class="fa fa-key"></i></div></a>
+				 			</div>
+				 			<div class="media-body">
+				 				
+								<a href="{{URL_STUDENT_ANALYSIS_SUBJECT.$record->slug}}"><!-- {{ getPhrase('by_subject')}} --> Phần tích</a>
+				 			</div>
+				 		</div>
+				 	</div>
+
+
+				 		<div class="col-md-6 col-sm-6">
+				 		<div class="media state-media box-ws">
+				 			<div class="media-left">
+				 				<a href="{{URL_PAYMENTS_LIST.$record->slug}}"><div class="state-icn bg-icon-pink"><i class="fa fa-credit-card"></i></div></a>
+				 			</div>
+				 			<div class="media-body">
+				 				
+								<a href="{{URL_PAYMENTS_LIST.$record->slug}}"><!-- {{ getPhrase('subscriptions')}} -->Danh sách đăng ký</a>
+				 			</div>
+				 		</div>
+				 	</div>
+
+				
+                  </div>
+               </div>
+                <div class="col-sm-6">
+
+                  	<div class="row">
+                       <div class="col-sm-12">
+                              
+								<?php $ids=[];?>
+								@for($i=0; $i<count($chart_data); $i++)
+								<?php 
+								$newid = 'myChart'.$i;
+								$ids[] = $newid; ?>
+								
+								<div class="panel-body">
+									<canvas id="{{$newid}}" width="25" height="25"></canvas>
+								</div>
+
+								@endfor
+                       </div>
+                      
+                   </div>
+               </div>
+           </div>
+
+			
+
+ 
+	
+	
+	 
+
 						 
 						</div>
 						 
@@ -93,6 +147,6 @@
 
 @section('footer_scripts')
  
- @include('admin.common.chart', array($chart_data,'ids' =>$ids));
+ @include('common.chart', array($chart_data,'ids' =>$ids));
 
 @stop

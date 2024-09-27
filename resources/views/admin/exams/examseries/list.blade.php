@@ -1,10 +1,8 @@
-@extends('admin.layouts.admin.adminlayout')
+@extends('admin.layouts.'.getRole().'.'.getRole().'layout')
 @section('header_scripts')
 <link href="{{CSS}}ajax-datatables.css" rel="stylesheet">
 @stop
 @section('content')
-
-
 <div id="page-wrapper">
 			<div class="container-fluid">
 				<!-- Page Heading -->
@@ -16,11 +14,9 @@
 						</ol>
 					</div>
 				</div>
-								
 				<!-- /.row -->
 				<div class="panel panel-custom">
 					<div class="panel-heading">
-						
 						<div class="pull-right messages-buttons">
 							<a href="{{URL_EXAM_SERIES_ADD}}" class="btn  btn-primary button" >{{ getPhrase('create')}}</a>
 						</div>
@@ -31,30 +27,24 @@
 						<table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
 							<thead>
 								<tr>
-									<th>{{ getPhrase('title')}}</th>
-									<th>{{ getPhrase('image')}}</th>
-									<th>{{ getPhrase('is_paid')}}</th>
-									<th>{{ getPhrase('cost')}}</th>
-									<th>{{ getPhrase('validity')}}</th>
-									<th>{{ getPhrase('total_exams')}}</th>
-									<th>{{ getPhrase('total_questions')}}</th>
-									
+									<th>Bộ đề thi</th>
+									<th>Hình</th>
+									{{-- <th>Loại</th>
+									<th>Giá</th> --}}
+									<!-- <th>Hiệu lực</th> -->
+									{{-- <th>Tổng điểm</th> --}}
+									{{-- <th>Câu hỏi</th> --}}
 									<th>{{ getPhrase('action')}}</th>
-								  
 								</tr>
 							</thead>
-							 
 						</table>
 						</div>
-
 					</div>
 				</div>
 			</div>
 			<!-- /.container-fluid -->
 		</div>
 @endsection
- 
-
 @section('footer_scripts')
 	@php
 	// MAKE DEFAULT VALUE COLUMN
@@ -62,7 +52,6 @@
 		'title', 'image', 'action'
 	];
 	@endphp
-
-	@include('admin.common.datatables', array('route'=>URL_EXAM_SERIES_AJAXLIST, 'route_as_url' => TRUE, 'table_columns' => $defaultColumns))
-	@include('admin.common.deletescript', array('route'=>URL_EXAM_SERIES_DELETE))
+ @include('common.datatables', array('route'=>URL_EXAM_SERIES_AJAXLIST, 'route_as_url' => TRUE, 'table_columns' => $defaultColumns))
+ @include('common.deletescript', array('route'=>URL_EXAM_SERIES_DELETE))
 @stop

@@ -23,6 +23,8 @@
                      <span class="language_l1">{!! $answer->option_value !!}</span>
                      @if(isset($answer->optionl2_value))
                 <span class="language_l2" style="display: none;">{!! $answer->optionl2_value !!}</span>
+                 @else
+                <span class="language_l2" style="display: none;">{!! $answer->option_value !!}</span>
                 @endif
                 </label>
             </input>

@@ -1,43 +1,46 @@
 <?php
     $answers = json_decode($question->answers);
-    $i=1;
- ?>
-<div class="select-answer">
-    <ul class="row list-style-none">
-         <?php $index = 0;?>
+?>
+<!-- Hiện thị câu trả lời ngang -->
+<?php if ($question->question_show_type == 0) { ?>
+<table style="width:98%">
+    <?php $i = 1;?>
+    @foreach($answers as $answer)
+        <?php if ($i == 1 || $i == 3) { echo "<tr>"; }?>
+        <td style="width: 3%"><span><?php echo $i; ?></span></td>
+        <td style="width: 47%; padding-left: 10px;">
+          {{ change_furigana ($answer->option_value) }}
+          @if($answer->has_file)
+            <img src="{{$image_path.$answer->file_name}}" width="150">
+          @endif
+        </td>
+        <?php if ($question->total_answers == $i) {
+            echo "</tr>";
+            break;
+        }?>
+        <?php if ($i == 2 || $i == 4) { echo "</tr>"; }?>
+    <?php $i++; ?>
+    @endforeach
+</table>
+<?php } ?>
+<!-- Hiện thị câu trả lời dọc -->
+<?php if ($question->question_show_type == 1) { ?>
+<table style="width:98%">
+        <?php $i = 1;?>
         @foreach($answers as $answer)
-        
-        <li class="col-md-6">
-            <input id="{{ $answer->option_value}}{{$question->id}}{{$i}}" value="{{$i}}" name="{{$question->id}}[]" 
-              @if(isset($previous_answers) && count($previous_answers))
-                @if(isset($previous_answers[$index]))
-                    @if($previous_answers[$index]=='true')
-                        checked
-                    @endif
-                @endif
-            @endif
-            type="radio"/>
-            
-            <label for="{{$answer->option_value}}{{$question->id}}{{$i++}}">
-                <span class="fa-stack radio-button">
-                    <i class="mdi mdi-check active">
-                    </i>
-                </span>
-                <span class="language_l1">{!! $answer->option_value !!}</span>
-
-                @if(isset($answer->optionl2_value))
-                <span class="language_l2" style="display: none;">{!! $answer->optionl2_value !!}</span>
-                @endif
-
-            </label>
-
-            @if($answer->has_file)
-            <img src="{{$image_path.$answer->file_name}}" height="50" width="50">
-            @endif
-
-        </li>
-         <?php $index++;?>
+            <tr>
+                <td style="width: 3%"><span><?php echo $i; ?></span></td>
+                <td style="width: 97%; padding-left: 10px;">
+                  {{ change_furigana ($answer->option_value) }}
+                  @if($answer->has_file)
+                    <img src="{{$image_path.$answer->file_name}}" width="150">
+                  @endif
+                </td>
+            </tr>
+        <?php if ($question->total_answers == $i) {
+            break;
+        }?>
+        <?php $i++; ?>
         @endforeach
-    </ul>
- 
-</div>
+</table>
+<?php } ?>

@@ -50,9 +50,9 @@
  
     </div>
 
-   <h4>For 2nd Language</h4>
+   <h4 >For 2nd Language</h4>
 
-     <div ng-if="total_answers > 0" class="row">
+     <div ng-if="total_answers > 0" class="row" style="display: none;">
 
      <fieldset class="form-group col-md-5" >
 
@@ -73,7 +73,7 @@
     </div>
 
 
-     <div class="row" data-ng-repeat="i in range(total_answers) track by $index" ng-if="total_answers > 0">
+     <div class="row" data-ng-repeat="i in range(total_answers) track by $index" ng-if="total_answers > 0" style="display: none;">
      
     <fieldset class="form-group col-md-5" >
 

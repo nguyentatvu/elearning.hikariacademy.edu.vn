@@ -8,9 +8,9 @@
 
 	swal({
 
-		  title: "{{getPhrase('are_you_sure')}}?",
+		  title: "Bạn có chắc chắn muốn xóa?",
 
-		  text: "{{getPhrase('you_will_not_be_able_to_recover_this_record')}}!",
+		  text: "Dữ liệu này sẽ bị xóa và không thể phục hồi!",
 
 		  type: "warning",
 
@@ -18,9 +18,9 @@
 
 		  confirmButtonClass: "btn-danger",
 
-		  confirmButtonText: "{{getPhrase('yes').', '.getPhrase('delete_it')}}!",
+		  confirmButtonText: "Có",
 
-		  cancelButtonText: "{{getPhrase('no').', '.getPhrase('cancel_please')}}!",
+		  cancelButtonText: "Không",
 
 		  closeOnConfirm: false,
 

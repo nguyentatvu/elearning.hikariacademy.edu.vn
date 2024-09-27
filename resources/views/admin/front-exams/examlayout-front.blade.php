@@ -1,254 +1,178 @@
 <!DOCTYPE html>
-
 <html lang="en" dir="{{ (App\Language::isDefaultLanuageRtl()) ? 'rtl' : 'ltr' }}">
-
-
-
 <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{getSetting('meta_description', 'seo_settings')}}">
+  <meta name="keywords" content="{{getSetting('meta_keywords', 'seo_settings')}}">
+  <meta name="csrf_token" content="{{ csrf_token() }}">
+  <link rel="icon" href="{{IMAGE_PATH_SETTINGS.getSetting('site_favicon', 'site_settings')}}" type="image/x-icon" />
+  <title>@yield('title') {{ isset($title) ? change_furigana_title($title) : getSetting('site_title','site_settings') }}</title>
+  <!-- Bootstrap Core CSS -->
+  @yield('header_scripts')
+  <link href="{{themes('site/css/main.css')}}" rel="stylesheet">
+  <link href="{{themes('css/notify.css')}}" rel="stylesheet">
+  <link href="{{themes('css/angular-validation.css')}}" rel="stylesheet">
+  <!-- Bootstrap Core CSS -->
+  <!--FontAwesome-->
+  <link href="{{CSS}}sweetalert.css" rel="stylesheet" type="text/css">
+  <link href="{{themes('css/front-exam.css')}}" rel="stylesheet">
+  <link href="{{themes('css/plugins/morris.css')}}" rel="stylesheet">
+  <link href="{{CSS}}materialdesignicons.css" rel="stylesheet" type="text/css">
+  <style type="text/css" media="screen">
+  .mt-51{
+    width: 100%;
+    padding-top: 10px;
+  }
+  #wrapper1{
+    width: 100%;
+    padding: 10px;
+  }
+  .panel-right-sidebar1{
+    display: flex;
 
-    <meta charset="utf-8">
-
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <meta name="description" content="{{getSetting('meta_description', 'seo_settings')}}">
-
-    <meta name="keywords" content="{{getSetting('meta_keywords', 'seo_settings')}}">
-
-        <meta name="csrf_token" content="{{ csrf_token() }}">
-
-
-    <link rel="icon" href="{{IMAGE_PATH_SETTINGS.getSetting('site_favicon', 'site_settings')}}" type="image/x-icon" />
-
-    <title>@yield('title') {{ isset($title) ? $title : getSetting('site_title','site_settings') }}</title>
-
-    <!-- Bootstrap Core CSS -->
-
- @yield('header_scripts')
-
-
- <!-- Bootstrap Core CSS -->
-      <link href="{{admin_asset('front/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
-     <link href="{{admin_asset('front/css/bootstrap.offcanvas.css')}}" rel="stylesheet">
-    <!--Owl Carousel-->
-     <link href="{{admin_asset('front/vendor/owl.carousel/assets/owl.carousel.min.css')}}" rel="stylesheet">
-     <link href="{{admin_asset('front/vendor/owl.carousel/assets/owl.theme.default.min.css')}}" rel="stylesheet">
-     <link href="{{admin_asset('front/vendor/owl.carousel/assets/owl.theme.green.min.css')}}" rel="stylesheet">
-   
-    <!-- Custom CSS -->
-     <link href="{{admin_asset('front/fonts/proxima-nova/proximanova.css')}}" rel="stylesheet">
-     <link href="{{admin_asset('front/css/style.css')}}" rel="stylesheet">
-    
-    <!--FontAwesome-->
-     <link href="{{admin_asset('front/vendor/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
-     <link href="{{admin_asset('css/sweetalert.css')}}" rel="stylesheet">
-
-    <link href="{{CSS}}plugins/morris.css" rel="stylesheet">
-    <link href="{{admin_asset('css/front-exam.css')}}" rel="stylesheet">
-     <link href="{{admin_asset('css/materialdesignicons.css')}}" rel="stylesheet">
-
-
-  
-
-    
-
-    
+  }
+  .mt-151{
+    padding-top: 1px;
+  }
+  .mt-52 {
+    margin-top: 180px;
+}
+.dis{
+  display: none;
+}
+</style>
 </head>
-
-
-
-
-
-<body ng-app="academia">
-
-      <!-- NAVIGATION -->
-    <nav class="navbar navbar-default st-navbar-default navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <a class="navbar-brand page-scroll" href="{{PREFIX}}"><img src="{{IMAGE_PATH_SETTINGS.getSetting('site_logo', 'site_settings')}}" alt="{{getSetting('site_title','site_settings')}}"></a>
-                <button type="button" class="navbar-toggle offcanvas-toggle pull-right" data-toggle="offcanvas" data-target="#js-bootstrap-offcanvas">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span>
-                        <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    </span>
-                </button>
-            </div>
-            <div class="navbar-offcanvas navbar-offcanvas-touch" id="js-bootstrap-offcanvas">
-                <ul class="nav navbar-nav navbar-right">
-
-                    <li> 
-                        <a
-
-                        @if($active_class=='home')
-                            class="page-scroll active" 
-                        @else
-                            class="page-scroll" 
-                        @endif
-
-                        href="{{PREFIX}}">Home</a> 
-                    </li>
-
-
-                     <li> 
-                        <a
-
-                        @if($active_class=='exams')
-                            class="page-scroll active" 
-                        @else
-                            class="page-scroll" 
-                        @endif
-
-                        href="{{URL_FRONTEND_EXAMS_LIST}}">{{getPhrase('exams')}}</a> 
-                    </li>
-
-                    <li> 
-                        <a 
-                        @if($active_class=='terms-conditions')
-                            class="page-scroll active" 
-                        @else
-                            class="page-scroll" 
-                        @endif
-
-                        href="{{SITE_PAGES_TERMS}}">Terms and Conditions
-                        </a> 
-                    </li>
-                    <li> 
-                        <a 
-                        @if($active_class=='privacy-policy')
-                            class="page-scroll active" 
-                        @else
-                            class="page-scroll" 
-                        @endif
-                        href="{{SITE_PAGES_PRIVACY}}"
-                        >Privacy and Policy
-                    </a> </li>
-                    <li> <a class="page-scroll" href="{{URL_USERS_LOGIN}}">Login</a> </li>
-                    <li> <a class="page-scroll" href="{{URL_USERS_REGISTER}}">Register</a> </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <!-- /NAVIGATION -->
-
-    
+<body ng-app="academia" class="margin1">
+  <div class="dis">
+    @include('site.header')
+  </div>
 
  @yield('custom_div')
-
  <?php 
-
  $class = '';
-
  if(!isset($right_bar))
-
-    $class = 'no-right-sidebar';
-
+  $class = 'no-right-sidebar';
 $block_class = '';
-
 if(isset($block_navigation))
-
-    $block_class = 'non-clickable';
-
- ?>
-
-    <div id="wrapper" class="{{$class}}">
-
-        <!-- Navigation -->
-
-        <nav role="navigation">
-            
-        
-
-
-        </nav>
-
-         
-
-        
-        @if(isset($right_bar))
-
-            
-
-        <aside class="right-sidebar" id="rightSidebar">
-
-            {{-- <button class="sidebat-toggle" id="sidebarToggle" href='javascript:'><i class="mdi mdi-menu"></i></button> --}}
-
-            <?php $right_bar_class_value = ''; 
-
-            if(isset($right_bar_class))
-
-                $right_bar_class_value = $right_bar_class;
-
-            ?>
-
-            <div class="panel panel-right-sidebar {{$right_bar_class_value}}">
-
-            <?php $data = '';
-
-            if(isset($right_bar_data))
-
-                $data = $right_bar_data;
-
-            ?>
-
-                @include($right_bar_path, array('data' => $data))
-
-            </div>
-
-        </aside>
-
-        
-
-    @endif
-
-        @yield('content')
-
+  $block_class = 'non-clickable';
+?>
+<div id="wrapper wrapper1" class="{{$class}} mt-150 mt-151 " >
+  <!-- Navigation -->
+  <nav role="navigation">
+  </nav>
+  @if(isset($right_bar))
+  <aside class=" top-sidebar mt-50 mt-51 op10" id="rightSidebar"><!--  right-sidebar  -->
+    {{-- <button class="sidebat-toggle" id="sidebarToggle" href='javascript:'><i class="mdi mdi-menu"></i></button> --}}
+    <?php $right_bar_class_value = ''; 
+    if(isset($right_bar_class))
+      $right_bar_class_value = $right_bar_class;
+    ?>
+    <div class="panel panel-right-sidebar {{$right_bar_class_value}} panel-right-sidebar1">
+      <?php $data = '';
+      if(isset($right_bar_data))
+        $data = $right_bar_data;
+      ?>
+      @include($right_bar_path, array('data' => $data))
     </div>
+  </aside>
+  @endif
+  @yield('content')
+</div>
+<div class="dis">
+    @include('site.footer')
+  </div>
 
-    <!-- /#wrapper -->
 
-    <!-- jQuery -->
-
-    <script src="{{admin_asset('js/jquery-1.12.1.min.js')}}"></script>
-    <script src="{{admin_asset('js/bootstrap.min.js')}}"></script>
-    <script src="{{admin_asset('js/main.js')}}"></script>
-    <script src="{{admin_asset('js/sweetalert-dev.js')}}"></script>
-    <script src="{{admin_asset('js/mousetrap.js')}}"></script>
-    <script src="{{admin_asset('js/landing-js/all.js')}}"></script>
-    <script src="{{admin_asset('js/landing-js/custom.js')}}"></script>
-    <script src="{{admin_asset('js/landing-js/mason_03.js')}}"></script>
-
+<script src="{{themes('site/js/jquery-3.1.1.min.js')}}"></script>
+<script src="{{themes('site/js/bootstrap.min.js')}}"></script>
+<script src="{{themes('site/js/slider/slick.min.js')}}"></script>
+<script src="{{themes('site/js/bootstrap.offcanvas.js')}}"></script>
+<script src="{{themes('site/js/jRate.min.js')}}"></script>
+<script src="{{themes('site/js/wow.min.js')}}"></script>
+<script src="{{themes('site/js/main.js')}}"></script>
+<script src="{{themes('js/notify.js')}}"></script>
+{{-- <script src="{{JS}}main.js"></script> --}}
+<script src="{{JS}}sweetalert-dev.js"></script>
+<script src="{{JS}}mousetrap.js"></script>
+<script src="{{JS}}landing-js/all.js"></script>
+<!-- <script>
+  window.history.forward();
+  function noBack() { window.history.forward(); }
+  function checkKeyCode(evt)
+  {
+    var evt = (evt) ? evt : ((evt) ? evt : null);
+    console.log(evt.keyCode);
+    var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+    if(
+          evt.keyCode == 123 //F12
+          || evt.keyCode==116 
+          || evt.keyCode==82 || evt.keyCode==9 || evt.keyCode==18 || evt.keyCode==17 
+          || evt.keyCode == 44 //PRNT SCR
+          )
+    {
+      evt.keyCode=0;
+      return false
+    }
+    else if(evt.keyCode==8)
+    {
+      evt.keyCode=0;
+      return false
+    }
+  }
+  document.onkeydown=checkKeyCode;
+</script>
+  <SCRIPT TYPE="text/javascript"> 
+    var message="Sorry, right-click has been disabled"; 
+    function clickIE() {if (document.all) {(message);return false;}} 
+    function clickNS(e) {if 
+      (document.layers||(document.getElementById&&!document.all)) { 
+        if (e.which==2||e.which==3) {(message);return false;}}} 
+        if (document.layers) 
+          {document.captureEvents(Event.MOUSEDOWN);document.onmousedown=clickNS;} 
+        else{document.onmouseup=clickNS;document.oncontextmenu=clickIE;} 
+        document.oncontextmenu=new Function("return false") 
+      </SCRIPT> 
+      <SCRIPT TYPE="text/javascript"> 
+        function disableselect(e){
+          return false
+        } 
+        function reEnable(){
+          return true
+        } 
+    //if IE4+
+    document.onselectstart=new Function ("return false") 
+    //if NS6
+    if (window.sidebar){
+      document.onmousedown=disableselect
+      document.onclick=reEnable
+    }
+  </SCRIPT>
   <script>
-            var csrfToken = $('[name="csrf_token"]').attr('content');
-
+    Mousetrap.bind(['ctrl+s', 'ctrl+p', 'ctrl+w', 'ctrl+u'], function(e) {
+      if (e.preventDefault) {
+        e.preventDefault();
+      } else {
+          // internet explorer
+          e.returnValue = false;
+        }
+      }); 
+  </script> -->
+  <script>
+    var csrfToken = $('[name="csrf_token"]').attr('content');
             setInterval(refreshToken, 600000); // 1 hour 
-
             function refreshToken(){
-                $.get('refresh-csrf').done(function(data){
+              $.get('refresh-csrf').done(function(data){
                     csrfToken = data; // the new token
-                });
+                  });
             }
-
             setInterval(refreshToken, 600000); // 1 hour 
-
-        </script>
-
-    
-
-    @include('admin.common.alertify')
-
-    
-
-    @yield('footer_scripts')
-
-    @include('errors.formMessages')
-
-    @yield('custom_div_end')
-    {!!getSetting('google_analytics', 'seo_settings')!!}
-</body>
-
-
-
+  </script>
+          @include('common.alertify')
+          @yield('footer_scripts')
+          @include('errors.formMessages')
+          @yield('custom_div_end')
+          {!!getSetting('google_analytics', 'seo_settings')!!}
+  </body>
 </html>

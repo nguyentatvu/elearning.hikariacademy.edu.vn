@@ -17,7 +17,7 @@
         <input type="text" name="options[]" id="option_@{{ $index }}" class="form-control" placeholder="Option @{{ $index+1 }}" ng-model="answers[$index].option_value" required="true">
     </fieldset>
 
-     <fieldset class="form-group col-md-4" >
+     <fieldset class="form-group col-md-4" style="display: none;">
         
         <label >Option @{{ $index+1 }} (2nd Language) </label> 
         <input type="text" name="optionsl2[]" id="optionl2_@{{ $index }}" class="form-control" placeholder="Option 2nd lang @{{ $index+1 }}" ng-model="answers[$index].optionl2_value">

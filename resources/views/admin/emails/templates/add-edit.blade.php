@@ -47,7 +47,7 @@
 @stop
 @section('footer_scripts')
 
-	@include('admin.common.validations')
-	@include('admin.common.editor')
+	@include('common.validations')
+	@include('common.editor')
 @stop
  

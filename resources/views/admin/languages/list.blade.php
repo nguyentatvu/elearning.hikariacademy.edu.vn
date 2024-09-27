@@ -55,8 +55,13 @@
  
 
 @section('footer_scripts')
-  
- @include('admin.common.datatables', array('route'=>'languages.dataTable'))
- @include('admin.common.deletescript', array('route'=>URL_LANGUAGES_DELETE))
+	@php
+	// MAKE DEFAULT VALUE COLUMN
+	$defaultColumns = [
+		'language', 'code','is_rtl','is_default', 'action'
+	];
+	@endphp
 
+	@include('common.datatables', array('route'=>'languages.dataTable', 'table_columns' => $defaultColumns))
+	@include('common.deletescript', array('route'=>URL_LANGUAGES_DELETE))
 @stop

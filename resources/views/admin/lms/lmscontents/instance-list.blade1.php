@@ -57,7 +57,7 @@
 
 @section('footer_scripts')
   
- @include('admin.common.datatables', array('route'=>'libraryinstances.dataTable'))
- @include('admin.common.deletescript', array('route'=>'/library/master/delete/'))
+ @include('common.datatables', array('route'=>'libraryinstances.dataTable'))
+ @include('common.deletescript', array('route'=>'/library/master/delete/'))
 
 @stop

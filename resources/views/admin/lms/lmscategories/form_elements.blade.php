@@ -7,9 +7,9 @@
 						'placeholder' => getPhrase('enter_category_name'),
 						'ng-model'=>'category',
 							'required'=> 'true', 
-							'ng-pattern' => getRegexPattern("name"),
+							'ng-pattern' => '',
 							'ng-minlength' => '2',
-							'ng-maxlength' => '60',
+							'ng-maxlength' => '160',
 							'ng-class'=>'{"has-error": formLms.category.$touched && formLms.category.$invalid}',
 
 						)) }}

@@ -1,6 +1,7 @@
 @extends($layout)
 @section('content')
 <div id="page-wrapper">
+  <div class="container-fluid">
  <div class="row">
                    <div class="col-lg-12">
                        <ol class="breadcrumb">
@@ -13,8 +14,8 @@
                <div class="panel panel-custom">
                    <div class="panel-heading">
                        <div class="pull-right messages-buttons">
-                           <a class="btn btn-lg btn-info button" href="{{URL_MESSAGES}}"> {{getPhrase('inbox').'('.$count = Auth::user()->newThreadsCount().')'}} </a>
-                           <a class="btn btn-lg btn-info button" href="{{URL_MESSAGES_CREATE}}"> 
+                           <a class="btn btn-lg btn-primary button" href="{{URL_MESSAGES}}"> {{getPhrase('inbox').'('.$count = Auth::user()->newThreadsCount().')'}} </a>
+                           <a class="btn btn-lg btn-danger button" href="{{URL_MESSAGES_CREATE}}"> 
                            {{getPhrase('compose')}}</a>
 
                 

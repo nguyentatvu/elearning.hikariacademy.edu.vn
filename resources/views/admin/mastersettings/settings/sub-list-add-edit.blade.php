@@ -194,9 +194,9 @@
 @stop
 @section('footer_scripts')
 	
-	@include('mastersettings.settings.scripts.js-scripts' );
-	@include('admin.common.validations', array('isLoaded'=>true));
-	 {{-- @include('admin.common.editor'); --}}
+	@include('mastersettings.settings.scripts.js-scripts' )
+	@include('common.validations', array('isLoaded'=>true))
+	 {{-- @include('common.editor'); --}}
 	  <script src="{{JS}}bootstrap-toggle.min.js"></script>
 @stop
  

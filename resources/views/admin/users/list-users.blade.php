@@ -21,9 +21,7 @@
 					<div class="panel-heading">
 						
 						<div class="pull-right messages-buttons">
-							 
-							<a href="{{URL_USERS_IMPORT}}" class="btn  btn-primary button" >{{ getPhrase('import_excel')}}</a>
-							<a href="{{URL_USERS_ADD}}" class="btn  btn-primary button" >{{ getPhrase('add_user')}}</a>
+							<a href="{{URL_USERS_ADD}}" class="btn  btn-primary button" >Thêm thành viên</a>
 							 
 						</div>
 						<h1>{{ $title }}</h1>
@@ -33,11 +31,12 @@
 						<table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
 							<thead>
 								<tr>
-								 	<th>{{ getPhrase('name')}}</th>
-									<th>{{ getPhrase('email')}}</th>
-									<th>{{ getPhrase('image')}}</th>
-									<th>{{ getPhrase('role')}}</th>
-									<th>{{ getPhrase('action')}}</th>
+									<th>HID</th>
+								 	<th>Họ tên</th>
+									<th>Email</th>
+									<th>Avata</th>
+									<th>Quyền</th>
+									<th>Hành động</th>
 								</tr>
 							</thead>
 							 
@@ -54,6 +53,12 @@
 @endsection
  
 @section('footer_scripts')
- @include('admin.common.datatables', array('route'=>'users.dataTable'))
- @include('admin.common.deletescript', array('route'=>URL_USERS_DELETE))
+	@php
+		// MAKE DEFAULT VALUE COLUMN
+		$defaultColumns = [
+			'hid', 'name', 'email', 'image', 'display_name', 'action'
+		];
+	@endphp
+	@include('common.datatables', array('route'=>'users.dataTable', 'table_columns' => $defaultColumns))
+	@include('common.deletescript', array('route'=>URL_USERS_DELETE))
 @stop

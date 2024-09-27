@@ -10,7 +10,7 @@
 						<ol class="breadcrumb">
 							<li><a href="{{PREFIX}}"><i class="mdi mdi-home"></i></a> </li>
 							@if(checkRole(getUserGrade(2)))
-							<li><a href="{{URL_USERS}}">{{ getPhrase('users')}}</a> </li>
+							<li><a href="{{URL_USERS}}"><!-- {{ getPhrase('users')}} -->Cài đặt</a> </li>
 							<li class="active">{{isset($title) ? $title : ''}}</li>
 							@else
 							<li class="active">{{$title}}</li>
@@ -35,7 +35,7 @@
 							 
 						</div>
 						@endif
-					<h1>{{ $title }}  </h1>
+					<h1><!-- {{ $title }}  --> Cài đặt phần chuyên dụng </h1>
 					</div>
 
 
@@ -46,7 +46,7 @@
 						array('url' => URL_USERS_SETTINGS.$record->slug, 
 						'method'=>'patch','novalidate'=>'','name'=>'formUsers ', 'files'=>'true' )) }}
 					
-					<h1>{{getPhrase('quiz_and_exam_series')}}</h1>
+					<h1><!-- {{getPhrase('quiz_and_exam_series')}} -->Khóa luyện thi</h1>
 
 					<div class="row">
 					@foreach($quiz_categories as $category)
@@ -70,7 +70,7 @@
 				 
 				 </div>
 
-				 	<h1>LMS {{getPhrase('categories')}}</h1>
+				 	<h1><!-- LMS {{getPhrase('categories')}} -->Khóa Học</h1>
 
 					<div class="row">
 					@foreach($lms_category as $category)
@@ -115,6 +115,6 @@
 @endsection
 
 @section('footer_scripts')
- @include('admin.common.validations');
+ @include('common.validations');
  <script src="{{JS}}bootstrap-toggle.min.js"></script>
 @stop

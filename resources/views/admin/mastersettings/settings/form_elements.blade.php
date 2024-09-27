@@ -10,11 +10,11 @@
 
 						<span class="text-red">*</span>
 
-						{{ Form::text('title', $value = null , $attributes = array('class'=>'form-control', 'placeholder' => getPhrase('title'),
+						{{ Form::text('title', $value = null , $attributes = array('class'=>'form-control', 'placeholder' => 'Title',
 
 							'ng-model'=>'title',
 
-							'ng-pattern' => getRegexPattern("name"),
+							'ng-pattern' => '',
 
 							'required'=> 'true', 
 

@@ -24,10 +24,17 @@
                                         <div class="col-md-4"><h4><span class="language_l1">{{$left->title}}</span> </h4></div>
                                         @if(isset($left->titlel2))
                                         <div class="col-md-4"><h4><span class="language_l2" style="display: none;">{{$left->titlel2}}</span> </h4></div>
+                                        @else
+
+                                          <div class="col-md-4"><h4><span class="language_l2" style="display: none;">{{$left->title}}</span> </h4></div>
+
                                         @endif
                                         <div class="col-md-4"><h4><span class="language_l1">{{$right->title}}</span></h4></div>
                                         @if(isset($right->titlel2))
                                         <div class="col-md-4"><h4><span class="language_l2" style="display: none;">{{$right->titlel2}}</span></h4></div>
+                                         @else
+
+                                          <div class="col-md-4"><h4><span class="language_l2" style="display: none;">{{$right->title}}</span> </h4></div>
                                         @endif
                                         <div class="col-md-2"><h4>Your answer</h4></div>
                                         <div class="col-md-2"><h4>Correct</h4></div>
@@ -39,12 +46,16 @@
                             <span class="language_l1"> {{$left_options[$index]}}</span>
                             @if($leftl2)
                             <span class="language_l2" style="display: none;"> {{$leftl2[$index]}}</span>
+                            @else
+                            <span class="language_l2" style="display: none;"> {{$left_options[$index]}}</span>
                             @endif
                            </div>
                             <div class="col-md-4"> 
                            <span class="language_l1"> {{$right_options[$index]}} </span>
                             @if($rightl2)
                            <span class="language_l2" style="display: none;"> {{$rightl2[$index]}} </span>
+                           @else
+                           <span class="language_l2" style="display: none;"> {{$right_options[$index]}} </span>
                            @endif
                           </div>
 

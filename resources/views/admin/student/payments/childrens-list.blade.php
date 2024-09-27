@@ -17,10 +17,10 @@
 	@foreach($children as $user)
 
 	<?php
-
+     
 	if(isItemPurchased($item_id, $item_type, $user->id))
-
-		continue;
+           continue;
+    
 
 
 
@@ -46,7 +46,7 @@
 
 			 
 
-					<input id="{{$user->id}}" onclick="changeSelectedUser('{{$user->id}}')" type="radio" class="form-control" name="child" value="{{$user->id}}" {{$checked}}>
+					<input id="{{$user->id}}" onclick="changeSelectedUser('{{$user->id}}')" type="radio" class="form-control child" name="child" value="{{$user->id}}" >
 
 					   <label for="{{$user->id}}">
 
@@ -78,7 +78,16 @@
 
 
 
-<script type="text/javascript">
+<script>
+   
+ //       var chkArray = 0;
+	
+	// $(".child:checked").each(function(){
+	// 	chkArray.push($(this).val());
+	// });
+
+	// console.log(chkArray);
+	
 
 	function changeSelectedUser(selected_id) {
 

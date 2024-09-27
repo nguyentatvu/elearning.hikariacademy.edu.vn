@@ -1,8 +1,8 @@
 <div class="panel-heading">
-		<h2>{{getPhrase('saved_exams')}}</h2>
+		<h2>Bộ đề thi</h2>
 	<div ng-if="savedSeries.length>0" class="crearfix selected-questions-details">
-		<span class="pull-left">{{getPhrase('saved_exams')}} (@{{savedSeries.length}})</span>
-		<span class="pull-right">{{getPhrase('total_questions')}}: @{{ totalQuestions }}</span>
+		<span class="pull-left">Số đề thi (@{{savedSeries.length}})</span>
+		<span class="pull-right">Câu hỏi: @{{ totalQuestions }}</span>
 	</div>
 	 <div ng-if="savedSeries.length==0"  class="crearfix selected-questions-details">
 		<span class="pull-left">{{getPhrase('no_data_available')}}</span>
@@ -15,14 +15,14 @@
 			<div class="col-md-12 clearfix">
 				<div ng-if="savedSeries!=''" class="vertical-scroll" >
 					 				
-					 				<a class="remove-all-questions text-red" ng-click="removeAll()">{{ getPhrase('remove_all')}}</a>
+					 				<a class="remove-all-questions text-red" ng-click="removeAll()">Xóa tất cả</a>
 					 				<table  
 								  class="table table-hover">
 								  <thead>
 								  <tr>
-									<th>{{getPhrase('title')}}</th>
-									<th>{{getPhrase('questions')}}</th>
-									<th>{{getPhrase('marks')}}</th>	
+									<th>Đề thi</th>
+									<th>Câu hỏi</th>
+									<th>Điểm</th>	
 									<th></th>	
 									</tr>
 									</thead>

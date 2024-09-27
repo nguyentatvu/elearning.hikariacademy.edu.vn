@@ -8,14 +8,14 @@
 					<div class="col-lg-12">
 						<ol class="breadcrumb">
 							<li><a href="{{PREFIX}}"><i class="mdi mdi-home"></i></a> </li>
-							<li class="active"> {{ $title }} </li>
+							<li class="active"><?php change_furigana_text ($title); ?> <!-- {{ $title }} --> </li>
 						</ol>
 					</div>
 				</div>
 				<!-- /.row -->
 				<div class="panel panel-custom">
 					<div class="panel-heading">
-						<h1>{{$title}}</h1>
+						<h1><!-- {{$title}} --><?php change_furigana_text ($title); ?></h1>
 					</div>
 					<div class="panel-body packages">
 						 
@@ -37,7 +37,7 @@
 										<h3>{{ $c->category }}</h3>
 										<ul>
 											<li><i class="icon-bookmark"></i> {{ count($c->quizzes()).' '.getPhrase('quizzes')}}</li>
-											<li><i class="icon-eye"></i> {{getPhrase('view')}}</li>
+											<li><i class="icon-eye"></i><!--  {{getPhrase('view')}} --> Xem chi tiết</li>
 										</ul>
 									
 									</div>

@@ -16,7 +16,7 @@
 
 							'ng-model'=>'title', 
 
-							'ng-pattern'=>getRegexPattern('name'), 
+							'ng-pattern'=>'', 
 
 							'required'=> 'true', 
 
@@ -24,7 +24,7 @@
 
 							'ng-minlength' => '2',
 
-							'ng-maxlength' => '40',
+							'ng-maxlength' => '240',
 
 							)) }}
 
@@ -282,6 +282,36 @@
 					{{ Form::text('end_date', $value = $date_to , $attributes = array('class'=>'input-sm form-control', 'placeholder' => '2015/7/17')) }}
 				</fieldset>
 			</div>
+
+          <div class="row">
+				<?php $options = array('1'=>'Yes', '0'=>'No');?>
+
+					 <fieldset class="form-group col-md-12" >
+
+						{{ Form::label('show_in_front', getphrase('show_in_home_page')) }}
+
+						<span class="text-red">*</span>
+
+						{{Form::select('show_in_front', $options, null, ['placeholder' => getPhrase('select'),'class'=>'form-control', 
+
+						    'ng-model'=>'show_in_front',
+
+							'required'=> 'true', 
+
+							'ng-class'=>'{"has-error": formLms.show_in_front.$touched && formLms.show_in_front.$invalid}',
+
+
+
+						]) }}
+
+						<div class="validation-error" ng-messages="formLms.show_in_front.$error" >
+
+	    					{!! getValidationMessage()!!}
+
+						</div>
+                
+                </fieldset>
+            </div>
 
  					<div class="row">
 

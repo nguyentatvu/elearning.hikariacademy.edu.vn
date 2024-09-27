@@ -14,7 +14,7 @@
 
 <div id="page-wrapper">
 
-			<div class="container-fluid">
+			<div class="container-fluid dip">
 
 				<!-- Page Heading -->
 
@@ -90,7 +90,7 @@
 
 						</div>
 
-						<div class="row">
+						<!-- <div class="row">
 
 							<div class="col-md-6 col-md-offset-3">
 
@@ -98,7 +98,7 @@
 
 							</div>
 
-						</div>
+						</div> -->
 
 					</div>
 
@@ -120,15 +120,15 @@
 
  @if(!$exam_record)
 
- @include('admin.common.datatables', array('route'=>URL_STUDENT_EXAM_GETATTEMPTS.$user->slug, 'route_as_url' => 'TRUE'))
+ @include('common.datatables', array('route'=>URL_STUDENT_EXAM_GETATTEMPTS.$user->slug, 'route_as_url' => 'TRUE'))
 
  @else
 
- @include('admin.common.datatables', array('route'=>URL_STUDENT_EXAM_GETATTEMPTS.$user->slug.'/'.$exam_record->slug, 'route_as_url' => 'TRUE'))
+ @include('common.datatables', array('route'=>URL_STUDENT_EXAM_GETATTEMPTS.$user->slug.'/'.$exam_record->slug, 'route_as_url' => 'TRUE'))
 
  @endif
 
- @include('admin.common.chart', array($chart_data,'ids' => array('myChart1')));
+ 
 
 @stop
 

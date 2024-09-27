@@ -12,8 +12,8 @@
 					<div class="col-lg-12">
 						<ol class="breadcrumb">
 							<li><a href="{{PREFIX}}"><i class="mdi mdi-home"></i></a> </li>
-							<li><a href="{{URL_STUDENT_ANALYSIS_BY_EXAM.$user->slug}}">{{getPhrase('analysis')}}</i></a> </li>
-							<li>{{ $title}}</li>
+							<li><a href="{{URL_STUDENT_ANALYSIS_BY_EXAM.$user->slug}}"><!-- {{getPhrase('analysis')}} --> Lịch sử bài kiểm tra</i></a> </li>
+							<li><!-- {{ $title}} -->Phân tích</li>
 						</ol>
 					</div>
 				</div>
@@ -29,8 +29,8 @@
 
 
 					<ul class="nav nav-tabs add-student-tabs">
-							<li class="active"><a data-toggle="tab" href="#academic_details">Marks</a></li>
-							<li><a data-toggle="tab" href="#personal_details">Time</a></li>
+							<li class="active"><a data-toggle="tab" href="#academic_details"><!-- Marks -->Điểm</a></li>
+							<li><a data-toggle="tab" href="#personal_details"><!-- Time -->Thời gian</a></li>
 							 
 					</ul>
 					<div class="tab-content tab-content-style">
@@ -146,10 +146,10 @@
 
 
  @if(isset($chart_data))
-	@include('admin.common.chart', array('chart_data'=>$chart_data,'ids' => $ids));
+	@include('common.chart', array('chart_data'=>$chart_data,'ids' => $ids));
 @endif
 @if(isset($time_data))
-	@include('admin.common.chart', array('chart_data'=>$time_data,'ids' => $timeids));
+	@include('common.chart', array('chart_data'=>$time_data,'ids' => $timeids));
 @endif
 
 
@@ -167,7 +167,7 @@ print_r($overall_ids);
 ?>
 
 
-	@include('admin.common.chart', array('chart_data'=>$overall_data,'ids' => $overall_ids));
+	@include('common.chart', array('chart_data'=>$overall_data,'ids' => $overall_ids));
 @endif
 
 

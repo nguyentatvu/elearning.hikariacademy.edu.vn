@@ -51,9 +51,9 @@
 @stop
 
 @section('footer_scripts')
-@include('admin.common.validations');
+@include('common.validations');
    {{-- <script src="{{JS}}bootstrap-datepicker.min.js"></script> --}}
-@include('admin.common.editor');
+@include('common.editor');
 <script src="{{JS}}datepicker.min.js"></script>
  <script>
  	  $('.input-daterange').datepicker({

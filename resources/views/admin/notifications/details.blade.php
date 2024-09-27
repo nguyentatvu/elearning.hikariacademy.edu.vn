@@ -11,7 +11,7 @@
                     <div class="col-lg-12">
                         <ol class="breadcrumb">
                             <li><a href="{{PREFIX}}"><i class="mdi mdi-home"></i></a> </li>
-                            <li><a href="{{URL_NOTIFICATIONS}}">{{getPhrase('notifications')}}</a></li>
+                            <li><a href="{{URL_NOTIFICATIONS}}"><!-- {{getPhrase('notifications')}} -->Thông báo</a></li>
                             <li>{{$notification->title}}</li>
                         </ol>
                     </div>
@@ -29,7 +29,7 @@
                             </div>
                             @if($notification->url)
                             <div class="notification-footer text-center">
-                                <a type="button" href="{{$notification->url}}" target="_blank" class="btn btn-lg btn-dark button">{{getPhrase('read_more')}}</a>
+                                <a type="button" href="{{$notification->url}}" target="_blank" class="btn btn-lg btn-dark button"><!-- {{getPhrase('read_more')}} -->Xem chi tiết</a>
                             </div>
                             @endif
 

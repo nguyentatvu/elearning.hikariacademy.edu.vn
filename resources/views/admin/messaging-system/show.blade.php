@@ -13,9 +13,11 @@
                     </div>
                 </div>
 <!-- <h1>Create a new message</h1> -->
+ <div class="row">
+                    <div class="col-md-7 col-sm-12">
 <div class="panel panel-custom">
                     <div class="panel-heading">
-                        <h3>{{$title}}</h3>
+                        <h1>{{$title}} </h1>
                     </div>
                     <div id="historybox" class="panel-body packages inbox-messages-replay">
                          
@@ -46,24 +48,27 @@
             </div>
             </div>
         @endforeach
+
+       
  
     </div>
     </div>
                 </div>
+             <div class="reply-block">
+                    <div class="row">
+            {!! Form::open(['route' => ['messages.update', $thread->id], 'method' => 'PUT']) !!}
+            <div class="col-sm-10">
+                {!! Form::textarea('message', null, ['class' => 'form-control']) !!}
             </div>
-              <h4>Reply</h4>
-        {!! Form::open(['route' => ['messages.update', $thread->id], 'method' => 'PUT']) !!}
-        <!-- Message Form Input -->
-        <div class="form-group">
-            {!! Form::textarea('message', null, ['class' => 'form-control']) !!}
+            <div class="col-sm-2">
+                {!! Form::submit('Reply', ['class' => 'btn btn-primary btn-lg btn-width']) !!}
+            </div>
+            {!! Form::close() !!}
         </div>
-
-        <!-- Submit Form Input -->
-        <div class="text-center">
-            {!! Form::submit('Submit', ['class' => 'btn btn-primary btn-lg']) !!}
-        </div>
-        {!! Form::close() !!}
+            </div>
+        
             
+</div></div>
 </div>
 </div>
 

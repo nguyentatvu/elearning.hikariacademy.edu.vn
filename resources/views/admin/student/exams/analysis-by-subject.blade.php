@@ -26,9 +26,9 @@
 
 							<li><a href="{{PREFIX}}"><i class="mdi mdi-home"></i></a> </li>
 
-							<li><a href="{{URL_STUDENT_ANALYSIS_BY_EXAM.$user->slug}}">{{getPhrase('analysis')}}</i></a> </li>
+							<li><a href="{{URL_STUDENT_ANALYSIS_BY_EXAM.$user->slug}}"><!-- {{getPhrase('analysis')}} -->Lịch sử bài thi</i></a> </li>
 
-							<li>{{ $title}}</li>
+							<li><!-- {{ $title}} -->Phân tích</li>
 
 						</ol>
 
@@ -46,7 +46,9 @@
 
 						 
 
-						<h1>{{ $title.' '.getPhrase('of').' '.$user->name .' '.getPhrase('in').' '.$exam_record->title.' '.getPhrase('exam') }}</h1>
+						<h1>Bài kiểm tra của {{$user->name}}
+							<!-- {{ $title.' '.getPhrase('of').' '.$user->name .' '.getPhrase('in').' '.$exam_record->title.' '.getPhrase('exam') }} --></h1>
+						
 
 					</div>
 
@@ -56,9 +58,9 @@
 
 					<ul class="nav nav-tabs add-student-tabs">
 
-							<li class="active"><a data-toggle="tab" href="#academic_details">{{getPhrase('marks')}}</a></li>
+							<li class="active"><a data-toggle="tab" href="#academic_details"><!-- {{getPhrase('marks')}} -->Điểm</a></li>
 
-							<li><a data-toggle="tab" href="#personal_details">{{getPhrase('time')}}</a></li>
+							<!-- <li><a data-toggle="tab" href="#personal_details">{{getPhrase('time')}}Thời gian</a></li> -->
 
 							 
 
@@ -78,15 +80,15 @@
 
 								 
 
-									<th>{{ getPhrase('title')}}</th>
+									<th><!-- {{ getPhrase('title')}} -->Bài thi</th>
 
-									<th>{{ getPhrase('correct')}}</th>
+									<th><!-- {{ getPhrase('correct')}} -->Câu đúng</th>
 
-									<th>{{ getPhrase('wrong')}}</th>
+									<th><!-- {{ getPhrase('wrong')}} -->Câu sai</th>
 
-									<th>{{ getPhrase('not_answered')}}</th>
+									<th><!-- {{ getPhrase('not_answered')}} -->Không tra lời</th>
 
-									<th>{{ getPhrase('total')}}</th>
+									<th><!-- {{ getPhrase('total')}} -->Tổng</th>
 
 									 
 
@@ -252,7 +254,7 @@
 
 						</div>
 
-
+ 
 
 						@endfor
 
@@ -284,11 +286,11 @@
 
  
 
- @include('admin.common.chart', array($chart_data,'ids' => $ids));
+<!--  @include('common.chart', array($chart_data,'ids' => $ids)); -->
 
 @if(isset($time_data))
 
-	@include('admin.common.chart', array('chart_data'=>$time_data,'ids' => $timeids));
+	@include('common.chart', array('chart_data'=>$time_data,'ids' => $timeids));
 
 @endif
 
