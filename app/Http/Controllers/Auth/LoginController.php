@@ -49,6 +49,10 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
+        if ($request->isMethod('get')) {
+            return redirect()->to('/');
+        }
+
         //Kiểm tra CAPTCHA
         //  $columns = array(
         // 	// 'g-recaptcha-response' => 'required|captcha',
@@ -101,6 +105,8 @@ class LoginController extends Controller
         if (Auth::check()) {
             Auth::logout();
         }
+
+        session()->flash('logout_successful');
         return redirect('/');
     }
 }
