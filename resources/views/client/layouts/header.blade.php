@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light">
+<nav class="navbar navbar-expand-lg navbar-light px-5">
     <div class="w-100 px-5 d-flex align-items-center justify-conten-center">
         <div class="me-auto">
             <a class="navbar-brand" href="/">
@@ -15,7 +15,7 @@
             </div>
         </div>
         @if (Auth::check())
-            <div class="header-my-coin mx-2">
+            <div class="header-my-coin">
                 <a href="{{ route('mypage.reward-point') }}">
                     {{ formatNumber(Auth::user()->reward_point + Auth::user()->recharge_point) }}
                 </a>
@@ -108,7 +108,6 @@
                     </div>
                 </li>
             </ul>
-        </div>
 
             <div class="btn-group mx-2">
                 <div type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -157,7 +156,7 @@
                     @if (Auth::user()->image)
                         <img src="{{ asset('uploads/users/thumbnail/' . Auth::user()->image) }}" class="rounded-circle object-fit-cover" width="60px" height="60px" alt="Avatar" />
                     @else
-                        <img src="{{ asset('images/no-avatar.png') }}" class="rounded-circle object-fit-cover" height="60px" width="60px" alt="Avatar" />
+                        <img src="{{ asset('images/no-avatar.png') }}" class="rounded-circle object-fit-cover" height="40px" width="40px" alt="Avatar" />
                     @endif
                 </div>
                 <ul class="dropdown-menu dropdown-menu-end w-200px p-2">

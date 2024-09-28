@@ -29,6 +29,10 @@ Route::get('/contact', function () {
     return view('client.pages.contact');
 })->name('home.contact');
 
+Route::get('/detail/Khoa-hoc-N1', function () {
+    return view('client.pages.course-detail');
+})->name('home.study.header-study');
+
 // My page (Client)
 Route::get('/mypage/leaderboard', function () {
     return view('client.mypage.leaderboard');
