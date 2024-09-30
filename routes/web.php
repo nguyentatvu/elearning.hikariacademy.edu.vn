@@ -46,6 +46,30 @@ Route::get('/mypage/recharge-point', function () {
     return view('client.mypage.recharge-point');
 })->name('mypage.recharge-point');
 
+Route::get('/mypage/my-personal', function () {
+    return view('client.mypage.personal');
+})->name('mypage.personal');
+
+Route::get('/mypage/my-courses', function () {
+    return view('client.mypage.my-courses');
+})->name('mypage.courses');
+
+Route::get('/mypage/my-exams', function () {
+    return view('client.mypage.my-exams');
+})->name('mypage.exams');
+
+Route::get('/mypage/my-comments', function () {
+    return view('client.mypage.my-comments');
+})->name('mypage.my-comments');
+
+Route::get('/mypage/my-result-exam', function () {
+    return view('client.mypage.my-result-exam');
+})->name('mypage.my-result-exam');
+
+Route::get('/mypage/payment-management', function () {
+    return view('client.mypage.payment-management');
+})->name('mypage.payment-management');
+
 
 /**************************
  * ADMIN ROUTES

@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Hikari Elearning</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link href="{{ asset('/css/bootstrap.css') }}" rel="stylesheet">
     <link href="{{ asset('/css/app.css') }}" rel="stylesheet">
     @yield('styles')
@@ -41,13 +41,24 @@
 
 <body>
     <div class="layout-wrapper">
-        <header id="header">
-            @include('client.layouts.header')
-        </header>
+        @if (strpos(request()->path(), 'detail') === false)
+            <header id="header">
+                @include('client.layouts.header')
+            </header>
+        @else
+            <header id="header">
+                @include('client.layouts.header-study')
+            </header>
+        @endif
+
         <div class="d-flex">
-            @if (strpos(request()->path(), 'mypage') === false)
+            @if (!str_contains(request()->path(), 'mypage') && !str_contains(request()->path(), 'detail'))
                 <aside class="sidebar" id="sidebar" style="height: 100%">
                     @include('client.layouts.sidebar')
+                </aside>
+            @else
+                <aside class="sidebar" id="sidebar" style="height: 100%">
+                    @include('client.layouts.sidebar-study')
                 </aside>
             @endif
             <div class="container-fluid main-content">
@@ -55,12 +66,21 @@
                     @yield('content')
                 </div>
                 @component('client.components.common-component') @endcomponent
+                @component('client.components.auth-modal')
+                @endcomponent
+                <div class="loading-overlay">
+                    <div class="loading-spinner"></div>
+                </div>
             </div>
         </div>
     </div>
 
     <footer id="footer">
-        @include('client.layouts.footer')
+        @if (strpos(request()->path(), 'detail') === false)
+            @include('client.layouts.footer')
+        @else
+            @include('client.layouts.footer-study')
+        @endif
     </footer>
 
     <script src="{{ asset('js/app.js') }}"></script>
