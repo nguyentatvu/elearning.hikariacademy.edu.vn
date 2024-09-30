@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\LmsContent;
 use App\LmsSeries;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 
 class LmsContentRepository extends BaseRepository
 {
@@ -86,5 +87,50 @@ class LmsContentRepository extends BaseRepository
             ->first();
 
         return $content;
+    }
+
+    /**
+     * Get list contents
+     *
+     * @param string $seriesId
+     * @return Collection
+     */
+    public function getListContents(string $seriesId) {
+        return $this->model->with('childContents.childContents.childContents')
+            ->whereNull('parent_id')->where('lmsseries_id', $seriesId)
+            ->where('delete_status', 0)->orderBy('stt', 'asc')
+            ->get();
+    }
+
+    /**
+     * Get content by id with its ancestor contents
+     *
+     * @param string $id
+     * @return mixed(LmsContent|Null)
+     */
+    public function findByIdWithAncestors(string $id) {
+        return $this->model
+            ->with('parentContent.parentContent.parentContent')
+            ->where('id', $id)
+            ->get()->first();
+    }
+
+    /**
+     * Get the first content of the series
+     *
+     * @param string $seriesId
+     * @return mixed(LmsContent|null)
+     */
+    public function getFirstContentOfSeries(?string $seriesId)
+    {
+        if ($seriesId === null) {
+            return null;
+        }
+
+        return $this->model
+            ->where('lmsseries_id', $seriesId)
+            ->orderBy('stt', 'asc')
+            ->whereNotIn('type', [LmsContent::LESSON, LmsContent::LESSON_TOPIC])
+            ->first();
     }
 }

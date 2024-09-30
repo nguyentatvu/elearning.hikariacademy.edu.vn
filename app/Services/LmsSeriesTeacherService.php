@@ -4,13 +4,11 @@ namespace App\Services;
 
 use App\Repositories\LmsSeriesTeacherRepository;
 
-class LmsSeriesTeacherService
+class LmsSeriesTeacherService extends BaseService
 {
-    private $lmsSeriesTeacherRepository;
-
-    public function __construct(LmsSeriesTeacherRepository $lmsSeriesTeacherRepository)
+    public function __construct(LmsSeriesTeacherRepository $repository)
     {
-        $this->lmsSeriesTeacherRepository = $lmsSeriesTeacherRepository;
+        parent::__construct($repository);
     }
 
     /**
@@ -21,6 +19,6 @@ class LmsSeriesTeacherService
      */
     public function getTeachersFromSeriesIds(array $seriesIds)
     {
-        return $this->lmsSeriesTeacherRepository->getTeachersFromSeriesIds($seriesIds);
+        return $this->repository->getTeachersFromSeriesIds($seriesIds);
     }
 }

@@ -31,7 +31,6 @@ class LmsSeries extends Model
 
     public static function getFreeSeries($limit = 0)
     {
-
         $records  = LmsSeries::where('show_in_front', 1)
             ->groupby('lms_category_id')
             ->inRandomOrder()

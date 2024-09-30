@@ -32,18 +32,6 @@ class ConversationService
      * Create new conversation if not exist
      *
      * @param array $condition
-     * @param array $data
-     * @return mixed
-     */
-    public function updateOrCreate(array $condition = [], array $data = [])
-    {
-        return $this->conversationRepository->updateOrCreate($condition, $data);
-    }
-
-    /**
-     * Create new conversation if not exist
-     *
-     * @param array $condition
      * @return \Illuminate\Database\Eloquent\Model
      */
     public function firstOrCreate(array $condition)

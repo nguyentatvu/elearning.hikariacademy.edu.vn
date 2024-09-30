@@ -9,25 +9,25 @@ use App\LmsContent;
 use App\Repositories\LmsContentRepository;
 use App\Repositories\LmsExamRepository;
 use App\Repositories\LmsFlashcardRepository;
+use App\Repositories\LmsSeriesRepository;
 use App\Repositories\LmsTestRepository;
 use App\Repositories\PaymentMethodRepository;
 
-class LmsContentService
+class LmsContentService extends BaseService
 {
-    private $lmsContentRepository;
     private $paymentMethodRepository;
     private $lmsTestRepository;
     private $lmsExamRepository;
     private $lmsFlashcardRepository;
 
     public function __construct(
-        LmsContentRepository $lmsContentRepository,
+        LmsContentRepository $repository,
         PaymentMethodRepository $paymentMethodRepository,
         LmsTestRepository $lmsTestRepository,
         LmsExamRepository $lmsExamRepository,
         LmsFlashcardRepository $lmsFlashcardRepository
     ) {
-        $this->lmsContentRepository = $lmsContentRepository;
+        parent::__construct($repository);
         $this->paymentMethodRepository = $paymentMethodRepository;
         $this->lmsTestRepository = $lmsTestRepository;
         $this->lmsExamRepository = $lmsExamRepository;
@@ -42,7 +42,7 @@ class LmsContentService
      */
     public function getContentsBySerieId(int $seriesId)
     {
-        return $this->lmsContentRepository->getContentsBySerieId($seriesId);
+        return $this->repository->getContentsBySerieId($seriesId);
     }
 
     /**
@@ -56,7 +56,7 @@ class LmsContentService
     public function getContentById(int $userId, int $seriesComboId, int $id)
     {
         $isValid = $this->paymentMethodRepository->checkSerieValidity($userId, $seriesComboId);
-        $content = $this->lmsContentRepository->getContentById($id);
+        $content = $this->repository->getContentById($id);
 
         if (!$content) {
             return null;
@@ -101,7 +101,7 @@ class LmsContentService
             return null;
         }
 
-        $content = $this->lmsContentRepository->getInProgressContent($userId, $seriesId);
+        $content = $this->repository->getInProgressContent($userId, $seriesId);
 
         if (!$content) {
             return null;
@@ -163,5 +163,61 @@ class LmsContentService
         $flashcard = $this->lmsFlashcardRepository->getFlashcardContentById($flashcardId);
 
         return new FlashcardResource($flashcard);
+    }
+
+    /**
+     * Get list contents
+     *
+     * @param string $seriesId
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    function getListContents(string $seriesId) {
+        return $this->repository->getListContents($seriesId);
+    }
+
+    /**
+     * Get the list of active content IDs, where "active" refers to the ancestors
+     * of contents that the current content is part of
+     *
+     * @param string $contentId
+     * @return array
+     */
+    public function getActiveContentIdList(string $contentId) {
+        $content = $this->repository->findByIdWithAncestors($contentId);
+
+        if (is_null($content)) {
+            return [];
+        }
+
+        // A content either has no parent or 2 levels of parents
+        if (is_null($content->parentContent)) {
+            return [$content->id];
+        }
+
+        return [
+            $content->id,
+            $content->parentContent->id,
+            $content->parentContent->parentContent->id
+        ];
+    }
+
+    /**
+     * Check if the content is a trial content
+     *
+     * @param string $contentId
+     * @return boolean
+     */
+    public function checkTrialContent(string $contentId) {
+        return $this->repository->findById((int) $contentId)->el_try === LmsContent::TRIAL_TYPE;
+    }
+
+    /**
+     * Get the first content of the series
+     *
+     * @param string $seriesId
+     * @return mixed(LmsContent|null)
+     */
+    public function getFirstContentOfSeries(string $seriesId) {
+        return $this->repository->getFirstContentOfSeries($seriesId);
     }
 }

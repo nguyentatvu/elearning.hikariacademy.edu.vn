@@ -16,15 +16,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class UserService
+class UserService extends BaseService
 {
-    private $userRepository;
     private $imageService;
     private $lmsSeriesComboService;
 
-    public function __construct(UserRepository $userRepository, ImageService $imageService, LmsSeriesComboService $lmsSeriesComboService)
+    public function __construct(UserRepository $repository, ImageService $imageService, LmsSeriesComboService $lmsSeriesComboService)
     {
-        $this->userRepository = $userRepository;
+        parent::__construct($repository);
         $this->imageService = $imageService;
         $this->imageService->setDestination(app('App\ImageSettings')->getProfilePicsThumbnailpath());
         $this->lmsSeriesComboService = $lmsSeriesComboService;
@@ -120,17 +119,6 @@ class UserService
     }
 
     /**
-     * Get User
-     *
-     * @param int $id
-     * @return Collection
-     */
-    public function findById(int $id)
-    {
-        return $this->userRepository->findById($id);
-    }
-
-    /**
      * Create User
      *
      * @param array $data
@@ -161,7 +149,7 @@ class UserService
                 $data['ip'] = $ipInfo['ip'];
             }
 
-            $user = $this->userRepository->create($data);
+            $user = $this->repository->create($data);
             $user->roles()->attach($user->role_id);
 
             sendEmail('registration',
@@ -179,18 +167,6 @@ class UserService
             DB::rollBack();
             throw $e;
         }
-    }
-
-    /**
-     * Update User
-     *
-     * @param int $id
-     * @param array $attributes
-     * @return bool
-     */
-    public function update(int $id, array $attributes = [])
-    {
-        return $this->userRepository->update($id, $attributes);
     }
 
     /**
@@ -279,6 +255,6 @@ class UserService
      */
     public function restoreRedeemedPoints(?string $user_id = null)
     {
-        $this->userRepository->restoreRedeemedPoints($user_id);
+        $this->repository->restoreRedeemedPoints($user_id);
     }
 }

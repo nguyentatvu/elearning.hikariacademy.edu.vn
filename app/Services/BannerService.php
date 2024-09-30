@@ -4,12 +4,10 @@ namespace App\Services;
 
 use App\Repositories\BannerRepository;
 
-class BannerService
+class BannerService extends BaseService
 {
-    private $bannerRepository;
-
     public function __construct(BannerRepository $bannerRepository)
     {
-        $this->bannerRepository = $bannerRepository;
+        parent::__construct($bannerRepository);
     }
 }

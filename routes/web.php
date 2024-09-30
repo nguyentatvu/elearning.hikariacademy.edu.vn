@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +13,17 @@ use Illuminate\Support\Facades\Mail;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::prefix('learning-management')->name('learning-management.')->group(function () {
+    Route::get('lesson/show/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showLesson')
+        ->name('lesson.show');
+    Route::get('lesson/exercise/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showExercise')
+        ->name('lesson.exercise');
+    Route::get('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showAudit')
+        ->name('lesson.audit');
+    Route::get('lesson/flashcard/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showFlashcard')
+        ->name('lesson.flashcard');
+});
 
 // Page (Client)
 Route::get('/', function () {
@@ -721,17 +731,17 @@ Route::get('learning-management/content/{req_content_type}', 'StudentLmsControll
 Route::get('learning-management/content/show/{slug}', 'StudentLmsController@showContent');
 
 
-Route::get('learning-management/lesson/show/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showLesson')->name('learning-management.lesson.show');
+// Route::get('learning-management/lesson/show/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showLesson')->name('learning-management.lesson.show');
 
 Route::get('learning-management/lesson/combo/{slug?}', 'StudentLmsController@showCombo');
 
 Route::get('learning-management/lesson-selected/show/{slug?}/{lesson_id?}', 'StudentLmsController@showLessonSelected');
 
-Route::get('learning-management/lesson/flashcard/{combo_slug}/{slug?}/{stt?}',  'StudentLmsController@flashCard');
+// Route::get('learning-management/lesson/flashcard/{combo_slug}/{slug?}/{stt?}',  'StudentLmsController@flashCard')->name('learning-management.flashcard.show');
 
-Route::get('learning-management/lesson/exercise/{combo_slug}/{series}/{slug}', 'StudentLmsController@studentExercises');
+// Route::get('learning-management/lesson/exercise/{combo_slug}/{series}/{slug}', 'StudentLmsController@studentExercises')->name('learning-management.exercise.show');
 
-Route::get('learning-management/lesson/audit/{combo_slug}/{series}/{slug}', 'StudentLmsController@studentAudittest');
+// Route::get('learning-management/lesson/audit/{combo_slug}/{series}/{slug}', 'StudentLmsController@studentAudittest')->name('learning-management.audit.show');
 
 Route::post('learning-management/lesson/audit/{combo_slug}/{series}/{slug}', 'StudentLmsController@storeResuttest');
 
