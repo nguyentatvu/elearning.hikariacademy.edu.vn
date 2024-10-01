@@ -4,13 +4,11 @@ namespace App\Services;
 
 use App\Repositories\LmsFlashcardRepository;
 
-class LmsFlashcardService
+class LmsFlashcardService extends BaseService
 {
-    private $lmsFlashcardRepository;
-
-    public function __construct(LmsFlashcardRepository $lmsFlashcardRepository)
+    public function __construct(LmsFlashcardRepository $repository)
     {
-        $this->lmsFlashcardRepository = $lmsFlashcardRepository;
+        parent::__construct($repository);
     }
 
     /**
@@ -21,6 +19,6 @@ class LmsFlashcardService
      */
     public function getFlashcardContentById(int $flashcardId)
     {
-        return $this->lmsFlashcardRepository->getFlashcardContentById($flashcardId);
+        return $this->repository->getFlashcardContentById($flashcardId);
     }
 }

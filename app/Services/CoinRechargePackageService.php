@@ -4,13 +4,11 @@ namespace App\Services;
 
 use App\Repositories\CoinRechargePackageRepository;
 
-class CoinRechargePackageService
+class CoinRechargePackageService extends BaseService
 {
-    private $coinRechargeRepo;
-
-    public function __construct(CoinRechargePackageRepository $coinRechargeRepo)
+    public function __construct(CoinRechargePackageRepository $repository)
     {
-        $this->coinRechargeRepo = $coinRechargeRepo;
+        parent::__construct($repository);
     }
 
     /**
@@ -20,7 +18,7 @@ class CoinRechargePackageService
      */
     public function getAllActivePackages()
     {
-        $activePackages = $this->coinRechargeRepo->getAllActivePackages();
+        $activePackages = $this->repository->getAllActivePackages();
         $activePackages = $activePackages->map(function ($item) {
             $item->formattedPrice = formatCurrencyVND($item->price, 2);
             $item->totalCoin = $item->coin + (int) ($item->coin * ($item->bonus_percentage / 100));
@@ -38,7 +36,7 @@ class CoinRechargePackageService
      * @return mixed(Model|null)
      */
     public function findByPrice(int $price) {
-        return $this->coinRechargeRepo->getByCondition('price', $price);
+        return $this->repository->getByCondition('price', $price);
     }
 
     /**
@@ -47,7 +45,7 @@ class CoinRechargePackageService
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAllSorted() {
-        return $this->coinRechargeRepo->getAllSorted();
+        return $this->repository->getAllSorted();
     }
 
     /**
@@ -59,17 +57,6 @@ class CoinRechargePackageService
      */
     public function updateOrInsert(array $attributes, array $values)
     {
-        return $this->coinRechargeRepo->updateOrInsert($attributes, $values);
-    }
-
-    /**
-     * Get coin recharge package by Id
-     *
-     * @param string $id
-     * @return mixed(Model|Null)
-     */
-    public function findById(int $id)
-    {
-        return $this->coinRechargeRepo->findById($id);
+        return $this->repository->updateOrInsert($attributes, $values);
     }
 }

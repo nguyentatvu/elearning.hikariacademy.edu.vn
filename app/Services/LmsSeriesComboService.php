@@ -7,14 +7,13 @@ use App\LmsSeries;
 use App\Repositories\LmsSeriesComboRepository;
 use DateTime;
 
-class LmsSeriesComboService
+class LmsSeriesComboService extends BaseService
 {
-    private $lmsSeriesComboRepository;
     private $lmsSeriesService;
 
-    public function __construct(LmsSeriesComboRepository $lmsSeriesComboRepository, LmsSeriesService $lmsSeriesService)
+    public function __construct(LmsSeriesComboRepository $repository, LmsSeriesService $lmsSeriesService)
     {
-        $this->lmsSeriesComboRepository = $lmsSeriesComboRepository;
+        parent::__construct($repository);
         $this->lmsSeriesService = $lmsSeriesService;
     }
 
@@ -27,7 +26,7 @@ class LmsSeriesComboService
      */
     public function getSeriesCombo(int $userId, array $filters)
     {
-        $seriesCombos = $this->lmsSeriesComboRepository->getSeriesCombo($userId, $filters);
+        $seriesCombos = $this->repository->getSeriesCombo($userId, $filters);
 
         foreach ($seriesCombos as &$seriesCombo) {
             $seriesArray = array_filter([$seriesCombo->n1, $seriesCombo->n2, $seriesCombo->n3, $seriesCombo->n4, $seriesCombo->n5], function ($value) {
@@ -51,7 +50,7 @@ class LmsSeriesComboService
      */
     public function getMySeries(int $userId, int $type = LmsSeries::COURSE)
     {
-        $mySeries = $this->lmsSeriesComboRepository->getMySeries($userId, $type);
+        $mySeries = $this->repository->getMySeries($userId, $type);
 
         foreach ($mySeries as &$series) {
             $expiryDate = calculateExpiryDate($series->created_at, $series->time, $series->month_extend);
@@ -70,7 +69,7 @@ class LmsSeriesComboService
      * @return Illuminate\Database\Eloquent\Collection
      */
     public function getRedeemedSeries() {
-        $series = $this->lmsSeriesComboRepository->getRedeemedSeries();
+        $series = $this->repository->getRedeemedSeries();
         $series = $series->map(function ($item) {
             $item->redeemed_amount = $item->redeem_point * config('constant.redeemed_coin.vnd_convert_rate');
             $item->redeemed_percent = (int) ($item->redeemed_amount / $item->cost * 100);

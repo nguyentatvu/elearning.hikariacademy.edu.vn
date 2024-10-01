@@ -4,22 +4,10 @@ namespace App\Services;
 
 use App\Repositories\PaymentRepository;
 
-class PaymentService
+class PaymentService extends BaseService
 {
-    private $paymentRepo;
-
-    public function __construct(PaymentRepository $paymentRepo)
+    public function __construct(PaymentRepository $repository)
     {
-        $this->paymentRepo = $paymentRepo;
-    }
-
-    /**
-     * Create data by array attributes
-     *
-     * @param array $attributes
-     * @return Model
-     */
-    public function create(array $attributes) {
-        return $this->paymentRepo->create($attributes);
+        parent::__construct($repository);
     }
 }

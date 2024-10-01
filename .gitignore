@@ -15,3 +15,4 @@ package-lock.json
 public/mix-manifest.json
 public/app.css
 /public/css/pages/
+/storage/debugbar/*

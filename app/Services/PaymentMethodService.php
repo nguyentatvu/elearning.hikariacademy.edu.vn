@@ -6,13 +6,11 @@ use App\LmsSeries;
 use App\Repositories\PaymentMethodRepository;
 use Illuminate\Support\Facades\Auth;
 
-class PaymentMethodService
+class PaymentMethodService extends BaseService
 {
-    private $paymentMethodRepository;
-
-    public function __construct(PaymentMethodRepository $paymentMethodRepository)
+    public function __construct(PaymentMethodRepository $repository)
     {
-        $this->paymentMethodRepository = $paymentMethodRepository;
+        parent::__construct($repository);
     }
 
     /**
@@ -24,43 +22,7 @@ class PaymentMethodService
      */
     public function checkSerieValidity(int $userId, int $seriesComboId)
     {
-        return $this->paymentMethodRepository->checkSerieValidity($userId, $seriesComboId);
-    }
-
-    /**
-     * Create payment method by array attributes
-     *
-     * @param array $attributes
-     * @return Model
-     */
-    public function create(array $attributes)
-    {
-        return $this->paymentMethodRepository->create($attributes);
-    }
-
-    /**
-     * Get payment method by condition
-     *
-     * @param string $field
-     * @param mixed $value
-     *
-     * @return mixed(Model|null)
-     */
-    public function getByCondition($field, $value)
-    {
-        return $this->paymentMethodRepository->getByCondition($field, $value);
-    }
-
-    /**
-     * Get payment method by condition
-     *
-     * @param array $conditions
-     *
-     * @return mixed(Model|null)
-     */
-    public function getByConditions(array $conditions)
-    {
-        return $this->paymentMethodRepository->getByConditions($conditions);
+        return $this->repository->checkSerieValidity($userId, $seriesComboId);
     }
 
     /**
@@ -69,17 +31,7 @@ class PaymentMethodService
      * @return mixed(\Illuminate\Database\Eloquent\Collection|null)
      */
     public function getAllCoinTransferOrders() {
-        return $this->paymentMethodRepository->getAllCoinTransferOrders();
-    }
-
-    /**
-     * Get payment method id
-     *
-     * @param string $id
-     * @return mixed(Model|Null)
-     */
-    public function findById(string $id) {
-        return $this->paymentMethodRepository->findById($id);
+        return $this->repository->getAllCoinTransferOrders();
     }
 
     /**
@@ -88,7 +40,7 @@ class PaymentMethodService
      * @return bool
      */
     public function checkPendingSeriesPayment() {
-        return $this->paymentMethodRepository->checkPendingSeriesPayment();
+        return $this->repository->checkPendingSeriesPayment();
     }
 
     /**
@@ -98,7 +50,7 @@ class PaymentMethodService
      */
     public function checkPendingSeriesTransferOrder()
     {
-        return $this->paymentMethodRepository->checkPendingSeriesTransferOrder();
+        return $this->repository->checkPendingSeriesTransferOrder();
     }
 
     /**
@@ -107,7 +59,7 @@ class PaymentMethodService
      * @return bool
      */
     public function checkPendingCoinPayment() {
-        return $this->paymentMethodRepository->checkPendingCoinPayment();
+        return $this->repository->checkPendingCoinPayment();
     }
 
     /**
@@ -117,7 +69,7 @@ class PaymentMethodService
      */
     public function checkPendingCoinTransferOrder()
     {
-        return $this->paymentMethodRepository->checkPendingCoinTransferOrder();
+        return $this->repository->checkPendingCoinTransferOrder();
     }
 
     /**
@@ -126,7 +78,7 @@ class PaymentMethodService
      * @return mixed(\Illuminate\Database\Eloquent\Collection|null)
      */
     public function getAllOverdueSeriesPayment() {
-        return $this->paymentMethodRepository->getAllOverdueSeriesPayment();
+        return $this->repository->getAllOverdueSeriesPayment();
     }
 
     /**
@@ -135,6 +87,6 @@ class PaymentMethodService
      * @return mixed(\Illuminate\Database\Eloquent\Collection|null)
      */
     public function getAllOverdueCoinPayment() {
-        return $this->paymentMethodRepository->getAllOverdueCoinPayment();
+        return $this->repository->getAllOverdueCoinPayment();
     }
 }
