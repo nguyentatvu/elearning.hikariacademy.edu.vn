@@ -1,0 +1,70 @@
+<style>
+    .custom-container {
+        background-color: #f8f9fa;
+        padding: 10px;
+        position: relative;
+    }
+
+    .btn-custom {
+        border-radius: 20px;
+        border: 1px solid #00a2ff;
+        color: #00a2ff;
+        background-color: white;
+    }
+
+    .btn-custom:hover {
+        background-color: #e6f7ff;
+    }
+
+    .btn-custom-primary {
+        border-radius: 20px;
+        background-color: #b3d7ff;
+        color: white;
+    }
+
+    .btn-custom-primary:hover {
+        background-color: #99c2ff;
+    }
+
+    .text-custom {
+        font-weight: bold;
+        font-size: 16px;
+        position: absolute;
+        right: 0;
+    }
+
+    @media (min-width: 768px) {
+        .mobile-footer-study {
+            display: none !important;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .text-custom {
+            position: relative;
+        }
+
+        .footer-study {
+            display: none !important;
+        }
+    }
+</style>
+
+<div class="custom-container d-flex justify-content-center align-items-center footer-study">
+    <span></span>
+    <div>
+        <button class="btn btn-custom"><i class="bi bi-chevron-left"></i> bài trước</button>
+        <button class="btn btn-custom-primary">bài tiếp theo <i class="bi bi-chevron-right"></i></button>
+    </div>
+    <div class="text-custom">
+        Bài 1: 「はじめまして」
+    </div>
+</div>
+
+<div class="custom-container d-flex justify-content-between align-items-center mobile-footer-study">
+    <button class="btn btn-custom"><i class="bi bi-chevron-left"></i></button>
+    <div class="text-custom">
+        Bài 1: 「はじめまして」
+    </div>
+    <button class="btn btn-custom-primary"><i class="bi bi-chevron-right"></i></button>
+</div>

@@ -1,4 +1,17 @@
-html, body {
-    font-family: var(--font-family-primary) !important;
-    font-size: var(--font-size-default);
+html,
+body {
+  font-family: var(--font-family-primary) !important;
+  font-size: var(--font-size-default);
+}
+
+/* Tablet styles (medium devices) */
+@media (max-width: 1199px) and (min-width: 768px) {
+
+}
+
+/* Mobile styles (small devices) */
+@media (max-width: 767px) {
+    * {
+        font-size: 0.8rem !important;
+    }
 }

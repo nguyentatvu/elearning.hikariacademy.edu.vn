@@ -14,14 +14,15 @@
             <div class="mypage-navigation">
                 <nav class="mypage-navigation__list">
                     <ul>
-                        <li><a href="#">Trang cá nhân</a></li>
+                        <li><a href="{{ url('mypage/my-personal') }}" class="{{ setActiveClass('mypage/my-personal') }}">Trang cá nhân</a></li>
                         <li><a href="{{ url('mypage/reward-point') }}" class="{{ setActiveClass('mypage/reward-point') }}">Điểm tích lũy</a></li>
                         <li><a href="{{ url('mypage/leaderboard') }}" class="{{ setActiveClass('mypage/leaderboard') }}">Bảng xếp hạng</a></li>
-                        <li><a href="#">Khóa học</a></li>
-                        <li><a href="#">Khóa luyện thi</a></li>
-                        <li><a href="#">Câu hỏi của bạn</a></li>
-                        <li><a href="#">Phòng thi của bạn</a></li>
-                        <li><a href="#">Kết quả thi</a></li>
+                        <li><a href="{{ url('mypage/my-courses') }}" class="{{ setActiveClass('mypage/my-courses') }}">Khóa học</a></li>
+                        <li><a href="{{ url('mypage/my-exams') }}" class="{{ setActiveClass('mypage/my-exams') }}">Khóa luyện thi</a></li>
+                        <li><a href="{{ url('mypage/my-comments') }}" class="{{ setActiveClass('mypage/my-comments') }}">Câu hỏi của bạn</a></li>
+                        <li><a href="{{ url('mypage/leaderboard') }}" class="{{ setActiveClass('mypage/leaderboard') }}">Phòng thi của bạn</a></li>
+                        <li><a href="{{ url('mypage/my-result-exam') }}" class="{{ setActiveClass('mypage/my-result-exam') }}">Kết quả thi</a></li>
+                        <li><a href="{{ url('mypage/payment-management') }}" class="{{ setActiveClass('mypage/payment-management') }}">Quản lý thanh toán</a></li>
                         <li><a href="{{ url('mypage/recharge-point') }}" class="{{ setActiveClass('mypage/recharge-point') }}">Nạp</a></li>
                     </ul>
                 </nav>

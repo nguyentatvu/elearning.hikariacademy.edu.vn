@@ -2,6 +2,95 @@
 @extends('client.app')
 
 @section('styles')
+<style>
+    .form-container h1 span {
+        color: var(--primary);
+    }
+
+    .form-container p span {
+        color: var(--primary);
+    }
+
+    .form-container .form-label {
+        color: var(--primary);
+    }
+
+    .form-container .form-control {
+        border-radius: 8px;
+        height: 48px;
+        font-size: 16px;
+    }
+
+    .form-container .btn-primary {
+        background-color: var(--primary);
+        border: none;
+        border-radius: 8px;
+        height: 48px;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    .form-container .btn-primary:hover {
+        background-color: #1558b0;
+    }
+
+    .form-container .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    .form-container .divider::before,
+    .form-container .divider::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #dadce0;
+    }
+
+    .form-container .social-login {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .form-container .social-login a {
+        font-size: 24px;
+        color: #5f6368;
+    }
+
+    .form-container .social-login a:hover {
+        color: var(--primary);
+    }
+
+    .form-container .login-link {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .form-container .login-link a {
+        color: var(--primary);
+        text-decoration: none;
+    }
+
+    .form-container .login-link a:hover {
+        text-decoration: underline;
+    }
+
+    .image-container img {
+        width: 100%;
+        border-radius: 16px;
+    }
+
+    .social-icon {
+        background-color: #F3F9FA;
+        padding: 10px;
+        height: 40px;
+        width: 40px;
+        display: flex;
+        border-radius: 12px;
+    }
+</style>
 @endsection
 
 @section('content')
@@ -16,7 +105,7 @@
         </div>
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="https://codingyaar.com/wp-content/uploads/dark-flowers-1.png" class="d-block w-100"
+                <img src="{{ asset('images/asset/slider/banner-slider-n2.jpg') }}" class="d-block w-100"
                     alt="...">
                 <div class="carousel-caption d-flex flex-column h-100 align-items-center justify-content-center bottom-0">
                     <h2 class="bg-dark bg-opacity-50 py-2 px-4">First slide label</h2>
@@ -26,7 +115,7 @@
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="https://codingyaar.com/wp-content/uploads/dark-flowers-2.png" class="d-block w-100"
+                <img src="{{ asset('images/asset/slider/banner-slider-n3.jpg') }}" class="d-block w-100"
                     alt="...">
                 <div class="carousel-caption d-flex flex-column h-100 align-items-center justify-content-center bottom-0 ">
                     <h2 class="bg-dark bg-opacity-50 py-2 px-4">Second slide label</h2>
@@ -36,7 +125,7 @@
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="https://codingyaar.com/wp-content/uploads/dark-flowers-3.png" class="d-block w-100"
+                <img src="{{ asset('images/asset/slider/banner-slider-n4.jpg') }}" class="d-block w-100"
                     alt="...">
                 <div class="carousel-caption d-flex flex-column h-100 align-items-center justify-content-center bottom-0">
                     <h2 class="bg-dark bg-opacity-50 py-2 px-4">Third slide label</h2>
@@ -115,8 +204,7 @@
                         <div class="col-md-4">
                             <div class="course-card">
                                 <img alt="Placeholder image for course" height="400"
-                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png"
-                                    width="600" />
+                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png" width="600" />
                                 <div class="course-card-body">
                                     <h5 class="course-card-title">Khóa học</h5>
                                     <p class="course-card-price">1.600.000đ</p>
@@ -136,8 +224,7 @@
                         <div class="col-md-4">
                             <div class="course-card">
                                 <img alt="Placeholder image for course" height="400"
-                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png"
-                                    width="600" />
+                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png" width="600" />
                                 <div class="course-card-body">
                                     <h5 class="course-card-title">Khóa học</h5>
                                     <p class="course-card-price">1.600.000đ</p>
@@ -157,8 +244,7 @@
                         <div class="col-md-4">
                             <div class="course-card">
                                 <img alt="Placeholder image for course" height="400"
-                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png"
-                                    width="600" />
+                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png" width="600" />
                                 <div class="course-card-body">
                                     <h5 class="course-card-title">Khóa học</h5>
                                     <p class="course-card-price">1.600.000đ</p>
@@ -184,8 +270,7 @@
                         <div class="col-md-4">
                             <div class="course-card">
                                 <img alt="Placeholder image for course" height="400"
-                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png"
-                                    width="600" />
+                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png" width="600" />
                                 <div class="course-card-body">
                                     <h5 class="course-card-title">Khóa học</h5>
                                     <p class="course-card-price">1.600.000đ</p>
@@ -205,8 +290,7 @@
                         <div class="col-md-4">
                             <div class="course-card">
                                 <img alt="Placeholder image for course" height="400"
-                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png"
-                                    width="600" />
+                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png" width="600" />
                                 <div class="course-card-body">
                                     <h5 class="course-card-title">Khóa học</h5>
                                     <p class="course-card-price">1.600.000đ</p>
@@ -226,8 +310,7 @@
                         <div class="col-md-4">
                             <div class="course-card">
                                 <img alt="Placeholder image for course" height="400"
-                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png"
-                                    width="600" />
+                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png" width="600" />
                                 <div class="course-card-body">
                                     <h5 class="course-card-title">Khóa học</h5>
                                     <p class="course-card-price">1.600.000đ</p>
@@ -249,13 +332,11 @@
             </div>
 
             <!-- Carousel Controls -->
-            <button class="carousel-control-prev" type="button" data-bs-target="#courseCarousel"
-                data-bs-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#courseCarousel" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#courseCarousel"
-                data-bs-slide="next">
+            <button class="carousel-control-next" type="button" data-bs-target="#courseCarousel" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
@@ -274,8 +355,27 @@
                         <div class="col-md-4">
                             <div class="course-card">
                                 <img alt="Placeholder image for course" height="400"
-                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png"
-                                    width="600" />
+                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png" width="600" />
+                                <div class="course-card-body">
+                                    <h5 class="course-card-title">Khóa học</h5>
+                                    <p class="course-card-price">1.600.000đ</p>
+                                    <p class="course-card-description">Khóa học giúp bạn rèn luyện kỹ năng đọc hiểu</p>
+                                    <p class="text-muted">Cô Vi, Cô Hoa, Thầy Nakamura</p>
+                                    <div class="d-flex align-items-center text-primary-color">
+                                        <i class="bi bi-play-circle-fill"></i>
+                                        <span class="ms-2">45</span>
+                                        <i class="bi bi-clock ms-3"></i>
+                                        <span class="ms-2 ml-auto">9 tháng</span>
+                                        <button class="btn btn-outline-primary ms-auto">Xem thêm</button>
+                                    </div>
+                                    <a href="" class="btn btn-primary w-100 mt-3">Mua ngay</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="course-card">
+                                <img alt="Placeholder image for course" height="400"
+                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png" width="600" />
                                 <div class="course-card-body">
                                     <h5 class="course-card-title">Khóa học</h5>
                                     <p class="course-card-price">1.600.000đ</p>
@@ -295,29 +395,7 @@
                         <div class="col-md-4">
                             <div class="course-card">
                                 <img alt="Placeholder image for course" height="400"
-                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png"
-                                    width="600" />
-                                <div class="course-card-body">
-                                    <h5 class="course-card-title">Khóa học</h5>
-                                    <p class="course-card-price">1.600.000đ</p>
-                                    <p class="course-card-description">Khóa học giúp bạn rèn luyện kỹ năng đọc hiểu</p>
-                                    <p class="text-muted">Cô Vi, Cô Hoa, Thầy Nakamura</p>
-                                    <div class="d-flex align-items-center text-primary-color">
-                                        <i class="bi bi-play-circle-fill"></i>
-                                        <span class="ms-2">45</span>
-                                        <i class="bi bi-clock ms-3"></i>
-                                        <span class="ms-2 ml-auto">9 tháng</span>
-                                        <button class="btn btn-outline-primary ms-auto">Xem thêm</button>
-                                    </div>
-                                    <button class="btn btn-primary w-100 mt-3">Mua ngay</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="course-card">
-                                <img alt="Placeholder image for course" height="400"
-                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png"
-                                    width="600" />
+                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png" width="600" />
                                 <div class="course-card-body">
                                     <h5 class="course-card-title">Khóa học</h5>
                                     <p class="course-card-price">1.600.000đ</p>
@@ -343,8 +421,7 @@
                         <div class="col-md-4">
                             <div class="course-card">
                                 <img alt="Placeholder image for course" height="400"
-                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png"
-                                    width="600" />
+                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png" width="600" />
                                 <div class="course-card-body">
                                     <h5 class="course-card-title">Khóa học</h5>
                                     <p class="course-card-price">1.600.000đ</p>
@@ -364,8 +441,7 @@
                         <div class="col-md-4">
                             <div class="course-card">
                                 <img alt="Placeholder image for course" height="400"
-                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png"
-                                    width="600" />
+                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png" width="600" />
                                 <div class="course-card-body">
                                     <h5 class="course-card-title">Khóa học</h5>
                                     <p class="course-card-price">1.600.000đ</p>
@@ -385,8 +461,7 @@
                         <div class="col-md-4">
                             <div class="course-card">
                                 <img alt="Placeholder image for course" height="400"
-                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png"
-                                    width="600" />
+                                    src="https://riki.edu.vn/_nuxt/img/1.abd2d70.png" width="600" />
                                 <div class="course-card-body">
                                     <h5 class="course-card-title">Khóa học</h5>
                                     <p class="course-card-price">1.600.000đ</p>
@@ -408,13 +483,11 @@
             </div>
 
             <!-- Carousel Controls -->
-            <button class="carousel-control-prev" type="button" data-bs-target="#courseCarousel"
-                data-bs-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#courseCarousel" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#courseCarousel"
-                data-bs-slide="next">
+            <button class="carousel-control-next" type="button" data-bs-target="#courseCarousel" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
@@ -672,5 +745,9 @@
 @endsection
 
 @section('scripts')
-    <script type="module"></script>
+    <script type="module">
+        $(document).ready(function() {
+            // $('#loginModal').modal('show');
+        });
+    </script>
 @endsection
