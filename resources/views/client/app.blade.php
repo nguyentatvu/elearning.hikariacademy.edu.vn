@@ -41,7 +41,7 @@
 
 <body>
     <div class="layout-wrapper">
-        @if (strpos(request()->path(), 'detail') === false)
+        @if (!Request::is('detail*'))
             <header id="header">
                 @include('client.layouts.header')
             </header>
@@ -52,7 +52,7 @@
         @endif
 
         <div class="d-flex">
-            @if (!str_contains(request()->path(), 'mypage'))
+            @if (!Request::is('detail*'))
                 <aside class="sidebar" id="sidebar" style="height: 100%">
                     @include('client.layouts.sidebar')
                 </aside>
@@ -73,7 +73,7 @@
     </div>
 
     <footer id="footer">
-        @if (strpos(request()->path(), 'detail') === false)
+        @if (!Request::is('detail*'))
             @include('client.layouts.footer')
         @else
             @include('client.layouts.footer-study')

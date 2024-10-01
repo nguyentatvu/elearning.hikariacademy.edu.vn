@@ -368,7 +368,7 @@
                                         <span class="ms-2 ml-auto">9 tháng</span>
                                         <button class="btn btn-outline-primary ms-auto">Xem thêm</button>
                                     </div>
-                                    <a href="{{ route('home.study.header-study') }}" class="btn btn-primary w-100 mt-3">Mua ngay</a>
+                                    <a href="" class="btn btn-primary w-100 mt-3">Mua ngay</a>
                                 </div>
                             </div>
                         </div>
