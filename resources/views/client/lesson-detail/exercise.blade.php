@@ -1,0 +1,1 @@
+@extends('client.shared.lesson-detail')

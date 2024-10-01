@@ -21,6 +21,25 @@ return [
             0 => 3,
             1 => 6,
             2 => 12,
+        ],
+        'type_map' => [
+            'video' => [1, 2, 6, 9],
+            'exercise' => [3, 4, 7],
+            'audit' => [5],
+            'flashcard' => [10],
+            'title' => [0, 8]
+        ],
+        'topic_icons' => [
+            0 => 'vocab.png',
+            1 => 'grammar.png',
+            2 => 'exercise.png',
+            3 => 'jap-character.svg'
+        ],
+        'chapter_icons' => [
+            5 => 'score.png',
+            9 => 'video-streaming.png',
+            10 => 'flashcard.png',
+            0 => 'lesson.png'
         ]
     ],
     'redeemed_coin' => [

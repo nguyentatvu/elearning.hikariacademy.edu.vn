@@ -4,13 +4,11 @@ namespace App\Services;
 
 use App\Repositories\LmsTestRepository;
 
-class LmsTestService
+class LmsTestService extends BaseService
 {
-    private $lmsTestRepository;
-
-    public function __construct(LmsTestRepository $lmsTestRepository)
+    public function __construct(LmsTestRepository $repository)
     {
-        $this->lmsTestRepository = $lmsTestRepository;
+        parent::__construct($repository);
     }
 
     /**
@@ -34,7 +32,7 @@ class LmsTestService
      */
     protected function calculatePoint(int $lessonId, array $submittedAnswers)
     {
-        $correctAnswers = $this->lmsTestRepository->getCorrectAnswers($lessonId);
+        $correctAnswers = $this->repository->getCorrectAnswers($lessonId);
 
         if (empty($correctAnswers)) {
             return null;

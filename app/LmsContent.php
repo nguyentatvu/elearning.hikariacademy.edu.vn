@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class LmsContent extends Model
 {
@@ -19,6 +20,9 @@ class LmsContent extends Model
     public const LESSON_TOPIC = 8;
     public const SUMMARY_AND_INTRODUCTION = 9;
     public const FLASHCARD = 10;
+
+    public const TRIAL_TYPE = 1;
+    public const PURCHASE_TYPE = 0;
 
     public static function getRecordWithSlug($slug)
     {
@@ -46,13 +50,21 @@ class LmsContent extends Model
     }
 
     /**
-     * Relationship with LmsContent
+     * Relationship with child contents
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function childContents()
     {
-        return $this->hasMany(LmsContent::class, 'parent_id', 'id');
+        return $this->hasMany(LmsContent::class, 'parent_id', 'id')
+            ->where('delete_status', 0);
+    }
+
+    /**
+     * Relationship with parent contents
+     */
+    public function parentContent() {
+        return $this->belongsTo(LmsContent::class, 'parent_id', 'id');
     }
 
     /**
@@ -62,7 +74,11 @@ class LmsContent extends Model
      */
     public function lmsseries()
     {
-        return $this->belongsTo(LmsSeries::class, 'lmsseries_id');
+        $slug = request()->route('slug');
+
+        return $this->belongsTo(LmsSeries::class, 'lmsseries_id')
+            ->where('slug', $slug)
+            ->where('delete_status', 0);
     }
 
     /**
@@ -73,5 +89,17 @@ class LmsContent extends Model
     public function lmsStudentView()
     {
         return $this->hasMany(LmsStudentView::class, 'lmscontent_id', 'id');
+    }
+
+    /**
+     * Relationship with LmsStudentView of current user (return null if guest)
+     */
+    public function currentLmsStudentView() {
+        if (!Auth::check()) {
+            return null;
+        }
+
+        return $this->hasOne(LmsStudentView::class, 'lmscontent_id', 'id')
+            ->where('users_id', Auth::id());
     }
 }

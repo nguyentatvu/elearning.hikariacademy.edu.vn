@@ -5,13 +5,11 @@ namespace App\Services;
 use App\LmsSeries;
 use App\Repositories\LmsExamRepository;
 
-class LmsExamService
+class LmsExamService extends BaseService
 {
-    private $lmsExamRepository;
-
-    public function __construct(LmsExamRepository $lmsExamRepository)
+    public function __construct(LmsExamRepository $repository)
     {
-        $this->lmsExamRepository = $lmsExamRepository;
+        parent::__construct($repository);
     }
 
     /**
@@ -22,6 +20,6 @@ class LmsExamService
      */
     public function getExerciseContent(int $lessonId)
     {
-        return $this->lmsExamRepository->getExerciseContent($lessonId);
+        return $this->repository->getExerciseContent($lessonId);
     }
 }

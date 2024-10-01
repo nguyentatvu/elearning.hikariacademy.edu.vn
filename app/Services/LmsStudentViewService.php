@@ -5,12 +5,29 @@ namespace App\Services;
 use App\LmsSeries;
 use App\Repositories\LmsStudentViewRepository;
 
-class LmsStudentViewService
+class LmsStudentViewService extends BaseService
 {
-    private $lmsStudentViewRepository;
-
-    public function __construct(LmsStudentViewRepository $lmsStudentViewRepository)
+    public function __construct(LmsStudentViewRepository $repository)
     {
-        $this->lmsStudentViewRepository = $lmsStudentViewRepository;
+        parent::__construct($repository);
+    }
+
+    /**
+     * Get content views by series
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getViewsBySeries() {
+        return $this->repository->getViewsBySeries();
+    }
+
+    /**
+     * Get the last viewed content of the student
+     *
+     * @param string $seriesId
+     * @return mixed(LmsContent|null)
+     */
+    public function getLastViewedContentOfStudent(string $seriesId) {
+        return $this->repository->getLastViewedContentOfStudent($seriesId);
     }
 }
