@@ -34,16 +34,16 @@
     }
 
     @media (min-width: 768px) {
-
-        /* Show the default footer on larger screens and hide the mobile footer */
         .mobile-footer-study {
             display: none !important;
         }
     }
+
     @media (max-width: 767px) {
         .text-custom {
             position: relative;
         }
+
         .footer-study {
             display: none !important;
         }

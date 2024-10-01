@@ -35,13 +35,10 @@ Route::group([], function () {
     Route::match(['get', 'post'], '/register', 'Auth\RegisterController@register')->name('register');
     Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 });
+
 Route::get('/contact', function () {
     return view('client.pages.contact');
 })->name('home.contact');
-
-Route::get('/detail/Khoa-hoc-N1', function () {
-    return view('client.pages.course-detail');
-})->name('home.study.header-study');
 
 // My page (Client)
 Route::get('/mypage/leaderboard', function () {
@@ -118,7 +115,7 @@ Route::post('users/forgot-password', 'Auth\RegisterController@postResetUsersPass
 
 Route::get('languages/list', 'NativeController@index');
 
-Route::get('languages/getList', ['as'   => 'languages.dataTable', 'uses' => 'NativeController@getDatatable']);
+Route::get('languages/getList', ['as' => 'languages.dataTable', 'uses' => 'NativeController@getDatatable']);
 
 Route::get('languages/add', 'NativeController@create');
 
@@ -165,7 +162,7 @@ Route::get('users/details-learning/{slug}', 'UsersController@detailsLearning');
 Route::get('users/registerjp', 'UsersController@registerjp');
 
 Route::get('users/list/getregisterjpList/{role_name?}', [
-    'as'   => 'users.registerjpdataTable',
+    'as' => 'users.registerjpdataTable',
     'uses' => 'UsersController@getregisterjpDatatable'
 ]);
 
@@ -184,12 +181,12 @@ Route::post('users/import', 'UsersController@readExcel');
 Route::get('users/import-report', 'UsersController@importResult');
 
 Route::get('users/list/getregisterList/{role_name?}', [
-    'as'   => 'users.registerdataTable',
+    'as' => 'users.registerdataTable',
     'uses' => 'UsersController@getregisterDatatable'
 ]);
 
 Route::get('users/list/getList/{role_name?}', [
-    'as'   => 'users.dataTable',
+    'as' => 'users.dataTable',
     'uses' => 'UsersController@getDatatable'
 ]);
 
@@ -262,7 +259,7 @@ Route::patch('mastersettings/subjects/edit/{slug}', 'SubjectsController@update')
 Route::delete('mastersettings/subjects/delete/{id}', 'SubjectsController@delete');
 
 Route::get('mastersettings/subjects/getList', [
-    'as'   => 'subjects.dataTable',
+    'as' => 'subjects.dataTable',
     'uses' => 'SubjectsController@getDatatable'
 ]);
 
@@ -285,7 +282,7 @@ Route::patch('mastersettings/topics/edit/{slug}', 'TopicsController@update');
 Route::delete('mastersettings/topics/delete/{id}', 'TopicsController@delete');
 
 Route::get('mastersettings/topics/getList', [
-    'as'   => 'topics.dataTable',
+    'as' => 'topics.dataTable',
     'uses' => 'TopicsController@getDatatable'
 ]);
 
@@ -319,13 +316,13 @@ Route::patch('exams/questionbank/edit/{slug}', 'QuestionBankController@update');
 
 Route::delete('exams/questionbank/delete/{id}', 'QuestionBankController@delete');
 
-Route::get('exams/questionbank/getList',  'QuestionBankController@getDatatable');
+Route::get('exams/questionbank/getList', 'QuestionBankController@getDatatable');
 
 Route::get('exams/questionbank/getquestionslist/{slug}', 'QuestionBankController@getQuestions');
 
-Route::get('exams/questionbank/import',  'QuestionBankController@import');
+Route::get('exams/questionbank/import', 'QuestionBankController@import');
 
-Route::post('exams/questionbank/import',  'QuestionBankController@readExcel');
+Route::post('exams/questionbank/import', 'QuestionBankController@readExcel');
 
 //Quiz Categories
 
@@ -342,7 +339,7 @@ Route::patch('exams/categories/edit/{slug}', 'QuizCategoryController@update');
 Route::delete('exams/categories/delete/{slug}', 'QuizCategoryController@delete');
 
 Route::get('exams/categories/getList', [
-    'as'   => 'quizcategories.dataTable',
+    'as' => 'quizcategories.dataTable',
     'uses' => 'QuizCategoryController@getDatatable'
 ]);
 
@@ -597,9 +594,9 @@ Route::delete('student/bookmarks/delete/{id}', 'BookmarksController@delete');
 
 Route::delete('student/bookmarks/delete_id/{id}', 'BookmarksController@deleteById');
 
-Route::get('student/bookmarks/getList/{slug}',  'BookmarksController@getDatatable');
+Route::get('student/bookmarks/getList/{slug}', 'BookmarksController@getDatatable');
 
-Route::post('student/bookmarks/getSavedList',  'BookmarksController@getSavedBookmarks');
+Route::post('student/bookmarks/getSavedList', 'BookmarksController@getSavedBookmarks');
 
 //////////////////////////
 
@@ -654,7 +651,7 @@ Route::patch('lms/categories/edit/{slug}', 'LmsCategoryController@update');
 Route::delete('lms/categories/delete/{slug}', 'LmsCategoryController@delete');
 
 Route::get('lms/categories/getList', [
-    'as'   => 'lmscategories.dataTable',
+    'as' => 'lmscategories.dataTable',
     'uses' => 'LmsCategoryController@getDatatable'
 ]);
 
@@ -673,7 +670,7 @@ Route::patch('lms/content/edit/{slug}', 'LmsContentController@update');
 Route::delete('lms/content/delete/{slug}', 'LmsContentController@delete');
 
 Route::get('lms/content/getList', [
-    'as'   => 'lmscontent.dataTable',
+    'as' => 'lmscontent.dataTable',
     'uses' => 'LmsContentController@getDatatable'
 ]);
 
@@ -830,7 +827,7 @@ Route::post('mastersettings/settings/add-sub-settings/{slug}', 'SettingsControll
 Route::patch('mastersettings/settings/add-sub-settings/{slug}', 'SettingsController@updateSubSettings');
 
 Route::get('mastersettings/settings/getList', [
-    'as'   => 'mastersettings.dataTable',
+    'as' => 'mastersettings.dataTable',
     'uses' => 'SettingsController@getDatatable'
 ]);
 
@@ -855,7 +852,7 @@ Route::patch('email/templates/edit/{slug}', 'EmailTemplatesController@update');
 Route::delete('email/templates/delete/{slug}', 'EmailTemplatesController@delete');
 
 Route::get('email/templates/getList', [
-    'as'   => 'emailtemplates.dataTable',
+    'as' => 'emailtemplates.dataTable',
 
     'uses' => 'EmailTemplatesController@getDatatable'
 ]);
@@ -958,8 +955,8 @@ Route::get('lms/video/{slug}/{cat_id?}', 'SiteController@viewVideo');
 
 Route::get('contact-us', function () {
     $view_name = 'admin.site.contact-us';
-    $data['active_class']  = "contact-us";
-    $data['title']  = getPhrase('contact_us');
+    $data['active_class'] = "contact-us";
+    $data['title'] = getPhrase('contact_us');
 
     return view($view_name, $data);
 });
@@ -984,7 +981,7 @@ Route::post('theme/update/settings/{slug}', 'SiteThemesController@updateSubSetti
 
 Route::get('classes', 'ClassesController@index');
 
-Route::get('classes/getList',  'ClassesController@getDatatable');
+Route::get('classes/getList', 'ClassesController@getDatatable');
 
 Route::get('classes/add', 'ClassesController@create');
 
@@ -1002,13 +999,13 @@ Route::post('classes/search/user', 'ClassesController@getParentsOnSearch');
 
 Route::post('classes/classes-details/{slug}', 'ClassesController@updateClassesDetails');
 
-Route::get('classes/user/getList/{slug}',  'ClassesController@getClassesUserDatatable');
+Route::get('classes/user/getList/{slug}', 'ClassesController@getClassesUserDatatable');
 
 Route::delete('classes/user/delete/{id}', 'ClassesController@deleteUserClasses');
 
 Route::get('books', 'BooksController@index');
 
-Route::get('books/getList',  'BooksController@getDatatable');
+Route::get('books/getList', 'BooksController@getDatatable');
 
 Route::get('books/add', 'BooksController@create');
 
@@ -1143,7 +1140,7 @@ Route::patch('lms/class/edit/{id}/{slug}', 'LmsClassController@update');
 Route::delete('lms/class/delete/{id}/{slug}', 'LmsClassController@delete');
 
 Route::get('lms/class/getList/{slug}', [
-    'as'   => 'lmsclass.dataTable',
+    'as' => 'lmsclass.dataTable',
     'uses' => 'LmsClassController@getDatatable'
 ]);
 
@@ -1175,7 +1172,7 @@ Route::patch('lms/class-content/edit/{slug}', 'LmsClassContentsController@update
 Route::delete('lms/class-content/delete/{slug}', 'LmsClassContentsController@delete');
 
 Route::get('lms/class-content/getList', [
-    'as'   => 'lmsclass_content.dataTable',
+    'as' => 'lmsclass_content.dataTable',
     'uses' => 'LmsClassContentsController@getDatatable'
 ]);
 
@@ -1187,7 +1184,7 @@ Route::patch('lms/class-content/detail/edit/{slug}', 'LmsClassContentsController
 Route::delete('lms/class-content/detail/delete/{slug}', 'LmsClassContentsController@delete');
 
 Route::get('lms/class-content/detail-datatable/getList/{id}', [
-    'as'   => 'lmsclass_content_detail.dataTable',
+    'as' => 'lmsclass_content_detail.dataTable',
     'uses' => 'LmsClassContentsController@detailDatatable'
 ]);
 
@@ -1260,7 +1257,7 @@ Route::get('lms/exam-categories/comments/getExamList', 'CommentController@listge
 //Flash card
 Route::get('lms/flashcard', 'FlashcardController@index');
 
-Route::get('lms/flashcard/getList',  'FlashcardController@getDatatable');
+Route::get('lms/flashcard/getList', 'FlashcardController@getDatatable');
 
 Route::get('lms/flashcard/add', 'FlashcardController@create');
 
@@ -1305,7 +1302,7 @@ Route::post('email/sendmailadmin', 'EmailTemplatesController@sendmailadmin');
 Route::get('email/danhsachthithu/{slug}', 'EmailTemplatesController@danhsachthithu');
 
 Route::get('email/templates/getUserList', [
-    'as'   => 'useremailtemplates.dataTable',
+    'as' => 'useremailtemplates.dataTable',
     'uses' => 'EmailTemplatesController@getUserEmailList'
 ]);
 
