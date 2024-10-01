@@ -2,10 +2,7 @@
     .custom-container {
         background-color: #f8f9fa;
         padding: 10px;
-        position: fixed; /* Giữ nó ở vị trí cố định */
-        bottom: 0; /* Đặt nó ở dưới cùng */
-        left: 0;
-        right: 0;
+        position: relative;
     }
 
     .btn-custom {
@@ -32,15 +29,42 @@
     .text-custom {
         font-weight: bold;
         font-size: 16px;
+        position: absolute;
+        right: 0;
+    }
+
+    @media (min-width: 768px) {
+
+        /* Show the default footer on larger screens and hide the mobile footer */
+        .mobile-footer-study {
+            display: none !important;
+        }
+    }
+    @media (max-width: 767px) {
+        .text-custom {
+            position: relative;
+        }
+        .footer-study {
+            display: none !important;
+        }
     }
 </style>
 
-<div class="custom-container d-flex justify-content-between align-items-center">
+<div class="custom-container d-flex justify-content-center align-items-center footer-study">
+    <span></span>
     <div>
-        <button class="btn btn-custom"><i class="fas fa-chevron-left"></i> bài trước</button>
-        <button class="btn btn-custom-primary">bài tiếp theo <i class="fas fa-chevron-right"></i></button>
+        <button class="btn btn-custom"><i class="bi bi-chevron-left"></i> bài trước</button>
+        <button class="btn btn-custom-primary">bài tiếp theo <i class="bi bi-chevron-right"></i></button>
     </div>
     <div class="text-custom">
-        Bài 1: 「はじめまして」 <i class="fas fa-arrow-right"></i>
+        Bài 1: 「はじめまして」
     </div>
+</div>
+
+<div class="custom-container d-flex justify-content-between align-items-center mobile-footer-study">
+    <button class="btn btn-custom"><i class="bi bi-chevron-left"></i></button>
+    <div class="text-custom">
+        Bài 1: 「はじめまして」
+    </div>
+    <button class="btn btn-custom-primary"><i class="bi bi-chevron-right"></i></button>
 </div>

@@ -52,20 +52,17 @@
         @endif
 
         <div class="d-flex">
-            @if (!str_contains(request()->path(), 'mypage') && !str_contains(request()->path(), 'detail'))
+            @if (!str_contains(request()->path(), 'mypage'))
                 <aside class="sidebar" id="sidebar" style="height: 100%">
                     @include('client.layouts.sidebar')
-                </aside>
-            @else
-                <aside class="sidebar" id="sidebar" style="height: 100%">
-                    @include('client.layouts.sidebar-study')
                 </aside>
             @endif
             <div class="container-fluid main-content">
                 <div id="main-wrapper">
                     @yield('content')
                 </div>
-                @component('client.components.common-component') @endcomponent
+                @component('client.components.common-component')
+                @endcomponent
                 @component('client.components.auth-modal')
                 @endcomponent
                 <div class="loading-overlay">
