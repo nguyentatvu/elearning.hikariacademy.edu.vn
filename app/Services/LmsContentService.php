@@ -19,19 +19,22 @@ class LmsContentService extends BaseService
     private $lmsTestRepository;
     private $lmsExamRepository;
     private $lmsFlashcardRepository;
+    private $lmsSeriesRepository;
 
     public function __construct(
         LmsContentRepository $repository,
         PaymentMethodRepository $paymentMethodRepository,
         LmsTestRepository $lmsTestRepository,
         LmsExamRepository $lmsExamRepository,
-        LmsFlashcardRepository $lmsFlashcardRepository
+        LmsFlashcardRepository $lmsFlashcardRepository,
+        LmsSeriesRepository $lmsSeriesRepository
     ) {
         parent::__construct($repository);
         $this->paymentMethodRepository = $paymentMethodRepository;
         $this->lmsTestRepository = $lmsTestRepository;
         $this->lmsExamRepository = $lmsExamRepository;
         $this->lmsFlashcardRepository = $lmsFlashcardRepository;
+        $this->lmsSeriesRepository = $lmsSeriesRepository;
     }
 
     /**
@@ -219,5 +222,48 @@ class LmsContentService extends BaseService
      */
     public function getFirstContentOfSeries(string $seriesId) {
         return $this->repository->getFirstContentOfSeries($seriesId);
+    }
+
+    /**
+     * Get next content
+     *
+     * @param mixed $contentId
+     * @param mixed $seriesSlug
+     * @return mixed(LmsContent|null)
+     */
+    public function getNextContent($contentId, $seriesSlug) {
+        $seriesId = optional($this->lmsSeriesRepository->getByCondition('slug', $seriesSlug))->id;
+        $contentOrder = optional($this->repository->findById($contentId))->stt;
+        if (is_null($seriesId) || is_null($contentOrder)) {
+            return null;
+        }
+
+        return $this->repository->getNextContent($contentOrder, $seriesId);
+    }
+
+    /**
+     * Get exercise content
+     *
+     * @param string $contentId
+     * @return \Illuminate\Support\Collection
+     */
+    public function getFormattedExerciseContent(string $contentId) {
+        $exercises =  $this->repository->getFormattedExerciseContent($contentId);
+
+        if (!$exercises->isEmpty()) {
+            foreach ($exercises as $key => $value) {
+                $exercises[$key]->mota = change_furigana(mb_convert_encoding(str_replace('＿＿', '__', $value->mota), "UTF-8", "auto"), 'return');
+                $exercises[$key]->answers = explode('-,-', trim($value->answers));
+            }
+            foreach ($exercises as $key => $record) {
+                $valueAnswers = array();
+                foreach ($record->answers as $answer) {
+                    $valueAnswers[] = change_furigana($answer, 'return');
+                }
+                $exercises[$key]->answers = $valueAnswers;
+            }
+        }
+
+        return $exercises;
     }
 }

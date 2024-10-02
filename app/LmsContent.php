@@ -24,6 +24,9 @@ class LmsContent extends Model
     public const TRIAL_TYPE = 1;
     public const PURCHASE_TYPE = 0;
 
+    public const ACTIVE = 0;
+    public const DELETED = 1;
+
     public static function getRecordWithSlug($slug)
     {
         return LmsContent::where('slug', '=', $slug)->first();

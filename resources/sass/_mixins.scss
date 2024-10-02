@@ -1,0 +1,24 @@
+/// @alias modifier
+@mixin m($modifier) {
+    &--#{$modifier} {
+        @content;
+    }
+}
+
+$breakpoints: (
+    'pc': '(min-width: 1200px)',
+    'max-pc': 'screen and (max-width: 1199px)',
+    'tb': '(min-width: 992px)',
+    'max-tb': 'screen and (max-width: 991px)',
+    'sp': '(min-width: 768px)',
+    'max-sp': 'screen and (max-width: 767px)',
+    'sp-sl' : '(min-width: 576px)',
+    'max-sp-sl': 'screen and (max-width: 575px)',
+    'sp-sm': '(min-width: 350px)'
+) !default;
+
+@mixin mq($breakpoint: sp) {
+    @media #{map-get($breakpoints, $breakpoint)} {
+        @content;
+    }
+}

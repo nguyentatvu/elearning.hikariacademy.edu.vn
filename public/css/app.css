@@ -17,11 +17,6 @@ body {
 
 /* Tablet styles (medium devices) */
 /* Mobile styles (small devices) */
-@media (max-width: 767px) {
-  * {
-    font-size: 0.8rem !important;
-  }
-}
 .text-primary-color {
   color: var(--primary);
 }
