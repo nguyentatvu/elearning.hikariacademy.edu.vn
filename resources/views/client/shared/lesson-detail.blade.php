@@ -2,17 +2,19 @@
 
 @section('styles')
     <link href="{{ asset('css/pages/lesson-detail/app-course.css') }}" rel="stylesheet">
+    @yield('lesson-detail-styles')
 @endsection
 
 @section('content')
     <div class="row study-main-section">
         <div class="col-lg-9 col-12 study-main-content">
             <div class="study-content">
-                <iframe width="100%" src="https://www.youtube.com/embed/D0xos2XTQPs?si=vy3ftZnn3YbYKsZi"
+                {{-- <iframe width="100%" src="https://www.youtube.com/embed/D0xos2XTQPs?si=vy3ftZnn3YbYKsZi"
                     title="YouTube video player" frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-                </iframe>
+                </iframe> --}}
+                @yield('lesson-detail-content')
             </div>
 
             <div class="nav nav-tabs navtab-select-menu" id="nav-tab" role="tablist">
@@ -197,6 +199,7 @@
 @endsection
 
 @section('scripts')
+    @yield('lesson-detail-scripts')
     <script>
         const showBuyCourseModal = () => {
             $('#buy_course_modal').modal('show');

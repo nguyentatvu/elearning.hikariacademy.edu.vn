@@ -102,6 +102,10 @@ html {
 .study-main-content {
     height: calc(100vh - 45px);
     overflow-y: auto;
+
+    .study-content {
+        margin-bottom: 4px;
+    }
 }
 
 .topic-content-link {
