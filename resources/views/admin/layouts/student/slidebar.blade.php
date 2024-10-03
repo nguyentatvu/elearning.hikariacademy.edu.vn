@@ -63,13 +63,13 @@
             </span>
             Câu hỏi của bạn
         </a>
-        <a class=" d-flex border-bottom {{isActiveClass($active_class, 'examslist') }}" href="/exams/student-exam-series/list">
+        {{-- <a class=" d-flex border-bottom {{isActiveClass($active_class, 'examslist') }}" href="/exams/student-exam-series/list">
             <span class="icon1 mr-3">
                 <i class="icon icon-heart">
                 </i>
             </span>
             Phòng thi của bạn
-        </a>
+        </a> --}}
 		<a class=" d-flex border-bottom {{isActiveClass($active_class, 'resultexam') }}" href="/exams/exam-categories/result">
             <span class="icon1 mr-3">
                 <i class="icon icon-star">

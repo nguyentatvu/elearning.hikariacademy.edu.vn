@@ -27,44 +27,23 @@
                         </tr>
                     </thead>
                     <tbody class="coin-table">
-                        <tr data-coin="10" data-price="10000" data-formatted-price="10 000VND">
-                            <td>
-                                <input type="radio" name="price">
-                                <label>10 000VND</label>
-                            </td>
-                            <td>
-                                <span class="coin">
-                                    <img src="{{ asset('images/icons/coin.svg') }}" class="rounded-circle coin-size">
-                                </span>
-                                Coin x 10&#32;
-                            </td>
-                        </tr>
-                        <tr data-coin="55" data-price="50000" data-formatted-price="50 000VND">
-                            <td>
-                                <input type="radio" name="price">
-                                <label>50 000VND</label>
-                            </td>
-                            <td>
-                                <span class="coin">
-                                    <img src="{{ asset('images/icons/coin.svg') }}" class="rounded-circle coin-size">
-                                </span>
-                                Coin x 55&#32;
-                                <small><span class="fw-bold">(+10%)</span></small>
-                            </td>
-                        </tr>
-                        <tr data-coin="120" data-price="100000" data-formatted-price="100 000VND">
-                            <td>
-                                <input type="radio" name="price">
-                                <label>100 000VND</label>
-                            </td>
-                            <td>
-                                <span class="coin">
-                                    <img src="{{ asset('images/icons/coin.svg') }}" class="rounded-circle coin-size">
-                                </span>
-                                Coin x 120&#32;
-                                <small><span class="fw-bold">(+20%)</span></small>
-                            </td>
-                        </tr>
+                        @foreach ($active_coin_packages as $coin_package)
+                            <tr data-coin="{{ $coin_package->totalCoin }}" data-price="{{ $coin_package->price }}" data-formatted-price="{{ $coin_package->formattedPrice }}">
+                                <td>
+                                    <input type="radio" name="price">
+                                    <label>{{ $coin_package->formattedPrice }}</label>
+                                </td>
+                                <td>
+                                    <span class="coin">
+                                        <img width="20" alt="hi-coin" src="{{ asset('images/icons/coin.svg') }}">
+                                    </span>
+                                    Coin x {{ $coin_package->totalCoin }}&#32;
+                                    @if ($coin_package->bonus_percentage > 0)
+                                        <small><strong>(+{{ $coin_package->bonus_percentage }}%)</strong></small>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -90,7 +69,7 @@
             </div>
             <div class="detail-row">
                 <span>Tài khoản</span>
-                <span>Nguyen Thi Anh Duong</span>
+                <span>{{ Auth::user()->name }}</span>
             </div>
             <div class="transaction-instructions">
                 <h4 class="font-weight-bold">Hướng dẫn thanh toán</h4>
@@ -185,7 +164,7 @@
                 </form>
             </div>
             <div class="transaction-submit d-none" id="submit_vnpay">
-                <form action="#" method="get">
+                <form action="{{ route('payments.coin.vnpay') }}" method="get">
                     <input type="text" name="price" hidden>
                     <button type="submit" class="submit-button">Nạp điểm</button>
                 </form>
@@ -201,6 +180,6 @@
 @section('scripts')
     <script src="{{ asset('js/client/mypage/recharge-point.js') }}"></script>
     <script>
-        const TRANSFER_ORDER_URL = '#';
+        const TRANSFER_ORDER_URL = '{{ route('payments.coin.transfer') }}';
     </script>
 @endsection
