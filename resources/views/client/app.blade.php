@@ -63,11 +63,6 @@
                 </div>
                 @component('client.components.common-component')
                 @endcomponent
-                @component('client.components.auth-modal')
-                @endcomponent
-                <div class="loading-overlay">
-                    <div class="loading-spinner"></div>
-                </div>
             </div>
         </div>
     </div>

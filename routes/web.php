@@ -15,8 +15,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('learning-management')->name('learning-management.')->group(function () {
+    Route::get('lesson/next', 'StudentLmsController@getNextLesson')
+        ->name('next-lesson');
     Route::get('lesson/show/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showLesson')
         ->name('lesson.show');
+    Route::post('lesson/exercise/save-score', 'StudentLmsController@saveExerciseScore')
+        ->name('lesson.exercise.save-score');
     Route::get('lesson/exercise/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showExercise')
         ->name('lesson.exercise');
     Route::get('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showAudit')

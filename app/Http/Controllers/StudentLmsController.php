@@ -26,6 +26,7 @@ use File;
 use Response;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 class StudentLmsController extends Controller
 {
@@ -194,12 +195,7 @@ class StudentLmsController extends Controller
         }
 
         // Set route
-        $routes = [
-            'video' => 'learning-management.lesson.show',
-            'exercise' => 'learning-management.lesson.exercise',
-            'audit' => 'learning-management.lesson.audit',
-            'flashcard' => 'learning-management.lesson.flashcard'
-        ];
+        $routes = config('constant.series.routes');
         $params['stt'] = $lms_content->id;
         foreach ($routes as $type => $route) {
             if (in_array($lms_content->type, $typeMap[$type])) {
@@ -278,7 +274,7 @@ class StudentLmsController extends Controller
         $this->processLessonContent($combo_slug, $slug, $stt);
 
         return view('client.lesson-detail.video', array_merge($this->getPreparedContentVariables(),
-            ['type' => 'lesson']
+            ['type' => 'lesson', 'video_url' => $this->prepContent['detail_content']->file_path]
         ));
     }
 
@@ -289,9 +285,11 @@ class StudentLmsController extends Controller
      */
     public function showExercise(string $combo_slug = '', string  $slug = '', string $stt = '') {
         $this->processLessonContent($combo_slug, $slug, $stt);
+        $exercises = $this->lmsContentService->getFormattedExerciseContent($stt);
 
         return view('client.lesson-detail.exercise', array_merge($this->getPreparedContentVariables(),
-            ['type' => 'exercise']
+            ['type' => 'exercise', 'count_records' => count($exercises), 'records' => $exercises,
+            'slug' => $stt, 'series' => $slug, 'combo_slug' => $combo_slug]
         ));
     }
 
@@ -319,5 +317,69 @@ class StudentLmsController extends Controller
         return view('client.lesson-detail.flashcard', array_merge($this->getPreparedContentVariables(),
             ['type' => 'flashcard']
         ));
+    }
+
+    /**
+     * Get next lesson
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getNextLesson(Request $request) {
+        $series_combo_slug = $request->get('series_combo_slug');
+        $series_slug = $request->get('series_slug');
+        $content_id = $request->get('content_id');
+
+        $nextContent = $this->lmsContentService->getNextContent($content_id, $series_slug);
+        if (!$nextContent) {
+            return response()->json([
+                'success' => false,
+                'url' => null
+            ]);
+        }
+
+        $typeMap = config('constant.series.type_map');
+        $routes = config('constant.series.routes');
+        $params = [
+            'combo_slug' => $series_combo_slug,
+            'slug' => $series_slug,
+            'stt' => $nextContent->id
+        ];
+
+        foreach ($routes as $type => $route) {
+            if (in_array($nextContent->type, $typeMap[$type])) {
+                return response()->json([
+                    'success' => true,
+                    'url' => route($route, $params)
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Save exercise score
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     */
+    public function saveExerciseScore(Request $request) {
+        $contentId = $request->get('content_id');
+        $earnedPoint = $request->get('earned_point');
+
+        $studentView = $this->lmsStudentViewService->getByConditions([
+            'lmscontent_id' => $contentId,
+            'users_id' => Auth::id(),
+        ]);
+
+        if ($earnedPoint < 1 || !$studentView) {
+            return;
+        }
+
+        $studentView->update([
+            'finish' => LmsStudentView::FINISH
+        ], [
+            'lmscontent_id' => $contentId,
+            'users_id' => Auth::id(),
+        ]);
     }
 }

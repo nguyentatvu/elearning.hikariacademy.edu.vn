@@ -31,7 +31,7 @@
         </div>
     @else
         <div class="accordion-item {{ $content->css_class }}">
-            @if ($content->type == App\LmsContent::SUMMARY_AND_INTRODUCTION && $content->el_try != App\LmsContent::TRIAL_TYPE)
+            @if ($content->type == App\LmsContent::SUMMARY_AND_INTRODUCTION && $content->el_try != App\LmsContent::TRIAL_TYPE && !$isValidPayment)
                 <a href="javascript:void(0)" class="topic-content-link" onclick={{ Auth::check() ? 'showBuyCourseModal()' : 'showAuthModal(true)' }}>
                     <i class="bi bi-lock-fill text-primary"></i>
                     <span>Nội dung bị ẩn</span>
