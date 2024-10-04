@@ -20,6 +20,7 @@ use App\{
     MessageHistory,
     Conversation,
     Payment,
+    WeeklyLeaderboard,
 };
 
 use Illuminate\Support\ServiceProvider;
@@ -75,6 +76,9 @@ class RepositoryServiceProvider extends ServiceProvider
         });
         $this->app->bind(PaymentRepository::class, function () {
             return new PaymentRepository(new Payment());
+        });
+        $this->app->bind(WeeklyLeaderboardRepository::class, function () {
+            return new WeeklyLeaderboardRepository(new WeeklyLeaderboard());
         });
     }
 }

@@ -239,11 +239,27 @@
   display: flex;
   gap: 30px;
 }
+@media screen and (max-width: 1199px) {
+  .leaderboard {
+    flex-direction: column;
+    align-items: center;
+  }
+}
 .leaderboard__top-3 {
   width: 50%;
   height: 530px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+}
+@media screen and (max-width: 1199px) {
+  .leaderboard__top-3 {
+    width: 70%;
+  }
+}
+@media screen and (max-width: 991px) {
+  .leaderboard__top-3 {
+    width: 100%;
+  }
 }
 .leaderboard__top {
   display: flex;
@@ -264,6 +280,7 @@
   height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
+  border-radius: 999px;
 }
 .leaderboard__top--avatar span {
   position: absolute;
@@ -273,7 +290,7 @@
   border-radius: 8px;
   color: white;
   font-size: 1rem;
-  font-weight: 600px;
+  font-weight: 600;
   width: 100%;
   text-align: center;
   padding: 4px 0;
@@ -314,6 +331,16 @@
 .leaderboard__list {
   width: 50%;
 }
+@media screen and (max-width: 1199px) {
+  .leaderboard__list {
+    width: 70%;
+  }
+}
+@media screen and (max-width: 991px) {
+  .leaderboard__list {
+    width: 95%;
+  }
+}
 .leaderboard__list table {
   width: 100%;
   border-collapse: collapse;
@@ -336,11 +363,13 @@
 }
 .leaderboard__list .rank {
   width: 30px;
+  padding-left: 20px;
 }
 .leaderboard__list .score {
   text-align: right;
   color: #007bff;
   font-weight: bold;
+  padding-right: 20px;
 }
 .leaderboard__list .current-user {
   background-color: #f8f9fa;
@@ -356,11 +385,21 @@
   display: flex;
   gap: 60px;
 }
+@media screen and (max-width: 1199px) {
+  .recharge-coin {
+    flex-direction: column;
+  }
+}
 .recharge-coin__list {
   width: 50%;
   display: flex;
   flex-direction: column;
   gap: 40px;
+}
+@media screen and (max-width: 1199px) {
+  .recharge-coin__list {
+    width: 100%;
+  }
 }
 .recharge-coin__instruction-list li {
   display: flex;
@@ -433,6 +472,11 @@
 }
 .recharge-coin .payment-transaction-detail {
   width: 50%;
+}
+@media screen and (max-width: 1199px) {
+  .recharge-coin .payment-transaction-detail {
+    width: 100%;
+  }
 }
 .recharge-coin .payment-transaction-detail .transaction-details {
   background-color: white;
