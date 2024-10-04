@@ -13,6 +13,7 @@ yarn-error.log
 composer.lock
 package-lock.json
 public/mix-manifest.json
-public/app.css
+public/css/app.css
+public/js/app.js
 /public/css/pages/
 /storage/debugbar/*

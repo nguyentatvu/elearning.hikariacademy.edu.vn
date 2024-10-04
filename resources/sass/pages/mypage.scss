@@ -485,6 +485,10 @@
     .coin-payment-selections {
         width: 100%;
 
+        input[type=radio] {
+            accent-color: var(--primary);
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
