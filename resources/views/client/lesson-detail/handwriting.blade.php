@@ -5,30 +5,51 @@
 @endsection
 
 @section('lesson-detail-content')
+    @php
+        if ($handwriting->type == \App\JapaneseWritingPractice::HIRAGANA) {
+            $handwritingDetail = $handwriting->hiraganaWritingPractices;
+        } else {
+            $handwritingDetail = $handwriting->kanjiWritingPractices;
+            $question = str_replace(
+                $handwritingDetail[0]->underlined_word,
+                '<u>' . $handwritingDetail[0]->underlined_word . '</u>',
+                $handwritingDetail[0]->full_word
+            );
+            $kanji = $handwritingDetail[0]->kanji;
+            $totalKanji = mb_strlen($kanji);
+        }
+        $total = $handwritingDetail->count();
+    @endphp
     <div id="handwriting_container" class="handwriting-container">
         <div id="handwriting_lesson" class="d-flex align-items-center handwriting-lesson">
             <span id="handwriting_lesson_title" class="handwriting-title">
                 Đề bài:
-                <span id="handwriting_lesson_content" class="handwriting-lesson-content">かんこうち</span>
+                @if ($handwriting->type == \App\JapaneseWritingPractice::HIRAGANA)
+                    <span id="handwriting_lesson_content" class="handwriting-lesson-content">
+                        {{ $handwritingDetail[0]->character }}</span>
+                @else
+                    <span id="handwriting_lesson_content" class="handwriting-lesson-content">
+                        {!! $question !!}</span>
+                @endif
             </span>
         </div>
         <div id="handwriting_wrapper" class="handwriting-wrapper">
             <div id="handwriting_tabs" class="handwriting-tabs">
-                <div class="handwriting-tab">
-                    <span class="handwriting-tab-title" data-kanji="観">
-                        Hán tự 1
-                    </span>
-                </div>
-                <div class="handwriting-tab">
-                    <span class="handwriting-tab-title" data-kanji="光">
-                        Hán tự 2
-                    </span>
-                </div>
-                <div class="handwriting-tab">
-                    <span class="handwriting-tab-title" data-kanji="地">
-                        Hán tự 3
-                    </span>
-                </div>
+                @if ($handwriting->type == \App\JapaneseWritingPractice::HIRAGANA)
+                    <div class="handwriting-tab">
+                        <span class="handwriting-tab-title" data-kanji="{{ $handwritingDetail[0]->character }}">
+                            {{ $handwritingDetail[0]->character }}
+                        </span>
+                    </div>
+                @else
+                    @for ($index = 0; $index < $totalKanji; $index++)
+                        <div class="handwriting-tab">
+                            <span class="handwriting-tab-title" data-kanji="{{ mb_substr($kanji, $index, 1) }}">
+                                Hán tự {{ $index + 1 }}
+                            </span>
+                        </div>
+                    @endfor
+                @endif
             </div>
             <div id="guide_and_canvas_container" class="guide-and-canvas-container">
                 <div id="left_container" class="left-container">
@@ -64,6 +85,18 @@
                     </div>
                 </div>
             </div>
+            <div class="handwriting-tab-template" style="display: none;">
+                <div class="handwriting-tab">
+                    <span class="handwriting-tab-title"></span>
+                </div>
+            </div>
+        </div>
+        <div id="handwriting_arrow" class="handwriting-arrow">
+            <i id="arrow_left" class="bi bi-arrow-left arrow disabled"></i>
+            <div class="handwriting-page">
+                <span id="current_page">1</span> / {{ $total }}
+            </div>
+            <i id="arrow_right" class="bi bi-arrow-right arrow"></i>
         </div>
     </div>
 @endsection
@@ -72,6 +105,14 @@
     <script src="{{ asset('js/client/handwriting/kanji-animate.js') }}"></script>
     <script src="{{ asset('js/client/handwriting/handwriting-canvas.js') }}"></script>
     <script>
+        const total = {{ $total }};
+        const handwritingDetails = @json($handwritingDetail);
+        const arrowLeft = $('#arrow_left');
+        const arrowRight = $('#arrow_right');
+        const handwritingLessonContent = $('#handwriting_lesson_content');
+        const handwritingTabs = $('#handwriting_tabs');
+        let currentIndex = 0;
+        let currentPage = $currentPage = $('#current_page');
         let handwritingGuideRedraw = $('#handwriting_guide_redraw');
         let handwritingGuideEye = $('#handwriting_guide_eye');
         let fileKanjiSvg = "{{ asset('images/kanji') }}";
@@ -87,11 +128,85 @@
         new KanjivgAnimate('.hadnwriting-guide-redraw')
 
         $(document).ready(function() {
+            handleArrowLeftEvent();
+            handleArrowRightEvent();
             handleClickHandwritingTab();
             hideAndShowHandwritingGuide();
             createCanvasByTab();
             showFirstTab();
         });
+
+        /**
+         * Update Handwriting
+         */
+        function updateHandwriting(index) {
+            const data = handwritingDetails[index];
+            updateHandwritingLessonContent(data);
+            updateHandwritingTabs(data);
+            handleClickHandwritingTab();
+            createCanvasByTab();
+            showFirstTab();
+
+            arrowLeft.toggleClass('disabled', index === 0);
+            arrowRight.toggleClass('disabled', index === total - 1);
+            $currentPage.text(index + 1);
+        }
+
+        /**
+         * Handle Arrow Event
+         */
+        function handleArrowLeftEvent() {
+            $('#arrow_left').on('click', function() {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateHandwriting(currentIndex);
+                }
+            });
+        }
+
+        function updateHandwritingLessonContent(data) {
+            if ({{ $handwriting->type }} == {{ \App\JapaneseWritingPractice::KANJI }}) {
+                const question = data.full_word.replace(data.underlined_word, `<u>${data.underlined_word}</u>`);
+                handwritingLessonContent.html(question);
+            } else {
+                handwritingLessonContent.text(data.character);
+            }
+        }
+
+        function updateHandwritingTabs(data) {
+            handwritingTabs.empty();
+
+            if ({{ $handwriting->type }} == {{ \App\JapaneseWritingPractice::KANJI }}) {
+                const kanjiChars = data.kanji.split('');
+                for (let i = 0; i < data.kanji.length; i++) {
+                    const kanjiChar = kanjiChars[i];
+
+                    let $tabClone = $('.handwriting-tab-template').first().clone();
+                    $tabClone.find('.handwriting-tab-title')
+                            .attr('data-kanji', kanjiChar)
+                            .text(`Hán tự ${i + 1}`);
+                    handwritingTabs.append($tabClone.children());
+                }
+            } else {
+                let $tabClone = $('.handwriting-tab-template').first().clone();
+                $tabClone.find('.handwriting-tab-title')
+                    .attr('data-kanji', data.character)
+                    .text(data.character);
+                handwritingTabs.append($tabClone.children());
+            }
+        }
+
+        /**
+         * Handle Arrow Event
+         */
+        function handleArrowRightEvent() {
+            $('#arrow_right').on('click', function() {
+                if (currentIndex < total - 1) {
+                    currentIndex++;
+                    updateHandwriting(currentIndex);
+                }
+            });
+        }
 
         /**
          * Show First Tab
@@ -143,17 +258,17 @@
         }
 
         function activeHandwritingGuideEye() {
-            handwritingGuideEye.css("pointer-events", "auto"); 
+            handwritingGuideEye.css("pointer-events", "auto");
             handwritingGuideEye.css("opacity", "1");
         }
 
         function disableHandwritingGuideEye() {
-            handwritingGuideEye.css("pointer-events", "none"); 
+            handwritingGuideEye.css("pointer-events", "none");
             handwritingGuideEye.css("opacity", "0.5");
         }
 
         function activeHandwritingGuideRedraw() {
-            handwritingGuideRedraw.css("pointer-events", "auto"); 
+            handwritingGuideRedraw.css("pointer-events", "auto");
             handwritingGuideRedraw.css("opacity", "1");
         }
 

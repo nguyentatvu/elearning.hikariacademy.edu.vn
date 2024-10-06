@@ -210,4 +210,33 @@
         font-size: 20px;
         margin-left: 4px;
     }
+
+    .handwriting-arrow {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        margin-top: 4px;
+
+        .arrow {
+            color: #166ac9;
+            margin: 0 6px;
+            cursor: pointer;
+            font-size: 20px;
+
+            &:hover {
+                color: #0d4e8b;
+            }
+
+            &.disabled {
+                color: #ccc;
+                cursor: default;
+            }
+        }
+
+        .handwriting-page {
+            color: #166ac9;
+            font-size: 16px;
+        }
+    }
 }

@@ -320,4 +320,24 @@ class StudentLmsController extends Controller
             ['type' => 'flashcard']
         ));
     }
+
+    /**
+     * Show handwriting
+     *
+     * @param string $combo_slug
+     * @param string $slug
+     * @param string $stt
+     * @return \Illuminate\Http\Response
+     */
+    public function showHandwriting(string $combo_slug = '', string  $slug = '', string $stt = '') {
+        $this->processLessonContent($combo_slug, $slug, $stt);
+        $preparedContent = $this->getPreparedContentVariables();
+        $japaneseHandwritingPracticeId = $preparedContent['detailContent']->japanese_writing_practice_id;
+        $handwriting = $this->lmsContentService->getHandwritingContent($japaneseHandwritingPracticeId);
+
+        return view('client.lesson-detail.handwriting', array_merge($preparedContent,
+            ['type' => 'handwriting'],
+            ['handwriting' => $handwriting]
+        ));
+    }
 }

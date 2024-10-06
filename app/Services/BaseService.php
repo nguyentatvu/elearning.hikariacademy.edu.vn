@@ -36,6 +36,17 @@ abstract class BaseService
     }
 
     /**
+     * Find data by Id with relations
+     *
+     * @param int $id
+     * @param array $relations
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function findByIdWithRelations(int $id, array $relations = []) {
+        return $this->repository->findByIdWithRelations($id, $relations);
+    }
+
+    /**
      * Get the data by condition
      *
      * @param $column
