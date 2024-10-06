@@ -20,6 +20,9 @@ use App\{
     MessageHistory,
     Conversation,
     Payment,
+    JapaneseWritingPractice,
+    HiraganaWritingPractice,
+    KanjiWritingPractice,
 };
 
 use Illuminate\Support\ServiceProvider;
@@ -75,6 +78,15 @@ class RepositoryServiceProvider extends ServiceProvider
         });
         $this->app->bind(PaymentRepository::class, function () {
             return new PaymentRepository(new Payment());
+        });
+        $this->app->bind(HandwritingRepository::class, function () {
+            return new HandwritingRepository(new JapaneseWritingPractice);
+        });
+        $this->app->bind(HiraganaWritingPracticeRepository::class, function () {
+            return new HiraganaWritingPracticeRepository(new HiraganaWritingPractice);
+        });
+        $this->app->bind(KanjiWritingPracticeRepository::class, function () {
+            return new KanjiWritingPracticeRepository(new KanjiWritingPractice);
         });
     }
 }

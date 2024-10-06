@@ -27,7 +27,7 @@ abstract class BaseService
     /**
      * Get data by Id
      *
-     * @param string $id
+     * @param int $id
      * @return mixed(Model|Null)
      */
     public function findById(int $id)
@@ -78,6 +78,18 @@ abstract class BaseService
     public function insert(array $attributes = [])
     {
         return $this->repository->insert($attributes);
+    }
+
+    /**
+     * Create data with incrementing number
+     *
+     * @param array $attributes
+     * @param string $column
+     * @return Model
+     */
+    public function createWithIncrementedNumber(array $attributes, string $column)
+    {
+        return $this->repository->createWithIncrementedNumber($attributes, $column);
     }
 
     /**

@@ -86,6 +86,21 @@ class BaseRepository
     }
 
     /**
+     * Create data with incrementing number
+     *
+     * @param array $attributes
+     * @param string $column
+     * @return Model
+     */
+    public function createWithIncrementedNumber(array $attributes, string $column)
+    {
+        $maxValue = $this->model->max($column);
+        $attributes[$column] = $maxValue ? $maxValue + 1 : 1;
+
+        return $this->model->create($attributes);
+    }
+
+    /**
      * Update data by Id and array attribute
      *
      * @param int $id

@@ -1,7 +1,7 @@
 <?php $settings = getSettings('lms');?>
 <input type="hidden" name="series_slug" value="{{$series_slug}}">
 <?php
-  $dr_loai = ['0'=>'Menu', '8'=>'Sub menu', '1'=>'Từ vựng','2'=>'Bài học','3'=>'Bài tập','4'=>'Bài tập toàn bài','5'=>'Bài test','6'=>'Hán tự','7'=>'Bài ôn tập', '9'=>'Giới thiệu', 10=>'Flashcard'];
+  $dr_loai = ['0'=>'Menu', '8'=>'Sub menu', '1'=>'Từ vựng','2'=>'Bài học','3'=>'Bài tập','4'=>'Bài tập toàn bài','5'=>'Bài test','6'=>'Hán tự','7'=>'Bài ôn tập', '9'=>'Giới thiệu', 10=>'Flashcard', 11 => 'Luyện viết'];
   $loai_selected = (isset($record->type)) ? $record->type : null;
 ?>
 <div class="row">

@@ -5,57 +5,60 @@
 @endsection
 
 @section('lesson-detail-content')
-    <div id="handwriting_container">
-        <div id="handwriting_lesson" class="d-flex align-items-center">
+    <div id="handwriting_container" class="handwriting-container">
+        <div id="handwriting_lesson" class="d-flex align-items-center handwriting-lesson">
             <span id="handwriting_lesson_title" class="handwriting-title">
                 Đề bài:
-                <span id="handwriting_lesson_content">観光地</span>
+                <span id="handwriting_lesson_content" class="handwriting-lesson-content">かんこうち</span>
             </span>
         </div>
-        <div id="handwriting_wrapper">
-            <div id="handwriting_tabs">
+        <div id="handwriting_wrapper" class="handwriting-wrapper">
+            <div id="handwriting_tabs" class="handwriting-tabs">
                 <div class="handwriting-tab">
-                    <span class="handwriting-tab-title">
-                        観
+                    <span class="handwriting-tab-title" data-kanji="観">
+                        Hán tự 1
                     </span>
                 </div>
                 <div class="handwriting-tab">
-                    <span class="handwriting-tab-title">
-                        光
+                    <span class="handwriting-tab-title" data-kanji="光">
+                        Hán tự 2
                     </span>
                 </div>
                 <div class="handwriting-tab">
-                    <span class="handwriting-tab-title">
-                        地
+                    <span class="handwriting-tab-title" data-kanji="地">
+                        Hán tự 3
                     </span>
                 </div>
             </div>
-            <div id="guide_and_canvas_container">
-                <div id="left_container">
-                    <div id="handwriting_guide">
-                        <div id="handwriting_guide_content">
-                        </div>
-                        <div class="actions">
-                            <div class="hadnwriting-guide-redraw handwriting-action" data-kanjivg-target="#animate">
-                                <i class="bi bi-arrow-clockwise"></i>
-                            </div>
-                            <div class="hadnwriting-guide-eye handwriting-action">
-                                <i class="bi bi-eye"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="right_container">
-                    <div id="handwriting_area">
-                        <div id="handwriting_content">
-                            <canvas id="handwriting_canvas" width="300" height="300"></canvas>
+            <div id="guide_and_canvas_container" class="guide-and-canvas-container">
+                <div id="left_container" class="left-container">
+                    <div class="handwriting-area">
+                        <span class="handwriting-label">Luyện viết</span>
+                        <div id="handwriting_content" class="handwriting-content">
+                            <canvas id="handwriting_canvas" class="handwriting-canvas" width="300"
+                                height="300"></canvas>
                         </div>
                         <div class="actions">
                             <div class="handwriting-action" onclick="clearCanvas()">
                                 <i class="bi bi-eraser"></i>
                             </div>
                             <div class="handwriting-action" onclick="checkHandwriting()">
-                                <span class="handwriting-action-title">Kiểm tra</span>
+                                <span class="handwriting-action-title">Xem kết quả</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="right_container" class="right-container">
+                    <div id="handwriting_guide" class="handwriting-guide">
+                        <span class="handwriting-label">Kết quả</span>
+                        <div id="handwriting_guide_content" class="handwriting-guide-content"></div>
+                        <div class="actions">
+                            <div id="handwriting_guide_redraw" class="hadnwriting-guide-redraw handwriting-action"
+                                data-kanjivg-target="#animate">
+                                <i class="bi bi-arrow-clockwise"></i>
+                            </div>
+                            <div id="handwriting_guide_eye" class="hadnwriting-guide-eye handwriting-action">
+                                <i class="bi bi-eye"></i>
                             </div>
                         </div>
                     </div>
@@ -69,22 +72,40 @@
     <script src="{{ asset('js/client/handwriting/kanji-animate.js') }}"></script>
     <script src="{{ asset('js/client/handwriting/handwriting-canvas.js') }}"></script>
     <script>
-        const fileKanjiSvg = "{{ asset('images/kanji') }}";
-        const handwritingGuideContent = $('#handwriting_guide_content');
-        const handwritingCanvasContent = $('#handwriting_canvas');
-        const canvas = handwritingCanvasContent[0];
-        const ctx = canvas.getContext('2d');
-        const handwritingCanvas = new handwriting.Canvas(document.getElementById("handwriting_canvas"));
+        let handwritingGuideRedraw = $('#handwriting_guide_redraw');
+        let handwritingGuideEye = $('#handwriting_guide_eye');
+        let fileKanjiSvg = "{{ asset('images/kanji') }}";
+        let handwritingGuideContent = $('#handwriting_guide_content');
+        let handwritingCanvasContent = $('#handwriting_canvas');
+        let handwritingContent = $('#handwriting_content');
+        let handwritingContentDiv;
+        let handwritingCanvas;
         let kanji;
-        let result;
+        let resultSVG;
+        let handwritingGuideVisibilityObject = {};
+        let handwritingGuideContentObject = {};
         new KanjivgAnimate('.hadnwriting-guide-redraw')
 
         $(document).ready(function() {
             handleClickHandwritingTab();
             hideAndShowHandwritingGuide();
+            createCanvasByTab();
+            showFirstTab();
         });
 
-        function setup() {
+        /**
+         * Show First Tab
+         */
+        function showFirstTab() {
+            let firstTab = $('#handwriting_tabs .handwriting-tab').first();
+            firstTab.addClass('active');
+            handleAfterClickingHandwritingTab(firstTab);
+        }
+
+        /**
+         * Get Result SVG
+         */
+        function getResultSvg() {
             let code = kanji.codePointAt(0).toString(16);
             code = code.padStart(5, '0');
             let svg = getKanjiWithoutNumber(code);
@@ -97,10 +118,97 @@
             $('.handwriting-tab').click(function() {
                 $('.handwriting-tab').removeClass('active');
                 $(this).addClass('active');
+                handleAfterClickingHandwritingTab(this);
+            });
+        }
 
-                kanji = $(this).find('.handwriting-tab-title').text().trim();
+        function handleAfterClickingHandwritingTab(handwritingTab) {
+            kanji = $(handwritingTab).find('.handwriting-tab-title').data('kanji').trim();
+            getResultSvg();
+            getCanvasByTab(kanji);
+            showCanvasByTab(kanji);
+            handleHandwritingGuideContent(kanji);
+        }
+
+        function handleHandwritingGuideContent(kanji) {
+            if (!handwritingGuideVisibilityObject[kanji]) {
+                handwritingGuideContent.html('');
+                disableHandwritingGuideEye();
+                disableHandwritingGuideRedraw();
+            } else {
                 showHandwritingGuideContent(kanji);
-                setup();
+                activeHandwritingGuideEye();
+                activeHandwritingGuideRedraw();
+            }
+        }
+
+        function activeHandwritingGuideEye() {
+            handwritingGuideEye.css("pointer-events", "auto"); 
+            handwritingGuideEye.css("opacity", "1");
+        }
+
+        function disableHandwritingGuideEye() {
+            handwritingGuideEye.css("pointer-events", "none"); 
+            handwritingGuideEye.css("opacity", "0.5");
+        }
+
+        function activeHandwritingGuideRedraw() {
+            handwritingGuideRedraw.css("pointer-events", "auto"); 
+            handwritingGuideRedraw.css("opacity", "1");
+        }
+
+        function disableHandwritingGuideRedraw() {
+            handwritingGuideRedraw.css("pointer-events", "none");
+            handwritingGuideRedraw.css("opacity", "0.5");
+        }
+
+        function showCanvasByTab(kanji) {
+            $('#handwriting_content .canvas-wrapper').hide();
+            $('#canvas_wrapper_' + kanji).show();
+        }
+
+        function getCanvasByTab(kanji) {
+            handwritingContentDiv = $('#canvas_wrapper_' + kanji);
+            handwritingCanvasContent = $('#handwriting_canvas_' + kanji);
+            let canvas = handwritingCanvasContent[0];
+            handwritingCanvas = new handwriting.Canvas(canvas);
+        }
+
+        /**
+         * Create Canvas By Tab
+         */
+        function createCanvasByTab() {
+            let currentCanvas = $('#handwriting_content canvas');
+            let width = currentCanvas.attr('width');
+            let height = currentCanvas.attr('height');
+            let tabs = $('#handwriting_tabs .handwriting-tab');
+            let tabCount = tabs.length;
+
+            handwritingContent.empty();
+
+            tabs.each(function(index) {
+                let kanji = $(this).find('.handwriting-tab-title').data('kanji').trim();
+                let newCanvasId = 'handwriting_canvas_' + kanji;
+                handwritingGuideVisibilityObject[kanji] = false;
+                handwritingGuideContentObject[kanji] = false;
+
+                let canvasWrapper = $('<div>', {
+                    class: 'canvas-wrapper',
+                    id: 'canvas_wrapper_' + kanji
+                });
+
+                let newCanvas = $('<canvas></canvas>', {
+                    id: newCanvasId
+                }).attr({
+                    width: width,
+                    height: height
+                });
+
+                canvasWrapper.append(newCanvas);
+                handwritingContent.append(canvasWrapper);
+                handwritingCanvasContent = $(`#${newCanvasId}`);
+                let canvas = handwritingCanvasContent[0];
+                handwritingCanvas = new handwriting.Canvas(canvas);
             });
         }
 
@@ -108,47 +216,54 @@
          * Show Handwriting Guide Content
          */
         function showHandwritingGuideContent(kanji) {
+            handwritingGuideVisibilityObject[kanji] = true;
             handwritingGuideContent.html('');
-            let code = kanji.codePointAt(0).toString(16);
-            code = code.padStart(5, '0');
 
-            getKanji(code);
+            getKanji(kanji)
         }
 
         /**
          * Get Kanji SVG
          */
-        function getKanji(code) {
-            $.get(`${fileKanjiSvg}/${code}.svg`, function(data) {
-                    const svgMatch = $(data).find('svg');
+        function getKanji(kanji) {
+            if (handwritingGuideContentObject[kanji]) {
+                handwritingGuideContent.append(handwritingGuideContentObject[kanji]);
+            } else {
+                let code = kanji.codePointAt(0).toString(16);
+                code = code.padStart(5, '0');
 
-                    if (svgMatch.length) {
-                        let svgContent = $('<div>').append(svgMatch.clone()).html();
-                        svgContentWithId = svgContent.replace('<svg', '<svg id="animate"');
+                $.get(`${fileKanjiSvg}/${code}.svg`, function(data) {
+                        const svgMatch = $(data).find('svg');
 
-                        handwritingGuideContent.append(svgContentWithId);
-                    }
+                        if (svgMatch.length) {
+                            let svgContent = $('<div>').append(svgMatch.clone()).html();
+                            svgContentWithId = svgContent.replace('<svg', '<svg id="animate"');
 
-                    let paths = handwritingGuideContent.find('path');
-                    getColorForPath(paths, true);
-                })
-                .fail(function(error) {
-                    console.error('Lỗi tải SVG:', error);
-                });
+                            handwritingGuideContent.append(svgContentWithId);
+                        }
+
+                        let paths = handwritingGuideContent.find('path');
+                        getColorForPath(paths, true);
+                        handwritingGuideContentObject[kanji] = handwritingGuideContent.html();
+                        //    handwritingGuideContent.children().css('display', 'none');
+                    })
+                    .fail(function(error) {
+                        console.error('Lỗi tải SVG:', error);
+                    });
+            }
         }
 
+        /**
+         * Get Kanji Without Number
+         */
         function getKanjiWithoutNumber(code) {
             $.get(`${fileKanjiSvg}/${code}.svg`, function(data) {
                     const svgMatch = $(data).find('svg');
 
                     if (svgMatch.length) {
                         let svgContent = $('<div>').append(svgMatch.clone()).html();
-                        let cleanedSVG = cleanupSVGContent(svgContent);
-
-                        loadSVGToCanvas(cleanedSVG);
+                        resultSVG = cleanupSVGContent(svgContent);
                     }
-
-
                 })
                 .fail(function(error) {
                     console.error('Lỗi tải SVG:', error);
@@ -226,47 +341,46 @@
          * Check Handwriting
          */
         function checkHandwriting() {
-            showSVGOnCanvas();
+            showResult();
+            showHandwritingGuideContent(kanji);
         }
 
-        function loadSVGToCanvas(svgString) {
-            const handwritingContent = document.getElementById('handwriting_content');
-            const contentWidth = handwritingContent.clientWidth;
-            const contentHeight = handwritingContent.clientHeight;
+        /**
+         * Show Result
+         */
+        function showResult() {
+            handwritingContentDiv.find('div').remove();
+            const svgDiv = $('<div>').html(resultSVG);
 
-            canvas.width = contentWidth;
-            canvas.height = contentHeight;
+            let paths = svgDiv.find('path');
+            getColorForPath(paths, false);
 
-            const cleanedSVG = svgString
-                .replace(/<path([^>]*)>/g, (match, group) => {
-                    if (!/stroke="/.test(group)) {
-                        return `<path${group} stroke="#F0F0F0">`;
-                    }
-                    return match;
-                });
-
-            result = new Image();
-            const svgBlob = new Blob([cleanedSVG], {
-                type: 'image/svg+xml;charset=utf-8'
+            svgDiv.css({
+                'position': 'absolute',
+                'top': '0',
+                'left': '0',
+                'z-index': '0'
             });
-            const url = URL.createObjectURL(svgBlob);
 
-            result.onload = function() {
-                URL.revokeObjectURL(url);
-            };
+            handwritingCanvasContent.css({
+                'position': 'absolute',
+                'top': '0',
+                'left': '0',
+                'z-index': '1'
+            });
 
-            result.src = url;
+            handwritingContentDiv.css('position', 'relative');
+            handwritingContentDiv.append(svgDiv);
+            activeHandwritingGuideEye();
+            activeHandwritingGuideRedraw();
         }
 
-        function showSVGOnCanvas() {
-            if (result) {
-                ctx.drawImage(result, 0, 0, canvas.width, canvas.height);
-            }
-        }
-
+        /**
+         * Hide And Show Handwriting Guide
+         */
         function hideAndShowHandwritingGuide() {
             $('.hadnwriting-guide-eye').on('click', function() {
-                $('#handwriting_guide_content').children().toggle();
+                handwritingGuideContent.children().toggle();
             });
         }
     </script>

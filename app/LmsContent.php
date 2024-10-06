@@ -20,6 +20,7 @@ class LmsContent extends Model
     public const LESSON_TOPIC = 8;
     public const SUMMARY_AND_INTRODUCTION = 9;
     public const FLASHCARD = 10;
+    public const HANDWRITING = 11;
 
     public const TRIAL_TYPE = 1;
     public const PURCHASE_TYPE = 0;

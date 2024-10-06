@@ -89,7 +89,7 @@
   			<div class="collapse navbar-collapse navbar-ex1-collapse">
   				<ul class="nav navbar-nav side-nav">
   					<li {{ isActive($active_class, 'dashboard') }}>
-			  			<a href="{{PREFIX}}">
+			  			<a href="{{PREFIX}}dashboard">
 			  				<i class="fa fa-fw fa-window-maximize"></i> {{ getPhrase('dashboard') }}
 			  			</a>
 			  		</li>
@@ -141,6 +141,13 @@
 						<li><a href="{{PREFIX.'lms/seriescombo'}}"> <i class="fa fa-fw fa-list"></i>Danh sách đăng</a></li>
 						<li><a href="{{PREFIX.'lms/seriescombo/add'}}"> <i class="fa fa-fw fa-plus"></i>Thêm mới</a></li>
 
+					</ul>
+				</li>
+				<li {{ isActive($active_class, 'handwriting') }} >
+					<a data-toggle="collapse" data-target="#handwriting"><i class="fa fa-fw fa-pencil"></i>Luyện viết</a>
+					<ul id="handwriting" class="collapse sidemenu-dropdown">
+						<li><a href="/lms/handwriting"> <i class="fa fa-fw fa-list"></i>Danh sách Luyện viết</a></li>
+						<li><a href="/lms/handwriting/add"> <i class="fa fa-fw fa-plus"></i>Thêm mới</a></li>
 					</ul>
 				</li>
 				<li {{ isActive($active_class, 'coupons') }} >

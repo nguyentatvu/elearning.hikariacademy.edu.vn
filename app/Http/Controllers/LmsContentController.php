@@ -94,7 +94,7 @@ class LmsContentController extends Controller
         $this->setSettings();
         return DataTables::of($records)
             ->addColumn('hocthu', function ($records) {
-                if (in_array($records->type, ['1', '2', '6', '9', '3', '4', '5', '10'])) {
+                if (in_array($records->type, ['1', '2', '6', '9', '3', '4', '5', '10', '11'])) {
                     $extra = '<div class="form-check text-center">
                       <input ' . ($records->el_try == 1 ? 'checked' : '') . ' class="form-check-input" onclick="update_try(' . $records->id . ',' . $records->el_try . ')" type="checkbox" style="display: inline-block; width: 20px;height: 20px;" value="" id="flexCheckDefault">
                     </div>';
@@ -166,7 +166,7 @@ class LmsContentController extends Controller
                 // (in_array($records->type,['8']) ?($records->import == 1 ? '<span class="label label-success">Đã import bài tâp</span> ' : '<span class="label label-warning">Chưa import bài tâp</span>') : null);
             })
             ->editColumn('type', function ($records) {
-                $dr_loai = ['0' => 'Menu', '1' => 'Từ vựng', '2' => 'Bài học', '3' => 'Bài tập', '4' => 'Bài tập toàn bài', '5' => 'Bài test', '6' => 'Hán tự', '7' => 'Bài ôn tập', '8' => 'Sub menu', '9' => 'Giới thiệu','10' => 'Flashcard'];
+                $dr_loai = ['0' => 'Menu', '1' => 'Từ vựng', '2' => 'Bài học', '3' => 'Bài tập', '4' => 'Bài tập toàn bài', '5' => 'Bài test', '6' => 'Hán tự', '7' => 'Bài ôn tập', '8' => 'Sub menu', '9' => 'Giới thiệu','10' => 'Flashcard', '11' => 'Luyện viết'];
                 return $dr_loai[$records->type];
             })
             ->removeColumn('bai')
@@ -202,8 +202,11 @@ class LmsContentController extends Controller
         //dd($lsmContent);
         $list             = DB::table('lms_flashcard')->get();
         $flashcard         = array_pluck($list, 'name', 'id');
+        $listHandwriting = DB::table('japanese_writing_practices')->get();
+        $handwriting = array_pluck($listHandwriting, 'title', 'id');
         // dd($flashcard);
         $data['flashcard'] = array(''=>'-- Chọn Flashcard --') + $flashcard;
+        $data['handwriting'] = array(''=>'-- Chọn bài luyện viết --') + $handwriting;
         // dd($data['flashcard']);
         $data['URL_LMS_CONTENT_ADD'] = PREFIX . "lms/$series/content/add";
         $data['URL_LMS_CONTENT']     = PREFIX . "lms/$series/content";
@@ -302,6 +305,13 @@ class LmsContentController extends Controller
                   $parent_id = $lms_content_after->parent_id;
                 }
                 break;
+              case 11:
+                if( $lms_content_after->type == 8) {
+                    $parent_id = $lms_content_after_id;
+                } else {
+                $parent_id = $lms_content_after->parent_id;
+                }
+                break;
               default:
                 $parent_id = null; //Submenu
                 break;
@@ -315,6 +325,7 @@ class LmsContentController extends Controller
             $record->slug         = $slug_insert;
             $record->parent_id    = $parent_id;
             $record->flashcard_id = $request->flashcard;
+            $record->japanese_writing_practice_id = $request->handwriting;
             $record->lmsseries_id = $lmsseries_id_q->id;
             $record->bai          = $request->bai;
             $record->type         = $request->loai;
