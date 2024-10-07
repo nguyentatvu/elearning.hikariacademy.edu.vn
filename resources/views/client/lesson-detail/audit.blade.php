@@ -2,6 +2,7 @@
 
 @section('styles-content')
     <link href="{{ asset('css/pages/lesson-detail/audit.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/exercise/audit.css') }}">
 @endsection
 
 @section('lesson-detail-content')

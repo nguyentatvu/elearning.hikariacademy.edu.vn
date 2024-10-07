@@ -1,10 +1,10 @@
 @extends('client.app-course')
 
 @section('styles')
-    <link rel="stylesheet" href="{{ asset('assets/admin/css/exercise/audit.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/admin/css/exercise/bundle.min.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('assets/admin/css/exercise/bundle.min.css') }}"> --}}
     <link href="{{ asset('css/pages/lesson-detail/app-course.css') }}" rel="stylesheet">
     @yield('styles-content')
+    @yield('lesson-detail-styles')
 @endsection
 
 @section('content')
@@ -204,21 +204,27 @@
 
 @section('scripts')
     <script>
+        // Function to display the Buy Course modal
         const showBuyCourseModal = () => $('#buy_course_modal').modal('show');
 
         $(document).ready(function() {
             let isHidden = false;
 
+            // Helper function to get the outer height of an element or return 0 if not found
             const getOuterHeight = selector => $(selector).outerHeight() || 0;
 
             const adjustLayout = () => {
                 const windowHeight = window.innerHeight;
                 const headerHeight = getOuterHeight('.header-study');
+
+                // Determine which footer is visible: desktop or mobile
                 const footerSelector = $('.footer-study').is(':visible') ? '.footer-study' :
                     '.mobile-footer-study';
                 const footerHeight = getOuterHeight(footerSelector);
                 const navTabHeight = getOuterHeight('.navtab-select-menu');
                 let additionalHeight = 0;
+
+                // Calculate the available height for the study content
                 const studyContentHeight = windowHeight - headerHeight - footerHeight - navTabHeight;
 
                 if ($('.wp-btn-progress-les').length) {
@@ -226,38 +232,76 @@
                     $('.audit-show').css('margin-top', additionalHeight);
                 }
 
+                // Adjust margins for main content and lesson list based on header and footer heights
                 $('.study-main-content, .list-lesson').css({
                     'margin-top': `${headerHeight}px`,
                     'margin-bottom': `${footerHeight}px`
                 });
 
                 if (isHidden) {
+                    // When tab content is hidden, set its height to 0 and adjust study content height
                     $('.tab-content').css('height', 0);
                     $('.study-content').css('height', studyContentHeight);
-                    $('.audit-show').css({
-                        'max-height': studyContentHeight - additionalHeight,
-                        'overflow-y': 'auto',
-                        'box-sizing': 'border-box'
-                    });
+
+                    if ($('.wp-btn-progress-les').length) {
+                        // Set max-height and enable scrolling for audit-show when hidden
+                        $('.audit-show').css({
+                            'max-height': studyContentHeight - additionalHeight,
+                            'height': studyContentHeight - additionalHeight,
+                            'overflow-y': 'auto',
+                            'box-sizing': 'border-box'
+                        });
+                    } else if ($('.vjs-theme-fantasy').length) {
+                        // Set max-height and enable scrolling for video player when hidden
+                        $('.vjs-theme-fantasy').css({
+                            'min-height': studyContentHeight - additionalHeight,
+                            'height': studyContentHeight - additionalHeight,
+                            'overflow-y': 'auto',
+                            'box-sizing': 'border-box'
+                        });
+                    } else if ($('.exercise-content').length) {
+                        // Set max-height and enable scrolling for exercise content when hidden
+                        $('.exercise-content').css({
+                            'height': studyContentHeight - additionalHeight,
+                            'overflow-y': 'auto',
+                            'box-sizing': 'border-box'
+                        });
+                    }
+
                 } else {
-                    const totalVH = headerHeight + footerHeight + navTabHeight;
-                    const tabContentHeightVH = 100 - ((totalVH / windowHeight) * 100);
+                    // Calculate the percentage height for tab content based on total fixed elements
+                    var studyContentVh = (studyContentHeight / windowHeight) * 100;
+                    const totalVH = (headerHeight + footerHeight + navTabHeight + studyContentVh) / windowHeight * 100;
+                    const tabContentHeightVH = 100 - totalVH;
+
                     $('.tab-content').css('height', `${tabContentHeightVH}vh`);
                     $('.study-content').css('height', 'auto');
-                    $('.audit-show').css('max-height', '40vh');
+
+                    if ($('.sptb').length) {
+                        // Set a fixed maximum height for audit-show when tab content is visible
+                        $('.audit-show').css('max-height', '40vh');
+                    } else if ($('.vjs-theme-fantasy').length) {
+                        $('.vjs-theme-fantasy').css('min-height', '40vh');
+                    } else if ($('.exercise-content').length) {
+                        $('.exercise-content').css('height', '40vh');
+                    }
                 }
             };
 
+            // Toggle the visibility of the tab content and adjust layout accordingly
             $('#btn_hide_tab_content').on('click', function() {
                 isHidden = !isHidden;
+                // Toggle the icon direction to indicate the current state
                 $(this).find('i').toggleClass('bi-chevron-double-up bi-chevron-double-down');
                 adjustLayout();
             });
 
+            // Initial layout adjustment and bind the adjustLayout function to window resize
             adjustLayout();
             $(window).resize(adjustLayout);
         });
     </script>
+
 
     @yield('scripts-content')
     @yield('lesson-detail-scripts')

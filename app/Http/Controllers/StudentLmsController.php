@@ -595,7 +595,7 @@ class StudentLmsController extends Controller
                 $passed = (int) $totalValue / (int) $point;
                 $sendUrl = null;
 
-                if ($passed >= 0.01) {
+                if ($passed >0.65) {
                     if (Auth::user() != null) {
                         $rewardPoint = 1;
                         if ($passed >= 1) {
