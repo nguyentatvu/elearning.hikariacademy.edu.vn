@@ -194,7 +194,6 @@
 @endsection
 
 @section('scripts')
-    @yield('lesson-detail-scripts')
     <script>
         const showBuyCourseModal = () => {
             $('#buy_course_modal').modal('show');

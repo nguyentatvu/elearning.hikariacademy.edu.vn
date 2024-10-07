@@ -105,7 +105,7 @@
     <script src="{{ asset('js/client/handwriting/kanji-animate.js') }}"></script>
     <script src="{{ asset('js/client/handwriting/handwriting-canvas.js') }}"></script>
     <script>
-        const total = {{ $total }};
+        let total = {{ $total }};
         const handwritingDetails = @json($handwritingDetail);
         const arrowLeft = $('#arrow_left');
         const arrowRight = $('#arrow_right');
