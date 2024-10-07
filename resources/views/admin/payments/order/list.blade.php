@@ -62,6 +62,7 @@
                                     <th>{{ getPhrase('email')}}</th>
                                     <th>Tên đơn hàng</th>
                                     <th>Loại</th>
+                                    <th>HICOIN</th>
                                     <th>Giá</th>
                                     <th>Thời gian đặt hàng</th>
                                     <th>Trạng thái</th>
@@ -110,7 +111,7 @@
     @php
         // MAKE DEFAULT VALUE COLUMN
         $defaultColumns = [
-            'stt', 'name', 'email', 'orderInfo', 'type', 'amount', 'created_at', 'status', 'action'
+            'stt', 'name', 'email', 'orderInfo', 'type', 'redeem_point', 'amount', 'created_at', 'status', 'action'
         ];
     @endphp
     @include('admin.common.datatables', array('route'=>url('payments-order/getList'), 'route_as_url' => TRUE, 'table_columns' => $defaultColumns))

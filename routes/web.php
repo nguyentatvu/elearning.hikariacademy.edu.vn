@@ -80,9 +80,41 @@ Route::get('/mypage/my-result-exam', function () {
     return view('client.mypage.my-result-exam');
 })->name('mypage.my-result-exam');
 
-Route::get('/mypage/payment-management', function () {
-    return view('client.mypage.payment-management');
-})->name('mypage.payment-management');
+// Payment
+
+Route::get('payments/lms/{slug}', 'PaymentsController@lmsPayments');
+
+Route::get('payments/momoqr/{slug}', 'PaymentsController@getMomoQr');
+
+Route::get('payments/atm/{bankcode}/{slug}', 'PaymentsController@getAtm');
+
+Route::post('payments/transfer', 'PaymentsController@atmTransfer');
+
+Route::post('payments/transfer/delete', 'PaymentsController@delatmTransfer');
+
+Route::get('payments-test/lms/{slug}', 'PaymentsController@testPayments');
+
+// Thanh toán VNPAY
+Route::get('payments/vnpay/{slug}', 'PaymentsController@getVNPAY');
+Route::get('/payments/vnpayReturn/{slug}', 'PaymentsController@vnpayReturn');
+Route::get('payments/VnPayIPN', 'SiteController@vnPayIPN');
+
+// Recharging coin payments
+Route::prefix('payments/coin')
+    ->name('payments.coin.')
+    ->group(function () {
+        Route::get('/', 'PaymentsController@listCoinPayments')
+            ->name('list');
+        Route::get('/momoqr', 'PaymentsController@getMomoQrCoin')
+            ->name('momoqr');
+        Route::get('/vnpayReturn', 'PaymentsController@vnpayReturnCoin')
+            ->name('vnpayReturn');
+        Route::get('/vnpay', 'PaymentsController@getVNPAYCoin')
+            ->name('vnpay');
+        Route::post('/transfer', 'PaymentsController@createBankTransferOrderCoin')
+            ->name('transfer');
+    });
+
 
 
 /**************************
@@ -1195,41 +1227,6 @@ Route::get('log/test', 'LogController@test');
 Route::post('learning-management/ajaxcheckout', 'StudentLmsController@ajaxcheckout');
 
 Route::post('learning-management/razorpaySuccess', 'StudentLmsController@razorpaySuccess');
-
-//thanh toán momo
-
-Route::get('payments/lms/{slug}', 'PaymentsController@lmsPayments');
-
-Route::get('payments/momoqr/{slug}', 'PaymentsController@getMomoQr');
-
-Route::get('payments/atm/{bankcode}/{slug}', 'PaymentsController@getAtm');
-
-Route::post('payments/transfer', 'PaymentsController@atmTransfer');
-
-Route::post('payments/transfer/delete', 'PaymentsController@delatmTransfer');
-
-Route::get('payments-test/lms/{slug}', 'PaymentsController@testPayments');
-
-// Thanh toán VNPAY
-Route::get('payments/vnpay/{slug}', 'PaymentsController@getVNPAY');
-Route::get('/payments/vnpayReturn/{slug}', 'PaymentsController@vnpayReturn');
-Route::get('payments/VnPayIPN', 'SiteController@vnPayIPN');
-
-// Recharging coin payments
-Route::prefix('payments/coin')
-    ->name('payments.coin.')
-    ->group(function () {
-        Route::get('/', 'PaymentsController@listCoinPayments')
-            ->name('list');
-        Route::get('/momoqr', 'PaymentsController@getMomoQrCoin')
-            ->name('momoqr');
-        Route::get('/vnpayReturn', 'PaymentsController@vnpayReturnCoin')
-            ->name('vnpayReturn');
-        Route::get('/vnpay', 'PaymentsController@getVNPAYCoin')
-            ->name('vnpay');
-        Route::post('/transfer', 'PaymentsController@createBankTransferOrderCoin')
-            ->name('transfer');
-    });
 
 // comments
 Route::post('comments/add', 'CommentController@store');
