@@ -1,18 +1,17 @@
 @extends('client.app-course')
 
 @section('styles')
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/exercise/audit.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/exercise/bundle.min.css') }}">
     <link href="{{ asset('css/pages/lesson-detail/app-course.css') }}" rel="stylesheet">
+    @yield('styles-content')
 @endsection
 
 @section('content')
     <div class="row study-main-section">
         <div class="col-lg-9 col-12 study-main-content">
             <div class="study-content">
-                <iframe width="100%" src="https://www.youtube.com/embed/D0xos2XTQPs?si=vy3ftZnn3YbYKsZi"
-                    title="YouTube video player" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-                </iframe>
+                @yield('lesson-detail-content')
             </div>
 
             <div class="nav nav-tabs navtab-select-menu" id="nav-tab" role="tablist">
@@ -24,26 +23,33 @@
                 <button class="nav-link nav_course_button" id="nav-example-tab" data-bs-toggle="tab"
                     data-bs-target="#nav-course-content" type="button" role="tab" aria-controls="nav-example"
                     aria-selected="false">Nội dung khoá học</button>
+                <div id="btn_hide_tab_content" class="btn btn-primary">
+                    <i class="bi bi-chevron-double-down"></i>
+                </div>
             </div>
 
             <div class="tab-content" id="nav-tabContent">
                 <!-- Mô tả bài học -->
                 <div class="tab-pane fade show active nav_description_content" id="nav-home" role="tabpanel"
                     aria-labelledby="nav-home-tab" tabindex="0">
-                    <div class="lesson-container">
-                        <h1 class="lesson-title">Bài học tiếng Nhật N5 - Giới thiệu về Kanji</h1>
+                    <div class="lesson-container container">
+                        <h4 class="lesson-title">Bài học tiếng Nhật N5 - Giới thiệu về Kanji</h4>
                         <div class="lesson-content">
-                            <h2>Từ vựng</h2>
-                            <ul>
-                                <li><b>日本</b> (にほん) - Nhật Bản</li>
-                                <li><b>学生</b> (がくせい) - Học sinh</li>
-                                <li><b>先生</b> (せんせい) - Giáo viên</li>
-                            </ul>
-                            <h2>Ngữ pháp</h2>
-                            <p>Trong bài học này, bạn sẽ học cách dùng trợ từ <b>は</b> để chỉ chủ ngữ trong câu. Ví dụ:</p>
-                            <p class="example">私は学生です。(わたしはがくせいです) - Tôi là học sinh.</p>
-                            <h2>Kanji</h2>
-                            <p>Chữ Kanji mới: <b>月</b> (つき) - mặt trăng, tháng.</p>
+                            <div class="my-5">
+                                <div class="row">
+                                    <h4 class="text-primary">Khóa Học Tiếng Nhật Cơ Bản</h4>
+                                    <p class="lead">Khám phá ngôn ngữ và văn hóa Nhật Bản qua khóa học cơ bản này, phù hợp
+                                        cho người mới bắt đầu!</p>
+                                    <ul class="list-group list-group-flush mb-4">
+                                        <li class="list-group-item">Thời lượng: 40 giờ</li>
+                                        <li class="list-group-item">Số buổi: 20 buổi</li>
+                                        <li class="list-group-item">Cấp độ: Cơ bản</li>
+                                    </ul>
+                                    <a href="#" class="btn btn-primary btn-lg">Đăng ký ngay</a>
+                                    <a href="#" class="btn btn-outline-secondary btn-lg">Xem chi tiết</a>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -198,61 +204,60 @@
 
 @section('scripts')
     <script>
-        const showBuyCourseModal = () => {
-            $('#buy_course_modal').modal('show');
-        }
+        const showBuyCourseModal = () => $('#buy_course_modal').modal('show');
 
         $(document).ready(function() {
-            // Function to set heights and margins based on the current layout
-            function adjustLayout() {
-                var iframe = $('.study-main-content iframe'); // Select the iframe
-                var tabContent = $('.tab-content'); // Select the tab content
-                var headerHeight = $('.header-study').outerHeight(); // Get header height
-                var navTabHeight = $('.navtab-select-menu').outerHeight(); // Get navigation tab height
+            let isHidden = false;
 
-                // Determine footer height based on visibility
-                var footerHeight;
-                if ($('.footer-study').css('display') === 'none') {
-                    // Use mobile footer height if desktop footer is hidden
-                    footerHeight = $('.mobile-footer-study').outerHeight();
+            const getOuterHeight = selector => $(selector).outerHeight() || 0;
+
+            const adjustLayout = () => {
+                const windowHeight = window.innerHeight;
+                const headerHeight = getOuterHeight('.header-study');
+                const footerSelector = $('.footer-study').is(':visible') ? '.footer-study' :
+                    '.mobile-footer-study';
+                const footerHeight = getOuterHeight(footerSelector);
+                const navTabHeight = getOuterHeight('.navtab-select-menu');
+                let additionalHeight = 0;
+                const studyContentHeight = windowHeight - headerHeight - footerHeight - navTabHeight;
+
+                if ($('.wp-btn-progress-les').length) {
+                    additionalHeight = getOuterHeight('.wp-btn-progress-les');
+                    $('.audit-show').css('margin-top', additionalHeight);
+                }
+
+                $('.study-main-content, .list-lesson').css({
+                    'margin-top': `${headerHeight}px`,
+                    'margin-bottom': `${footerHeight}px`
+                });
+
+                if (isHidden) {
+                    $('.tab-content').css('height', 0);
+                    $('.study-content').css('height', studyContentHeight);
+                    $('.audit-show').css({
+                        'max-height': studyContentHeight - additionalHeight,
+                        'overflow-y': 'auto',
+                        'box-sizing': 'border-box'
+                    });
                 } else {
-                    // Use desktop footer height
-                    footerHeight = $('.footer-study').outerHeight();
+                    const totalVH = headerHeight + footerHeight + navTabHeight;
+                    const tabContentHeightVH = 100 - ((totalVH / windowHeight) * 100);
+                    $('.tab-content').css('height', `${tabContentHeightVH}vh`);
+                    $('.study-content').css('height', 'auto');
+                    $('.audit-show').css('max-height', '40vh');
                 }
+            };
 
-                // Set the top and bottom margins for the main content area
-                $('.study-main-content').css({
-                    'margin-top': (headerHeight) + 'px', // Top margin
-                    'margin-bottom': (footerHeight) + 'px' // Bottom margin
-                });
-
-                $('.list-lesson').css({
-                    'margin-top': (headerHeight) + 'px', // Top margin
-                    'margin-bottom': (footerHeight) + 'px' // Bottom margin
-                });
-
-                // Check if iframe and tabContent elements exist
-                if (iframe.length && tabContent.length) {
-                    var windowHeight = window.innerHeight;
-
-                    var headerVH = (headerHeight / windowHeight) * 100;
-                    var footerVH = (footerHeight / windowHeight) * 100;
-                    var iframeHeight = iframe.outerHeight();
-                    var iframeVH = (iframeHeight / windowHeight) * 100;
-                    var navTabVH = (navTabHeight / windowHeight) * 100;
-
-                    var calculatedHeight = 100 - (headerVH + footerVH + iframeVH + navTabVH); // Remaining height
-
-                    tabContent.css('height', calculatedHeight + 'vh');
-                }
-            }
-
-            adjustLayout(); // Initial adjustment when the document is ready
-
-            // Adjust layout dynamically on window resize
-            $(window).resize(function() {
-                adjustLayout(); // Recalculate layout on resize
+            $('#btn_hide_tab_content').on('click', function() {
+                isHidden = !isHidden;
+                $(this).find('i').toggleClass('bi-chevron-double-up bi-chevron-double-down');
+                adjustLayout();
             });
+
+            adjustLayout();
+            $(window).resize(adjustLayout);
         });
     </script>
+
+    @yield('scripts-content')
 @endsection

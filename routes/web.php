@@ -19,8 +19,11 @@ Route::prefix('learning-management')->name('learning-management.')->group(functi
         ->name('lesson.show');
     Route::get('lesson/exercise/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showExercise')
         ->name('lesson.exercise');
-    Route::get('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showAudit')
+    Route::get('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@studentAudittest')
         ->name('lesson.audit');
+    Route::post('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@storeResuttest')
+        ->name('lesson.audit.store');
+
     Route::get('lesson/flashcard/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showFlashcard')
         ->name('lesson.flashcard');
 });
@@ -95,15 +98,6 @@ Route::get('dashboard/testlang', 'DashboardController@testLanguage');
 Route::get('auth/{slug}', 'Auth\LoginController@redirectToProvider');
 
 Route::get('auth/{slug}/callback', 'Auth\LoginController@handleProviderCallback');
-
-// Authentication Routes
-
-Route::get('parent-logout', function () {
-    if (Auth::check())
-        flash('Oops..!', getPhrase('parents_module_is_not_available'), 'error');
-    Auth::logout();
-    return redirect(URL_USERS_LOGIN);
-});
 
 Route::get('confirm/{slug?}', 'SiteController@confirmRegister');
 
@@ -771,7 +765,7 @@ Route::get('learning-management/lesson-selected/show/{slug?}/{lesson_id?}', 'Stu
 
 // Route::get('learning-management/lesson/audit/{combo_slug}/{series}/{slug}', 'StudentLmsController@studentAudittest')->name('learning-management.audit.show');
 
-Route::post('learning-management/lesson/audit/{combo_slug}/{series}/{slug}', 'StudentLmsController@storeResuttest');
+// Route::post('learning-management/lesson/audit/{combo_slug}/{series}/{slug}', 'StudentLmsController@storeResuttest');
 
 
 //Payments Controller

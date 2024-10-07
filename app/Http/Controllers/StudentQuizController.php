@@ -51,7 +51,7 @@ use App\Logger;
 
 use App\ExamScore;
 
-require 'vendor/html2pdf/autoload.php';
+// require 'vendor/html2pdf/autoload.php';
 
 use Spipu\Html2Pdf\Html2Pdf;
 
@@ -281,7 +281,7 @@ class StudentQuizController extends Controller
 
         if ($slug!='all')
 
-        { 
+        {
 
           $category = QuizCategory::getRecordWithSlug($slug);
 
@@ -353,7 +353,7 @@ class StudentQuizController extends Controller
 
         }
 
-        if ($interested_categories) 
+        if ($interested_categories)
 
         {
 
@@ -371,7 +371,7 @@ class StudentQuizController extends Controller
 
           }
 
-        } 
+        }
 
         else
 
@@ -571,7 +571,7 @@ class StudentQuizController extends Controller
 
       }
 
-      
+
 
       $data['time_hours']         = makeNumber($time['hours'],2,'0','left');
 
@@ -623,17 +623,17 @@ class StudentQuizController extends Controller
 
       $data['right_bar_data']      = array(
 
-        'questions'      => $final_questions, 
+        'questions'      => $final_questions,
 
-        'current_state'  => $current_state, 
+        'current_state'  => $current_state,
 
-        'quiz'           => $quiz, 
+        'quiz'           => $quiz,
 
-        'time_hours'     => $data['time_hours'], 
+        'time_hours'     => $data['time_hours'],
 
         'time_minutes'   => $data['time_minutes'],
 
-        'atime_hours'    => $data['atime_hours'], 
+        'atime_hours'    => $data['atime_hours'],
 
         'atime_minutes'  => $data['atime_minutes']
 
@@ -705,7 +705,7 @@ class StudentQuizController extends Controller
 
       }
 
-      
+
 
       $data['time_hours']         = makeNumber($time['hours'],2,'0','left');
 
@@ -755,17 +755,17 @@ class StudentQuizController extends Controller
 
           $data['right_bar_data']      = array(
 
-            'questions'      => $final_questions, 
+            'questions'      => $final_questions,
 
-            'current_state'  => $current_state, 
+            'current_state'  => $current_state,
 
-            'quiz'           => $quiz, 
+            'quiz'           => $quiz,
 
-            'time_hours'     => $data['time_hours'], 
+            'time_hours'     => $data['time_hours'],
 
             'time_minutes'   => $data['time_minutes'],
 
-            'atime_hours'    => $data['atime_hours'], 
+            'atime_hours'    => $data['atime_hours'],
 
             'atime_minutes'  => $data['atime_minutes']
 
@@ -789,7 +789,7 @@ class StudentQuizController extends Controller
 
      */
 
-    function convertToHoursMins($time, $format = '%02d:%02d') 
+    function convertToHoursMins($time, $format = '%02d:%02d')
 
     {
 
@@ -831,7 +831,7 @@ class StudentQuizController extends Controller
 
     {
 
-      
+
 
 
 
@@ -889,7 +889,7 @@ class StudentQuizController extends Controller
 
       $data['examseries_slug'] = $examseries_table->slug;
 
-      
+
 
       $view_name = 'admin.student.exams.results-exam';
 
@@ -1111,7 +1111,7 @@ class StudentQuizController extends Controller
 
       $data['finish'] = 0;
 
-      
+
 
 
 
@@ -1152,7 +1152,7 @@ class StudentQuizController extends Controller
              $record_resultfinish = new QuizResultfinish();
 
              $ip_info = ip_info('Visitor', "Location");
-             
+
              if($ip_info) {
 
                $record_resultfinish->country_code = $ip_info['country_code'];
@@ -1200,23 +1200,23 @@ class StudentQuizController extends Controller
 
 
 
-             $useragent = $_SERVER['HTTP_USER_AGENT']; 
+             $useragent = $_SERVER['HTTP_USER_AGENT'];
 
-              //$iPod = stripos($useragent, "iPod"); 
+              //$iPod = stripos($useragent, "iPod");
 
-              $iPad = stripos($useragent, "iPad"); 
+              $iPad = stripos($useragent, "iPad");
 
               $iPhone = stripos($useragent, "iPhone");
 
-              $Android = stripos($useragent, "Android"); 
+              $Android = stripos($useragent, "Android");
 
               $iOS = stripos($useragent, "iOS");
 
-              //-- You can add billion devices 
+              //-- You can add billion devices
 
 
 
-              $DEVICE = ($iPad||$iPhone||$Android||$iOS); 
+              $DEVICE = ($iPad||$iPhone||$Android||$iOS);
 
 
 
@@ -1346,7 +1346,7 @@ class StudentQuizController extends Controller
 
              $result_quiz_3 = $get_result->quiz_3_mark;
 
-             
+
 
              /*Sau khi tính hoàn thành 3 bài thi, Tính điểm theo từng Cấp N*/
 
@@ -1632,7 +1632,7 @@ class StudentQuizController extends Controller
 
             $record_resultfinish = QuizResultfinish::find($quizresultfinish_data->id);
 
-            //Save marks 
+            //Save marks
 
             $record_resultfinish->quiz_1_total = $quiz_1_total;
 
@@ -1652,7 +1652,7 @@ class StudentQuizController extends Controller
 
                         $status_thi = 1;
 
-                  } 
+                  }
 
             }
 
@@ -1664,7 +1664,7 @@ class StudentQuizController extends Controller
 
                   }
 
-            } 
+            }
 
             if($quiz->category_id == 3) {
 
@@ -1676,7 +1676,7 @@ class StudentQuizController extends Controller
 
             }
 
-            
+
 
             if($quiz->category_id == 2) {
 
@@ -1750,14 +1750,14 @@ class StudentQuizController extends Controller
 			$data['quiz3'] = $record_resultfinish->quiz_3_total;
 			$data['total'] = $record_resultfinish->total_marks;
 			$layoutPDF = $quiz->category_id <= 3 ? 'student.exams.finish-results-exam' : 'student.exams.finish-results-exam2';
-			
+
 			$view_name     = view('admin.' .$layoutPDF, $data)->render();
 			$htmldata = \Blade::compileString($view_name);
 			//$log = new Logger(env('MAIL_LOG_PATH'));
 			//$log->putLog('htmldata: '.$htmldata);
-	
+
 			try {
-			
+
 				$html2pdf = new Html2Pdf('P', 'A4', 'fr', true, 'UTF-8', array(5, 5, 5, 8));
 				$html2pdf->setDefaultFont('cid0jp');
 				$html2pdf->writeHTML($htmldata, false);
@@ -1765,17 +1765,17 @@ class StudentQuizController extends Controller
 				$html2pdf->output($path, 'F');
 			} catch (Html2PdfException $e) {
 				$html2pdf->clean();
-			
+
 				$formatter = new ExceptionFormatter($e);
 				echo $formatter->getHtmlMessage();
 			}
-			$mail_template = $quiz->category_id <= 3 ? 'thongbaoketquathi123' : 'thongbaoketquathi45'; 
+			$mail_template = $quiz->category_id <= 3 ? 'thongbaoketquathi123' : 'thongbaoketquathi45';
 			try {
-				sendEmail($mail_template, 
+				sendEmail($mail_template,
 					array(
-						'name'=>$user_record->name, 
-						'title'=>$examseries_title, 
-						'start_date'=> date("d-m-Y"), 
+						'name'=>$user_record->name,
+						'title'=>$examseries_title,
+						'start_date'=> date("d-m-Y"),
 						'quiz1'=>$record_resultfinish->quiz_1_total,
 						'quiz2'=>$record_resultfinish->quiz_2_total,
 						'quiz3'=>$record_resultfinish->quiz_3_total,
@@ -1800,9 +1800,9 @@ class StudentQuizController extends Controller
 
         // $template    = new EmailTemplate();
 
-        // $content_data =  $template->sendEmailNotification('exam-result', 
+        // $content_data =  $template->sendEmailNotification('exam-result',
 
-        //  array('username'    =>$user_record->name, 
+        //  array('username'    =>$user_record->name,
 
         //           'content'  => $content,
 
@@ -1810,7 +1810,7 @@ class StudentQuizController extends Controller
 
         /*try {
 
-          $user_record->notify(new \App\Notifications\StudentExamResult($user_record,$exam_status,$quiz->title,$quiz->pass_percentage)); 
+          $user_record->notify(new \App\Notifications\StudentExamResult($user_record,$exam_status,$quiz->title,$quiz->pass_percentage));
 
         } catch (Exception $e) {
 
@@ -1854,7 +1854,7 @@ class StudentQuizController extends Controller
 
         $dataset_marks = [count(json_decode($record->correct_answer_questions)),
 
-                          count(json_decode($record->wrong_answer_questions)), 
+                          count(json_decode($record->wrong_answer_questions)),
 
                           count(json_decode($record->not_answered_questions))];
 
@@ -1880,7 +1880,7 @@ class StudentQuizController extends Controller
 
             );
 
-        $data['marks_data'][] = (object)$chart_data; 
+        $data['marks_data'][] = (object)$chart_data;
 
         $time_spent = 0;
 
@@ -1948,7 +1948,7 @@ class StudentQuizController extends Controller
 
                                                 );
 
-                                                $data['time_data'][]  = (object)$chart_data;*/ 
+                                                $data['time_data'][]  = (object)$chart_data;*/
 
         //Chart Data END
 
@@ -2000,7 +2000,7 @@ class StudentQuizController extends Controller
 
     /**
 
-     * This below method process the submitted answers based on the 
+     * This below method process the submitted answers based on the
 
      * provided answers and quiz questions
 
@@ -2080,11 +2080,11 @@ class StudentQuizController extends Controller
 
               $subject[$subject_id]['time_spent_correct_answers'] += $time_spent[$question_record->id];
 
-              $time_spent_correct_answer_question[$question_record->id]['time_to_spend'] 
+              $time_spent_correct_answer_question[$question_record->id]['time_to_spend']
 
               = $question_record->time_to_spend;
 
-              $time_spent_correct_answer_question[$question_record->id]['time_spent'] 
+              $time_spent_correct_answer_question[$question_record->id]['time_spent']
 
               = $time_spent[$question_record->id];
 
@@ -2100,15 +2100,15 @@ class StudentQuizController extends Controller
 
               $obtained_negative_marks          += $negative_mark;
 
-              $subject[$subject_id]['time_spent_wrong_answers']    
+              $subject[$subject_id]['time_spent_wrong_answers']
 
               += $time_spent[$question_record->id];
 
-              $time_spent_wrong_answer_question[$question_record->id]['time_to_spend'] 
+              $time_spent_wrong_answer_question[$question_record->id]['time_to_spend']
 
               = $question_record->time_to_spend;
 
-              $time_spent_wrong_answer_question[$question_record->id]['time_spent'] 
+              $time_spent_wrong_answer_question[$question_record->id]['time_spent']
 
               = $time_spent[$question_record->id];
 
@@ -2132,7 +2132,7 @@ class StudentQuizController extends Controller
 
               {
 
-                if( $actual_answer[$answer_key]->answer != 
+                if( $actual_answer[$answer_key]->answer !=
 
                   $answer_value )
 
@@ -2164,15 +2164,15 @@ class StudentQuizController extends Controller
 
               $subject[$subject_id]['correct_answers'] +=1;
 
-              $subject[$subject_id]['time_spent_correct_answers'] 
+              $subject[$subject_id]['time_spent_correct_answers']
 
               += $time_spent[$question_record->id];
 
-              $time_spent_correct_answer_question[$question_record->id]['time_to_spend'] 
+              $time_spent_correct_answer_question[$question_record->id]['time_to_spend']
 
               = $question_record->time_to_spend;
 
-              $time_spent_correct_answer_question[$question_record->id]['time_spent'] 
+              $time_spent_correct_answer_question[$question_record->id]['time_spent']
 
               = $time_spent[$question_record->id];
 
@@ -2184,7 +2184,7 @@ class StudentQuizController extends Controller
 
               $subject[$subject_id]['wrong_answers'] += 1;
 
-              $subject[$subject_id]['time_spent_wrong_answers']    
+              $subject[$subject_id]['time_spent_wrong_answers']
 
               += $time_spent[$question_record->id];
 
@@ -2192,11 +2192,11 @@ class StudentQuizController extends Controller
 
               $obtained_negative_marks          += $negative_mark;
 
-              $time_spent_wrong_answer_question[$question_record->id]['time_to_spend'] 
+              $time_spent_wrong_answer_question[$question_record->id]['time_to_spend']
 
               = $question_record->time_to_spend;
 
-              $time_spent_wrong_answer_question[$question_record->id]['time_spent'] 
+              $time_spent_wrong_answer_question[$question_record->id]['time_spent']
 
               = $time_spent[$question_record->id];
 
@@ -2204,7 +2204,7 @@ class StudentQuizController extends Controller
 
             break;
 
-            case 'blanks': 
+            case 'blanks':
 
             $actual_answer = json_decode($actual_answer);
 
@@ -2242,15 +2242,15 @@ class StudentQuizController extends Controller
 
               $subject[$subject_id]['correct_answers'] +=1;
 
-              $subject[$subject_id]['time_spent_correct_answers'] 
+              $subject[$subject_id]['time_spent_correct_answers']
 
               += $time_spent[$question_record->id];
 
-              $time_spent_correct_answer_question[$question_record->id]['time_to_spend'] 
+              $time_spent_correct_answer_question[$question_record->id]['time_to_spend']
 
               = $question_record->time_to_spend;
 
-              $time_spent_correct_answer_question[$question_record->id]['time_spent'] 
+              $time_spent_correct_answer_question[$question_record->id]['time_spent']
 
               = $time_spent[$question_record->id];
 
@@ -2264,7 +2264,7 @@ class StudentQuizController extends Controller
 
               $subject[$subject_id]['wrong_answers'] += 1;
 
-              $subject[$subject_id]['time_spent_wrong_answers']    
+              $subject[$subject_id]['time_spent_wrong_answers']
 
               += $time_spent[$question_record->id];
 
@@ -2272,11 +2272,11 @@ class StudentQuizController extends Controller
 
               $obtained_negative_marks          += $negative_mark;
 
-              $time_spent_wrong_answer_question[$question_record->id]['time_to_spend'] 
+              $time_spent_wrong_answer_question[$question_record->id]['time_to_spend']
 
               = $question_record->time_to_spend;
 
-              $time_spent_wrong_answer_question[$question_record->id]['time_spent'] 
+              $time_spent_wrong_answer_question[$question_record->id]['time_spent']
 
               = $time_spent[$question_record->id];
 
@@ -2284,11 +2284,11 @@ class StudentQuizController extends Controller
 
             break;
 
-            case (  $question_type == 'para'  || 
+            case (  $question_type == 'para'  ||
 
-              $question_type == 'audio' || 
+              $question_type == 'audio' ||
 
-              $question_type == 'video' 
+              $question_type == 'video'
 
             ):
 
@@ -2310,7 +2310,7 @@ class StudentQuizController extends Controller
 
                 $flag=1;
 
-                $obtained_marks += $indidual_marks;    
+                $obtained_marks += $indidual_marks;
 
               }
 
@@ -2326,15 +2326,15 @@ class StudentQuizController extends Controller
 
               $subject[$subject_id]['correct_answers'] +=1;
 
-              $subject[$subject_id]['time_spent_correct_answers'] 
+              $subject[$subject_id]['time_spent_correct_answers']
 
               += $time_spent[$question_record->id];
 
-              $time_spent_correct_answer_question[$question_record->id]['time_to_spend'] 
+              $time_spent_correct_answer_question[$question_record->id]['time_to_spend']
 
               = $question_record->time_to_spend;
 
-              $time_spent_correct_answer_question[$question_record->id]['time_spent'] 
+              $time_spent_correct_answer_question[$question_record->id]['time_spent']
 
               = $time_spent[$question_record->id];
 
@@ -2348,7 +2348,7 @@ class StudentQuizController extends Controller
 
               $subject[$subject_id]['wrong_answers'] += 1;
 
-              $subject[$subject_id]['time_spent_wrong_answers']    
+              $subject[$subject_id]['time_spent_wrong_answers']
 
               += $time_spent[$question_record->id];
 
@@ -2356,11 +2356,11 @@ class StudentQuizController extends Controller
 
               $obtained_negative_marks          += $negative_mark;
 
-              $time_spent_wrong_answer_question[$question_record->id]['time_to_spend'] 
+              $time_spent_wrong_answer_question[$question_record->id]['time_to_spend']
 
               = $question_record->time_to_spend;
 
-              $time_spent_wrong_answer_question[$question_record->id]['time_spent'] 
+              $time_spent_wrong_answer_question[$question_record->id]['time_spent']
 
               = $time_spent[$question_record->id];
 
@@ -2404,15 +2404,15 @@ class StudentQuizController extends Controller
 
               $subject[$subject_id]['correct_answers'] +=1;
 
-              $subject[$subject_id]['time_spent_correct_answers'] 
+              $subject[$subject_id]['time_spent_correct_answers']
 
               += $time_spent[$question_record->id];
 
-              $time_spent_correct_answer_question[$question_record->id]['time_to_spend'] 
+              $time_spent_correct_answer_question[$question_record->id]['time_to_spend']
 
               = $question_record->time_to_spend;
 
-              $time_spent_correct_answer_question[$question_record->id]['time_spent'] 
+              $time_spent_correct_answer_question[$question_record->id]['time_spent']
 
               = $time_spent[$question_record->id];
 
@@ -2426,7 +2426,7 @@ class StudentQuizController extends Controller
 
               $subject[$subject_id]['wrong_answers'] += 1;
 
-              $subject[$subject_id]['time_spent_wrong_answers']    
+              $subject[$subject_id]['time_spent_wrong_answers']
 
               += $time_spent[$question_record->id];
 
@@ -2434,11 +2434,11 @@ class StudentQuizController extends Controller
 
               $obtained_negative_marks          += $negative_mark;
 
-              $time_spent_wrong_answer_question[$question_record->id]['time_to_spend'] 
+              $time_spent_wrong_answer_question[$question_record->id]['time_to_spend']
 
               = $question_record->time_to_spend;
 
-              $time_spent_wrong_answer_question[$question_record->id]['time_spent'] 
+              $time_spent_wrong_answer_question[$question_record->id]['time_spent']
 
               = $time_spent[$question_record->id];
 
@@ -2580,7 +2580,7 @@ class StudentQuizController extends Controller
 
             return '<a href="'.URL_PAYMENTS_CHECKOUT.'exam/'.$records->slug.'">'.getPhrase('buy_now').'</a>';
 
-          else 
+          else
 
             return '-';
 
@@ -2630,7 +2630,7 @@ class StudentQuizController extends Controller
 
       })
 
-      ->editColumn('title', function($records) 
+      ->editColumn('title', function($records)
 
       {
 
@@ -2648,7 +2648,7 @@ class StudentQuizController extends Controller
 
         $paid_type =  false;
 
-        if($records->is_paid && !isItemPurchased($records->id, 'exam')) 
+        if($records->is_paid && !isItemPurchased($records->id, 'exam'))
 
           $paid_type = true;
 
@@ -2728,7 +2728,7 @@ class StudentQuizController extends Controller
 
       if($isValid = $this->isValidRecord($user))
 
-        return redirect($isValid);  
+        return redirect($isValid);
 
       if(!isEligible($slug))
 
@@ -2746,7 +2746,7 @@ class StudentQuizController extends Controller
 
       } else {
 
-        // echo  $exam_slug; 
+        // echo  $exam_slug;
 
         $marks = App\QuizResult::where('user_id', '=', $user->id)
 
@@ -2788,11 +2788,11 @@ class StudentQuizController extends Controller
 
       }
 
-      $chart_data['type'] = 'line'; 
+      $chart_data['type'] = 'line';
 
         //horizontalBar, bar, polarArea, line, doughnut, pie
 
-      $chart_data['title'] = getPhrase('exam_attempts_and_score');  
+      $chart_data['title'] = getPhrase('exam_attempts_and_score');
 
       $chart_data['data']   = (object) array(
 
@@ -2842,7 +2842,7 @@ class StudentQuizController extends Controller
 
       $view_name = 'admin.student.exams.attempts-history-show';
 
-      return view($view_name, $data);    
+      return view($view_name, $data);
 
     }
 
@@ -2870,7 +2870,7 @@ class StudentQuizController extends Controller
 
       $view_name = 'admin.student.exams.attempts-history-finish';
 
-      return view($view_name, $data);    
+      return view($view_name, $data);
 
     }
 
@@ -2904,7 +2904,7 @@ class StudentQuizController extends Controller
 
         $records = QuizResultfinish::join('examseries', 'examseries.id', '=', 'quizresultfinish.examseri_id')
 
-        ->select(['examseries.title', 'quizresultfinish.created_at', 
+        ->select(['examseries.title', 'quizresultfinish.created_at',
 
             'quizresultfinish.id', 'quizresultfinish.quiz_1_total','quizresultfinish.quiz_2_total',
 
@@ -3058,7 +3058,7 @@ class StudentQuizController extends Controller
 
             {
 
-              
+
 
               $detail = '<span class="badge badge-outline-info badge-pill">'.$records->total_marks.'</span>';
 
@@ -3220,7 +3220,7 @@ class StudentQuizController extends Controller
 
                   }
 
-              
+
 
               $user = User::where('id', '=', $records->user_id)->get()->first();
 
@@ -3304,7 +3304,7 @@ class StudentQuizController extends Controller
 
       if($isValid = $this->isValidRecord($user))
 
-        return redirect($isValid);  
+        return redirect($isValid);
 
       if(!isEligible($slug))
 
@@ -3362,11 +3362,11 @@ class StudentQuizController extends Controller
 
       }
 
-      $chart_data['type'] = 'pie'; 
+      $chart_data['type'] = 'pie';
 
         //horizontalBar, bar, polarArea, line, doughnut, pie
 
-      $chart_data['title'] = getPhrase('exam_analysis_by_attempts'); 
+      $chart_data['title'] = getPhrase('exam_analysis_by_attempts');
 
       $border_color=[];
 
@@ -3390,11 +3390,11 @@ class StudentQuizController extends Controller
 
       $data['layout']             = getLayout();
 
-      // return view('student.exams.analysis-by-exam', $data);  
+      // return view('student.exams.analysis-by-exam', $data);
 
       $view_name = 'admin.student.exams.analysis-by-exam';
 
-      return view($view_name, $data);    
+      return view($view_name, $data);
 
     }
 
@@ -3484,7 +3484,7 @@ class StudentQuizController extends Controller
 
       if($isValid = $this->isValidRecord($user))
 
-        return redirect($isValid);  
+        return redirect($isValid);
 
       $exam_record = FALSE;
 
@@ -3588,7 +3588,7 @@ class StudentQuizController extends Controller
 
         $time_data['type'] = 'pie';
 
-        $time_data['title'] = $subject_record->subject_title;  
+        $time_data['title'] = $subject_record->subject_title;
 
         $time_data['data']   = (object) array(
 
@@ -3606,11 +3606,11 @@ class StudentQuizController extends Controller
 
         $data['time_data'][] = (object)$time_data;
 
-        $chart_data['type'] = 'doughnut'; 
+        $chart_data['type'] = 'doughnut';
 
         //horizontalBar, bar, polarArea, line, doughnut, pie
 
-        $chart_data['title'] = $subject_record->subject_title;  
+        $chart_data['title'] = $subject_record->subject_title;
 
         $chart_data['data']   = (object) array(
 
@@ -3630,7 +3630,7 @@ class StudentQuizController extends Controller
 
         $i++;
 
-      } 
+      }
 
       $data['subjects_display']   = $subjects_display;
 
@@ -3644,11 +3644,11 @@ class StudentQuizController extends Controller
 
       $data['layout']             = getLayout();
 
-      // return view('student.exams.analysis-by-subject', $data);     
+      // return view('student.exams.analysis-by-subject', $data);
 
       $view_name = 'admin.student.exams.analysis-by-subject';
 
-      return view($view_name, $data);   
+      return view($view_name, $data);
 
     }
 
@@ -3670,7 +3670,7 @@ class StudentQuizController extends Controller
 
       if($isValid = $this->isValidRecord($user))
 
-        return redirect($isValid);  
+        return redirect($isValid);
 
       if(!isEligible($slug))
 
@@ -3684,7 +3684,7 @@ class StudentQuizController extends Controller
 
       {
 
-        flash('Ooops..!','No Records available', 'overlay');                
+        flash('Ooops..!','No Records available', 'overlay');
 
         return back();
 
@@ -3694,7 +3694,7 @@ class StudentQuizController extends Controller
 
       $color_wrong = getColor('background', rand(00,9999));
 
-      $color_not_attempted = getColor('background', rand(00,9999)); 
+      $color_not_attempted = getColor('background', rand(00,9999));
 
       $i=0;
 
@@ -3746,11 +3746,11 @@ class StudentQuizController extends Controller
 
         $border_color = [$color_correct,$color_wrong,$color_not_attempted];
 
-        $marks_data['type'] = 'pie'; 
+        $marks_data['type'] = 'pie';
 
         //horizontalBar, bar, polarArea, line, doughnut, pie
 
-        $marks_data['title'] = $record->subject_name;  
+        $marks_data['title'] = $record->subject_name;
 
         $marks_data['data']   = (object) array(
 
@@ -3768,11 +3768,11 @@ class StudentQuizController extends Controller
 
         $data['chart_data'][] = (object)$marks_data;
 
-        $time_data['type'] = 'bar'; 
+        $time_data['type'] = 'bar';
 
         //horizontalBar, bar, polarArea, line, doughnut, pie
 
-        $time_data['title'] = $record->subject_name;  
+        $time_data['title'] = $record->subject_name;
 
         $time_data['data']   = (object) array(
 
@@ -3792,7 +3792,7 @@ class StudentQuizController extends Controller
 
         $i++;
 
-      } 
+      }
 
       $data['chart_data'][] = (object)$marks_data;
 
@@ -3828,7 +3828,7 @@ class StudentQuizController extends Controller
 
       $overall_time_dataset = [$overall_time_spent_correct_answers, $overall_time_spent_wrong_answers];
 
-      $overall_marks_data['type'] = 'doughnut'; 
+      $overall_marks_data['type'] = 'doughnut';
 
         //horizontalBar, bar, polarArea, line, doughnut, pie
 
@@ -3870,7 +3870,7 @@ class StudentQuizController extends Controller
 
       $view_name = 'admin.student.exams.subject-analysis.subject-analysis';
 
-      return view($view_name, $data);   
+      return view($view_name, $data);
 
     }
 
@@ -3898,7 +3898,7 @@ class StudentQuizController extends Controller
 
           $return_data['message'] = 'Invalid Request';
 
-          if(!count($data))    
+          if(!count($data))
 
           {
 
@@ -3950,7 +3950,7 @@ class StudentQuizController extends Controller
 
           }
 
-          else 
+          else
 
           {
 
@@ -3986,7 +3986,7 @@ class StudentQuizController extends Controller
 
     // $exam_record->current_state   = $final_data;
 
-          $exam_record->save();                                
+          $exam_record->save();
 
           $return_data['status'] = 'ok';
 

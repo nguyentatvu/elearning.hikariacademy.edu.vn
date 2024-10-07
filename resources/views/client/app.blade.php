@@ -52,7 +52,7 @@
         @endif
 
         <div class="d-flex">
-            @if (!Request::is('detail*'))
+            @if (!Request::is('detail*') && !Request::is('mypage*'))
                 <aside class="sidebar" id="sidebar" style="height: 100%">
                     @include('client.layouts.sidebar')
                 </aside>
@@ -62,8 +62,6 @@
                     @yield('content')
                 </div>
                 @component('client.components.common-component')
-                @endcomponent
-                @component('client.components.auth-modal')
                 @endcomponent
                 <div class="loading-overlay">
                     <div class="loading-spinner"></div>
