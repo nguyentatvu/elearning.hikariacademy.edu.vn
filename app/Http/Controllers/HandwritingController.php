@@ -66,7 +66,7 @@ class HandwritingController extends Controller
             return back();
         }
 
-        $records = $this->handwritingService->getAllWithSorting();
+        $records = $this->handwritingService->getAllWithOrderBy('updated_at', 'desc');
 
         $table = DataTables::of($records)
             ->addColumn('action', function ($records) {
@@ -135,13 +135,17 @@ class HandwritingController extends Controller
         $records = null;
 
         if ($handwriting->type == JapaneseWritingPractice::HIRAGANA) {
-            $records = HiraganaWritingPractice::select(['id', 'character', 'number'])
-                ->where('practice_id', $id)
-                ->orderBy('id');
+            $records = $this->hiraganaWritingPracticeService->getByConditionsWithOrderBy(
+                ['practice_id' => $id],
+                ['id', 'character', 'number'],
+                'id'
+            );
         } else if ($handwriting->type == JapaneseWritingPractice::KANJI) {
-            $records = KanjiWritingPractice::select(['id', 'full_word', 'number', 'underlined_word', 'kanji'])
-                ->where('practice_id', $id)
-                ->orderBy('id');
+            $records = $this->kanjiWritingPracticeService->getByConditionsWithOrderBy(
+                ['practice_id' => $id],
+                ['id', 'full_word', 'number', 'underlined_word', 'kanji'],
+                'id'
+            );
         }
 
         if ($records) {
@@ -158,7 +162,6 @@ class HandwritingController extends Controller
                     </div>';
                 })
                 ->removeColumn('id')
-                ->removeColumn('handwriting_id')
                 ->rawColumns(['action']);
 
             return $table->make();
@@ -271,17 +274,24 @@ class HandwritingController extends Controller
         $data = $request->only(['type', 'handwriting_id', 'character', 'full_word', 'underlined_word', 'kanji']);
 
         if ($data['type'] == JapaneseWritingPractice::HIRAGANA) {
-            $this->hiraganaWritingPracticeService->createWithIncrementedNumber([
-                'practice_id' => $data['handwriting_id'],
-                'character'   => $data['character'],
-            ], 'number');
+            $this->hiraganaWritingPracticeService->createByConditionsWithIncrementedNumber(
+                ['practice_id' => $data['handwriting_id']],
+                [
+                    'practice_id' => $data['handwriting_id'],
+                    'character'   => $data['character']
+                ],
+                'number'
+            );
         } else if ($data['type'] == JapaneseWritingPractice::KANJI) {
-            $this->kanjiWritingPracticeService->createWithIncrementedNumber([
-                'practice_id' => $data['handwriting_id'],
-                'full_word'   => $data['full_word'],
-                'underlined_word' => $data['underlined_word'],
-                'kanji'       => $data['kanji'],
-            ], 'number');
+            $this->kanjiWritingPracticeService->createByConditionsWithIncrementedNumber(
+                ['practice_id' => $data['handwriting_id']],
+                [
+                    'practice_id' => $data['handwriting_id'],
+                    'full_word'   => $data['full_word'],
+                    'underlined_word' => $data['underlined_word'],
+                    'kanji'       => $data['kanji']
+                ],
+                'number');
         }
 
         flash('success', 'Thêm Flashcard thành công', 'success');
@@ -511,7 +521,7 @@ class HandwritingController extends Controller
                 $this->hiraganaWritingPracticeService->delete($detailId);
             }
             else if ($handwriting->type == JapaneseWritingPractice::KANJI) {
-                $record = $this->kanjiWritingPracticeService->delete($detailId);
+                $this->kanjiWritingPracticeService->delete($detailId);
             }
 
             $response['status']  = 1;

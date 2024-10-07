@@ -259,6 +259,7 @@
                 if (resultKanjiObject[kanjiIndex]) {
                     resultKanji = $(resultKanjiObject[kanjiIndex]);
                     $(this).after(resultKanji)
+                    showHandwritingTabTitle(kanjiIndex);
                 }
             });
         }
@@ -538,6 +539,18 @@
         function checkHandwriting() {
             showResult(resultSVG);
             showHandwritingGuideContent(kanji);
+            showHandwritingTabTitle(kanji)
+        }
+
+        /**
+         * Show Handwriting Tab Title
+         */
+        function showHandwritingTabTitle(kanji) {
+            let $element = $('.handwriting-tab-title[data-kanji="' + kanji + '"]');
+
+            if ($element.length > 0) {
+                $element.text(kanji);
+            }
         }
 
         /**
