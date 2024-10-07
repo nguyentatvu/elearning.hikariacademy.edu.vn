@@ -1500,3 +1500,93 @@ function admin_asset($path)
 function getFullUserImage(string $userImageFile) {
     return asset('uploads/users/thumbnail/' . $userImageFile);
 }
+
+/**
+ * Call API to Dify
+ *
+ * @param string $url
+ * @param string $apiKey
+ * @param array $data
+ * @return mixed
+ */
+function callApi(string $url, string $apiKey, string $httpMethod, array $data)
+{
+    $curl = curl_init();
+    curl_setopt_array($curl, [
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => $httpMethod,
+        CURLOPT_POSTFIELDS => json_encode($data),
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: Bearer ' . $apiKey,
+            'Content-Type: application/json',
+        ),
+    ]);
+
+    $response = curl_exec($curl);
+    $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+    if (!$response) {
+        $error = curl_error($curl);
+        $error_no = curl_errno($curl);
+        $effective_url = curl_getinfo($curl, CURLINFO_EFFECTIVE_URL);
+
+        app_log()->error($error, [
+            'error_no' => $error_no,
+            'http_code' => $httpStatus,
+            'url' => $effective_url
+        ]);
+
+        return null;
+    }
+
+    $response = json_decode($response, true);
+
+    if (!($httpStatus >= 200 && $httpStatus < 300)) {
+        app_log()->error($response['message'] ?? '', [
+            'http_code' => $httpStatus,
+            'url' => $url
+        ]);
+
+        return null;
+    }
+
+    curl_close($curl);
+
+    return $response;
+}
+
+/**
+ * Get redeemed points array from redeemed amount
+ *
+ * @param int $required_redeemed_amount
+ * @return mixed(array|bool)
+ */
+function getRedeemedPointsArrayFromRedeemedPoint(int $required_redeemed_amount, $user = null)
+{
+    $user = is_null($user) ? Auth::user() : $user;
+    $reward_point = $user->reward_point;
+    $recharge_point = $user->recharge_point;
+
+    if ($required_redeemed_amount > $reward_point + $recharge_point) {
+        return false;
+    }
+
+    if ($required_redeemed_amount > $reward_point) {
+        return [
+            'reward_point' => $reward_point,
+            'recharge_point' => $required_redeemed_amount - $reward_point
+        ];
+    } else if ($required_redeemed_amount <= $reward_point) {
+        return [
+            'reward_point' => $required_redeemed_amount,
+            'recharge_point' => 0
+        ];
+    }
+
+    return false;
+}

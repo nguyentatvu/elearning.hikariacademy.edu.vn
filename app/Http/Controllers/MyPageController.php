@@ -24,7 +24,7 @@ class MyPageController extends Controller
         $this->weeklyLearboardService = $weeklyLearboardService;
         $this->paymentMethodService = $paymentMethodService;
         $this->coinRechargeService = $coinRechargeService;
-        $this->middleware('auth')->except('leaderboard');
+        $this->middleware('auth');
     }
 
     /**

@@ -126,105 +126,116 @@ class PaymentsController extends Controller
         $view_name            = 'admin.student.payments.testpayments';
         return view($view_name, $data);
     }
-    public function lmsPayments(Request $request, $slug)
-    {
-        $is_redeemed = !!$request->is_redeemed;
+
+    /**
+     * Show series payment page
+     *
+     * @param Request $request
+     * @param string $slug
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function lmsPayments(Request $request, $slug) {
         $user = Auth::user();
+        $is_redeemed = !!$request->is_redeemed;
         $series_order_created_at = $user->series_order_created_at;
-        $is_order_expired = $series_order_created_at != null
+        $is_order_expired = $series_order_created_at !== null
             && now()->diffInMinutes(Carbon::parse($series_order_created_at)) >= config('constant.payment.min_valid_time');
+
         if ($is_order_expired) {
             $this->userService->restoreRedeemedPoints();
         }
+
         $this->paymentMethodService->getAllOverdueSeriesPayment()->each(function ($payment_method) {
             $payment_method->update(['status' => PaymentMethod::PAYMENT_FAILED]);
         });
 
         $record = LmsSeriesCombo::getRecordWithSlug($slug);
-        //Check if the series is allowed to pay with redeemed points
+
+        // Kiểm tra nếu không cho phép thanh toán bằng điểm quy đổi
         if ($record->redeem_point == 0 && $is_redeemed) {
             flash('Thông báo', 'Khoá học không hỗ trợ giảm giá quy đổi bằng Hi Coin', 'error');
             return redirect('/home');
         }
 
-        if ($record != null && $record->cost == 0) {
-            //kiểm tra đơn hàng đã tồn tại
+        // Kiểm tra nếu khoá học miễn phí
+        if ($record !== null && $record->cost == 0) {
             $lmsseries_combo_check = DB::table('payment_method')
                 ->where('item_id', $record->id)
-                ->where('user_id', Auth::user()->id)
+                ->where('user_id', $user->id)
                 ->first();
-            if ($lmsseries_combo_check != null) {
+
+            if ($lmsseries_combo_check !== null) {
                 flash('Thông báo', 'Đơn hàng đã được tạo trước đó', 'success');
-                if ($record->type == 1) {
-                    return redirect('/lms/exam-categories/study');
-                }
-                return redirect('/lms/exam-categories/list');
+                return redirect($record->type == 1 ? '/lms/exam-categories/study' : '/lms/exam-categories/list');
             }
-            // đặt hàng 0đ
+
+            // Đặt hàng miễn phí
             $orderInfo = $record->title;
-            $orderId   = 'HIK' . time() . "";
-            $requestId = Auth::user()->id . '_' . $record->id . '_' . $record->type;
-            //$requestId_info = explode('_', $requestId);
+            $orderId = 'HIK' . time();
+            $requestId = "{$user->id}_{$record->id}_{$record->type}";
+
             DB::beginTransaction();
             try {
-                $payment               = new PaymentMethod();
-                $payment->user_id      = Auth::user()->id;
-                $payment->item_id      = $record->id;
-                $payment->item_name    = $orderInfo;
-                $payment->amount       = 0;
-                $payment->requestId    = $requestId;
-                $payment->orderId      = $orderId;
-                $payment->orderInfo    = $orderInfo;
-                $payment->transId      = mt_srand(10);
-                $payment->orderType    = 'Free';
-                $payment->payType      = 'Free';
-                $payment->extraData    = "merchantName=Hikari Academy";
-                $payment->responseTime = date("Y-m-d H:i:s");
-                $payment->status       = 1; //Update Giao dich thanh công 0=>1
+                $payment = new PaymentMethod([
+                    'user_id' => $user->id,
+                    'item_id' => $record->id,
+                    'item_name' => $orderInfo,
+                    'amount' => 0,
+                    'requestId' => $requestId,
+                    'orderId' => $orderId,
+                    'orderInfo' => $orderInfo,
+                    'transId' => mt_srand(10),
+                    'orderType' => 'Free',
+                    'payType' => 'Free',
+                    'extraData' => 'merchantName=Hikari Academy',
+                    'responseTime' => now(),
+                    'status' => 1,
+                ]);
                 $payment->save();
+
                 for ($i = 1; $i <= 5; $i++) {
                     $n = 'n' . $i;
                     if ($record->$n > 0) {
                         DB::table('payments')->insert([
-                            'user_id'            => Auth::user()->id,
-                            'item_id'            => $record->$n,
-                            'time'               => $record->time,
+                            'user_id' => $user->id,
+                            'item_id' => $record->$n,
+                            'time' => $record->time,
                             'payments_method_id' => $payment->id,
                         ]);
                     }
                 }
+
                 DB::commit();
-                $message_success = "Bạn đã mua khóa học {$orderInfo} thành công";
-                flash('Thông báo', $message_success, 'success');
-                if ($record->type == 1) {
-                    return redirect('/lms/exam-categories/study');
-                }
-                return redirect('/lms/exam-categories/list');
+                flash('Thông báo', "Bạn đã mua khóa học {$orderInfo} thành công", 'success');
             } catch (Exception $e) {
-                $message = "Tạo đơn hàng thất bại";
-                flash('Thông báo', $message, 'error');
-                if ($record->type == 1) {
-                    return redirect('/lms/exam-categories/study');
-                }
-                return redirect('/lms/exam-categories/list');
+                DB::rollBack();
+                flash('Thông báo', 'Tạo đơn hàng thất bại', 'error');
             }
+
+            return redirect($record->type == 1 ? '/lms/exam-categories/study' : '/lms/exam-categories/list');
         }
 
-        $data['required_redeem_point'] = $record->redeem_point;
-        $data['is_redeemed'] = $is_redeemed;
-        $data['payments_history'] = DB::table('payments')->where([
-                                        ['payments.user_id', Auth::id()],
-                                        ['payments.status', 1],
-                                        ])
-                                        ->orderBy('id', 'desc')
-                                        ->get();
-        $data['active_class'] = 'buypoint';
-        $data['title']        = 'Phương thức thanh toán';
-        $data['layout']       = getLayout();
-        $data['lmsseries']    = $record;
-        $view_name            = 'admin.student.payments.lmspayments';
-        return view($view_name, $data);
+        // Chuẩn bị dữ liệu cho view
+        $data = [
+            'required_redeem_point' => $record->redeem_point,
+            'remaining_series_cost' => $record->cost - $record->redeem_point * config('constant.redeemed_coin.vnd_convert_rate'),
+            'is_redeemed' => $is_redeemed,
+            'payments_history' => DB::table('payments')
+                ->where('user_id', $user->id)
+                ->where('status', 1)
+                ->orderBy('id', 'desc')
+                ->get(),
+            'active_class' => 'buypoint',
+            'title' => 'Phương thức thanh toán',
+            'layout' => getLayout(),
+            'series_combo' => $record,
+        ];
+
+        return view('client.pages.purchase-series', $data);
     }
+
+
     public function execPostRequest($url, $data)
     {
         $ch = curl_init($url);
@@ -2010,8 +2021,10 @@ try_again:
                 }
             }
             if ($record != null) {
-                if ($this->paymentMethodService->checkPendingSeriesTransferOrder()) {
-                    $data = array('error' => 3, 'message' => 'Đơn hàng đã được tạo trước đó');
+                if ($this->paymentMethodService->checkPendingSeriesTransferOrder() ||
+                    $this->paymentMethodService->checkPendingSeriesPayment())
+                {
+                    $data = array('error' => 3, 'message' => 'Đơn hàng đã được tạo trước đó, vui lòng đợi');
                     return json_encode($data);
                 }
             } else {
@@ -2035,7 +2048,6 @@ try_again:
                 $amount    = $record->cost;
             }
 
-
             $orderInfo      = $record->title;
             $orderId        = 'HIK' . time() . "";
             $requestId      = Auth::user()->id . '_' . $record->id . '_' . $record->type;
@@ -2056,6 +2068,7 @@ try_again:
                 $payment->extraData    = "merchantName=Hikari Academy";
                 $payment->responseTime = date("Y-m-d H:i:s");
                 $payment->status       = PaymentMethod::PAYMENT_PENDING;
+                $payment->redeem_point = $request->isRedeemed === 'true' ? $record->redeem_point : 0;
                 $payment->save();
 
                 if ($request->isRedeemed === 'true') {
@@ -2156,7 +2169,7 @@ try_again:
         DB::statement(DB::raw('set @rownum=0'));
         $records = PaymentMethod::join('users', 'users.id', '=', 'payment_method.user_id')
             ->join('lmsseries_combo', 'lmsseries_combo.id', '=', 'payment_method.item_id')
-            ->select([DB::raw('@rownum  := @rownum  + 1 AS stt'), 'users.name', 'users.email', 'payment_method.orderInfo',
+            ->select([DB::raw('@rownum  := @rownum  + 1 AS stt'), 'users.name', 'users.email', 'payment_method.orderInfo', 'payment_method.redeem_point',
                 'lmsseries_combo.type', 'payment_method.amount', 'payment_method.created_at', 'payment_method.status', 'payment_method.id'])
             ->where('payment_method.orderType', 'transfer')
             ->distinct()
@@ -2185,6 +2198,9 @@ try_again:
             ->editColumn('type', function ($records) {
                 $dr_type = array(0 => 'Khóa học', 1 => 'Khóa luyện thi');
                 return $dr_type[$records->type];
+            })
+            ->editColumn('redeem_point', function ($records) {
+                return formatNumber($records->redeem_point ?? 0);
             })
             ->editColumn('status', function ($records) {
                 return config('constant.payment.status')[$records->status];
@@ -2567,7 +2583,9 @@ try_again:
         $amount = $record->cost;
         $required_redeemed_amount = $required_redeemed_point * 1000;
 
-        if ($this->paymentMethodService->checkPendingSeriesPayment() === true) {
+        if ($this->paymentMethodService->checkPendingSeriesTransferOrder() ||
+            $this->paymentMethodService->checkPendingSeriesPayment())
+        {
             flash('Thông báo', 'Hãy hoàn thành thanh toán trước đó, hoặc đợi 15 phút để hơn hàng hết hạn!', 'error');
             return back();
         }
@@ -2802,9 +2820,9 @@ try_again:
 					flash('Mua khoá học thành công!', $message_success, 'success');
 
 					if ($record->type == 1) {
-						return redirect('/lms/exam-categories/study');
+						return redirect('/home');
 					}
-					return redirect('/lms/exam-categories/list');
+					return redirect('/home');
 				} else {
                     // Returning the redeemed points to reward points if transaction is failed
                     $payment_method->update(
