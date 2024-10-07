@@ -20,6 +20,7 @@ use App\{
     MessageHistory,
     Conversation,
     Payment,
+    WeeklyLeaderboard,
     JapaneseWritingPractice,
     HiraganaWritingPractice,
     KanjiWritingPractice,
@@ -78,6 +79,9 @@ class RepositoryServiceProvider extends ServiceProvider
         });
         $this->app->bind(PaymentRepository::class, function () {
             return new PaymentRepository(new Payment());
+        });
+        $this->app->bind(WeeklyLeaderboardRepository::class, function () {
+            return new WeeklyLeaderboardRepository(new WeeklyLeaderboard());
         });
         $this->app->bind(HandwritingRepository::class, function () {
             return new HandwritingRepository(new JapaneseWritingPractice);

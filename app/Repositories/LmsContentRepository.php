@@ -133,4 +133,38 @@ class LmsContentRepository extends BaseRepository
             ->whereNotIn('type', [LmsContent::LESSON, LmsContent::LESSON_TOPIC])
             ->first();
     }
+
+    /**
+     * Get next content
+     *
+     * @param string $contentOrder
+     * @param string $seriesId
+     * @return mixed(LmsContent|null)
+     */
+    public function getNextContent(string $contentOrder, string $seriesId) {
+        return $this->model
+            ->where('stt', '>=', ((int) $contentOrder + 1))
+            ->where('lmsseries_id', $seriesId)
+            ->where('delete_status', LmsContent::ACTIVE)
+            ->whereNotIn('type', [LmsContent::LESSON, LmsContent::LESSON_TOPIC])
+            ->orderby('stt')
+            ->first();
+    }
+
+    /**
+     * Get exercise content
+     *
+     * @param string $contentId
+     * @return \Illuminate\Support\Collection
+     */
+    public function getFormattedExerciseContent(string $contentId) {
+        return $this->model
+            ->join('lms_exams', 'lms_exams.content_id', '=', 'lmscontents.id')
+            ->where('lmscontents.id', $contentId)
+            ->where('lmscontents.delete_status', LmsContent::ACTIVE)
+            ->where('lms_exams.delete_status', LmsContent::ACTIVE)
+            ->whereNotNull('lms_exams.dang')
+            ->select('lms_exams.id', 'label', 'dang', 'cau', 'mota', 'dapan', DB::raw("CONCAT_WS('-,-',luachon1,luachon2,luachon3,luachon4) AS answers"))
+            ->get();
+    }
 }

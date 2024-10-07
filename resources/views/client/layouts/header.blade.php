@@ -154,7 +154,7 @@
             <div class="btn-group mx-2">
                 <div type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     @if (Auth::user()->image)
-                        <img src="{{ asset('uploads/users/thumbnail/' . Auth::user()->image) }}" class="rounded-circle object-fit-cover" width="60px" height="60px" alt="Avatar" />
+                        <img src="{{ asset('uploads/users/thumbnail/' . Auth::user()->image) }}" class="rounded-circle object-fit-cover" width="40px" height="40px" alt="Avatar" />
                     @else
                         <img src="{{ asset('images/no-avatar.png') }}" class="rounded-circle object-fit-cover" height="40px" width="40px" alt="Avatar" />
                     @endif
@@ -163,9 +163,9 @@
                     <li>
                         <div class="d-flex justify-content-center align-items-center">
                             @if (Auth::user()->image)
-                                <img src="{{ asset('uploads/users/thumbnail/' . Auth::user()->image) }}" class="rounded-circle object-fit-cover" width="60px" height="60px" alt="Avatar" />
+                                <img src="{{ asset('uploads/users/thumbnail/' . Auth::user()->image) }}" class="rounded-circle object-fit-cover" width="40px" height="40px" alt="Avatar" />
                             @else
-                                <img src="{{ asset('images/no-avatar.png') }}" class="rounded-circle object-fit-cover" height="60px" width="60px" alt="Avatar" />
+                                <img src="{{ asset('images/no-avatar.png') }}" class="rounded-circle object-fit-cover" height="40px" width="40px" alt="Avatar" />
                             @endif
                             <div>
                                 <div>Học viên A</div>

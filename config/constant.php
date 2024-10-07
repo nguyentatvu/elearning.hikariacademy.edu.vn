@@ -39,7 +39,20 @@ return [
             5 => 'score.png',
             9 => 'video-streaming.png',
             10 => 'flashcard.png',
-            0 => 'lesson.png'
+            0 => 'lesson.png',
+            1 => 'lesson.png',
+            2 => 'lesson.png',
+            3 => 'lesson.png',
+            4 => 'lesson.png',
+            6 => 'lesson.png',
+            7 => 'lesson.png',
+            8 => 'lesson.png',
+        ],
+        'routes' => [
+            'video' => 'learning-management.lesson.show',
+            'exercise' => 'learning-management.lesson.exercise',
+            'audit' => 'learning-management.lesson.audit',
+            'flashcard' => 'learning-management.lesson.flashcard'
         ]
     ],
     'redeemed_coin' => [

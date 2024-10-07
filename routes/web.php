@@ -42,42 +42,57 @@ Route::get('/contact', function () {
     return view('client.pages.contact');
 })->name('home.contact');
 
-// My page (Client)
-Route::get('/mypage/leaderboard', function () {
-    return view('client.mypage.leaderboard');
-})->name('mypage.leaderboard');
+Route::prefix('mypage')->name('mypage.')->group(function () {
+    Route::get('/leaderboard', 'MyPageController@leaderboard')
+        ->name('leaderboard');
 
-Route::get('/mypage/reward-point', function () {
-    return view('client.mypage.reward-point');
-})->name('mypage.reward-point');
+    Route::get('/reward-point', function () {
+        return view('client.mypage.reward-point');
+    })->name('reward-point');
 
-Route::get('/mypage/recharge-point', function () {
-    return view('client.mypage.recharge-point');
-})->name('mypage.recharge-point');
+    Route::get('/recharge-point', 'MyPageController@rechargePoint')
+        ->name('recharge-point');
 
-Route::get('/mypage/my-personal', function () {
-    return view('client.mypage.personal');
-})->name('mypage.personal');
+    Route::get('/my-personal', function () {
+        return view('client.mypage.personal');
+    })->name('personal');
 
-Route::get('/mypage/my-courses', function () {
-    return view('client.mypage.my-courses');
-})->name('mypage.courses');
+    Route::get('/my-courses', function () {
+        return view('client.mypage.my-courses');
+    })->name('courses');
 
-Route::get('/mypage/my-exams', function () {
-    return view('client.mypage.my-exams');
-})->name('mypage.exams');
+    Route::get('/my-exams', function () {
+        return view('client.mypage.my-exams');
+    })->name('exams');
 
-Route::get('/mypage/my-comments', function () {
-    return view('client.mypage.my-comments');
-})->name('mypage.my-comments');
+    Route::get('/my-comments', function () {
+        return view('client.mypage.my-comments');
+    })->name('my-comments');
 
-Route::get('/mypage/my-result-exam', function () {
-    return view('client.mypage.my-result-exam');
-})->name('mypage.my-result-exam');
+    Route::get('/my-result-exam', function () {
+        return view('client.mypage.my-result-exam');
+    })->name('my-result-exam');
 
-Route::get('/mypage/payment-management', function () {
-    return view('client.mypage.payment-management');
-})->name('mypage.payment-management');
+    Route::get('/payment-management', function () {
+        return view('client.mypage.payment-management');
+    })->name('payment-management');
+});
+
+Route::prefix('learning-management')->name('learning-management.')->group(function () {
+    Route::get('lesson/next', 'StudentLmsController@getNextLesson')
+        ->name('next-lesson');
+    Route::get('lesson/show/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showLesson')
+        ->name('lesson.show');
+    Route::post('lesson/exercise/save-score', 'StudentLmsController@saveExerciseScore')
+        ->name('lesson.exercise.save-score');
+    Route::get('lesson/exercise/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showExercise')
+        ->name('lesson.exercise');
+    Route::get('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showAudit')
+        ->name('lesson.audit');
+    Route::get('lesson/flashcard/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showFlashcard')
+        ->name('lesson.flashcard');
+});
+
 
 
 /**************************
