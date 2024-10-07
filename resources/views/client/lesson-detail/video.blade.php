@@ -52,6 +52,13 @@
         }
 
         (function() {
+            const existingPlayers = videojs.getPlayers();
+            for (const playerId in existingPlayers) {
+                if (existingPlayers[playerId]) {
+                    existingPlayers[playerId].dispose();
+                }
+            }
+
             const player = videojs('my-video', getVideoConfig());
 
             player.httpSourceSelector();

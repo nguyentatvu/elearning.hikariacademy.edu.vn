@@ -464,6 +464,43 @@
     }
 }
 
+@include mq (max-sp-sl) {
+    .leaderboard__top--point {
+        width: 100px;
+        max-height: 230px;
+    }
+
+    .leaderboard__top--point-detail .point {
+        font-size: 40px;
+
+        & ~ span {
+            font-size: 16px;
+        }
+    }
+
+    .leaderboard__top--point > img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .leaderboard__top--avatar {
+        width: 100px;
+        height: 100px;
+    }
+
+    .leaderboard__top--avatar span {
+        font-size: 11px;
+    }
+
+    .leaderboard__top-3 {
+        height: 400px;
+    }
+
+    .leaderboard__list th, .leaderboard__list td {
+        padding: 8px;
+    }
+}
+
 .recharge-coin {
     display: flex;
     gap: 60px;
@@ -659,20 +696,5 @@
 .gray-filter {
     filter: grayscale(100%);
 }
-
-.container {
-    @include mq (max-tb) {
-        max-width: 100%;
-    }
-
-    @include mq (max-sp) {
-        max-width: 100%;
-    }
-
-    @include mq (max-sp-sl) {
-        max-width: 100%;
-    }
-}
-
 
 @import 'my-page/personal.scss';
