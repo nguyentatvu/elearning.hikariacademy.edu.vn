@@ -3024,12 +3024,12 @@ try_again:
 
                 $formattedCoinAmount = formatNumber($unfinishedPaymentMethod->recharge_coin_amount);
                 flash('Thông báo!', "Bạn đã nạp $formattedCoinAmount HiCoins thành công!", 'success');
-                return redirect()->route('payments.coin.list', $user->slug);
+                return redirect()->route('mypage.recharge-point');
             } else {
                 $unfinishedPaymentMethod->update(['status' => PaymentMethod::PAYMENT_FAILED]);
 
                 flash('Thông báo!', 'Bạn đã huỷ đơn hàng thành toán!', 'error');
-                return redirect()->route('payments.coin.list', $user->slug);
+                return redirect()->route('mypage.recharge-point');
             }
         } else {
             flash('error', 'Chữ ký không hợp lệ', 'error');

@@ -1493,3 +1493,10 @@ function admin_asset($path)
 {
     return asset('assets/admin/' . $path);
 }
+
+/**
+ * Get full user image path
+ */
+function getFullUserImage(string $userImageFile) {
+    return asset('uploads/users/thumbnail/' . $userImageFile);
+}

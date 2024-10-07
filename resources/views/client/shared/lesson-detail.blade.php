@@ -260,4 +260,5 @@
     </script>
 
     @yield('scripts-content')
+    @yield('lesson-detail-scripts')
 @endsection

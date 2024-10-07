@@ -8,6 +8,9 @@ class LmsExam extends Model
 {
     protected $table = 'lms_exams';
 
+    public const ACTIVE = 0;
+    public const DELETED = 1;
+
     /**
      * Gets the answers
      *

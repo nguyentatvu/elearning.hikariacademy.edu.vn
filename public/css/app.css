@@ -17,11 +17,6 @@ body {
 
 /* Tablet styles (medium devices) */
 /* Mobile styles (small devices) */
-@media (max-width: 767px) {
-  * {
-    font-size: 0.8rem !important;
-  }
-}
 .text-primary-color {
   color: var(--primary);
 }
@@ -56,6 +51,30 @@ body {
 
 .text-secondary {
   color: var(--secondary) !important;
+}
+
+.line-clamp-1 {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
 /* HTML5 display-role reset for older browsers */

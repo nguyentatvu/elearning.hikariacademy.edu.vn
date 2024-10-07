@@ -2,6 +2,7 @@
 
 @section('styles')
     <link href="{{ asset('css/pages/mypage.css') }}" rel="stylesheet">
+    @yield('mypage-styles')
 @endsection
 
 @section('content')

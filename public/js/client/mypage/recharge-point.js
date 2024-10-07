@@ -58,21 +58,19 @@ const changeTransactionSubmit = () => {
 
 const askToCreateTransferOrder = () => {
     $('#submit_bank_transfer>button').on('click', function () {
-        swal({
+        Swal.fire({
             title: "Xác nhận tạo đơn hàng",
             text: "",
-            type: "warning",
+            icon: "warning",
             showCancelButton: true,
             confirmButtonColor: '#8CD4F5',
             confirmButtonText: "Đồng ý",
             cancelButtonText: "Hủy bỏ",
-            closeOnConfirm: false,
-            closeOnCancel: false
-        }, function (isConfirm) {
-            if(!isConfirm) {
-                swal("Hủy bỏ", "Đơn hàng của bạn đã bị hủy bỏ", "error");
-            }
-            else {
+            reverseButtons: true,
+        }).then((result) => {
+            if (result.isDismissed) {
+                Swal.fire("Hủy bỏ", "Đơn hàng của bạn đã bị hủy bỏ", "error");
+            } else if (result.isConfirmed) {
                 submitCreateTransferOrder();
             }
         });
@@ -82,7 +80,7 @@ const askToCreateTransferOrder = () => {
 const submitCreateTransferOrder = () => {
     $.ajax({
         headers: {
-            'X-CSRF-TOKEN':'{{ csrf_token() }}'
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         url: TRANSFER_ORDER_URL,
         type: 'POST',
@@ -91,28 +89,13 @@ const submitCreateTransferOrder = () => {
         },
         dataType: 'json',
         success: function (data) {
-            swal({
-                title: 'Thông báo',
-                text: data.messages,
-                type: 'success',
-                showConfirmButton: false,
-                showCancelButton: false,
-                timer: 2000,
-            });
+            showSuccessAlert(data.messages);
         },
         error: function (data) {
             if (data.responseJSON) {
                 data = data.responseJSON;
             }
-
-            swal({
-                title: 'Thông báo',
-                text: data.messages,
-                type: 'error',
-                showConfirmButton: false,
-                showCancelButton: false,
-                timer: 2000,
-            });
+            showErrorAlert(data.messages);
         }
     });
 }
