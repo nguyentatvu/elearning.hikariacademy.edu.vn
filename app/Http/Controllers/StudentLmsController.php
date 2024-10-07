@@ -410,6 +410,17 @@ class StudentLmsController extends Controller
             'users_id' => Auth::id(),
         ]);
     }
+
+    /**
+     * Handles student audit test, processes lesson content and answers submitted by student.
+     * Calculates student's score and returns the audit view.
+     *
+     * @param Request $request
+     * @param string $combo_slug
+     * @param string $slug
+     * @param string $stt
+     * @return \Illuminate\Http\Response
+     */
     public function studentAudittest(Request $request, $combo_slug = '', $slug = '', $stt = '')
     {
         $this->processLessonContent($combo_slug, $slug, $stt);
@@ -506,6 +517,13 @@ class StudentLmsController extends Controller
         return redirect('home');
     }
 
+    /**
+     * Updates or inserts the student's view for the current content.
+     *
+     * @param string $slug
+     * @param string $stt
+     * @return void
+     */
     private function updateAndInsertContentView($slug, $stt)
     {
         $current_content_view = LmsStudentView::query()
@@ -534,6 +552,16 @@ class StudentLmsController extends Controller
         }
     }
 
+    /**
+     * Stores the result of the student's test, calculates score, and updates the view status.
+     * Redirects to the appropriate lesson or next content based on the result.
+     *
+     * @param Request $request
+     * @param string $combo_slug
+     * @param string $slug
+     * @param string $stt
+     * @return \Illuminate\Http\Response
+     */
     public function storeResuttest(Request $request, $combo_slug = '', $slug = '', $stt = '')
     {
         $this->processLessonContent($combo_slug, $slug, $stt);
@@ -595,7 +623,7 @@ class StudentLmsController extends Controller
                 $passed = (int) $totalValue / (int) $point;
                 $sendUrl = null;
 
-                if ($passed >0.65) {
+                if ($passed > 0.65) {
                     if (Auth::user() != null) {
                         $rewardPoint = 1;
                         if ($passed >= 1) {
