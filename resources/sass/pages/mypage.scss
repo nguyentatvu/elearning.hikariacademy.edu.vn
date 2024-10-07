@@ -48,31 +48,6 @@
     margin-top: 20px;
 }
 
-.reward-point {
-    width: 100%;
-
-    &__overview {
-        width: 100%;
-        display: flex;
-        gap: 30px;
-        justify-content: center;
-    }
-
-    &__overview-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background-color: #6AC4F3;
-        color: white;
-        font-size: 25px;
-        font-weight: 600;
-        border-radius: 8px;
-        height: 130px;
-        width: 480px;
-    }
-}
-
 .coin-size {
     width: 16px;
     height: 16px;
@@ -86,12 +61,61 @@
 .reward-point {
     width: 100%;
 
+    &__wrapper {
+        display: flex;
+        flex-direction: column;;
+        margin: 0 auto;
+        gap: 20px;
+        width: 820px;
+
+        @include mq (max-sp) {
+            width: 500px;
+        }
+
+        @include mq (max-sp-sl) {
+            width: 100%;
+        }
+    }
+
+    &__overview {
+        width: 100%;
+        display: flex;
+        gap: 30px;
+        justify-content: center;
+
+        @include mq (max-sp-sl) {
+            flex-direction: column;
+            gap: 16px;
+        }
+    }
+
+    &__overview-item {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        align-items: center;
+        justify-content: center;
+        background-color: #6AC4F3;
+        color: white;
+        font-size: 25px;
+        font-weight: 600;
+        border-radius: 8px;
+        height: 130px;
+
+        @include mq (max-sp-sl) {
+            padding: 12px 0;
+        }
+    }
+
     &__detail {
         width: 100%;
         display: flex;
         gap: 20px;
         justify-content: center;
-        margin-top: 20px;
+
+        @include mq (max-sp) {
+            flex-wrap: wrap;
+        }
     }
 
     &__detail-item {
@@ -105,6 +129,18 @@
         border-radius: 8px;
         font-weight: 600;
         box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+
+        @include mq (max-sp) {
+            width: auto;
+            flex: 1 1 48%;
+            max-width: 48%;
+            box-sizing: border-box;
+        }
+
+        @include mq (max-sp-sl) {
+            flex: 1 1 46%;
+            max-width: 46%;
+        }
 
         >img {
             width: 50px;
@@ -123,11 +159,20 @@
         grid-template-columns: repeat(3, minmax(0, 1fr));
         column-gap: 12px;
         row-gap: 12px;
-        width: 880px;
+        width: fit-content;
         margin: 20px auto 0px;
+
+        @include mq (max-pc) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        @include mq (max-sp-sl) {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
     }
 
     &__item {
+        width: 285px;
         position: relative;
         border: 1px solid #f2f5fa;
         border-radius: 6px;
@@ -158,6 +203,10 @@
         padding: 12px;
         background-color: #f8fafc;
 
+        &.not-allowed {
+            pointer-events: none;
+        }
+
         a {
             width: 100%;
             border: none;
@@ -172,10 +221,6 @@
             &:hover {
                 color: white !important;
                 opacity: 0.85;
-            }
-
-            &.not-allowed {
-                pointer-events: none;
             }
         }
     }
@@ -608,6 +653,24 @@
         mask-repeat: no-repeat;
         -webkit-mask-size: 100% 100%;
         mask-size: 100% 100%;
+    }
+}
+
+.gray-filter {
+    filter: grayscale(100%);
+}
+
+.container {
+    @include mq (max-tb) {
+        max-width: 100%;
+    }
+
+    @include mq (max-sp) {
+        max-width: 100%;
+    }
+
+    @include mq (max-sp-sl) {
+        max-width: 100%;
     }
 }
 

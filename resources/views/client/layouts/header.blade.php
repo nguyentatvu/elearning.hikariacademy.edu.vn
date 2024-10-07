@@ -16,10 +16,14 @@
         </div>
         @if (Auth::check())
             <div class="header-my-coin">
-                <a href="{{ route('mypage.reward-point') }}">
+                <a href="{{ route('mypage.reward-point') }}" class="owned-point">
                     {{ formatNumber(Auth::user()->reward_point + Auth::user()->recharge_point) }}
                 </a>
                 <img src="{{ asset('images/icons/coin.svg') }}" class="rounded-circle object-fit-cover">
+                <div class="hicoin-animation">
+                    <span class="me-1 fs-5">+<span class="increased-point"></span></span>
+                    <img width="20" alt="hi-coin" src="{{ asset('images/icons/coin.svg') }}">
+                </div>
             </div>
 
             <div class="btn-group mx-2">

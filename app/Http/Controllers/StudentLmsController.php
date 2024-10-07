@@ -39,19 +39,22 @@ class StudentLmsController extends Controller
     private $lmsStudentViewService;
     private $lmsSeriesComboService;
     private $paymentMethodService;
+    private $userService;
 
     public function __construct(
         LmsContentService $lmsContentService,
         LmsSeriesService $lmsSeriesService,
         LmsStudentViewService $lmsStudentViewService,
         LmsSeriesComboService $lmsSeriesComboService,
-        PaymentMethodService $paymentMethodService
+        PaymentMethodService $paymentMethodService,
+        UserService $userService
     ) {
         $this->lmsContentService = $lmsContentService;
         $this->lmsSeriesService = $lmsSeriesService;
         $this->lmsStudentViewService = $lmsStudentViewService;
         $this->lmsSeriesComboService = $lmsSeriesComboService;
         $this->paymentMethodService = $paymentMethodService;
+        $this->userService = $userService;
     }
 
     /**
@@ -213,6 +216,7 @@ class StudentLmsController extends Controller
      * Save student view
      */
     private function saveStudentView(string $contentId) {
+        $this->prepContent['is_finished_content'] = false;
         if (!$this->prepContent['is_valid_payment']) {
             return;
         }
@@ -230,6 +234,8 @@ class StudentLmsController extends Controller
                 'created_date' => date('Y-m-d H:i:s'),
             ]);
         }
+
+        $this->prepContent['is_finished_content'] = optional($studentView)->finish == LmsStudentView::FINISH;
     }
 
     /**
@@ -261,7 +267,8 @@ class StudentLmsController extends Controller
             'isFreeSeries' => $this->prepContent['is_free_series'],
             'seriesType' => $this->prepContent['series_type'],
             'detailContent' => $this->prepContent['detail_content'],
-            'seriesCombo' => $this->prepContent['series_combo']
+            'seriesCombo' => $this->prepContent['series_combo'],
+            'isFinishedContent' => $this->prepContent['is_finished_content'],
         ];
     }
 
@@ -362,21 +369,33 @@ class StudentLmsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return void
      */
-    public function saveExerciseScore(Request $request) {
+    public function finishContent(Request $request) {
         $contentId = $request->get('content_id');
-        $earnedPoint = $request->get('earned_point');
+        $earnedPoints = $request->get('earned_points');
+        $contentType = $request->get('content_type');
 
         $studentView = $this->lmsStudentViewService->getByConditions([
             'lmscontent_id' => $contentId,
             'users_id' => Auth::id(),
+            'finish' => LmsStudentView::NOT_FINISHED
         ]);
+        $content = $this->lmsContentService->findById($contentId);
 
-        if ($earnedPoint < 1 || !$studentView) {
+        if ($earnedPoints < 1 || !$studentView || !$content) {
             return;
         }
+        // Remove exceeded points
+        $earnedPoints = max(0, min($earnedPoints, 3));
+
+        $user = Auth::user();
+        $this->userService->updatePointHistory([$contentType => $earnedPoints]);
+        $user->update([
+            'reward_point' => $user->reward_point + $earnedPoints
+        ]);
 
         $studentView->update([
-            'finish' => LmsStudentView::FINISH
+            'finish' => LmsStudentView::FINISH,
+            'reward_point' => $earnedPoints
         ], [
             'lmscontent_id' => $contentId,
             'users_id' => Auth::id(),

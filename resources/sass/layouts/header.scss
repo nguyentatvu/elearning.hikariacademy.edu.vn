@@ -47,6 +47,40 @@
     -moz-border-radius: 15px;
     -ms-border-radius: 15px;
     -o-border-radius: 15px;
+    position: relative;
+
+    .hicoin-animation {
+        position: absolute;
+        bottom: -11px;
+        right: 10%;
+        color: #007bff;
+        font-weight: bold;
+        opacity: 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .hicoin-float {
+        animation: hicoinFloat 2s ease-out;
+    }
+
+    @keyframes hicoinFloat {
+        0% {
+            bottom: 0px;
+            opacity: 0;
+        }
+
+        50% {
+            bottom: 12px;
+            opacity: 1;
+        }
+
+        100% {
+            bottom: 24px;
+            opacity: 0;
+        }
+    }
 }
 
 .header-my-coin a {
