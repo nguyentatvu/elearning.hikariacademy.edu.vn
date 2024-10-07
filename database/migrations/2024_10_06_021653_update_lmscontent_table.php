@@ -19,7 +19,8 @@ class UpdateLmscontentTable extends Migration
             $table->foreign('japanese_writing_practice_id')
                 ->references('id')
                 ->on('japanese_writing_practices')
-                ->onDelete('cascade');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
     }
 
@@ -31,6 +32,7 @@ class UpdateLmscontentTable extends Migration
     public function down()
     {
         Schema::table('lmscontents', function (Blueprint $table) {
+            $table->dropForeign(['japanese_writing_practice_id']);
             $table->dropColumn('japanese_writing_practice_id');
         });
     }

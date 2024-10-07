@@ -1,6 +1,12 @@
 @extends('admin.layouts.' . getRole() . '.' . getRole() . 'layout')
 @section('header_scripts')
     <link href="{{ CSS }}ajax-datatables.css" rel="stylesheet">
+
+    <style>
+        .tr-head {
+            pointer-events: none;
+        }
+    </style>
 @stop
 @section('content')
     <div id="page-wrapper">
@@ -37,13 +43,13 @@
                         <table cellspacing="0" class="table table-striped table-bordered datatable" width="100%">
                             <thead>
                                 <tr>
-                                    <th>
+                                    <th class="tr-head">
                                         Luyện viết
                                     </th>
-                                    <th>
+                                    <th class="tr-head">
                                         Loại
                                     </th>
-                                    <th>
+                                    <th class="tr-head">
                                         {{ getPhrase('action') }}
                                     </th>
                                 </tr>

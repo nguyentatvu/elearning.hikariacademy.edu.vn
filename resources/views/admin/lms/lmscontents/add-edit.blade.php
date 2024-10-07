@@ -53,7 +53,11 @@
           @endif
           @include('admin.lms.lmscontents.form_elements',
           array('button_name'=> $button_name),
-          array('record'=>$record,'series_slug'=>$series_slug))
+          array('record'=>$record,
+            'series_slug'=>$series_slug,
+            'handwriting' => $handwriting,
+            'handwriting_type' => $handwriting_type
+          ))
 
           {!! Form::close() !!}
         </div>

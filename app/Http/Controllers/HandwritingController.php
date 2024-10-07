@@ -8,6 +8,7 @@ use App\KanjiWritingPractice;
 use App\Services\HandwritingService;
 use App\Services\HiraganaWritingPracticeService;
 use App\Services\KanjiWritingPracticeService;
+use App\Services\LmsContentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -19,16 +20,19 @@ class HandwritingController extends Controller
     private $handwritingService;
     private $hiraganaWritingPracticeService;
     private $kanjiWritingPracticeService;
+    private $lmsContentService;
 
     public function __construct(
         HandwritingService $handwritingService,
         HiraganaWritingPracticeService $hiraganaWritingPracticeService,
-        KanjiWritingPracticeService $kanjiWritingPracticeService
+        KanjiWritingPracticeService $kanjiWritingPracticeService,
+        LmsContentService $lmsContentService
     ) {
         $this->middleware('auth');
         $this->handwritingService = $handwritingService;
         $this->hiraganaWritingPracticeService = $hiraganaWritingPracticeService;
         $this->kanjiWritingPracticeService = $kanjiWritingPracticeService;
+        $this->lmsContentService = $lmsContentService;
     }
 
     /**
@@ -208,15 +212,18 @@ class HandwritingController extends Controller
 
             if (isset($data['file_import'])) {
                 $file = $data['file_import'];
-                $result = $this->handleDataFromExcel($handwriting, $file);
+                $result = $this->handleDataFromExcel($handwriting->id, $handwriting->type, $file);
 
                 if (!$result && $handwriting->type == JapaneseWritingPractice::HIRAGANA) {
                     return redirect()
                         ->back()
                         ->withErrors(['error' => 'File không hợp lệ cho bài luyện viết Hiragana. File chỉ nên có 2 cột.'])
-                        ->withInput();
+                        ->withInput($request->all());
                 } else if (!$result && $handwriting->type == JapaneseWritingPractice::KANJI) {
-                    return redirect()->back()->withErrors(['error' => 'File không hợp lệ cho bài luyện viết Kanji. File chỉ nên có 4 cột.'])->withInput($request->all());
+                    return redirect()
+                        ->back()
+                        ->withErrors(['error' => 'File không hợp lệ cho bài luyện viết Kanji. File chỉ nên có 4 cột.'])
+                        ->withInput($request->all());
                 }
             }
 
@@ -318,23 +325,43 @@ class HandwritingController extends Controller
             return back();
         }
 
-        $data = $request->only('title', 'file_import');
+        $data = $request->only('title', 'type','file_import');
 
         DB::beginTransaction();
         try {
-            $result = $this->handwritingService->update($id, [
+            $handwriting = $this->handwritingService->findById($id);
+
+            // Delete all hiragana or kanji writing practice relating to this handwriting
+            if ($handwriting->type == JapaneseWritingPractice::HIRAGANA) {
+                $handwriting->hiraganaWritingPractices()->delete();
+            } else if ($handwriting->type == JapaneseWritingPractice::KANJI) {
+                $handwriting->kanjiWritingPractices()->delete();
+            }
+
+            $upatedResult = $this->handwritingService->update($id, [
                 'title' => $data['title'],
+                'type'  => $data['type'],
             ]);
 
-            if ($result && isset($data['file_import'])) {
+            if ($upatedResult && isset($data['file_import'])) {
                 $file = $data['file_import'];
-                $handwriting = $this->handwritingService->findById($id);
-                $result = $this->handleDataFromExcel($handwriting, $file);
 
-                if (!$result && $handwriting->type == JapaneseWritingPractice::HIRAGANA) {
-                    return redirect()->back()->withErrors(['error' => 'File không hợp lệ cho bài luyện viết Hiragana. File chỉ nên có 2 cột.'])->withInput($request->all());
-                } else if (!$result && $handwriting->type == JapaneseWritingPractice::KANJI) {
-                    return redirect()->back()->withErrors(['error' => 'File không hợp lệ cho bài luyện viết Kanji. File chỉ nên có 4 cột.'])->withInput($request->all());
+                $result = $this->handleDataFromExcel($id, $data['type'], $file);
+
+                if (!$result) {
+                    if ($data['type'] == JapaneseWritingPractice::HIRAGANA) {
+                        DB::rollBack();
+                        return redirect()
+                            ->back()
+                            ->withErrors(['error' => 'File không hợp lệ cho bài luyện viết Hiragana. File chỉ nên có 2 cột.'])
+                            ->withInput($request->all());
+                    } else if ($data['type'] == JapaneseWritingPractice::KANJI) {
+                        DB::rollBack();
+                        return redirect()
+                            ->back()
+                            ->withErrors(['error' => 'File không hợp lệ cho bài luyện viết Kanji. File chỉ nên có 4 cột.'])
+                            ->withInput($request->all());
+                    }
                 }
             }
 
@@ -437,17 +464,26 @@ class HandwritingController extends Controller
             return back();
         }
 
+        DB::beginTransaction();
         try {
             $this->handwritingService->delete($id);
+            $this->lmsContentService->deleteByKeyValueConditions([
+                'japanese_writing_practice_id' => $id
+            ]);
             $response['status']  = 1;
             $response['message'] = 'Xóa thành công';
+
+            DB::commit();
         } catch (\Illuminate\Database\QueryException $e) {
             $response['status'] = 0;
+
             if (getSetting('show_foreign_key_constraint', 'module')) {
                 $response['message'] = $e->errorInfo;
             } else {
                 $response['message'] = getPhrase('this_record_is_in_use_in_other_modules');
             }
+
+            DB::rollback();
         }
 
         return json_encode($response);
@@ -495,11 +531,12 @@ class HandwritingController extends Controller
     /**
      * Handle data from excel
      *
-     * @param JapaneseWritingPractice $handwriting
+     * @param int $handwritingId
+     * @param int $handwritingType
      * @param UploadedFile $file
      * @return bool
      */
-    protected function handleDataFromExcel(JapaneseWritingPractice $handwriting, UploadedFile $file)
+    protected function handleDataFromExcel(int $handwritingId, int $handwritingType, UploadedFile $file)
     {
         $path = $file->getRealPath();
         config(['excel.import.startRow' => 2]);
@@ -507,27 +544,27 @@ class HandwritingController extends Controller
             $reader->noHeading();
         })->get()->toArray();
 
-        if ($handwriting->type == JapaneseWritingPractice::HIRAGANA) {
+        if ($handwritingType == JapaneseWritingPractice::HIRAGANA) {
             foreach ($data as $rowData) {
                 if (count($rowData) != 2) {
                     return false;
                 }
 
                 $this->hiraganaWritingPracticeService->create([
-                    'practice_id' => $handwriting->id,
+                    'practice_id' => $handwritingId,
                     'number'      => $rowData[0],
                     'character'   => $rowData[1],
                 ]);
 
             }
-        } else if ($handwriting->type == JapaneseWritingPractice::KANJI) {
+        } else if ($handwritingType == JapaneseWritingPractice::KANJI) {
             foreach ($data as $rowData) {
                 if (count($rowData) != 4) {
                     return false;
                 }
 
                 $this->kanjiWritingPracticeService->create([
-                    'practice_id' => $handwriting->id,
+                    'practice_id' => $handwritingId,
                     'number'      => $rowData[0],
                     'full_word'   => $rowData[1],
                     'underlined_word' => $rowData[2],

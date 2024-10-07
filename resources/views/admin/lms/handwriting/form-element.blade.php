@@ -29,26 +29,23 @@
         </fieldset>
     </div>
 </div>
-@if (!$record)
-    <div class="row">
-        <div class="col-md-6">
-            <?php $type = array(1 => 'Hiragana', 2 => 'Kanji');?>
-            <fieldset class="form-group">
-                {{ Form::label('type', 'Loại bài luyện viết') }}
-                <span class="text-red">*</span>
-                {{ Form::select('type', $type, $value = null, [
-                        'class' => 'form-control',
-                        'placeholder' => '',
-                        'required' => 'true',
-                        'ng-model'=>'type',
-                        'ng-pattern' => '',
-                        'ng-class'=>'{"has-error": formHandwriting.type.$touched && formHandwriting.type.$invalid}',
-                    ])
-                }}
-            </fieldset>
-        </div>
+<div class="row">
+    <div class="col-md-6">
+        <?php $type = [1 => 'Hiragana', 2 => 'Kanji']; ?>
+        <fieldset class="form-group">
+            {{ Form::label('type', 'Loại bài luyện viết') }}
+            <span class="text-red">*</span>
+            {{ Form::select('type', $type, $value = null, [
+                'class' => 'form-control',
+                'placeholder' => '',
+                'required' => 'true',
+                'ng-model' => 'type',
+                'ng-pattern' => '',
+                'ng-class' => '{"has-error": formHandwriting.type.$touched && formHandwriting.type.$invalid}',
+            ]) }}
+        </fieldset>
     </div>
-@endif
+</div>
 
 @if (!$record)
     <div class="buttons text-center">

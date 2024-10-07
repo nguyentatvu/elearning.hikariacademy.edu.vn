@@ -12,11 +12,19 @@ use Image;
 use ImageSettings;
 use Yajra\DataTables\DataTables;
 use \App;
+use App\Services\HandwritingService;
+use App\Services\LmsContentService;
+
 class LmsContentController extends Controller
 {
-    public function __construct()
+    private $handwritingService;
+    private $lsmContentService;
+
+    public function __construct(HandwritingService $handwritingService, LmsContentService $lsmContentService)
     {
         $this->middleware('auth');
+        $this->handwritingService = $handwritingService;
+        $this->lsmContentService = $lsmContentService;
     }
     protected $examSettings;
     public function setSettings()
@@ -600,11 +608,16 @@ class LmsContentController extends Controller
             return back();
         }
         $record                       = LmsContent::getRecordWithId($slug);
+        $listHandwriting = $this->handwritingService->getAll();
+        $handwriting = array_pluck($listHandwriting, 'title', 'id');
+        $handwritingType = $this->handwritingService->findById($record->japanese_writing_practice_id)->type;
         //dd($series );
         $data['URL_LMS_CONTENT_EDIT'] = PREFIX . "lms/$series/content/edit/" . $slug;
         $data['URL_LMS_CONTENT']      = PREFIX . "lms/$series/content";
         $data['series_slug']          = $series;
         $data['record']               = $record;
+        $data['handwriting'] = array(''=>'-- Chọn bài luyện viết --') + $handwriting;
+        $data['handwriting_type'] = $handwritingType;
         $data['title']                = 'Cập nhật ' . $record->bai;
         $data['active_class']         = 'lms';
         $data['settings']             = json_encode($record);
@@ -914,6 +927,23 @@ class LmsContentController extends Controller
                     $record->import = '1';
                     $record->save();
                 }
+            }
+
+            if ((int) $request->loai == LmsContent::HANDWRITING) {
+                $result = $this->handwritingService->getByConditions([
+                    'id' => $request->handwriting,
+                    'type' => $request->type
+                ]);
+
+                if (!$result) {
+                    DB::rollBack();
+                    return redirect()->back()
+                        ->withErrors(['error' => 'Bài luyện viết và đề phải khớp với nhau'])
+                        ->withInput($request->all());
+                }
+
+                $record->japanese_writing_practice_id = $request->handwriting;
+                $record->save();
             }
             # end import bai tap loai 4
             DB::commit();

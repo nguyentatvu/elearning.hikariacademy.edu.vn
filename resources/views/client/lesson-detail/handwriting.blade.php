@@ -125,6 +125,8 @@
         let resultSVG;
         let handwritingGuideVisibilityObject = {};
         let handwritingGuideContentObject = {};
+        let resultKanjiObject = {};
+        let canvasData = {};
         new KanjivgAnimate('.hadnwriting-guide-redraw')
 
         $(document).ready(function() {
@@ -146,6 +148,7 @@
             handleClickHandwritingTab();
             createCanvasByTab();
             showFirstTab();
+            restoreCurrentCanvasData(index + 1);
 
             arrowLeft.toggleClass('disabled', index === 0);
             arrowRight.toggleClass('disabled', index === total - 1);
@@ -153,17 +156,8 @@
         }
 
         /**
-         * Handle Arrow Event
+         * Update Handwriting Lesson Content
          */
-        function handleArrowLeftEvent() {
-            $('#arrow_left').on('click', function() {
-                if (currentIndex > 0) {
-                    currentIndex--;
-                    updateHandwriting(currentIndex);
-                }
-            });
-        }
-
         function updateHandwritingLessonContent(data) {
             if ({{ $handwriting->type }} == {{ \App\JapaneseWritingPractice::KANJI }}) {
                 const question = data.full_word.replace(data.underlined_word, `<u>${data.underlined_word}</u>`);
@@ -173,6 +167,9 @@
             }
         }
 
+        /**
+         * Update Handwriting Tabs
+         */
         function updateHandwritingTabs(data) {
             handwritingTabs.empty();
 
@@ -199,11 +196,69 @@
         /**
          * Handle Arrow Event
          */
+         function handleArrowLeftEvent() {
+            $('#arrow_left').on('click', function() {
+                if (currentIndex > 0) {
+                    saveCurrentCanvasData(currentIndex + 1 );
+                    currentIndex--;
+                    updateHandwriting(currentIndex);
+                }
+            });
+        }
+
+        /**
+         * Handle Arrow Event
+         */
         function handleArrowRightEvent() {
             $('#arrow_right').on('click', function() {
                 if (currentIndex < total - 1) {
+                    saveCurrentCanvasData(currentIndex + 1);
                     currentIndex++;
                     updateHandwriting(currentIndex);
+                }
+            });
+        }
+
+        /**
+         * Save Current Canvas Data
+         */
+        function saveCurrentCanvasData(currentIndex) {
+            $('#handwriting_content canvas').each(function() {
+                let canvas = $(this)[0];
+                let canvasId = this.id;
+
+                if (!canvasData[currentIndex]) {
+                    canvasData[currentIndex] = {};
+                }
+
+                canvasData[currentIndex][canvasId] = canvas.toDataURL('image/png');
+            });
+        }
+
+        /**
+         * Restore Current Canvas Data
+         */
+        function restoreCurrentCanvasData(currentIndex) {
+            $('#handwriting_content canvas').each(function() {
+                let canvas = $(this)[0];
+                let canvasId = this.id;
+                let context = canvas.getContext('2d');
+                let image = new Image();
+
+                if (canvasData[currentIndex] && canvasData[currentIndex][canvasId]) {
+                    image.src = canvasData[currentIndex][canvasId];
+
+                    image.onload = function() {
+                        context.clearRect(0, 0, canvas.width, canvas.height);
+                        context.drawImage(image, 0, 0);
+                    };
+                }
+
+                let kanjiIndex = canvasId.split('_').pop();
+
+                if (resultKanjiObject[kanjiIndex]) {
+                    resultKanji = $(resultKanjiObject[kanjiIndex]);
+                    $(this).after(resultKanji)
                 }
             });
         }
@@ -237,6 +292,9 @@
             });
         }
 
+        /**
+         * Handle After Clicking Handwriting Tab
+         */
         function handleAfterClickingHandwritingTab(handwritingTab) {
             kanji = $(handwritingTab).find('.handwriting-tab-title').data('kanji').trim();
             getResultSvg();
@@ -245,6 +303,9 @@
             handleHandwritingGuideContent(kanji);
         }
 
+        /**
+         * Handle Handwriting Guide Content
+         */
         function handleHandwritingGuideContent(kanji) {
             if (!handwritingGuideVisibilityObject[kanji]) {
                 handwritingGuideContent.html('');
@@ -257,31 +318,49 @@
             }
         }
 
+        /**
+         * Active Handwriting Guide Eye
+         */
         function activeHandwritingGuideEye() {
             handwritingGuideEye.css("pointer-events", "auto");
             handwritingGuideEye.css("opacity", "1");
         }
 
+        /**
+         * Disable Handwriting Guide Eye
+         */
         function disableHandwritingGuideEye() {
             handwritingGuideEye.css("pointer-events", "none");
             handwritingGuideEye.css("opacity", "0.5");
         }
 
+        /**
+         * Active Handwriting Guide Redraw
+         */
         function activeHandwritingGuideRedraw() {
             handwritingGuideRedraw.css("pointer-events", "auto");
             handwritingGuideRedraw.css("opacity", "1");
         }
 
+        /**
+         * Disable Handwriting Guide Redraw
+         */
         function disableHandwritingGuideRedraw() {
             handwritingGuideRedraw.css("pointer-events", "none");
             handwritingGuideRedraw.css("opacity", "0.5");
         }
 
+        /**
+         * Show Canvas By Tab
+         */
         function showCanvasByTab(kanji) {
             $('#handwriting_content .canvas-wrapper').hide();
             $('#canvas_wrapper_' + kanji).show();
         }
 
+        /**
+         * Get Canvas By Tab
+         */
         function getCanvasByTab(kanji) {
             handwritingContentDiv = $('#canvas_wrapper_' + kanji);
             handwritingCanvasContent = $('#handwriting_canvas_' + kanji);
@@ -304,8 +383,14 @@
             tabs.each(function(index) {
                 let kanji = $(this).find('.handwriting-tab-title').data('kanji').trim();
                 let newCanvasId = 'handwriting_canvas_' + kanji;
-                handwritingGuideVisibilityObject[kanji] = false;
-                handwritingGuideContentObject[kanji] = false;
+
+                if (!handwritingGuideVisibilityObject[kanji]) {
+                    handwritingGuideVisibilityObject[kanji] = false;
+                }
+
+                if (!handwritingGuideContentObject[kanji]) {
+                    handwritingGuideContentObject[kanji] = false;
+                }
 
                 let canvasWrapper = $('<div>', {
                     class: 'canvas-wrapper',
@@ -321,9 +406,6 @@
 
                 canvasWrapper.append(newCanvas);
                 handwritingContent.append(canvasWrapper);
-                handwritingCanvasContent = $(`#${newCanvasId}`);
-                let canvas = handwritingCanvasContent[0];
-                handwritingCanvas = new handwriting.Canvas(canvas);
             });
         }
 
@@ -353,14 +435,12 @@
                         if (svgMatch.length) {
                             let svgContent = $('<div>').append(svgMatch.clone()).html();
                             svgContentWithId = svgContent.replace('<svg', '<svg id="animate"');
-
                             handwritingGuideContent.append(svgContentWithId);
                         }
 
                         let paths = handwritingGuideContent.find('path');
                         getColorForPath(paths, true);
                         handwritingGuideContentObject[kanji] = handwritingGuideContent.html();
-                        //    handwritingGuideContent.children().css('display', 'none');
                     })
                     .fail(function(error) {
                         console.error('Lỗi tải SVG:', error);
@@ -456,36 +536,21 @@
          * Check Handwriting
          */
         function checkHandwriting() {
-            showResult();
+            showResult(resultSVG);
             showHandwritingGuideContent(kanji);
         }
 
         /**
          * Show Result
          */
-        function showResult() {
+        function showResult(resultSVG) {
             handwritingContentDiv.find('div').remove();
-            const svgDiv = $('<div>').html(resultSVG);
+            const svg = $(resultSVG);
+            let paths = svg.find('path');
 
-            let paths = svgDiv.find('path');
             getColorForPath(paths, false);
-
-            svgDiv.css({
-                'position': 'absolute',
-                'top': '0',
-                'left': '0',
-                'z-index': '0'
-            });
-
-            handwritingCanvasContent.css({
-                'position': 'absolute',
-                'top': '0',
-                'left': '0',
-                'z-index': '1'
-            });
-
-            handwritingContentDiv.css('position', 'relative');
-            handwritingContentDiv.append(svgDiv);
+            resultKanjiObject[kanji] = svg;
+            handwritingContentDiv.append(svg);
             activeHandwritingGuideEye();
             activeHandwritingGuideRedraw();
         }

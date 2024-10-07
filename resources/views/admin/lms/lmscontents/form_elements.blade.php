@@ -120,6 +120,30 @@
     class="form-control"
     name="lms_type_4" accept=".xls,.xlsx" >
   </fieldset>
+  <fieldset class="form-group col-md-6" ng-if="loai=='11'">
+    {{ Form::label('handwriting', 'Chọn bài luyện viết') }}
+    {{ Form::select('handwriting', $handwriting, $value = $record->japanese_writing_practice_id , $attributes = array('class'=>'form-control',
+      'ng-model'=>'handwriting',
+      'ng-class'=>'{"has-error": formLms.handwriting.$touched}',
+      )) }}
+    <div class="validation-error" ng-messages="formLms.handwriting.$error">
+        {!! getValidationMessage()!!}
+    </div>
+  </fieldset>
+  <fieldset class="form-group col-md-6" ng-if="loai=='11'">
+    <?php $type = array(1 => 'Hiragana', 2 => 'Kanji');?>
+    {{ Form::label('type', 'Loại bài luyện viết') }}
+    <span class="text-red">*</span>
+    {{ Form::select('type', $type, $value = $handwriting_type, [
+        'class' => 'form-control',
+        'placeholder' => '',
+        'required' => 'true',
+        'ng-model'=>'type',
+        'ng-pattern' => '',
+        'ng-class'=>'{"has-error": formHandwriting.type.$touched && formHandwriting.type.$invalid}',
+      ])
+    }}
+  </fieldset>
   @if($record)
   @if($record->image!='')
   <fieldset class="form-group col-md-3">

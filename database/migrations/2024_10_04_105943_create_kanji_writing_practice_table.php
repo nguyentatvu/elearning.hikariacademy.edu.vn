@@ -25,7 +25,8 @@ class CreateKanjiWritingPracticeTable extends Migration
             $table->foreign('practice_id')
                 ->references('id')
                 ->on('japanese_writing_practices')
-                ->onDelete('cascade');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
     }
 

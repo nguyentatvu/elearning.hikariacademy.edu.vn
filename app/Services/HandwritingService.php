@@ -17,10 +17,12 @@ class HandwritingService extends BaseService
     /**
      * Get all Handwritings with sorting
      *
+     * @param string $column
+     * @param string $order
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getAllWithSorting()
+    public function getAllWithSorting(string $column = 'updated_at', string $order = 'desc')
     {
-        return $this->handwritingRepository->getAllWithSorting();
+        return $this->handwritingRepository->getAllWithSorting($column, $order);
     }
 }
