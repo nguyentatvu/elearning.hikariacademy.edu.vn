@@ -4,7 +4,7 @@
   $dr_loai = ['0'=>'Menu','8'=>'Menu con', 
                 '1'=>'Từ vựng','2'=>'Bài học','3'=>'Bài tập',
                 '4'=>'Bài tập toàn bài','5'=>'Bài test',
-                '6'=>'Hán tự','7'=>'Bài ôn tập','9'=>'Giới thiệu','10' => 'Flashcard'];
+                '6'=>'Hán tự','7'=>'Bài ôn tập','9'=>'Giới thiệu','10' => 'Flashcard', '11' => 'Luyện viết'];
   $loai_selected = (isset($record->type)) ? $record->type : null;
 ?>
     <div class="row">
@@ -96,6 +96,16 @@
               'ng-class'=>'{"has-error": formLms.flashcard.$touched && formLms.loai.$invalid}',
               )) }}
             <div class="validation-error" ng-messages="formLms.flashcard.$error">
+                {!! getValidationMessage()!!}
+            </div>
+        </fieldset>
+        <fieldset class="form-group col-md-6" ng-if="loai=='11'">
+            {{ Form::label('handwriting', 'Chọn bài luyện viết') }}
+            {{ Form::select('handwriting', $handwriting, $value = '' , $attributes = array('class'=>'form-control',
+              'ng-model'=>'handwriting',
+              'ng-class'=>'{"has-error": formLms.handwriting.$touched && formLms.loai.$invalid}',
+              )) }}
+            <div class="validation-error" ng-messages="formLms.handwriting.$error">
                 {!! getValidationMessage()!!}
             </div>
         </fieldset>

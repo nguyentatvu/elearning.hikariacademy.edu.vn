@@ -25,14 +25,37 @@ abstract class BaseService
     }
 
     /**
+     * Get all the data with order by
+     *
+     * @param string $orderBy
+     * @param string $order
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAllWithOrderBy($orderBy, $order = 'asc')
+    {
+        return $this->repository->getAllWithOrderBy($orderBy, $order);
+    }
+
+    /**
      * Get data by Id
      *
-     * @param string $id
+     * @param int $id
      * @return mixed(Model|Null)
      */
     public function findById(int $id)
     {
         return $this->repository->findById($id);
+    }
+
+    /**
+     * Find data by Id with relations
+     *
+     * @param int $id
+     * @param array $relations
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function findByIdWithRelations(int $id, array $relations = []) {
+        return $this->repository->findByIdWithRelations($id, $relations);
     }
 
     /**
@@ -59,6 +82,20 @@ abstract class BaseService
     }
 
     /**
+     * Get the data by multiple conditions with order
+     *
+     * @param array $args
+     * @param array $select
+     * @param string $orderBy
+     * @param string $order
+     * @return mixed(Model|Null)
+     */
+    public function getByConditionsWithOrderBy(array $args = [], array $select = ['*'], string $orderBy = 'id', string $order = 'asc')
+    {
+        return $this->repository->getByConditionsWithOrderBy($args, $select, $orderBy, $order);
+    }
+
+    /**
      * Create data by array attributes
      *
      * @param array $attributes
@@ -78,6 +115,19 @@ abstract class BaseService
     public function insert(array $attributes = [])
     {
         return $this->repository->insert($attributes);
+    }
+
+    /**
+     * Create data with incrementing number
+     *
+     * @param array $conditions
+     * @param array $attributes
+     * @param string $column
+     * @return Model
+     */
+    public function createByConditionsWithIncrementedNumber(array $conditions, array $attributes, string $column)
+    {
+        return $this->repository->createByConditionsWithIncrementedNumber($conditions, $attributes, $column);
     }
 
     /**

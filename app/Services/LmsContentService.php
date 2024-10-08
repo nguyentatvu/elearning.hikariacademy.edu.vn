@@ -20,6 +20,7 @@ class LmsContentService extends BaseService
     private $lmsExamRepository;
     private $lmsFlashcardRepository;
     private $lmsSeriesRepository;
+    private $handwritingService;
 
     public function __construct(
         LmsContentRepository $repository,
@@ -27,7 +28,8 @@ class LmsContentService extends BaseService
         LmsTestRepository $lmsTestRepository,
         LmsExamRepository $lmsExamRepository,
         LmsFlashcardRepository $lmsFlashcardRepository,
-        LmsSeriesRepository $lmsSeriesRepository
+        LmsSeriesRepository $lmsSeriesRepository,
+        HandwritingService $handwritingService
     ) {
         parent::__construct($repository);
         $this->paymentMethodRepository = $paymentMethodRepository;
@@ -35,6 +37,7 @@ class LmsContentService extends BaseService
         $this->lmsExamRepository = $lmsExamRepository;
         $this->lmsFlashcardRepository = $lmsFlashcardRepository;
         $this->lmsSeriesRepository = $lmsSeriesRepository;
+        $this->handwritingService = $handwritingService;
     }
 
     /**
@@ -265,5 +268,18 @@ class LmsContentService extends BaseService
         }
 
         return $exercises;
+    }
+
+    /**
+     * Get handwriting content by id
+     *
+     * @param int $handwritingId
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getHandwritingContent(int $handwritingId)
+    {
+        $handwriting = $this->handwritingService->findByIdWithRelations($handwritingId, ['hiraganaWritingPractices', 'kanjiWritingPractices']);
+
+        return $handwriting;
     }
 }

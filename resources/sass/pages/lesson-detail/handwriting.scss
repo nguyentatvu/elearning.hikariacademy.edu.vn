@@ -1,0 +1,260 @@
+@import "../../mixins";
+
+.handwriting-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+
+    .handwriting-wrapper {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: 450px;
+        border-radius: 12px;
+        border: 1px solid #ccc;
+        overflow: hidden;
+
+        @include mq(max-sp) {
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+        }
+
+        .handwriting-tabs {
+            width: 10%;
+            height: 100%;
+            border-right: 1px solid #ccc;
+
+            @include mq(max-sp) {
+                width: 100%;
+                height: 40px;
+                display: flex;
+                flex-direction: row;
+                border-bottom: 1px solid #ccc;
+                border-right: none;
+            }
+
+            .handwriting-tab {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                height: 50px;
+                border-bottom: 1px solid #ccc;
+                cursor: pointer;
+                transition: background-color 0.3s, color 0.3s;
+
+                @include mq(max-sp) {
+                    width: 80px;
+                    height: 100%;
+                    border-right: 1px solid #ccc;
+                    border-bottom: none;
+                }
+
+                &.active {
+                    background-color: #166ac9;
+                    color: white;
+                }
+
+                .handwriting-tab-title {
+                    font-size: 16px;
+
+                    @include mq(max-sp) {
+                        font-size: 14px;
+                    }
+                }
+            }
+        }
+
+        .guide-and-canvas-container {
+            width: 90%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+
+            @include mq(max-sp) {
+                flex-direction: column;
+                width: 100%;
+                height: 90%;
+            }
+
+            .left-container {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                width: 50%;
+                height: 100%;
+                border-right: 1px solid #ccc;
+
+                @include mq(max-sp) {
+                    width: 100%;
+                    height: 50%;
+                    border-bottom: 1px solid #ccc;
+                    border-right: none;
+                }
+
+                .handwriting-area {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 8px;
+                    width: 100%;
+                    height: 90%;
+
+                    @include mq(max-sp) {
+                        padding: 8px;
+                    }
+
+                    .handwriting-content {
+                        width: 300px;
+                        height: 300px;
+                        border: 1px solid #ccc;
+
+                        .canvas-wrapper {
+                            position: relative;
+
+                            canvas {
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                z-index: 1;
+                            }
+
+                            svg {
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                z-index: 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .right-container {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                width: 50%;
+                height: 100%;
+
+                @include mq(max-sp) {
+                    width: 100%;
+                    height: 50%;
+                }
+
+                .handwriting-guide {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    gap: 8px;
+                    align-items: center;
+                    width: 85%;
+                    height: 100%;
+
+                    @include mq(max-sp) {
+                        padding: 8px;
+                    }
+
+                    .handwriting-guide-content {
+                        width: 300px;
+                        height: 300px;
+                        border: 1px solid #ccc;
+                    }
+                }
+            }
+        }
+
+        svg {
+            width: 300px;
+            height: 300px;
+        }
+
+        .handwriting-label {
+            font-size: 20px;
+            color: #166ac9;
+
+            @include mq(max-sp) {
+                font-size: 16px;
+            }
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+            gap: 4px;
+
+            .handwriting-action {
+                display: flex;
+                height: 40px;
+                justify-content: center;
+                align-items: center;
+                background-color: #166ac9;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+
+                &:hover {
+                    background-color: #0d4e8b;
+                }
+
+                i {
+                    width: 40px;
+                    height: 40px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    color: white;
+                    font-size: 24px;
+                }
+
+                .handwriting-action-title {
+                    padding: 0px 4px;
+                    color: white;
+                }
+            }
+        }
+    }
+
+    .handwriting-title {
+        font-size: 20px;
+        margin-left: 4px;
+    }
+
+    .handwriting-arrow {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        margin-top: 4px;
+
+        .arrow {
+            color: #166ac9;
+            margin: 0 6px;
+            cursor: pointer;
+            font-size: 20px;
+
+            &:hover {
+                color: #0d4e8b;
+            }
+
+            &.disabled {
+                color: #ccc;
+                cursor: default;
+            }
+        }
+
+        .handwriting-page {
+            color: #166ac9;
+            font-size: 16px;
+        }
+    }
+}

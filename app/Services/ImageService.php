@@ -1,17 +1,20 @@
 <?php
+
 namespace App\Services;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 
-class ImageService {
+class ImageService
+{
     private $destinationPath;
 
     /**
      * Constructor
      */
-    public function __construct(?string $destinationPath = null) {
+    public function __construct(?string $destinationPath = null)
+    {
         $this->destinationPath = $destinationPath;
     }
 
@@ -21,7 +24,8 @@ class ImageService {
      * @param string $destinationPath
      * @return void
      */
-    public function setDestination(string $destinationPath) {
+    public function setDestination(string $destinationPath)
+    {
         $this->destinationPath = $destinationPath;
     }
 
@@ -33,7 +37,8 @@ class ImageService {
      *
      * @return string
      */
-    public function save(UploadedFile $file, ?string $fileName = null) {
+    public function save(UploadedFile $file, ?string $fileName = null)
+    {
         if ($fileName == null) {
             $fileName = $file->getClientOriginalName();
         }
@@ -49,9 +54,24 @@ class ImageService {
      *
      * @param string $fullFileName
      */
-    public function remove(string $fullFileName) {
+    public function remove(string $fullFileName)
+    {
         if (File::exists($fullFileName)) {
             File::delete($fullFileName);
+        }
+    }
+
+    /**
+     * Remove all images with the same name
+     *
+     * @param int|string $id
+     * @param string $path
+     */
+    public function removeAllImagesWithTheSameName($id, string $path)
+    {
+        $files = File::glob($path . $id . '.*');
+        foreach ($files as $file) {
+            File::delete($file);
         }
     }
 }

@@ -16,16 +16,17 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class UserService extends BaseService
+class UserService
 {
+    private $userRepository;
     private $imageService;
     private $lmsSeriesComboService;
 
-    public function __construct(UserRepository $repository, ImageService $imageService, LmsSeriesComboService $lmsSeriesComboService)
+    public function __construct(UserRepository $userRepository, ImageService $imageService, LmsSeriesComboService $lmsSeriesComboService)
     {
-        parent::__construct($repository);
+        $this->userRepository = $userRepository;
         $this->imageService = $imageService;
-        $this->imageService->setDestination(app('App\ImageSettings')->getProfilePicsThumbnailpath());
+        $this->imageService->setDestination(app('App\ImageSettings')->getUploadUserThumbnailPath());
         $this->lmsSeriesComboService = $lmsSeriesComboService;
     }
 
@@ -119,6 +120,17 @@ class UserService extends BaseService
     }
 
     /**
+     * Get User
+     *
+     * @param int $id
+     * @return Collection
+     */
+    public function findById(int $id)
+    {
+        return $this->userRepository->findById($id);
+    }
+
+    /**
      * Create User
      *
      * @param array $data
@@ -140,6 +152,7 @@ class UserService extends BaseService
             $data['password'] = bcrypt($password);
             $data['slug'] = createSlug(User::class, $data['name']);
             $data['login_enabled'] = 1;
+            $data['reward_point'] = 0;
 
             if ($ipInfo) {
                 $data['country_code'] = $ipInfo['country_code'];
@@ -149,10 +162,10 @@ class UserService extends BaseService
                 $data['ip'] = $ipInfo['ip'];
             }
 
-            $user = $this->repository->create($data);
+            $user = $this->userRepository->create($data);
             $user->roles()->attach($user->role_id);
 
-            sendEmail('registration',
+            $emailSent = sendEmail('registration',
                 array(
                     'name' => $user->name,
                     'username' => $user->username,
@@ -161,12 +174,29 @@ class UserService extends BaseService
                     'to_email_bcc' => env('TO_EMAIL_CC', 'dev@hikarinetworks.com')
             ));
 
+            if (!$emailSent) {
+                DB::rollBack();
+                return false;
+            }
+
             DB::commit();
             return $user;
         } catch(Exception $e) {
             DB::rollBack();
             throw $e;
         }
+    }
+
+    /**
+     * Update User
+     *
+     * @param int $id
+     * @param array $attributes
+     * @return bool
+     */
+    public function update(int $id, array $attributes = [])
+    {
+        return $this->userRepository->update($id, $attributes);
     }
 
     /**
@@ -204,7 +234,9 @@ class UserService extends BaseService
      */
     public function uploadImageFile(int $id, UploadedFile $file)
     {
+        $imageSetting = new ImageSettings();
         $filename = $id . '.' . $file->guessClientExtension();
+        $this->imageService->removeAllImagesWithTheSameName($id, $imageSetting->getUploadUserThumbnailPath());
         $this->imageService->save($file, $filename);
 
         return $filename;
@@ -255,7 +287,7 @@ class UserService extends BaseService
      */
     public function restoreRedeemedPoints(?string $user_id = null)
     {
-        $this->repository->restoreRedeemedPoints($user_id);
+        $this->userRepository->restoreRedeemedPoints($user_id);
     }
 
     /**

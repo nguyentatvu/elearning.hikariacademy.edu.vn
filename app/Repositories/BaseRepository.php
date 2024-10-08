@@ -28,6 +28,18 @@ class BaseRepository
     }
 
     /**
+     * Get all the data with order by
+     *
+     * @param string $orderBy
+     * @param string $order
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAllWithOrderBy($orderBy, $order = 'asc')
+    {
+        return $this->model->orderBy($orderBy, $order)->get();
+    }
+
+    /**
      * Get data by Id
      *
      * @param string $id
@@ -36,6 +48,17 @@ class BaseRepository
     public function findById(int $id)
     {
         return $this->model->find($id);
+    }
+
+    /**
+     * Find data by Id with relations
+     *
+     * @param int $id
+     * @param array $relations
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function findByIdWithRelations(int $id, array $relations = []) {
+        return $this->model->with($relations)->find($id);
     }
 
     /**
@@ -64,6 +87,22 @@ class BaseRepository
     }
 
     /**
+     * Get the data by multiple conditions with order
+     *
+     * @param array $args
+     * @param array $select
+     * @param string $orderBy
+     * @param string $order
+     * @return mixed(Model|Null)
+     */
+    public function getByConditionsWithOrderBy(array $args = [], array $select = ['*'], string $orderBy = 'id', string $order = 'asc')
+    {
+        return $this->model->select($select)->where($args)
+            ->orderBy($orderBy, $order)
+            ->get();
+    }
+
+    /**
      * Create data by array attributes
      *
      * @param array $attributes
@@ -83,6 +122,25 @@ class BaseRepository
     public function insert(array $attributes = [])
     {
         return $this->model->insert($attributes);
+    }
+
+    /**
+     * Create data with incrementing number
+     *
+     * @param array $conditions
+     * @param array $attributes
+     * @param string $column
+     * @return Model
+     */
+    public function createByConditionsWithIncrementedNumber(array $conditions, array $attributes, string $column)
+    {
+        $maxValue = $this->model
+            ->where($conditions)
+            ->max($column);
+
+        $attributes[$column] = $maxValue ? $maxValue + 1 : 1;
+
+        return $this->model->create($attributes);
     }
 
     /**

@@ -21,6 +21,9 @@ use App\{
     Conversation,
     Payment,
     WeeklyLeaderboard,
+    JapaneseWritingPractice,
+    HiraganaWritingPractice,
+    KanjiWritingPractice,
 };
 
 use Illuminate\Support\ServiceProvider;
@@ -79,6 +82,15 @@ class RepositoryServiceProvider extends ServiceProvider
         });
         $this->app->bind(WeeklyLeaderboardRepository::class, function () {
             return new WeeklyLeaderboardRepository(new WeeklyLeaderboard());
+        });
+        $this->app->bind(HandwritingRepository::class, function () {
+            return new HandwritingRepository(new JapaneseWritingPractice);
+        });
+        $this->app->bind(HiraganaWritingPracticeRepository::class, function () {
+            return new HiraganaWritingPracticeRepository(new HiraganaWritingPractice);
+        });
+        $this->app->bind(KanjiWritingPracticeRepository::class, function () {
+            return new KanjiWritingPracticeRepository(new KanjiWritingPractice);
         });
     }
 }
