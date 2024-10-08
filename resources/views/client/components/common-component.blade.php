@@ -30,14 +30,18 @@
     </script>
 @endif
 
+
 <script>
+    const chatbotUrl = "{{ env('CHAT_BOT_URL') }}";
+    const chatbotToken = "{{ env('CHAT_BOT_TOKEN') }}";
+
     window.difyChatbotConfig = {
-        token: 'YbbDYAQxsbf9OF8w',
-        baseUrl: 'http://35.190.235.118:8880'
+        token: chatbotToken,
+        baseUrl: chatbotUrl
     }
 </script>
 <script
-    src="http://35.190.235.118:8880/embed.min.js"
-    id="YbbDYAQxsbf9OF8w"
+    src="{{ env('CHAT_BOT_URL') }}/embed.min.js"
+    id="{{ env('CHAT_BOT_TOKEN') }}"
     defer>
 </script>
