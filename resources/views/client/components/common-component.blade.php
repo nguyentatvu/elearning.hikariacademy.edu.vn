@@ -1,4 +1,10 @@
 @component('client.components.auth-modal') @endcomponent
+<style>
+    #dify-chatbot-bubble-button {
+      background-color: #0e6efd !important;
+    }
+</style>
+
 <div class="loading-overlay">
     <div class="loading-spinner"></div>
 </div>
@@ -23,3 +29,15 @@
         });
     </script>
 @endif
+
+<script>
+    window.difyChatbotConfig = {
+        token: 'YbbDYAQxsbf9OF8w',
+        baseUrl: 'http://35.190.235.118:8880'
+    }
+</script>
+<script
+    src="http://35.190.235.118:8880/embed.min.js"
+    id="YbbDYAQxsbf9OF8w"
+    defer>
+</script>
