@@ -63,6 +63,9 @@
                 </div>
                 @component('client.components.common-component')
                 @endcomponent
+                <div class="loading-overlay">
+                    <div class="loading-spinner"></div>
+                </div>
             </div>
         </div>
     </div>

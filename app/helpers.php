@@ -824,16 +824,16 @@ function change_furigana($text, $return = "echo")
 
                 switch ($star) {
                     case 1:
-                        $text_star =  '<span class="hikari-sao"><img src="/public/images/sao300/sao1.png"></span>';
+                        $text_star = '<span class="hikari-sao"><img src="' . asset('images/asset/sao300/sao1.png') . '"></span>';
                         break;
                     case 2:
-                        $text_star =  '<span class="hikari-sao"><img src="/public/images/sao300/sao2.png"></span>';
+                        $text_star = '<span class="hikari-sao"><img src="' . asset('images/asset/sao300/sao2.png') . '"></span>';
                         break;
                     case 3:
-                        $text_star =  '<span class="hikari-sao"><img src="/public/images/sao300/sao3.png"></span>';
+                        $text_star = '<span class="hikari-sao"><img src="' . asset('images/asset/sao300/sao3.png') . '"></span>';
                         break;
                     case 4:
-                        $text_star =  '<span class="hikari-sao"><img src="/public/images/sao300/sao4.png"></span>';
+                        $text_star = '<span class="hikari-sao"><img src="' . asset('images/asset/sao300/sao4.png') . '"></span>';
                         break;
                 }
 
