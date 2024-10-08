@@ -76,6 +76,32 @@ Route::get('/mypage/my-comments', function () {
     return view('client.mypage.my-comments');
 })->name('mypage.my-comments');
 
+Route::prefix('mypage')->name('mypage.')->group(function () {
+    Route::get('/leaderboard', 'MyPageController@leaderboard')
+        ->name('leaderboard');
+
+    Route::get('/reward-point', 'MyPageController@rewardPoint')
+        ->name('reward-point');
+
+    Route::get('/recharge-point', 'MyPageController@rechargePoint')
+        ->name('recharge-point');
+
+    Route::get('/my-personal', function () {
+        return view('client.mypage.personal');
+    })->name('personal');
+
+    Route::get('/my-courses', function () {
+        return view('client.mypage.my-courses');
+    })->name('courses');
+
+    Route::get('/my-exams', function () {
+        return view('client.mypage.my-exams');
+    })->name('exams');
+
+    Route::get('/my-comments', function () {
+        return view('client.mypage.my-comments');
+    })->name('my-comments');
+
     Route::get('/my-result-exam', function () {
         return view('client.mypage.my-result-exam');
     })->name('my-result-exam');
