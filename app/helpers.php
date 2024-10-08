@@ -1502,7 +1502,7 @@ function getFullUserImage(string $userImageFile) {
 }
 
 /**
- * Call API to Dify
+ * Call API
  *
  * @param string $url
  * @param string $apiKey
