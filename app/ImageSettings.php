@@ -18,6 +18,7 @@ class ImageSettings extends Model
     protected $defaultProfilePicPath           = "public/uploads/users/default.png";
     protected $defaultprofilePicsThumbnailpath = "public/uploads/users/thumbnail/default.png";
     protected $settingsImagePath = "public/uploads/settings/";
+    protected $uploadUserThumbnailPath = "uploads/users/thumbnail/";
 
     ///////////////////////////////////
     // Image Question upload options //
@@ -120,5 +121,15 @@ class ImageSettings extends Model
     public function getSettingsImagePath()
     {
         return $this->settingsImagePath;
+    }
+
+    /**
+     * Get Upload User Thumbnail
+     *
+     * @return string
+     */
+    public function getUploadUserThumbnailPath()
+    {
+        return $this->uploadUserThumbnailPath;
     }
 }
