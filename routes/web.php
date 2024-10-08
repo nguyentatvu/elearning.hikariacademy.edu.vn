@@ -801,9 +801,6 @@ Route::get('learning-management/lesson-selected/show/{slug?}/{lesson_id?}', 'Stu
 
 // Route::get('learning-management/lesson/audit/{combo_slug}/{series}/{slug}', 'StudentLmsController@studentAudittest')->name('learning-management.audit.show');
 
-// Route::post('learning-management/lesson/audit/{combo_slug}/{series}/{slug}', 'StudentLmsController@storeResuttest');
-
-
 //Payments Controller
 
 Route::get('payments/list/{slug}', 'PaymentsController@index');
