@@ -51,10 +51,10 @@ Route::get('/contact', function () {
 Route::get('/mypage/leaderboard', function () {
     return view('client.mypage.leaderboard');
 })->name('mypage.leaderboard');
+action:
 
-Route::get('/mypage/reward-point', function () {
-    return view('client.mypage.reward-point');
-})->name('mypage.reward-point');
+Route::get('/reward-point', 'MyPageController@rewardPoint')
+    ->name('reward-point');
 
 Route::get('/mypage/recharge-point', function () {
     return view('client.mypage.recharge-point');
@@ -76,9 +76,29 @@ Route::get('/mypage/my-comments', function () {
     return view('client.mypage.my-comments');
 })->name('mypage.my-comments');
 
-Route::get('/mypage/my-result-exam', function () {
-    return view('client.mypage.my-result-exam');
-})->name('mypage.my-result-exam');
+    Route::get('/my-result-exam', function () {
+        return view('client.mypage.my-result-exam');
+    })->name('my-result-exam');
+
+    Route::get('/payment-management', function () {
+        return view('client.mypage.payment-management');
+    })->name('payment-management');
+});
+
+Route::prefix('learning-management')->name('learning-management.')->group(function () {
+    Route::get('lesson/next', 'StudentLmsController@getNextLesson')
+        ->name('next-lesson');
+    Route::get('lesson/show/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showLesson')
+        ->name('lesson.show');
+    Route::post('lesson/exercise/finish-content', 'StudentLmsController@finishContent')
+        ->name('lesson.exercise.finish-content');
+    Route::get('lesson/exercise/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showExercise')
+        ->name('lesson.exercise');
+    Route::get('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showAudit')
+        ->name('lesson.audit');
+    Route::get('lesson/flashcard/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showFlashcard')
+        ->name('lesson.flashcard');
+});
 
 // Payment
 

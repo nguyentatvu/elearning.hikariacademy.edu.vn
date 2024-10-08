@@ -9,20 +9,6 @@
 <?php $nextUrl = null;?>
 @endif
 <script>
-    const saveExerciseScore = (contentId, earnedPoint) => {
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': '{{csrf_token()}}'
-            },
-            url: '{{ route('learning-management.lesson.exercise.save-score') }}',
-            type: "post",
-            data: {
-                content_id: contentId,
-                earned_point: earnedPoint
-            },
-        });
-    }
-
     const goToNextLesson = () => {
         let seriesSlug = "{{ request()->route('slug') }}";
         let seriesComboSlug = "{{ request()->route('combo_slug') }}";
@@ -484,9 +470,11 @@
             $(parameter.getFooter()).empty();
             $(parameter.getFooter()).append(appendFooter());
             $('.main-bar').css('width','100%');
-            @if($isValidPayment)
+            @if($isValidPayment && !$isFinishedContent)
                 const rewardPoint = calculatePointsForExercise(parameter.gettotalPoint(), {{$count_records}});
-                await saveExerciseScore('{{$detailContent->id}}', rewardPoint);
+                await earnPointFinishContent('{{$detailContent->id}}', rewardPoint, 'exercise_test');
+                await animateHicoin(rewardPoint);
+                await checkFinishContent();
             @endif
         })
         $(document).on('click','.button-rest',function(){

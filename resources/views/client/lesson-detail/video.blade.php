@@ -52,6 +52,13 @@
         }
 
         (function() {
+            const existingPlayers = videojs.getPlayers();
+            for (const playerId in existingPlayers) {
+                if (existingPlayers[playerId]) {
+                    existingPlayers[playerId].dispose();
+                }
+            }
+
             const player = videojs('my-video', getVideoConfig());
 
             player.httpSourceSelector();
@@ -64,8 +71,19 @@
             player.ready(function() {
                 addSkipButton(player);
                 allowQualitySelect(player);
+                earnPointsOnVideoEnded(player);
             });
         })();
+
+        const earnPointsOnVideoEnded = (player) => {
+            player.on('ended', function() {
+                @if($isValidPayment && !$isFinishedContent)
+                    earnPointFinishContent('{{$detailContent->id}}', 1, 'video');
+                    animateHicoin(1);
+                    checkFinishContent();
+                @endif
+            })
+        }
 
         const allowQualitySelect = (player) => {
             // Ensure HTTP Source Selector is fully initialized

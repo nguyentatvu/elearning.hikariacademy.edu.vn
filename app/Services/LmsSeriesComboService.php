@@ -6,6 +6,7 @@ use App\Http\Resources\SeriesAndTeacherResource;
 use App\LmsSeries;
 use App\Repositories\LmsSeriesComboRepository;
 use DateTime;
+use Illuminate\Support\Facades\Auth;
 
 class LmsSeriesComboService extends BaseService
 {
@@ -69,10 +70,14 @@ class LmsSeriesComboService extends BaseService
      * @return Illuminate\Database\Eloquent\Collection
      */
     public function getRedeemedSeries() {
+        $user = Auth::user();
+        $onwedPoints = $user->reward_point + $user->recharge_point;
         $series = $this->repository->getRedeemedSeries();
-        $series = $series->map(function ($item) {
+
+        $series = $series->map(function ($item) use ($onwedPoints) {
             $item->redeemed_amount = $item->redeem_point * config('constant.redeemed_coin.vnd_convert_rate');
             $item->redeemed_percent = (int) ($item->redeemed_amount / $item->cost * 100);
+            $item->is_payable = $onwedPoints >= $item->redeem_point;
 
             return $item;
         });

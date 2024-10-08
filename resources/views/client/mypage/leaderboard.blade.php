@@ -16,7 +16,7 @@
                     <img src="{{ asset('images/mypage/top-2.png') }}" alt="top 2">
                     <div class="leaderboard__top--point-detail">
                         <span class="point">{{ $leaderboard[1]->user->reward_point }}</span>
-                        <span>Điểm</span>
+                        <span class="">Điểm</span>
                     </div>
                 </div>
             </div>
@@ -33,7 +33,7 @@
                     <img src="{{ asset('images/mypage/top-1.png') }}" alt="top 2">
                     <div class="leaderboard__top--point-detail">
                         <span class="point">{{ $leaderboard[0]->user->reward_point }}</span>
-                        <span>Điểm</span>
+                        <span class="">Điểm</span>
                     </div>
                 </div>
             </div>
@@ -50,7 +50,7 @@
                     <img src="{{ asset('images/mypage/top-3.png') }}" alt="top 2">
                     <div class="leaderboard__top--point-detail">
                         <span class="point">{{ $leaderboard[2]->user->reward_point }}</span>
-                        <span>Điểm</span>
+                        <span class="">Điểm</span>
                     </div>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                 <thead>
                     <tr class="fw-bold">
                         <th>Hạng</th>
-                        <th>Ảnh đại diện</th>
+                        <th>Avatar</th>
                         <th>Học viên</th>
                         <th class="text-end">Tổng điểm</th>
                     </tr>

@@ -224,6 +224,9 @@
                             });
                         },
                         complete: function() {
+                            // Update display HICOIN
+                            const remainRewardPoint = {{ $total_reward_point - $required_redeem_point }};
+                            $('.header-my-coin .owned-point').text(remainRewardPoint);
                             toggleLoadingOverlay();
                         }
                     });

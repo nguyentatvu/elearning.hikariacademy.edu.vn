@@ -29,4 +29,27 @@ class UserRepository extends BaseRepository
             ]);
         }
     }
+
+    /**
+     * Update Point History
+     *
+     * @param array $data
+     * @param string $userId
+     * @return void
+     */
+    public function updatePointHistory($data, string $userId) {
+        $user = $userId ? $this->findById((int) $userId) : Auth::user();
+        $pointHistory = $user->point_history;
+
+        foreach($data as $key => $value) {
+            if (array_key_exists($key, $pointHistory) && !in_array($key, ['total', 'used'])) {
+                $pointHistory[$key] += $value;
+                $pointHistory['total'] += $value;
+            } else if ($key == 'used') {
+                $pointHistory['used'] += $value;
+            }
+        }
+
+        $user->update(['point_history' => $pointHistory]);
+    }
 }
