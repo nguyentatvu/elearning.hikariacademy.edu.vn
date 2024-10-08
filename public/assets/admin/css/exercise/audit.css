@@ -4463,9 +4463,7 @@ a#back2top {
 .ob-romaji {
     word-break: break-word;
 }
-.wp-content-les {
-    padding-bottom: 150px;
-}
+
 .wp-content-les.study-volc {
     overflow: hidden;
 }
@@ -4887,10 +4885,6 @@ h1, h2, h3, h4, h5, h6 {
 .header-les .nb-les .nb-cpl {
     color: #d02445;
 }
-.wp-content-les {
-    margin-top: 40px;
-    padding-bottom: 150px;
-}
 .guide-user-les {
     font-size: 17px;
     color: #535354;
@@ -5095,7 +5089,6 @@ h1, h2, h3, h4, h5, h6 {
     background-color: #fff;
     /*position: fixed;*/
     width: 100%;
-    bottom: 0;
 }
 .wp-btn-progress-les .left-ct {
     display: flex;
@@ -8046,11 +8039,6 @@ h1, h2, h3, h4, h5, h6 {
     }
     .header-les .score i {
         margin-right: 5px;
-    }
-    .wp-content-les {
-        margin-top: 20px;
-        min-height: 520px;
-        padding-bottom: 70px;
     }
     .header-les .name-les {
         font-size: 15px;
@@ -12124,3 +12112,4 @@ a:focus, a:hover {
     .btn-nav-les {
         padding: 5px 20px !important;
     }
+}

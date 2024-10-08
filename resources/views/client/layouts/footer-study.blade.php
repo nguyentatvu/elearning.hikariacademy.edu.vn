@@ -50,7 +50,7 @@
     }
 </style>
 
-<div class="custom-container d-flex justify-content-center align-items-center footer-study d-none">
+<div class="custom-container d-flex justify-content-center align-items-center footer-study">
     <span></span>
     <div>
         <button class="btn btn-custom"><i class="bi bi-chevron-left"></i> bài trước</button>

@@ -33,6 +33,18 @@
             <span class="ms-2 d-inline-block">Khoá học N1</span>
         </a>
         <div class="d-flex align-items-center">
+            @if (Auth::check())
+                <div class="header-my-coin me-3">
+                    <a href="{{ route('mypage.reward-point') }}" class="owned-point text-white">
+                        {{ formatNumber(Auth::user()->reward_point + Auth::user()->recharge_point) }}
+                    </a>
+                    <img src="{{ asset('images/icons/coin.svg') }}" class="rounded-circle object-fit-cover">
+                    <div class="hicoin-animation">
+                        <span class="me-1 fs-5 text-white">+<span class="increased-point"></span></span>
+                        <img width="20" alt="hi-coin" src="{{ asset('images/icons/coin.svg') }}">
+                    </div>
+                </div>
+            @endif
             <div class="progress">
                 <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75"
                     aria-valuemin="0" aria-valuemax="100" style="width: 35%">35%</div>

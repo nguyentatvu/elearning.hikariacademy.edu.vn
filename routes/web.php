@@ -15,17 +15,24 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('learning-management')->name('learning-management.')->group(function () {
+    Route::get('lesson/next', 'StudentLmsController@getNextLesson')
+        ->name('next-lesson');
     Route::get('lesson/show/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showLesson')
         ->name('lesson.show');
+    Route::post('lesson/exercise/save-score', 'StudentLmsController@saveExerciseScore')
+        ->name('lesson.exercise.save-score');
     Route::get('lesson/exercise/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showExercise')
         ->name('lesson.exercise');
-    Route::get('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showAudit')
+        Route::get('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@studentAudittest')
         ->name('lesson.audit');
+    Route::post('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@storeResuttest')
+        ->name('lesson.audit.store');
     Route::get('lesson/flashcard/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showFlashcard')
         ->name('lesson.flashcard');
     Route::get('lesson/handwriting/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showHandwriting')
         ->name('lesson.handwriting');
 });
+
 
 // Page (Client)
 Route::get('/', function () {
@@ -42,13 +49,41 @@ Route::get('/contact', function () {
     return view('client.pages.contact');
 })->name('home.contact');
 
+// My page (Client)
+Route::get('/mypage/leaderboard', function () {
+    return view('client.mypage.leaderboard');
+})->name('mypage.leaderboard');
+action:
+
+Route::get('/reward-point', 'MyPageController@rewardPoint')
+    ->name('reward-point');
+
+Route::get('/mypage/recharge-point', function () {
+    return view('client.mypage.recharge-point');
+})->name('mypage.recharge-point');
+
+Route::get('/mypage/my-personal', function () {
+    return view('client.mypage.personal');
+})->name('mypage.personal');
+
+Route::get('/mypage/my-courses', function () {
+    return view('client.mypage.my-courses');
+})->name('mypage.courses');
+
+Route::get('/mypage/my-exams', function () {
+    return view('client.mypage.my-exams');
+})->name('mypage.exams');
+
+Route::get('/mypage/my-comments', function () {
+    return view('client.mypage.my-comments');
+})->name('mypage.my-comments');
+
 Route::prefix('mypage')->name('mypage.')->group(function () {
     Route::get('/leaderboard', 'MyPageController@leaderboard')
         ->name('leaderboard');
 
-    Route::get('/reward-point', function () {
-        return view('client.mypage.reward-point');
-    })->name('reward-point');
+    Route::get('/reward-point', 'MyPageController@rewardPoint')
+        ->name('reward-point');
 
     Route::get('/recharge-point', 'MyPageController@rechargePoint')
         ->name('recharge-point');
@@ -83,8 +118,8 @@ Route::prefix('learning-management')->name('learning-management.')->group(functi
         ->name('next-lesson');
     Route::get('lesson/show/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showLesson')
         ->name('lesson.show');
-    Route::post('lesson/exercise/save-score', 'StudentLmsController@saveExerciseScore')
-        ->name('lesson.exercise.save-score');
+    Route::post('lesson/exercise/finish-content', 'StudentLmsController@finishContent')
+        ->name('lesson.exercise.finish-content');
     Route::get('lesson/exercise/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showExercise')
         ->name('lesson.exercise');
     Route::get('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showAudit')
@@ -147,15 +182,6 @@ Route::get('dashboard/testlang', 'DashboardController@testLanguage');
 Route::get('auth/{slug}', 'Auth\LoginController@redirectToProvider');
 
 Route::get('auth/{slug}/callback', 'Auth\LoginController@handleProviderCallback');
-
-// Authentication Routes
-
-Route::get('parent-logout', function () {
-    if (Auth::check())
-        flash('Oops..!', getPhrase('parents_module_is_not_available'), 'error');
-    Auth::logout();
-    return redirect(URL_USERS_LOGIN);
-});
 
 Route::get('confirm/{slug?}', 'SiteController@confirmRegister');
 
@@ -822,9 +848,6 @@ Route::get('learning-management/lesson-selected/show/{slug?}/{lesson_id?}', 'Stu
 // Route::get('learning-management/lesson/exercise/{combo_slug}/{series}/{slug}', 'StudentLmsController@studentExercises')->name('learning-management.exercise.show');
 
 // Route::get('learning-management/lesson/audit/{combo_slug}/{series}/{slug}', 'StudentLmsController@studentAudittest')->name('learning-management.audit.show');
-
-Route::post('learning-management/lesson/audit/{combo_slug}/{series}/{slug}', 'StudentLmsController@storeResuttest');
-
 
 //Payments Controller
 

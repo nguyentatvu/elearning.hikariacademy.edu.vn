@@ -7,7 +7,7 @@
 @section('lesson-detail-content')
 <style>
 </style>
-<div class="w-100">
+<div class="w-100 exercise-content">
     <!--Coursed Description-->
     <div class="card overflow-hidden">
         <div class="card-body">

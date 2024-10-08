@@ -3,7 +3,7 @@
         <a href="{{ $content->url }}" class="text-dark">
             @if ($is_valid_payment || $chapter_index !== 0)
                 <img src="{{ asset("images/icons/{$content->checkbox_icon}") }}"alt="check box"
-                    style="bottom: 1px;" class="position-relative size-16">
+                    style="bottom: 1px;" class="position-relative size-16" data-content-id="{{ $content->id }}">
             @else
                 <img src="{{ asset("images/icons/empty-box.svg") }}"alt="check box"
                     style="bottom: 1px;" class="position-relative">

@@ -62,10 +62,6 @@
         @component('client.components.common-component')
         @endcomponent
 
-        <div class="loading-overlay">
-            <div class="loading-spinner"></div>
-        </div>
-
         <footer>
             @include('client.layouts.footer-study')
         </footer>
@@ -73,6 +69,7 @@
 
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('js/plugins/party.min.js') }}"></script>
     <script src="{{ asset('js/client/common.js') }}"></script>
     @yield('scripts')
 </body>

@@ -45,13 +45,15 @@ class StudentLmsController extends Controller
         LmsSeriesService $lmsSeriesService,
         LmsStudentViewService $lmsStudentViewService,
         LmsSeriesComboService $lmsSeriesComboService,
-        PaymentMethodService $paymentMethodService
+        PaymentMethodService $paymentMethodService,
+        UserService $userService
     ) {
         $this->lmsContentService = $lmsContentService;
         $this->lmsSeriesService = $lmsSeriesService;
         $this->lmsStudentViewService = $lmsStudentViewService;
         $this->lmsSeriesComboService = $lmsSeriesComboService;
         $this->paymentMethodService = $paymentMethodService;
+        $this->userService = $userService;
     }
 
     /**
@@ -60,7 +62,8 @@ class StudentLmsController extends Controller
      * @param array $params
      * @return mixed
      */
-    private function checkValidURL(array &$params) {
+    private function checkValidURL(array &$params)
+    {
         $this->prepContent['series_id'] =
             optional($this->lmsSeriesService->getByCondition('slug', $params['slug']))->id;
         $this->prepContent['series_combo'] =
@@ -74,16 +77,16 @@ class StudentLmsController extends Controller
         // If 'stt' exists, perform the check.
         if ($params['stt'] === '') {
             $content = $this->lmsContentService->findById((int) $params['stt']);
-        }
-        else {
+        } else {
             $content = true;
         }
 
-        if (!$this->prepContent['series_id'] ||
+        if (
+            !$this->prepContent['series_id'] ||
             !$this->prepContent['series_combo_id'] ||
-            !$content)
-        {
-            return redirect()->to('/');
+            !$content
+        ) {
+            // return redirect()->to('/');
         }
     }
 
@@ -94,19 +97,21 @@ class StudentLmsController extends Controller
      * @param array $params
      * @return mixed
      */
-    private function checkValidPayment(array &$params) {
+    private function checkValidPayment(array &$params)
+    {
         // Both a guest user and a student who hasn't purchased the series have the same trial access.
         // A student who has purchased the series is granted full access to all content in the series.
         $userId = auth()->id() ?? -1;
         $seriesId = $this->prepContent['series_id'];
         $seriesComboId = $this->prepContent['series_combo_id'];
 
-        $this->prepContent['is_valid_payment']
-            = $this->paymentMethodService->checkSerieValidity($userId, $seriesComboId);
+        $this->prepContent['is_valid_payment'] = true;
+        // = $this->paymentMethodService->checkSerieValidity($userId, $seriesComboId);
 
-        if ($this->prepContent['series_combo']
-            && $this->prepContent['series_combo']->cost == 0)
-        {
+        if (
+            $this->prepContent['series_combo']
+            && $this->prepContent['series_combo']->cost == 0
+        ) {
             $this->prepContent['is_free_series'] = true;
             $this->prepContent['is_valid_payment'] = true;
         } else {
@@ -117,15 +122,14 @@ class StudentLmsController extends Controller
             if ($this->prepContent['is_valid_payment']) {
                 $lastViewedContent = $this->lmsStudentViewService->getLastViewedContentOfStudent($seriesId);
                 $params['stt'] = $lastViewedContent->lmscontent_id ?? $this->getFirstContentId($seriesId);
-            }
-            else {
+            } else {
                 $params['stt'] = $this->getFirstContentId($seriesId);
             }
 
             return;
         }
 
-        $isTrialContent = $this->lmsContentService->checkTrialContent($params['stt']);
+        // $isTrialContent = $this->lmsContentService->checkTrialContent($params['stt']);
         if (!$this->prepContent['is_valid_payment'] && !$isTrialContent) {
             $params['stt'] = $this->getFirstContentId($seriesId);
         }
@@ -137,7 +141,8 @@ class StudentLmsController extends Controller
      * @param string $seriesId
      * @return mixed
      */
-    private function getFirstContentId(string $seriesId) {
+    private function getFirstContentId(string $seriesId)
+    {
         $content = $this->lmsContentService->getFirstContentOfSeries($seriesId);
         return $content->id ?? null;
     }
@@ -148,7 +153,8 @@ class StudentLmsController extends Controller
      * @param array $params
      * @return void
      */
-    private function prepareContentList(array &$params) {
+    private function prepareContentList(array &$params)
+    {
         $this->prepContent['detail_content'] = $this->lmsContentService->findById((int) $params['stt']);
         $this->prepContent['active_content_id_list'] = $this->lmsContentService->getActiveContentIdList($params['stt']);
         $this->prepContent['contents'] = $this->lmsContentService->getListContents($this->prepContent['series_id'])->sortBy('stt');
@@ -213,6 +219,7 @@ class StudentLmsController extends Controller
      * Save student view
      */
     private function saveStudentView(string $contentId) {
+        $this->prepContent['is_finished_content'] = false;
         if (!$this->prepContent['is_valid_payment']) {
             return;
         }
@@ -230,6 +237,8 @@ class StudentLmsController extends Controller
                 'created_date' => date('Y-m-d H:i:s'),
             ]);
         }
+
+        $this->prepContent['is_finished_content'] = optional($studentView)->finish == LmsStudentView::FINISH;
     }
 
     /**
@@ -240,7 +249,8 @@ class StudentLmsController extends Controller
      * @param string $stt
      * @return void
      */
-    private function processLessonContent(string $combo_slug, string $slug, string $stt) {
+    private function processLessonContent(string $combo_slug, string $slug, string $stt)
+    {
         $params = compact('combo_slug', 'slug', 'stt');
 
         $this->checkValidURL($params);
@@ -254,14 +264,16 @@ class StudentLmsController extends Controller
      *
      * @return array
      */
-    private function getPreparedContentVariables() {
+    private function getPreparedContentVariables()
+    {
         return [
             'contents' => $this->prepContent['contents'],
             'isValidPayment' => $this->prepContent['is_valid_payment'],
             'isFreeSeries' => $this->prepContent['is_free_series'],
             'seriesType' => $this->prepContent['series_type'],
             'detailContent' => $this->prepContent['detail_content'],
-            'seriesCombo' => $this->prepContent['series_combo']
+            'seriesCombo' => $this->prepContent['series_combo'],
+            'isFinishedContent' => $this->prepContent['is_finished_content'],
         ];
     }
 
@@ -270,10 +282,12 @@ class StudentLmsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showLesson (string $combo_slug = '', string  $slug = '', string $stt = '') {
+    public function showLesson(string $combo_slug = '', string $slug = '', string $stt = '')
+    {
         $this->processLessonContent($combo_slug, $slug, $stt);
 
-        return view('client.lesson-detail.video', array_merge($this->getPreparedContentVariables(),
+        return view('client.lesson-detail.video', array_merge(
+            $this->getPreparedContentVariables(),
             ['type' => 'lesson', 'video_url' => $this->prepContent['detail_content']->file_path]
         ));
     }
@@ -283,13 +297,21 @@ class StudentLmsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showExercise(string $combo_slug = '', string  $slug = '', string $stt = '') {
+    public function showExercise(string $combo_slug = '', string $slug = '', string $stt = '')
+    {
         $this->processLessonContent($combo_slug, $slug, $stt);
         $exercises = $this->lmsContentService->getFormattedExerciseContent($stt);
 
-        return view('client.lesson-detail.exercise', array_merge($this->getPreparedContentVariables(),
-            ['type' => 'exercise', 'count_records' => count($exercises), 'records' => $exercises,
-            'slug' => $stt, 'series' => $slug, 'combo_slug' => $combo_slug]
+        return view('client.lesson-detail.exercise', array_merge(
+            $this->getPreparedContentVariables(),
+            [
+                'type' => 'exercise',
+                'count_records' => count($exercises),
+                'records' => $exercises,
+                'slug' => $stt,
+                'series' => $slug,
+                'combo_slug' => $combo_slug
+            ]
         ));
     }
 
@@ -298,10 +320,12 @@ class StudentLmsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showAudit (string $combo_slug = '', string  $slug = '', string $stt = '') {
+    public function showAudit(string $combo_slug = '', string $slug = '', string $stt = '')
+    {
         $this->processLessonContent($combo_slug, $slug, $stt);
 
-        return view('client.lesson-detail.audit', array_merge($this->getPreparedContentVariables(),
+        return view('client.lesson-detail.audit', array_merge(
+            $this->getPreparedContentVariables(),
             ['type' => 'audit']
         ));
     }
@@ -311,10 +335,12 @@ class StudentLmsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showFlashcard (string $combo_slug = '', string  $slug = '', string $stt = '') {
+    public function showFlashcard(string $combo_slug = '', string $slug = '', string $stt = '')
+    {
         $this->processLessonContent($combo_slug, $slug, $stt);
 
-        return view('client.lesson-detail.flashcard', array_merge($this->getPreparedContentVariables(),
+        return view('client.lesson-detail.flashcard', array_merge(
+            $this->getPreparedContentVariables(),
             ['type' => 'flashcard']
         ));
     }
@@ -325,7 +351,8 @@ class StudentLmsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function getNextLesson(Request $request) {
+    public function getNextLesson(Request $request)
+    {
         $series_combo_slug = $request->get('series_combo_slug');
         $series_slug = $request->get('series_slug');
         $content_id = $request->get('content_id');
@@ -362,26 +389,395 @@ class StudentLmsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return void
      */
-    public function saveExerciseScore(Request $request) {
+    public function finishContent(Request $request) {
         $contentId = $request->get('content_id');
-        $earnedPoint = $request->get('earned_point');
+        $earnedPoints = $request->get('earned_points');
+        $contentType = $request->get('content_type');
 
         $studentView = $this->lmsStudentViewService->getByConditions([
             'lmscontent_id' => $contentId,
             'users_id' => Auth::id(),
+            'finish' => LmsStudentView::NOT_FINISHED
         ]);
+        $content = $this->lmsContentService->findById($contentId);
 
-        if ($earnedPoint < 1 || !$studentView) {
+        if ($earnedPoints < 1 || !$studentView || !$content) {
             return;
         }
+        // Remove exceeded points
+        $earnedPoints = max(0, min($earnedPoints, 3));
+
+        $user = Auth::user();
+        $this->userService->updatePointHistory([$contentType => $earnedPoints]);
+        $user->update([
+            'reward_point' => $user->reward_point + $earnedPoints
+        ]);
 
         $studentView->update([
-            'finish' => LmsStudentView::FINISH
+            'finish' => LmsStudentView::FINISH,
+            'reward_point' => $earnedPoints
         ], [
             'lmscontent_id' => $contentId,
             'users_id' => Auth::id(),
         ]);
     }
+
+    /**
+     * Handles student audit test, processes lesson content and answers submitted by student.
+     * Calculates student's score and returns the audit view.
+     *
+     * @param Request $request
+     * @param string $combo_slug
+     * @param string $slug
+     * @param string $stt
+     * @return \Illuminate\Http\Response
+     */
+    public function studentAudittest(Request $request, $combo_slug = '', $slug = '', $stt = '')
+    {
+        $this->processLessonContent($combo_slug, $slug, $stt);
+
+        if (Auth::check()) {
+
+            // Retrieve test records from the database
+            $records = DB::table('lmscontents')
+                ->join('lms_test', 'lms_test.content_id', '=', 'lmscontents.id')
+                ->where('lmscontents.id', $stt)
+                ->where('lmscontents.delete_status', 0)
+                ->where('lms_test.delete_status', 0)
+                ->whereNotNull('lms_test.dang')
+                ->select('lms_test.id', 'dang', 'cau', 'mota', 'dapan', 'display', DB::raw("CONCAT_WS('-,-',luachon1,luachon2,luachon3,luachon4) AS answers"))
+                ->orderBy('lms_test.id', 'asc')
+                ->get();
+
+            if (!$records->isEmpty()) {
+                $this->updateAndInsertContentView($slug, $stt);
+
+                // Process the records
+                foreach ($records as $record) {
+                    $record->mota = change_furigana(trim($record->mota), 'return');
+                    if ($record->dang == '7') {
+                        $record->mota = str_replace("\n", "\n\n", $record->mota);
+                    }
+                    $record->answers = array_map(function ($answer) {
+                        return change_furigana($answer, 'return');
+                    }, explode('-,-', trim($record->answers)));
+                }
+
+                // Initialize variables for score calculation
+                $totalQuestions = count($records);
+                $correctCount = 0;
+                $studentAnswers = [];
+
+                // Check if the student has submitted answers
+                if ($request->isMethod('post')) {
+                    $dataQuest = $request->except(['_token', 'content_id', 'time']);
+
+                    $studentAnswers = $dataQuest; // Student's answers
+
+                    // Compare student's answers with correct answers
+                    foreach ($records as $record) {
+                        $questionId = $record->id;
+                        $correctAnswer = $record->dapan;
+                        $studentAnswer = isset($studentAnswers['quest_' . $questionId]) ? $studentAnswers['quest_' . $questionId] : null;
+
+                        if ($studentAnswer == $correctAnswer) {
+                            $correctCount++;
+                            $record->correct = 1; // Indicate the answer is correct
+                        } else {
+                            $record->correct = 0; // Indicate the answer is incorrect
+                        }
+
+                        $record->check = $studentAnswer; // Store the student's answer
+                    }
+
+                    // Calculate the score
+                    $point = ($correctCount / $totalQuestions) * 100;
+
+                    // Pass the score to the view
+                    $data['point'] = $point;
+                    $data['value'] = $correctCount;
+                    $data['passed'] = ($point >= 50) ? 1 : 0; // Assume passing score is 50%
+
+                    // Update the student's view record to indicate test is completed
+                    $this->updateContentViewFinishStatus($stt, Auth::id());
+                }
+
+                $data['student_answers'] = $studentAnswers;
+            }
+
+            // Define the back URL
+            $back_url = url()->previous();
+
+            // Set view parameters
+            $data['class'] = 'audit';
+            $data['title'] = 'Khóa học';
+            $data['stt'] = $stt;
+            $data['slug'] = $slug;
+            $data['combo_slug'] = $combo_slug;
+            $data['records'] = $records;
+            $data['layout'] = getLayout();
+            $data['back_url'] = $back_url;
+            $view_name = 'client.lesson-detail.audit';
+
+            return view($view_name, array_merge(
+                $this->getPreparedContentVariables(),
+                $data
+            ));
+        }
+
+        return redirect('home');
+    }
+
+    /**
+     * Updates or inserts the student's view for the current content.
+     *
+     * @param string $slug
+     * @param string $stt
+     * @return void
+     */
+    private function updateAndInsertContentView($slug, $stt)
+    {
+        $current_content_view = LmsStudentView::query()
+            ->join('lmscontents', 'lmscontents.id', '=', 'lms_student_view.lmscontent_id')
+            ->join('lmsseries', 'lmsseries.id', '=', 'lmscontents.lmsseries_id')
+            ->where([
+                ['users_id', Auth::id()],
+                ['lmsseries.slug', $slug],
+                ['lmscontents.delete_status', 0],
+                ['lmscontents.id', $stt],
+            ])->get();
+        $current_lms_content = LmsContent::where([
+            'id' => $stt,
+            'delete_status' => 0,
+        ])->first();
+
+        // Make sure current content view is empty and its content exists
+        if ($current_content_view->isEmpty() && $current_lms_content != null) {
+            LmsStudentView::insert([
+                'lmscontent_id' => $stt,
+                'users_id' => Auth::id(),
+                'view_time' => 0,
+                'finish' => 0,
+                'type' => $current_lms_content->type,
+            ]);
+        }
+    }
+
+    /**
+     * Stores the result of the student's test, calculates score, and updates the view status.
+     * Redirects to the appropriate lesson or next content based on the result.
+     *
+     * @param Request $request
+     * @param string $combo_slug
+     * @param string $slug
+     * @param string $stt
+     * @return \Illuminate\Http\Response
+     */
+    public function storeResuttest(Request $request, $combo_slug = '', $slug = '', $stt = '')
+    {
+        $this->processLessonContent($combo_slug, $slug, $stt);
+
+        if ($request->isMethod('post')) {
+            try {
+                $content_id = $stt;
+                $time = $request->time;
+                $dataQuest = $request->all();
+                unset($dataQuest['_token']);
+                unset($dataQuest['content_id']);
+                unset($dataQuest['time']);
+
+                $records = DB::table('lmscontents')
+                    ->join('lms_test', 'lms_test.content_id', '=', 'lmscontents.id')
+                    ->where('lmscontents.id', $stt)
+                    ->where('lmscontents.delete_status', 0)
+                    ->where('lms_test.delete_status', 0)
+                    ->select('lms_test.id', 'dang', 'cau', 'mota', 'dapan', 'diem', 'display', DB::raw("CONCAT_WS(',', luachon1, luachon2, luachon3, luachon4) AS answers"))
+                    ->orderBy('lms_test.id')
+                    ->get();
+                $totalValue = 0;
+                $point = 0;
+
+                foreach ($records as $keyRecord => $valueRecord) {
+                    $point += $valueRecord->diem;
+                    $correct = 0;
+                    $check = 999;
+
+                    foreach ($dataQuest as $key => $value) {
+                        $idKey = filter_var(str_replace('quest_', '', $key), FILTER_SANITIZE_NUMBER_INT);
+                        if ($valueRecord->id == $idKey) {
+                            if ($valueRecord->dapan == $value) {
+                                $totalValue += (int) $valueRecord->diem;
+                                $correct = 1;
+                            }
+                            $check = $value;
+                            unset($dataQuest[$key]);
+                            break;
+                        }
+                    }
+                    $records[$keyRecord]->correct = $correct;
+                    $records[$keyRecord]->check = $check;
+                }
+
+                foreach ($records as $key => $value) {
+                    $records[$key]->mota = change_furigana(trim($value->mota), 'return');
+                    $records[$key]->answers = explode(',', trim($value->answers));
+                }
+
+                foreach ($records as $key => $record) {
+                    $valueAnswers = array();
+                    foreach ($record->answers as $answer) {
+                        $valueAnswers[] = change_furigana($answer, 'return');
+                    }
+                    $records[$key]->answers = $valueAnswers;
+                }
+
+                $passed = (int) $totalValue / (int) $point;
+                $sendUrl = null;
+
+                if ($passed > 0.65) {
+                    if (Auth::user() != null) {
+                        $rewardPoint = 1;
+                        if ($passed >= 1) {
+                            $rewardPoint = 3;
+                        } elseif ($passed > 0.8) {
+                            $rewardPoint = 2;
+                        }
+                        try {
+                            DB::beginTransaction();
+                            DB::table('lms_test_result')->insert([
+                                'lmscontent_id' => $content_id,
+                                'combo_slug' => $combo_slug,
+                                'finish' => 1,
+                                'total_point' => $point,
+                                'users_id' => Auth::id(),
+                                'point' => $totalValue,
+                                'time_result' => $time,
+                                'created_by' => Auth::id(),
+                            ]);
+                            $this->userService->updatePoint($rewardPoint, $content_id, Auth::id());
+
+                            DB::table('lms_student_view')
+                                ->where('users_id', Auth::id())
+                                ->where('lmscontent_id', $content_id)
+                                ->update(['finish' => 1]);
+
+                            DB::commit();
+                        } catch (Exception $e) {
+                            DB::rollBack();
+                        }
+                    }
+
+                    $record = DB::table('lmscontents')
+                        ->where('id', (int) $stt)
+                        ->select('stt', 'lmsseries_id')
+                        ->get();
+
+                    if (!$record->isEmpty()) {
+                        $recordurl = DB::table('lmscontents')
+                            ->where('stt', '>=', ((int) $record[0]->stt + 1))
+                            ->where('lmsseries_id', $record[0]->lmsseries_id)
+                            ->whereNotIn('type', [0, 8])
+                            ->select('id', 'type')
+                            ->first();
+
+                        if (!empty($recordurl)) {
+                            switch ($recordurl->type) {
+                                case 1:
+                                case 2:
+                                case 6:
+                                    $sendUrl = PREFIX . 'learning-management/lesson/show/' . $combo_slug . '/' . $slug . '/' . $recordurl->id;
+                                    break;
+                                case 3:
+                                case 4:
+                                    $sendUrl = PREFIX . 'learning-management/lesson/exercise/' . $combo_slug . '/' . $slug . '/' . $recordurl->id;
+                                    break;
+                                case 5:
+                                    $sendUrl = PREFIX . 'learning-management/lesson/audit/' . $combo_slug . '/' . $slug . '/' . $recordurl->id;
+                                    break;
+                                default:
+                                    $sendUrl = null;
+                                    break;
+                            }
+                        }
+                    }
+                }
+
+                if (Auth::check() && Auth::user()->role_id != 6) {
+                    $check = DB::table('lms_student_view')
+                        ->select('id')
+                        ->where('lmscontent_id', $stt)
+                        ->where('users_id', Auth::id())
+                        ->get();
+
+                    if ($check->isEmpty()) {
+                        return redirect('home');
+                    }
+                    $data['hi_combo'] = DB::table('lmsseries_combo')
+                        ->where('slug', $combo_slug)
+                        ->where('delete_status', 0)
+                        ->first();
+
+                    $data['checkpay'] = DB::table('payment_method')
+                        ->select(DB::raw("(SELECT COUNT(id) FROM payment_method WHERE payment_method.item_id = " . $data['hi_combo']->id . " AND payment_method.user_id = " . Auth::id() . " AND DATE_ADD(responseTime, INTERVAL IF(" . $data['hi_combo']->time . " = 0,90,IF(" . $data['hi_combo']->time . " = 1,180,365)) DAY) > NOW()) as payment"))
+                        ->first();
+                    if ($data['checkpay']->payment == 0) {
+                        return redirect('home');
+                    }
+                }
+
+                if (Auth::check()) {
+                    $data['total_course'] = DB::table('lmsseries')
+                        ->join('lmscontents', 'lmsseries.id', '=', 'lmscontents.lmsseries_id')
+                        ->where([
+                            ['lmsseries.delete_status', 0],
+                            ['lmsseries.slug', $slug],
+                            ['lmscontents.delete_status', 0],
+                        ])
+                        ->whereNotIn('lmscontents.type', [0, 8])
+                        ->distinct()
+                        ->count();
+
+                    $data['current_course'] = DB::table('lms_student_view')
+                        ->join('lmscontents', 'lmscontents.id', '=', 'lms_student_view.lmscontent_id')
+                        ->join('lmsseries', 'lmsseries.id', '=', 'lmscontents.lmsseries_id')
+                        ->where([
+                            ['users_id', Auth::id()],
+                            ['lmsseries.slug', $slug],
+                            ['lms_student_view.finish', 1],
+                            ['lmscontents.delete_status', 0],
+                            ['lmsseries.delete_status', 0],
+                        ])
+                        ->whereNotIn('lmscontents.type', [0, 8])
+                        ->distinct('lms_student_view.lmscontent_id')
+                        ->count();
+                }
+
+                $data['class'] = 'exams';
+                $data['title'] = 'Khóa học';
+                $data['slug'] = $slug;
+                $data['stt'] = $stt;
+                $data['records'] = $records;
+                $data['totalValue'] = $totalValue;
+                $data['point'] = $point;
+                $data['combo_slug'] = $combo_slug;
+                $data['back_url'] = $sendUrl;
+                $data['sendUrl'] = $sendUrl;
+                $data['passed'] = $passed;
+                $data['active_class'] = 'audit';
+                $data['layout'] = getLayout();
+
+                $view_name = 'client.lesson-detail.audit';
+
+                return view($view_name, array_merge(
+                    $this->getPreparedContentVariables(),
+                    $data
+                ));
+            } catch (Exception $e) {
+                return redirect(PREFIX . 'learning-management/lesson/audit/' . $combo_slug . '/' . $slug . '/' . $stt);
+            }
+        }
+    }
+
 
     /**
      * Show handwriting
