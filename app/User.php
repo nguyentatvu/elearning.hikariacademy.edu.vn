@@ -65,6 +65,7 @@ class User extends Authenticatable implements JWTSubject
         'series_order_created_at',
         'recharge_point',
         'redeemed_points',
+        'point_history'
     ];
 
     protected $hidden = [
@@ -75,7 +76,8 @@ class User extends Authenticatable implements JWTSubject
     protected $dates = ['trial_ends_at', 'subscription_ends_at', 'last_login_date'];
 
     protected $casts = [
-        'redeemed_points' => 'array'
+        'redeemed_points' => 'array',
+        'point_history' => 'array'
     ];
 
     /**

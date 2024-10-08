@@ -33,9 +33,8 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
     Route::get('/leaderboard', 'MyPageController@leaderboard')
         ->name('leaderboard');
 
-    Route::get('/reward-point', function () {
-        return view('client.mypage.reward-point');
-    })->name('reward-point');
+    Route::get('/reward-point', 'MyPageController@rewardPoint')
+        ->name('reward-point');
 
     Route::get('/recharge-point', 'MyPageController@rechargePoint')
         ->name('recharge-point');
@@ -70,8 +69,8 @@ Route::prefix('learning-management')->name('learning-management.')->group(functi
         ->name('next-lesson');
     Route::get('lesson/show/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showLesson')
         ->name('lesson.show');
-    Route::post('lesson/exercise/save-score', 'StudentLmsController@saveExerciseScore')
-        ->name('lesson.exercise.save-score');
+    Route::post('lesson/exercise/finish-content', 'StudentLmsController@finishContent')
+        ->name('lesson.exercise.finish-content');
     Route::get('lesson/exercise/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showExercise')
         ->name('lesson.exercise');
     Route::get('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showAudit')

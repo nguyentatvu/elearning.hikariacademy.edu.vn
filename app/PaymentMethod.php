@@ -23,7 +23,8 @@ class PaymentMethod extends Model
         'extraData',
         'responseTime',
         'status',
-        'recharge_coin_amount'
+        'recharge_coin_amount',
+        'redeem_point'
     ];
 
     public const PAYMENT_PENDING = 0;

@@ -257,4 +257,15 @@ class UserService extends BaseService
     {
         $this->repository->restoreRedeemedPoints($user_id);
     }
+
+    /**
+     * Update Point History
+     *
+     * @param array $data
+     * @param string $userId
+     * @return void
+     */
+    public function updatePointHistory($data, string $userId = '') {
+        $this->repository->updatePointHistory($data, $userId);
+    }
 }

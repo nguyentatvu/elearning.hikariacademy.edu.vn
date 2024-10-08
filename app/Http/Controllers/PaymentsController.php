@@ -219,6 +219,7 @@ class PaymentsController extends Controller
         // Chuẩn bị dữ liệu cho view
         $data = [
             'required_redeem_point' => $record->redeem_point,
+            'total_reward_point' => Auth::user()->reward_point + Auth::user()->recharge_point,
             'remaining_series_cost' => $record->cost - $record->redeem_point * config('constant.redeemed_coin.vnd_convert_rate'),
             'is_redeemed' => $is_redeemed,
             'payments_history' => DB::table('payments')
@@ -2318,6 +2319,10 @@ try_again:
             'responseTime' => date("Y-m-d H:i:s"),
             'created_by' => Auth::user()->id
         ]);
+        $this->userService->updatePointHistory(
+            ['recharge' => $paymentMethod->recharge_coin_amount],
+            $paymentMethod->user_id
+        );
         $user_recharging->update([
             'recharge_point' => $user_recharging->recharge_point + $paymentMethod->recharge_coin_amount
         ]);
@@ -2388,6 +2393,7 @@ try_again:
                     'redeemed_points' => null,
                     'series_order_created_at' => null
                 ]);
+                $this->userService->updatePointHistory(['used' => $record->redeem_point], $record->user_id);
             }
 
             DB::commit();
@@ -2635,6 +2641,7 @@ try_again:
 			$payment->extraData    = "merchantName=Hikari Academy";
 			$payment->responseTime = date("Y-m-d H:i:s");
 			$payment->status       = 0; //Update Giao dich thanh công 0=>1
+            $payment->redeem_point = $is_redeemed ? $record->redeem_point : 0;
 			$payment->save();
 
 			$lmsseries_combo = DB::table('lmsseries_combo')->where('id', $payment->item_id)->first();
@@ -2815,6 +2822,7 @@ try_again:
                         'redeemed_points' => null,
                         'series_order_created_at' => null
                     ]);
+                    $this->userService->updatePointHistory(['used' => $payment_method->redeem_point ?? 0]);
 
 					$message_success = "Bạn đã mua {$record->title} thành công";
 					flash('Mua khoá học thành công!', $message_success, 'success');
@@ -3036,6 +3044,7 @@ try_again:
         if ($secureHash == $vnp_SecureHash) {
             if ($request->get('vnp_ResponseCode') == '00') {
                 $unfinishedPaymentMethod->update(['status' => PaymentMethod::PAYMENT_SUCCESS]);
+                $this->userService->updatePointHistory(['recharge' => $unfinishedPaymentMethod->recharge_coin_amount]);
                 $user->update([
                     'recharge_point' => $user->recharge_point + $unfinishedPaymentMethod->recharge_coin_amount
                 ]);

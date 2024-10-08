@@ -202,7 +202,7 @@
         $(document).ready(function() {
             // Function to set heights and margins based on the current layout
             function adjustLayout() {
-                var iframe = $('.study-main-content iframe'); // Select the iframe
+                var studyContent = $('.study-main-content .study-content'); // Select the study content
                 var tabContent = $('.tab-content'); // Select the tab content
                 var headerHeight = $('.header-study').outerHeight(); // Get header height
                 var navTabHeight = $('.navtab-select-menu').outerHeight(); // Get navigation tab height
@@ -228,17 +228,17 @@
                     'margin-bottom': (footerHeight) + 'px' // Bottom margin
                 });
 
-                // Check if iframe and tabContent elements exist
-                if (iframe.length && tabContent.length) {
+                // Check if study content and tabContent elements exist
+                if (studyContent.length && tabContent.length) {
                     var windowHeight = window.innerHeight;
 
                     var headerVH = (headerHeight / windowHeight) * 100;
                     var footerVH = (footerHeight / windowHeight) * 100;
-                    var iframeHeight = iframe.outerHeight();
-                    var iframeVH = (iframeHeight / windowHeight) * 100;
+                    var studyContentHeight = studyContent.outerHeight();
+                    var studyContentVH = (studyContentHeight / windowHeight) * 100;
                     var navTabVH = (navTabHeight / windowHeight) * 100;
 
-                    var calculatedHeight = 100 - (headerVH + footerVH + iframeVH + navTabVH); // Remaining height
+                    var calculatedHeight = 100 - (headerVH + footerVH + studyContentVH + navTabVH); // Remaining height
 
                     tabContent.css('height', calculatedHeight + 'vh');
                 }
@@ -251,6 +251,62 @@
                 adjustLayout(); // Recalculate layout on resize
             });
         });
+
+        function animateHicoin(increasedPoints = 0) {
+            if (increasedPoints === 0) {
+                return;
+            }
+
+            const hicoinAnimation = $('.hicoin-animation');
+            const displayedIncreasedPoints = $('.hicoin-animation .increased-point');
+            const displayedOwnedPoints = $(".header-my-coin .owned-point");
+            const pointContainer = $('.header-my-coin');
+
+            const ownedPoints = parseInt(displayedOwnedPoints.text().replace(/,/g, ""));
+            displayedIncreasedPoints.text(increasedPoints);
+            displayedOwnedPoints.text((ownedPoints + increasedPoints).toLocaleString('en-US'));
+
+            // Play confetti animation effect
+            party.confetti(pointContainer[0], {
+                count: party.variation.range(30, 40),
+                spread: party.variation.range(40, 50),
+                origin: {
+                x: 0.5,
+                y: 0.5 + (50 / pointContainer[0].offsetHeight)
+                }
+            });
+
+            // Play tada and float point animation effect
+            pointContainer.addClass("animate__tada animate__animated");
+            hicoinAnimation.addClass('hicoin-float');
+            setTimeout(() => {
+                hicoinAnimation.removeClass('hicoin-float');
+                pointContainer.removeClass("animate__tada animate__animated");
+            }, 2000);
+        }
+
+        // Finish content
+        const earnPointFinishContent = (contentId, earnedPoints = 1, contentType = '') => {
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                },
+                url: '{{ route('learning-management.lesson.exercise.finish-content') }}',
+                type: "post",
+                data: {
+                    content_id: contentId,
+                    earned_points: earnedPoints,
+                    content_type: contentType
+                },
+            });
+        }
+
+        const checkFinishContent = () => {
+            const contentId = '{{ $detailContent->id }}';
+            const checkImage = $('img[data-content-id="' + contentId + '"]');
+            imageSource = checkImage.attr('src').replace('empty-box.svg', 'checked-box.png');
+            checkImage.attr('src', imageSource).addClass('animate__bounceIn animate__animated');
+        }
     </script>
     @yield('lesson-detail-scripts')
 @endsection
