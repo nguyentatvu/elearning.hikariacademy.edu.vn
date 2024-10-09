@@ -14,24 +14,17 @@ class FlashcardResource extends Resource
      */
     public function toArray($request)
     {
-        $details = $this->flashcardDetails->map(function ($detail) {
-            return [
-                'id' => $detail->id,
-                'word' => $detail->m1tuvung,
-                'front_example' => $detail->m1vidu,
-                'pronunciation' => $detail->m2cachdoc,
-                'sino_vietnamese' => $detail->m2amhanviet,
-                'meaning' => $detail->m2ynghia,
-                'back_example' => $detail->m2vidu,
-                'stt' => $detail->stt,
-                'audio' => $detail->mp3,
-            ];
-        });
+        $audioUrl = config('constant.flash_card.audio_url') . $this->mp3;
 
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'detail' => $details,
+            'word' => $this->m1tuvung,
+            'front_example' => $this->m1vidu,
+            'pronunciation' => $this->m2cachdoc,
+            'sino_vietnamese' => $this->m2amhanviet,
+            'meaning' => $this->m2ynghia,
+            'back_example' => $this->m2vidu,
+            'stt' => $this->stt,
+            'audio' => $audioUrl,
         ];
     }
 }

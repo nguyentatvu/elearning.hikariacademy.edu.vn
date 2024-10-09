@@ -82,7 +82,7 @@ class LmsSeriesComboRepository extends BaseRepository
             ])
             ->distinct()
             ->orderBy('payment_method.created_at', 'desc')
-            ->get();
+            ->paginate(10);
 
         return $series;
     }
@@ -92,8 +92,34 @@ class LmsSeriesComboRepository extends BaseRepository
      *
      * @return Illuminate\Database\Eloquent\Collection
      */
-    public function getRedeemedSeries() {
+    public function getRedeemedSeries()
+    {
         $series = $this->model::where('redeem_point', '>', 0)->get();
         return $series;
+    }
+
+    /**
+     * Get series by series id
+     *
+     * @param int $seriesComboId
+     * @param int $seriesId
+     * @param array $select
+     * @return mixed
+     */
+    public function getBySeriesId(int $seriesComboId, int $seriesId, array $select = ['*'])
+    {
+        $seriesCombo = $this->model::select($select)
+            ->where('id', $seriesComboId)
+            ->where('delete_status', 0)
+            ->where(function ($query) use ($seriesId) {
+                $query->where('n1', $seriesId)
+                    ->orWhere('n2', $seriesId)
+                    ->orWhere('n3', $seriesId)
+                    ->orWhere('n4', $seriesId)
+                    ->orWhere('n5', $seriesId);
+            })
+            ->first();
+
+        return $seriesCombo;
     }
 }

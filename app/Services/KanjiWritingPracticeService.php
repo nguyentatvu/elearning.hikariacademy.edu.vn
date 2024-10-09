@@ -6,11 +6,8 @@ use App\Repositories\KanjiWritingPracticeRepository;
 
 class KanjiWritingPracticeService extends BaseService
 {
-    private $kanjiWritingPracticeRepository;
-
-    public function __construct(KanjiWritingPracticeRepository $kanjiWritingPracticeRepository)
+    public function __construct(KanjiWritingPracticeRepository $repository)
     {
-        parent::__construct($kanjiWritingPracticeRepository);
-        $this->kanjiWritingPracticeRepository = $kanjiWritingPracticeRepository;
+        parent::__construct($repository);
     }
 }

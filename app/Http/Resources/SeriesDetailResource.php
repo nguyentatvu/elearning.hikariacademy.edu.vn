@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\Resource;
 
-class SeriesAndTeacherResource extends Resource
+class SeriesDetailResource extends Resource
 {
     /**
      * Transform the resource into an array.
@@ -14,20 +14,18 @@ class SeriesAndTeacherResource extends Resource
      */
     public function toArray($request)
     {
-        $imageUrl = config('constant.series.image_url');
+        $timeValues = config('constant.series.time');
+        $imageUrl = config('constant.series_combo.image_url');
 
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'short_description' => $this->short_description,
+            'cost' => (int) $this->cost,
+            'description' => $this->description,
             'image' => $imageUrl . $this->image,
+            'time' => $timeValues[$this->time],
             'total_lessons' => $this->total_lessons,
-            'teachers' => $this->teachers->map(function ($teacher) {
-                return [
-                    'id' => $teacher->id,
-                    'name' => $teacher->name,
-                ];
-            }),
+            'payment' => $this->payment
         ];
     }
 }

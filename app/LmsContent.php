@@ -106,4 +106,18 @@ class LmsContent extends Model
         return $this->hasOne(LmsStudentView::class, 'lmscontent_id', 'id')
             ->where('users_id', Auth::id());
     }
+
+    /**
+     * Scope a query to only include total lessons
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $seriesId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeTotalLessons($query, $seriesId)
+    {
+        return $query->where('lmsseries_id', $seriesId)
+            ->where('delete_status', 0)
+            ->whereNotIn('type', [self::LESSON_TOPIC, self::LESSON]);
+    }
 }

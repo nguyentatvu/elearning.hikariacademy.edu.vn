@@ -142,4 +142,13 @@ class User extends Authenticatable implements JWTSubject
             ->limit($limit)
             ->get();
     }
+
+    /**
+     * Relationship with LmsSeries model
+     * A user (teacher) can belong to many series.
+     */
+    public function lmsseries()
+    {
+        return $this->belongsToMany(LmsSeries::class, 'lmsseries_teacher', 'teacher_id', 'lmsseries_id');
+    }
 }

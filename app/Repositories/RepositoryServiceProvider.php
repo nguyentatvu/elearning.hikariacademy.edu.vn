@@ -17,8 +17,6 @@ use App\{
     LmsSeries,
     Flashcard,
     PaymentMethod,
-    MessageHistory,
-    Conversation,
     Payment,
     WeeklyLeaderboard,
     JapaneseWritingPractice,
@@ -67,12 +65,6 @@ class RepositoryServiceProvider extends ServiceProvider
         });
         $this->app->bind(LmsSeriesRepository::class, function () {
             return new LmsSeriesRepository(new LmsSeries);
-        });
-        $this->app->bind(MessageHistoryRepository::class, function () {
-            return new MessageHistoryRepository(new MessageHistory);
-        });
-        $this->app->bind(ConversationRepository::class, function () {
-            return new ConversationRepository(new Conversation);
         });
         $this->app->bind(CoinRechargePackageRepository::class, function () {
             return new CoinRechargePackageRepository(new CoinRechargePackage());

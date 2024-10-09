@@ -2,7 +2,4 @@
 
 namespace App\Repositories;
 
-class BannerRepository extends BaseRepository
-{
-
-}
+class BannerRepository extends BaseRepository {}
