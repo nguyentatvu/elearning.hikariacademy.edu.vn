@@ -6,11 +6,8 @@ use App\Repositories\HiraganaWritingPracticeRepository;
 
 class HiraganaWritingPracticeService extends BaseService
 {
-    private $hiraganaWritingPracticeRepository;
-
-    public function __construct(HiraganaWritingPracticeRepository $hiraganaWritingPracticeRepository)
+    public function __construct(HiraganaWritingPracticeRepository $repository)
     {
-        parent::__construct($hiraganaWritingPracticeRepository);
-        $this->hiraganaWritingPracticeRepository = $hiraganaWritingPracticeRepository;
+        parent::__construct($repository);
     }
 }

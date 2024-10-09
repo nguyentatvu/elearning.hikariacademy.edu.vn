@@ -12,10 +12,22 @@ class LmsSeriesComboService extends BaseService
 {
     private $lmsSeriesService;
 
-    public function __construct(LmsSeriesComboRepository $repository, LmsSeriesService $lmsSeriesService)
+    public function __construct(LmsSeriesComboRepository $repository)
     {
         parent::__construct($repository);
-        $this->lmsSeriesService = $lmsSeriesService;
+    }
+
+    /**
+     * Get LmsSeriesService
+     *
+     * @return LmsSeriesService
+     */
+    public function getLmsSeriesService()
+    {
+        if (!$this->lmsSeriesService) {
+            $this->lmsSeriesService = app(LmsSeriesService::class);
+        }
+        return $this->lmsSeriesService;
     }
 
     /**
@@ -34,8 +46,8 @@ class LmsSeriesComboService extends BaseService
                 return !is_null($value);
             });
 
-            $seriesAndTeachers = $this->lmsSeriesService->getSeriesWithTeachers($seriesArray);
-            $series= SeriesAndTeacherResource::collection($seriesAndTeachers);
+            $seriesAndTeachers = $this->getLmsSeriesService()->getSeriesWithTeachers($seriesArray);
+            $series = SeriesAndTeacherResource::collection($seriesAndTeachers);
             $seriesCombo->series = $series;
         }
 
@@ -69,7 +81,8 @@ class LmsSeriesComboService extends BaseService
      *
      * @return Illuminate\Database\Eloquent\Collection
      */
-    public function getRedeemedSeries() {
+    public function getRedeemedSeries()
+    {
         $user = Auth::user();
         $onwedPoints = $user->reward_point + $user->recharge_point;
         $series = $this->repository->getRedeemedSeries();
@@ -83,5 +96,18 @@ class LmsSeriesComboService extends BaseService
         });
 
         return $series;
+    }
+
+    /**
+     * Get series by series id
+     *
+     * @param int $seriesComboId
+     * @param int $seriesId
+     * @param array $select
+     * @return mixed
+     */
+    public function getBySeriesId(int $seriesComboId, int $seriesId, array $select = ['*'])
+    {
+        return $this->repository->getBySeriesId($seriesComboId, $seriesId, $select);
     }
 }

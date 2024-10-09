@@ -31,7 +31,7 @@ abstract class BaseService
      * @param string $order
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getAllWithOrderBy($orderBy, $order = 'asc')
+    public function getAllWithOrderBy(string $orderBy, string $order = 'asc')
     {
         return $this->repository->getAllWithOrderBy($orderBy, $order);
     }

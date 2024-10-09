@@ -17,6 +17,7 @@ return [
     ],
     'series' => [
         'upload_path' => 'uploads/lms/combo/',
+        'image_url' => 'public/uploads/lms/series/',
         'time' => [
             0 => 3,
             1 => 6,
@@ -58,12 +59,6 @@ return [
     'redeemed_coin' => [
         'vnd_convert_rate' => 1000
     ],
-    'chatbot' => [
-        'endpoint' => [
-            'chat_messages' => 'chat-messages',
-            'delete_conversation' => 'conversations',
-        ]
-    ],
     'payment' => [
         'status' => [
             '0' => 'Chờ thanh toán',
@@ -77,5 +72,11 @@ return [
             '1' => 'Hiển thị',
             '0' => 'Ẩn',
         ]
+    ],
+    'series_combo' => [
+        'image_url' => 'public/uploads/lms/combo/',
+    ],
+    'flash_card' => [
+        'audio_url' => 'public/uploads/flashcard/',
     ]
 ];

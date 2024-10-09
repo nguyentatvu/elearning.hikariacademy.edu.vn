@@ -1,61 +1,75 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+# HIKARI
 
-## About Laravel
+## Yêu Cầu Hệ Thống
+- PHP >= 7.0.0
+- Composer
+- Node.js & NPM
+- MySQL
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Hướng Dẫn Cài Đặt
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 1. Sao chép tệp `.env` từ `.env.example`
+Đầu tiên, sao chép tệp `.env.example` thành `.env`:
+```bash
+cp .env.example .env
+```
+Sau đó, mở file `.env` và điều chỉnh các giá trị cần thiết cho môi trường của bạn, ví dụ: cấu hình cơ sở dữ liệu.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 2. Cài đặt các phụ thuộc PHP
+Chạy lệnh sau để cài đặt tất cả các gói PHP yêu cầu thông qua Composer:
 
-## Learning Laravel
+```bash
+composer install
+```
+Hoặc nếu đã có tệp `composer.lock`, bạn có thể sử dụng:
+```bash
+composer update
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 3. Cài đặt các gói JavaScript
+Tiếp theo, cài đặt các gói JavaScript cần thiết bằng cách chạy lệnh:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+npm install
+```
 
-## Laravel Sponsors
+### 4. Tạo tài liệu Swagger
+Để tạo tài liệu API Swagger, chạy lệnh sau:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+```bash
+php artisan l5-swagger:generate
+```
+Sau đó, bạn có thể truy cập tài liệu Swagger tại đường dẫn:
+```
+http://your-app-url/api/documentation
+```
 
-### Premium Partners
+### 5. Khởi động ứng dụng
+Sau khi cài đặt, bạn có thể khởi động ứng dụng Laravel bằng lệnh:
+```bash
+php artisan serve
+```
+Ứng dụng sẽ chạy tại `http://localhost:8000`.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[OP.GG](https://op.gg)**
+## Các Lệnh Hữu Ích
 
-## Contributing
+- **Xóa cache cấu hình**:
+  ```bash
+  php artisan config:clear
+  ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **Xóa cache route**:
+  ```bash
+  php artisan route:clear
+  ```
 
-## Code of Conduct
+- **Xóa cache view**:
+  ```bash
+  php artisan view:clear
+  ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- **Xóa tất cả cache**:
+  ```bash
+  php artisan optimize:clear
+  ```

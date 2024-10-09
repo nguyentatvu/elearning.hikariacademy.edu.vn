@@ -16,6 +16,11 @@ class UserResource extends Resource
     public function toArray($request)
     {
         $imageSettings = new ImageSettings();
+        $image = $imageSettings->getProfilePicsThumbnailpath() . $this->image;
+
+        if (!$this->image || $this->image == "") {
+            $image = $imageSettings->getDefaultprofilePicsThumbnailpath();
+        }
 
         return [
             'id' => $this->id,
@@ -23,7 +28,7 @@ class UserResource extends Resource
             'username' => $this->username,
             'email' => $this->email,
             'phone' => $this->phone,
-            'image' => $imageSettings->getProfilePicsThumbnailpath() . $this->image,
+            'image' => $image,
             'address' => $this->address,
             'reward_point' => $this->reward_point,
         ];
