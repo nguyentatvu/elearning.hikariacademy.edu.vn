@@ -185,7 +185,7 @@
                     <li><a class="dropdown-item" href="{{ route('mypage.reward-point') }}">Điễm tích luỹ</a></li>
                     <li><a class="dropdown-item" href="{{ route('mypage.courses') }}">Khoá học</a></li>
                     <li><a class="dropdown-item" href="{{ route('mypage.exams') }}">Khoá luyện thi</a></li>
-                    <li><a class="dropdown-item" href="#">Phòng thi</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.mock-exam.list') }}">Phòng thi</a></li>
                     <li><a class="dropdown-item" href="{{ route('mypage.my-result-exam') }}">Kết quả thi</a></li>
                     <li><a class="dropdown-item" data-toggle="modal" data-target="#loginModal">Đổi mật khẩu</a></li>
                     <li><a class="dropdown-item" href="{{ route('mypage.recharge-point') }}">Nạp</a></li>
