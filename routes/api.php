@@ -24,7 +24,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::prefix('banner')
         ->group(function () {
-            Route::get('', 'Api\BannerController@getAll');
+            Route::get('', 'Api\BannerController@getBannerByConditions');
         });
 
     Route::prefix('series-combo')
