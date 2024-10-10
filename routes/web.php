@@ -23,7 +23,7 @@ Route::prefix('learning-management')->name('learning-management.')->group(functi
         ->name('lesson.exercise.save-score');
     Route::get('lesson/exercise/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showExercise')
         ->name('lesson.exercise');
-        Route::get('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@studentAudittest')
+    Route::get('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@studentAudittest')
         ->name('lesson.audit');
     Route::post('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@storeResuttest')
         ->name('lesson.audit.store');

@@ -284,6 +284,8 @@
                         $('.vjs-theme-fantasy').css('min-height', '40vh');
                     } else if ($('.exercise-content').length) {
                         $('.exercise-content').css('height', '40vh');
+                    } else if ($('.handwriting-container').length) {
+                        $('.handwriting-container').css('height', '40vh');
                     }
                 }
             };
