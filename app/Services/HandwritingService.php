@@ -6,11 +6,8 @@ use App\Repositories\HandwritingRepository;
 
 class HandwritingService extends BaseService
 {
-    private $handwritingRepository;
-
-    public function __construct(HandwritingRepository $handwritingRepository)
+    public function __construct(HandwritingRepository $repository)
     {
-        parent::__construct($handwritingRepository);
-        $this->handwritingRepository = $handwritingRepository;
+        parent::__construct($repository);
     }
 }

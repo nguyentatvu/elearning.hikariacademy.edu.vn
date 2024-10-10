@@ -16,18 +16,14 @@ class ContentResource extends Resource
     {
         return [
             'id' => $this->id,
-            'bai' => $this->bai,
-            'title' => $this->title,
+            'title' => $this->bai,
             'file_path' => $this->file_path,
-            'image' => $this->image,
             'description' => $this->description,
             'type' => $this->type,
             'is_trial' => $this->el_try,
             'parent_id' => $this->parent_id,
             'document' => $this->download_doc,
-            'test' => $this->test,
-            'exercise' => $this->exercise,
-            'flashcard' => $this->flashcard,
+            'content' => $this->content,
         ];
     }
 }

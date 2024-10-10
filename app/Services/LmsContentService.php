@@ -8,8 +8,6 @@ use App\Http\Resources\TestResource;
 use App\LmsContent;
 use App\Repositories\LmsContentRepository;
 use App\Repositories\LmsExamRepository;
-use App\Repositories\LmsFlashcardRepository;
-use App\Repositories\LmsSeriesRepository;
 use App\Repositories\LmsTestRepository;
 use App\Repositories\PaymentMethodRepository;
 
@@ -18,26 +16,50 @@ class LmsContentService extends BaseService
     private $paymentMethodRepository;
     private $lmsTestRepository;
     private $lmsExamRepository;
-    private $lmsFlashcardRepository;
-    private $lmsSeriesRepository;
+    private $lmsFlashcardService;
+    private $lmsSeriesService;
     private $handwritingService;
+    private $lmsSeriesComboService;
 
     public function __construct(
         LmsContentRepository $repository,
         PaymentMethodRepository $paymentMethodRepository,
         LmsTestRepository $lmsTestRepository,
         LmsExamRepository $lmsExamRepository,
-        LmsFlashcardRepository $lmsFlashcardRepository,
-        LmsSeriesRepository $lmsSeriesRepository,
-        HandwritingService $handwritingService
+        LmsFlashcardService $lmsFlashcardService,
+        LmsSeriesService $lmsSeriesService,
+        HandwritingService $handwritingService,
+        LmsSeriesComboService $lmsSeriesComboService
     ) {
         parent::__construct($repository);
         $this->paymentMethodRepository = $paymentMethodRepository;
         $this->lmsTestRepository = $lmsTestRepository;
         $this->lmsExamRepository = $lmsExamRepository;
-        $this->lmsFlashcardRepository = $lmsFlashcardRepository;
-        $this->lmsSeriesRepository = $lmsSeriesRepository;
+        $this->lmsFlashcardService = $lmsFlashcardService;
+        $this->lmsSeriesService = $lmsSeriesService;
         $this->handwritingService = $handwritingService;
+        $this->lmsSeriesComboService = $lmsSeriesComboService;
+    }
+
+    /**
+     * Get contents
+     *
+     * @param int $userId
+     * @param int $seriesComboId
+     * @param int $seriesId
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getContents(int $userId, int $seriesComboId, int $seriesId)
+    {
+        $seriesCombo = $this->lmsSeriesComboService->getBySeriesId($seriesComboId, $seriesId, ['id']);
+
+        if (!$seriesCombo) {
+            return null;
+        }
+
+        $isValid = $this->paymentMethodRepository->checkSerieValidity($userId, $seriesComboId);
+
+        return $this->repository->getContents($seriesId, $isValid);
     }
 
     /**
@@ -62,33 +84,36 @@ class LmsContentService extends BaseService
     public function getContentById(int $userId, int $seriesComboId, int $id)
     {
         $isValid = $this->paymentMethodRepository->checkSerieValidity($userId, $seriesComboId);
-        $content = $this->repository->getContentById($id);
+        $lmsContent = $this->repository->getContentById($id);
+        $content = [];
 
-        if (!$content) {
+        if (!$lmsContent) {
             return null;
         }
 
-        if (!$isValid && $content->el_try != 1) {
+        if (!$isValid && $lmsContent->el_try != 1) {
             return null;
         }
 
-        if ($content->type == LmsContent::TEST) {
-            $test = $this->getTestContent($id);
+        if ($lmsContent->type == LmsContent::TEST) {
+            $content = $this->getTestContent($id);
         }
 
-        if (in_array($content->type, [LmsContent::PARTIAL_EXERCISE, LmsContent::SUMMARY_EXERCISE])) {
-            $exercise = $this->getExerciseContent($id);
+        if (in_array($lmsContent->type, [LmsContent::PARTIAL_EXERCISE, LmsContent::SUMMARY_EXERCISE])) {
+            $content = $this->getExerciseContent($id);
         }
 
-        if ($content->type == LmsContent::FLASHCARD) {
-            $flashcard = $this->getFlashcardContent($content->flashcard_id);
+        if ($lmsContent->type == LmsContent::FLASHCARD) {
+            $content = $this->getFlashcardContent($lmsContent->flashcard_id);
+
+            if ($content) {
+                $content = FlashcardResource::collection($content->flashcardDetails);
+            }
         }
 
-        $content->test = $test ?? [];
-        $content->exercise = $exercise ?? [];
-        $content->flashcard = $flashcard ?? [];
+        $lmsContent->content = $content;
 
-        return $content;
+        return $lmsContent;
     }
 
     /**
@@ -107,29 +132,32 @@ class LmsContentService extends BaseService
             return null;
         }
 
-        $content = $this->repository->getInProgressContent($userId, $seriesId);
+        $lmsContent = $this->repository->getInProgressContent($userId, $seriesId);
+        $content = [];
 
-        if (!$content) {
+        if (!$lmsContent) {
             return null;
         }
 
-        if ($content->type == LmsContent::TEST) {
-            $test = $this->getTestContent($content->id);
+        if ($lmsContent->type == LmsContent::TEST) {
+            $content = $this->getTestContent($lmsContent->id);
         }
 
-        if (in_array($content->type, [LmsContent::PARTIAL_EXERCISE, LmsContent::SUMMARY_EXERCISE])) {
-            $exercise = $this->getExerciseContent($content->id);
+        if (in_array($lmsContent->type, [LmsContent::PARTIAL_EXERCISE, LmsContent::SUMMARY_EXERCISE])) {
+            $content = $this->getExerciseContent($lmsContent->id);
         }
 
-        if ($content->type == LmsContent::FLASHCARD) {
-            $flashcard = $this->getFlashcardContent($content->flashcard_id);
+        if ($lmsContent->type == LmsContent::FLASHCARD) {
+            $content = $this->getFlashcardContent($lmsContent->flashcard_id);
+
+            if ($content) {
+                $content = FlashcardResource::collection($content->flashcardDetails);
+            }
         }
 
-        $content->test = $test ?? [];
-        $content->exercise = $exercise ?? [];
-        $content->flashcard = $flashcard ?? [];
+        $lmsContent->content = $content;
 
-        return $content;
+        return $lmsContent;
     }
 
     /**
@@ -162,13 +190,13 @@ class LmsContentService extends BaseService
      * Get flashcard content by id
      *
      * @param int $flashcardId
-     * @return FlashcardResource
+     * @return mixed
      */
     protected function getFlashcardContent(int $flashcardId)
     {
-        $flashcard = $this->lmsFlashcardRepository->getFlashcardContentById($flashcardId);
+        $flashcard = $this->lmsFlashcardService->getFlashcardContentById($flashcardId);
 
-        return new FlashcardResource($flashcard);
+        return $flashcard;
     }
 
     /**
@@ -235,7 +263,7 @@ class LmsContentService extends BaseService
      * @return mixed(LmsContent|null)
      */
     public function getNextContent($contentId, $seriesSlug) {
-        $seriesId = optional($this->lmsSeriesRepository->getByCondition('slug', $seriesSlug))->id;
+        $seriesId = optional($this->lmsSeriesService->getByCondition('slug', $seriesSlug))->id;
         $contentOrder = optional($this->repository->findById($contentId))->stt;
         if (is_null($seriesId) || is_null($contentOrder)) {
             return null;

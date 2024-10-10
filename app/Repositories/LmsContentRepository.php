@@ -13,9 +13,10 @@ class LmsContentRepository extends BaseRepository
      * Get contents by series id
      *
      * @param int $seriesId
+     * @param bool $isValid
      * @return \Illuminate\Support\Collection
      */
-    public function getContentsBySerieId(int $seriesId)
+    public function getContents(int $seriesId, bool $isValid)
     {
         $series = LmsSeries::where('delete_status', 0)->find($seriesId);
 
@@ -23,7 +24,7 @@ class LmsContentRepository extends BaseRepository
             return null;
         }
 
-        return $this->getContents(null, $seriesId);
+        return $this->getChildContent(null, $seriesId, $isValid);
     }
 
     /**
@@ -31,12 +32,13 @@ class LmsContentRepository extends BaseRepository
      *
      * @param int|null $parentId
      * @param int $seriesId
+     * @param bool $isValid
      * @return \Illuminate\Support\Collection
      */
-    private function getContents(?int $parentId, int $seriesId)
+    private function getChildContent(?int $parentId, int $seriesId, bool $isValid)
     {
         $contents = $this->model::query()
-            ->select('id', 'bai', 'title', 'file_path', 'image', 'description', 'type', 'el_try as is_trial', 'parent_id')
+            ->select('id', 'bai as title', 'type', 'el_try', 'parent_id')
             ->where('lmsseries_id', $seriesId)
             ->where('parent_id', $parentId)
             ->where('delete_status', 0)
@@ -44,7 +46,27 @@ class LmsContentRepository extends BaseRepository
             ->get();
 
         foreach ($contents as $content) {
-            $content->children = $this->getContents($content->id, $seriesId);
+            if (
+                !$isValid &&
+                !$content->el_try &&
+                in_array($content->type, [
+                    LmsContent::VOCABULARY,
+                    LmsContent::STRUCTURE,
+                    LmsContent::PARTIAL_EXERCISE,
+                    LmsContent::SUMMARY_EXERCISE,
+                    LmsContent::TEST,
+                    LmsContent::KANJI,
+                    LmsContent::SUMMARY_AND_INTRODUCTION,
+                    LmsContent::FLASHCARD
+                ])
+            ) {
+                $content->is_locked = true;
+            } else {
+                $content->is_locked = false;
+            }
+
+            $content->makeHidden(['el_try']);
+            $content->children = $this->getChildContent($content->id, $seriesId, $isValid);
         }
 
         return $contents;
@@ -95,7 +117,8 @@ class LmsContentRepository extends BaseRepository
      * @param string $seriesId
      * @return Collection
      */
-    public function getListContents(string $seriesId) {
+    public function getListContents(string $seriesId)
+    {
         return $this->model->with('childContents.childContents.childContents')
             ->whereNull('parent_id')->where('lmsseries_id', $seriesId)
             ->where('delete_status', 0)->orderBy('stt', 'asc')
@@ -108,7 +131,8 @@ class LmsContentRepository extends BaseRepository
      * @param string $id
      * @return mixed(LmsContent|Null)
      */
-    public function findByIdWithAncestors(string $id) {
+    public function findByIdWithAncestors(string $id)
+    {
         return $this->model
             ->with('parentContent.parentContent.parentContent')
             ->where('id', $id)
@@ -141,7 +165,8 @@ class LmsContentRepository extends BaseRepository
      * @param string $seriesId
      * @return mixed(LmsContent|null)
      */
-    public function getNextContent(string $contentOrder, string $seriesId) {
+    public function getNextContent(string $contentOrder, string $seriesId)
+    {
         return $this->model
             ->where('stt', '>=', ((int) $contentOrder + 1))
             ->where('lmsseries_id', $seriesId)
@@ -157,7 +182,8 @@ class LmsContentRepository extends BaseRepository
      * @param string $contentId
      * @return \Illuminate\Support\Collection
      */
-    public function getFormattedExerciseContent(string $contentId) {
+    public function getFormattedExerciseContent(string $contentId)
+    {
         return $this->model
             ->join('lms_exams', 'lms_exams.content_id', '=', 'lmscontents.id')
             ->where('lmscontents.id', $contentId)

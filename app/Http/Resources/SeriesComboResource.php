@@ -15,6 +15,7 @@ class SeriesComboResource extends Resource
     public function toArray($request)
     {
         $timeValues = config('constant.series.time');
+        $imageUrl = config('constant.series_combo.image_url');
 
         return [
             'id' => $this->id,
@@ -22,11 +23,11 @@ class SeriesComboResource extends Resource
             'code' => $this->code,
             'slug_lms_series_combo' => $this->slug,
             'slug_lms_series' => $this->slug_lmscontents,
-            'cost' => $this->cost,
-            'selloff' => $this->selloff,
+            'cost' => (int) $this->cost,
+            'selloff' => (int) $this->selloff,
             'short_description' => $this->short_description,
             'description' => $this->description,
-            'image' => $this->image,
+            'image' => $imageUrl . $this->image,
             'type' => $this->type,
             'time' => $timeValues[$this->time],
             'total_items' => $this->total_items,
