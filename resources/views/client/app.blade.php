@@ -13,6 +13,10 @@
     @yield('styles')
 
     <style>
+        body {
+            overflow: hidden;
+        }
+
         header#header {
             position: fixed;
             top: 0;
@@ -20,21 +24,17 @@
             width: 100%;
             z-index: 99999;
             background: #ffffff;
-        }
-
-        aside#sidebar {
-            position: sticky;
-            top: 60px;
-            left: 0;
-            width: 120px;
-            height: 100%;
-            z-index: 1000;
-            background: #ffffff;
+            border: 1px solid #e6e6e6;
+            padding: 10px 0;
         }
 
         .main-content {
-            margin-top: 60px;
             position: relative;
+            overflow: scroll;
+        }
+
+        .main-content .content {
+            min-height: 100vh;
         }
     </style>
 </head>
@@ -51,36 +51,78 @@
             </header>
         @endif
 
-        <div class="d-flex">
-            @if (!Request::is('detail*') && !Request::is('mypage*'))
-                <aside class="sidebar" id="sidebar" style="height: 100%">
-                    @include('client.layouts.sidebar')
-                </aside>
-            @endif
-            <div class="container-fluid main-content">
-                <div id="main-wrapper">
-                    @yield('content')
-                </div>
-                @component('client.components.common-component')
-                @endcomponent
-                <div class="loading-overlay">
-                    <div class="loading-spinner"></div>
+        <div class="main-content">
+            <div class="d-flex content">
+                @if (!Request::is('detail*') && !Request::is('mypage*'))
+                    <aside class="sidebar" id="sidebar">
+                        @include('client.layouts.sidebar')
+                    </aside>
+                @endif
+                <div class="container-fluid">
+                    <div id="main-wrapper">
+                        @yield('content')
+                    </div>
+                    @component('client.components.common-component')
+                    @endcomponent
+                    <div class="loading-overlay">
+                        <div class="loading-spinner"></div>
+                    </div>
                 </div>
             </div>
+            <footer id="footer">
+                @if (!Request::is('detail*'))
+                    @include('client.layouts.footer')
+                @else
+                    @include('client.layouts.footer-study')
+                @endif
+            </footer>
         </div>
     </div>
-
-    <footer id="footer">
-        @if (!Request::is('detail*'))
-            @include('client.layouts.footer')
-        @else
-            @include('client.layouts.footer-study')
-        @endif
-    </footer>
-
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('js/client/common.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            let isHidden = false;
+
+            // Helper function to get the outer height of an element or return 0 if not found
+            const getOuterHeight = selector => $(selector).outerHeight() || 0;
+
+            const adjustLayout = () => {
+                const windowHeight = $(window).height(); // jQuery method for consistency
+                const headerHeight = getOuterHeight('#header');
+                const sideBarHeight = getOuterHeight('#sidebar');
+                const footerHeight = getOuterHeight('#footer');
+
+                const contentHeight = windowHeight - headerHeight;
+                // Check if the screen width is for mobile or tablet
+                if (window.matchMedia('(max-width: 1024px)').matches) {
+                    const contentHeight = windowHeight - headerHeight - sideBarHeight;
+                    $('.main-footer').css({
+                        'padding-bottom': sideBarHeight + 10,
+                    });
+                }
+
+                if ($('.layout-my-page').length == 0) {
+                    $('.main-content').css({
+                        'margin-top': headerHeight,
+                        'height': contentHeight,
+                    });
+                } else {
+                    const navigateBackHeight = $('.navigate-back').outerHeight() || 0;
+                    const contentHeight = windowHeight - headerHeight;
+
+                    $('.main-content').css({
+                        'margin-top': headerHeight + 'px',
+                        'height': `calc(100vh - ${headerHeight}px)`,
+                    });
+                }
+            };
+
+            adjustLayout();
+            $(window).resize(adjustLayout); // Adjust layout on window resize
+        });
+    </script>
     @yield('scripts')
 </body>
 

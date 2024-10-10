@@ -4,6 +4,13 @@
     width: 420px;
 }
 
+/* Hide the search bar on mobile */
+@media (max-width: 991.98px) {
+    .form-search {
+        display: none;
+    }
+}
+
 .form-search i {
     position: absolute;
     top: 50%;
@@ -20,18 +27,10 @@
     border-radius: 20px;
     outline: none;
     transition: opacity 0.2s ease-in-out;
-    -webkit-transition: opacity 0.2s ease-in-out;
-    -moz-transition: opacity 0.2s ease-in-out;
-    -ms-transition: opacity 0.2s ease-in-out;
-    -o-transition: opacity 0.2s ease-in-out;
 }
 
 .form-search input:focus {
-    width: 100%;
-    height: 40px;
     border: 2px solid black;
-    border-radius: 20px;
-    outline: none;
 }
 
 .header-my-coin {
@@ -42,44 +41,44 @@
     padding: 1px 10px;
     border-radius: 15px;
     gap: 10px;
-    box-sizing: border-box;
-    -webkit-border-radius: 15px;
-    -moz-border-radius: 15px;
-    -ms-border-radius: 15px;
-    -o-border-radius: 15px;
     position: relative;
+}
 
-    .hicoin-animation {
-        position: absolute;
-        bottom: -11px;
-        right: 10%;
-        color: #007bff;
-        font-weight: bold;
+/* Hide the coin balance on mobile */
+@media (max-width: 991.98px) {
+    .header-my-coin {
+        display: none;
+    }
+}
+
+.hicoin-animation {
+    position: absolute;
+    bottom: -11px;
+    right: 10%;
+    color: #007bff;
+    font-weight: bold;
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.hicoin-float {
+    animation: hicoinFloat 2s ease-out;
+}
+
+@keyframes hicoinFloat {
+    0% {
+        bottom: 0px;
         opacity: 0;
-        display: flex;
-        align-items: center;
-        gap: 6px;
     }
-
-    .hicoin-float {
-        animation: hicoinFloat 2s ease-out;
+    50% {
+        bottom: 12px;
+        opacity: 1;
     }
-
-    @keyframes hicoinFloat {
-        0% {
-            bottom: 0px;
-            opacity: 0;
-        }
-
-        50% {
-            bottom: 12px;
-            opacity: 1;
-        }
-
-        100% {
-            bottom: 24px;
-            opacity: 0;
-        }
+    100% {
+        bottom: 24px;
+        opacity: 0;
     }
 }
 
@@ -92,14 +91,21 @@
     height: 20px;
 }
 
-.header-notification-img {
-    height: 100px;
-    width: 100px;
+.header-notification-img,
+.header-course-img {
+    height: 40px;
+    width: 40px;
     margin-right: 10px;
 }
 
-.header-course-img {
-    height: 100px;
-    width: 100px;
-    margin-right: 10px;
+/* Adjust logo size on mobile */
+@media (max-width: 991.98px) {
+    .navbar-brand img {
+        width: 120px;
+    }
+
+    /* Adjust padding for the navbar */
+    .navbar {
+        padding: 0 15px;
+    }
 }

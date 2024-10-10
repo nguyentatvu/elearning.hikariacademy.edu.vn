@@ -33,7 +33,6 @@ Route::prefix('learning-management')->name('learning-management.')->group(functi
         ->name('lesson.handwriting');
 });
 
-
 // Page (Client)
 Route::get('/', function () {
     return view('client.pages.home');
@@ -92,13 +91,11 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
         return view('client.mypage.personal');
     })->name('personal');
 
-    Route::get('/my-courses', function () {
-        return view('client.mypage.my-courses');
-    })->name('courses');
+    Route::get('/my-courses', 'LmsSeriesController@listCategories')
+    ->name('courses');
 
-    Route::get('/my-exams', function () {
-        return view('client.mypage.my-exams');
-    })->name('exams');
+    Route::get('/my-exams', 'LmsSeriesController@listCategoriesstudy')
+    ->name('exams');
 
     Route::get('/my-comments', function () {
         return view('client.mypage.my-comments');
@@ -800,7 +797,7 @@ Route::delete('lms/seriescombo/delete/{slug}', 'LmsComboController@delete');
 
 //LMS SERIES STUDENT LINKS
 
-Route::get('lms/exam-categories/list', 'LmsSeriesController@listCategories');
+// Route::get('lms/exam-categories/list', 'LmsSeriesController@listCategories');
 
 Route::get('lms/exam-categories/study', 'LmsSeriesController@listCategoriesstudy');
 
