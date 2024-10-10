@@ -1,0 +1,1 @@
+<script src="{{ asset('/js/client/mock-exam/ckeditor.js') }}"></script>

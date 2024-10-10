@@ -21,7 +21,7 @@
                         <li><a href="{{ url('mypage/my-courses') }}" class="{{ setActiveClass('mypage/my-courses') }}">Khóa học</a></li>
                         <li><a href="{{ url('mypage/my-exams') }}" class="{{ setActiveClass('mypage/my-exams') }}">Khóa luyện thi</a></li>
                         <li><a href="{{ url('mypage/my-comments') }}" class="{{ setActiveClass('mypage/my-comments') }}">Câu hỏi của bạn</a></li>
-                        <li><a href="{{ url('mypage/leaderboard') }}" class="{{ setActiveClass('mypage/leaderboard') }}">Phòng thi của bạn</a></li>
+                        <li><a href="{{ url('mypage/mock-exam/list') }}" class="{{ setActiveClass('mypage/mock-exam/list') }}">Phòng thi của bạn</a></li>
                         <li><a href="{{ url('mypage/my-result-exam') }}" class="{{ setActiveClass('mypage/my-result-exam') }}">Kết quả thi</a></li>
                         <li><a href="{{ url('mypage/payment-management') }}" class="{{ setActiveClass('mypage/payment-management') }}">Quản lý thanh toán</a></li>
                         <li><a href="{{ url('mypage/recharge-point') }}" class="{{ setActiveClass('mypage/recharge-point') }}">Nạp</a></li>
@@ -33,4 +33,8 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    @yield('mypage-scripts')
 @endsection
