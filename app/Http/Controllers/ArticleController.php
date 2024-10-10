@@ -106,7 +106,7 @@ class ArticleController extends Controller
             ], 422);
         }
 
-        $articleImagePath = config('constant.article.uploadPath');
+        $articleImagePath = config('constant.article.upload_path');
         $imageService = new ImageService($articleImagePath);
         $imagePathList = [];
 
@@ -248,7 +248,7 @@ class ArticleController extends Controller
             ], 422);
         }
 
-        $articleImagePath = config('constant.article.uploadPath');
+        $articleImagePath = config('constant.article.upload_path');
         $imageService = new ImageService($articleImagePath);
         $imagePathList = [];
 

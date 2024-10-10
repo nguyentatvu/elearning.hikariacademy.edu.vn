@@ -18,7 +18,7 @@
 
     .btn-custom-primary {
         border-radius: 20px;
-        background-color: #b3d7ff;
+        background-color: var(--primary);
         color: white;
     }
 
@@ -56,15 +56,15 @@
         <button class="btn btn-custom"><i class="bi bi-chevron-left"></i> bài trước</button>
         <button class="btn btn-custom-primary">bài tiếp theo <i class="bi bi-chevron-right"></i></button>
     </div>
-    <div class="text-custom">
-        Bài 1: 「はじめまして」
+    <div class="text-custom me-4">
+        {{ $detailContent->bai }}
     </div>
 </div>
 
 <div class="custom-container d-flex justify-content-between align-items-center mobile-footer-study">
     <button class="btn btn-custom"><i class="bi bi-chevron-left"></i></button>
     <div class="text-custom">
-        Bài 1: 「はじめまして」
+        {{ $detailContent->bai }}
     </div>
     <button class="btn btn-custom-primary"><i class="bi bi-chevron-right"></i></button>
 </div>

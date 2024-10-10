@@ -17,18 +17,28 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('learning-management')->name('learning-management.')->group(function () {
     Route::get('lesson/next', 'StudentLmsController@getNextLesson')
         ->name('next-lesson');
+
     Route::get('lesson/show/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showLesson')
         ->name('lesson.show');
+
+    Route::post('lesson/exercise/finish-content', 'StudentLmsController@finishContent')
+        ->name('lesson.exercise.finish-content');
+
     Route::post('lesson/exercise/save-score', 'StudentLmsController@saveExerciseScore')
         ->name('lesson.exercise.save-score');
+
     Route::get('lesson/exercise/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showExercise')
         ->name('lesson.exercise');
-        Route::get('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@studentAudittest')
+
+    Route::get('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@studentAudittest')
         ->name('lesson.audit');
+
     Route::post('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@storeResuttest')
         ->name('lesson.audit.store');
+
     Route::get('lesson/flashcard/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showFlashcard')
         ->name('lesson.flashcard');
+
     Route::get('lesson/handwriting/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showHandwriting')
         ->name('lesson.handwriting');
 });
@@ -53,30 +63,6 @@ Route::get('/contact', function () {
 Route::get('/mypage/leaderboard', function () {
     return view('client.mypage.leaderboard');
 })->name('mypage.leaderboard');
-action:
-
-Route::get('/reward-point', 'MyPageController@rewardPoint')
-    ->name('reward-point');
-
-Route::get('/mypage/recharge-point', function () {
-    return view('client.mypage.recharge-point');
-})->name('mypage.recharge-point');
-
-Route::get('/mypage/my-personal', function () {
-    return view('client.mypage.personal');
-})->name('mypage.personal');
-
-Route::get('/mypage/my-courses', function () {
-    return view('client.mypage.my-courses');
-})->name('mypage.courses');
-
-Route::get('/mypage/my-exams', function () {
-    return view('client.mypage.my-exams');
-})->name('mypage.exams');
-
-Route::get('/mypage/my-comments', function () {
-    return view('client.mypage.my-comments');
-})->name('mypage.my-comments');
 
 Route::prefix('mypage')->name('mypage.')->group(function () {
     Route::get('/leaderboard', 'MyPageController@leaderboard')
@@ -94,9 +80,11 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
     Route::get('/mock-exam/{slug}', 'MyPageController@mockExamDetail')
         ->name('mock-exam.detail');
 
-    Route::get('/my-personal', function () {
-        return view('client.mypage.personal');
-    })->name('personal');
+    Route::get('/my-personal', 'MypageController@showPersonal')
+        ->name('personal');
+
+    Route::post('/update-info', 'MypageController@updateUserInfo')
+        ->name('update-info');
 
     Route::get('/my-courses', function () {
         return view('client.mypage.my-courses');
@@ -118,22 +106,6 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
         return view('client.mypage.payment-management');
     })->name('payment-management');
 });
-
-Route::prefix('learning-management')->name('learning-management.')->group(function () {
-    Route::get('lesson/next', 'StudentLmsController@getNextLesson')
-        ->name('next-lesson');
-    Route::get('lesson/show/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showLesson')
-        ->name('lesson.show');
-    Route::post('lesson/exercise/finish-content', 'StudentLmsController@finishContent')
-        ->name('lesson.exercise.finish-content');
-    Route::get('lesson/exercise/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showExercise')
-        ->name('lesson.exercise');
-    Route::get('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showAudit')
-        ->name('lesson.audit');
-    Route::get('lesson/flashcard/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showFlashcard')
-        ->name('lesson.flashcard');
-});
-
 // Payment
 
 Route::get('payments/lms/{slug}', 'PaymentsController@lmsPayments');

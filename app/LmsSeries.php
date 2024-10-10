@@ -9,6 +9,7 @@ class LmsSeries extends Model
 {
     protected $table = 'lmsseries';
 
+    public const COURSE_AND_EXAM = -1;
     public const COURSE = 0;
     public const EXAM = 1;
 
