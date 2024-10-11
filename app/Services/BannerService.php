@@ -6,8 +6,8 @@ use App\Repositories\BannerRepository;
 
 class BannerService extends BaseService
 {
-    public function __construct(BannerRepository $bannerRepository)
+    public function __construct(BannerRepository $repository)
     {
-        parent::__construct($bannerRepository);
+        parent::__construct($repository);
     }
 }

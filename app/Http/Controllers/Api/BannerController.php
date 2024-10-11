@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Banner;
+use App\Http\Resources\BannerResource;
 use Illuminate\Http\Request;
 use App\Services\BannerService;
 
@@ -26,19 +27,35 @@ class BannerController extends Controller
      * @SWG\Get(
      *     tags={"Banner"},
      *     path="/banner",
-     *     summary="List of banners",
+     *     summary="Get Banners by group",
+     *     description="This API returns Banners by group.
+     *           Enum
+     *           BannerGroup: LOGIN - 1, HOME - 2, CONTACT - 3, COURSE_DETAIL - 4
+     *           BannerDisplayType: SINGLE - 1, SLIDER - 2",
+     *     @SWG\Parameter(
+     *         name="group",
+     *         in="query",
+     *         description="Banner Group: 1 - Login, 2 - Home, 3 - Contact, 4 - Course Detail",
+     *         required=true,
+     *         type="integer",
+     *         enum={1, 2, 3, 4}
+     *     ),
      *     @SWG\Response(
      *         response=200,
-     *         description="List of banners",
+     *         description="Successful operation",
      *         @SWG\Schema(
-     *             type="object",
-     *             @SWG\Property(property="id", type="integer", example="1"),
-     *             @SWG\Property(property="title", type="string", example="Banner A"),
-     *             @SWG\Property(property="description", type="string", example="Description of Banner A"),
-     *             @SWG\Property(property="type", type="string", example="Type of Banner A"),
-     *             @SWG\Property(property="image", type="string", example="Link image of Banner A"),
-     *             @SWG\Property(property="created_at", type="datetime", example="2025-01-01 00:00:00"),
-     *             @SWG\Property(property="updated_at", type="datetime", example="2025-01-01 00:00:00"),
+     *             type="array",
+     *             @SWG\Items(
+     *                 type="object",
+     *                 @SWG\Property(property="id", type="integer", example="1"),
+     *                 @SWG\Property(property="order", type="integer", example="1"),
+     *                 @SWG\Property(property="title", type="string", example="Title"),
+     *                 @SWG\Property(property="description", type="string", example="Description"),
+     *                 @SWG\Property(property="display_type", type="integer", example="1"),
+     *                 @SWG\Property(property="group", type="integer", example="1"),
+     *                 @SWG\Property(property="image", type="string", example="Link image"),
+     *                 @SWG\Property(property="to_url", type="string", example="Url"),
+     *             )
      *         )
      *     ),
      *     @SWG\Response(
@@ -60,9 +77,16 @@ class BannerController extends Controller
      *     security={{"bearer_token":{}}}
      * )
      */
-    public function getAll()
+    public function getBannerByConditions(Request $request)
     {
-        $banners = Banner::all();
-        return response()->json($banners);
+        $data = $request->only(['group']);
+        $banners = $this->bannerService->getByConditionsWithOrderBy(
+            ['group' => $data['group']],
+            ['*'],
+            'order',
+            'asc'
+        );
+
+        return BannerResource::collection($banners);
     }
 }
