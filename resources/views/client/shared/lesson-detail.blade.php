@@ -223,6 +223,7 @@
 
             @if (isset($flashcardDetail) && !empty($flashcardDetail))
                 isHidden = true;
+                $('#btn_hide_tab_content').find('i').toggleClass('bi-chevron-double-up bi-chevron-double-down');
             @endif
 
             // Helper function to get the outer height of an element or return 0 if not found
