@@ -1,0 +1,68 @@
+@import "../../mixins";
+
+.flashcard-detail-container {
+    border: none;
+    margin-top: 4px;
+
+    .flashcard-detail-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+
+        .flashcard-detail {
+            display: grid;
+            grid-template-columns: 3fr 6fr 1fr;
+            align-items: center;
+            flex: 1 1 calc(50% - 10px);
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 8px;
+            text-align: center;
+
+            @include mq(max-sp) {
+                flex: 1 1 100%;
+            }
+
+            &:hover {
+                transform: scale(1.01);
+                transition: all 0.1s ease-in-out;
+            }
+
+            .flashcard-term {
+                grid-column: 1;
+                text-align: left;
+                color: #166bc9;
+                font-size: 16px;
+
+                @include mq(max-sp) {
+                    font-size: 14px;
+                }
+            }
+
+            .flashcard-meaning-block {
+                grid-column: 2;
+                text-align: left;
+
+                font-size: 16px;
+
+                @include mq(max-sp) {
+                    font-size: 14px;
+                }
+            }
+
+            .flashcard-audio {
+                grid-column: 3;
+                cursor: pointer;
+
+                &:hover {
+                    color: #166bc9;
+                }
+
+                i {
+                    font-size: 20px;
+                }
+            }
+        }
+    }
+}

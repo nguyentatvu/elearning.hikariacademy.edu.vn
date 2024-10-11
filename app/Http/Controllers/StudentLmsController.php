@@ -105,8 +105,7 @@ class StudentLmsController extends Controller
         $seriesId = $this->prepContent['series_id'];
         $seriesComboId = $this->prepContent['series_combo_id'];
 
-        $this->prepContent['is_valid_payment'] = true;
-        // = $this->paymentMethodService->checkSerieValidity($userId, $seriesComboId);
+        $this->prepContent['is_valid_payment'] = $this->paymentMethodService->checkSerieValidity($userId, $seriesComboId);
 
         if (
             $this->prepContent['series_combo']
@@ -129,7 +128,7 @@ class StudentLmsController extends Controller
             return;
         }
 
-        // $isTrialContent = $this->lmsContentService->checkTrialContent($params['stt']);
+        $isTrialContent = $this->lmsContentService->checkTrialContent($params['stt']);
         if (!$this->prepContent['is_valid_payment'] && !$isTrialContent) {
             $params['stt'] = $this->getFirstContentId($seriesId);
         }
@@ -338,10 +337,14 @@ class StudentLmsController extends Controller
     public function showFlashcard(string $combo_slug = '', string $slug = '', string $stt = '')
     {
         $this->processLessonContent($combo_slug, $slug, $stt);
+        $preparedContent = $this->getPreparedContentVariables();
+        $flashcardId = $preparedContent['detailContent']->flashcard_id;
+        $flashcard = $this->lmsContentService->getFlashcardContent($flashcardId);
 
         return view('client.lesson-detail.flashcard', array_merge(
-            $this->getPreparedContentVariables(),
-            ['type' => 'flashcard']
+            $preparedContent,
+            ['type' => 'flashcard'],
+            ['flashcard' => $flashcard]
         ));
     }
 
