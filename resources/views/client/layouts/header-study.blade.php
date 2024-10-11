@@ -30,7 +30,7 @@
     <div class="container-fluid">
         <a class="navbar-brand me-2 d-flex align-items-center justify-content-center" href="#">
             <i class="bi bi-chevron-left"></i>
-            <span class="ms-2 d-inline-block">Khoá học N1</span>
+            <span class="ms-2 d-inline-block">{{ $series->title }}</span>
         </a>
         <div class="d-flex align-items-center">
             @if (Auth::check())

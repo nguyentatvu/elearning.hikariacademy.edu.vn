@@ -6,24 +6,27 @@
 @endsection
 
 @section('mypage-content')
-    <style>
-
-    </style>
-    <div class="px-5 pb-5">
+    <div class="px-5 pb-5 personal-wrapper">
         <div>
             <div class="banner">
-                <div class="profile-pic"></div>
-                <h3 class="profile-name">Nguyen Van A</h3>
+                <div class="profile-pic">
+                    @if (Auth::user()->image)
+                        <img src="{{ asset('uploads/users/thumbnail/' . Auth::user()->image) }}" class="rounded-circle object-fit-cover size-full" alt="Avatar" />
+                    @else
+                        <img src="{{ asset('images/no-avatar.png') }}" class="rounded-circle object-fit-cover size-full" alt="Avatar" />
+                    @endif
+                </div>
+                <h3 class="profile-name">{{ Auth::user()->name }}</h3>
             </div>
         </div>
         <div class="row mt-5">
-            <div class="col-md-6">
-                <section class="section">
+            <div class="col-lg-6">
+                <section class="section section-introduction">
                     <h5 class="section-title">
                         Giới thiệu
                     </h5>
                     <p class="section-subtitle">
-                        Thành viên của HIKARI từ 3 tháng trước
+                        Thành viên của HIKARI từ {{ compareDates(Auth::user()->created_at) }}
                     </p>
                 </section>
 
@@ -32,97 +35,113 @@
                         <h5 class="section-title">
                             Khoá học đã tham gia
                         </h5>
-                        <a class="view-all" href="#">
-                            Xem tất cả
-                        </a>
                     </div>
-
-                    <div class="course-item d-flex align-items-center mb-3">
-                        <img alt="Ảnh đại diện khoá học N1" src="{{ asset('images/logo-N1.png') }}" />
-                        <div class="course-info flex-grow-1">
-                            <div class="course-title">Khoá học N1</div>
-                            <div class="course-time">Học cách đây 2 phút trước</div>
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
-                                    aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 25%">25%</div>
+                    @if ($view_series_history->count() > 0)
+                        @foreach ($view_series_history as $series)
+                        <div class="course-item d-flex align-items-center pb-3">
+                            <img class="series-image" alt="series image" src="{{ '/public/uploads/lms/combo/'.$series->image }}" />
+                            <div class="course-info flex-grow-1">
+                                <div class="course-title">{{ $series->title }}</div>
+                                <div class="course-time mb-1">Học cách đây {{ compareTime($series->viewed_time) }}</div>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                                        aria-valuenow="{{ $series->progressPercent }}" aria-valuemin="0" aria-valuemax="100"
+                                        style="width: {{ $series->progressPercent }}%">
+                                        <span class="{{ $series->progressPercent <= 10 ? 'd-none' : '' }}">
+                                            {{ $series->progressPercent }}%
+                                        </span>
+                                    </div>
+                                    <span class="ms-1 text-primary {{ $series->progressPercent <= 10 ? '' : 'd-none' }}">
+                                        {{ $series->progressPercent }}%
+                                    </span>
+                                </div>
+                                <a href="{{ route('learning-management.lesson.show', ['combo_slug' => $series->combo_slug, 'slug' => $series->slug]) }}"
+                                    class="text-primary mt-1 fs-5 d-block">
+                                    Tiếp tục học
+                                </a>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="course-item d-flex align-items-center mb-3">
-                        <img alt="Ảnh đại diện khoá học N1" src="{{ asset('images/logo-N1.png') }}" />
-                        <div class="course-info flex-grow-1">
-                            <div class="course-title">Khoá học N1</div>
-                            <div class="course-time">Học cách đây 30 phút trước</div>
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
-                                    aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 50%">50%</div>
-                            </div>
+                        @endforeach
+                    @else
+                        <div>
+                            <span>Bạn chưa học bài học nào.</span>
+                            <a href="#" class="fs-5">Hãy chọn ngay cho mình một khoá học!</a>
                         </div>
-                    </div>
-
-                    <div class="course-item d-flex align-items-center mb-3">
-                        <img alt="Ảnh đại diện khoá học N1" src="{{ asset('images/logo-N1.png') }}" />
-                        <div class="course-info flex-grow-1">
-                            <div class="course-title">Khoá học N1</div>
-                            <div class="course-time">Học cách đây 40 phút trước</div>
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
-                                    aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%">75%</div>
-                            </div>
-                        </div>
-                    </div>
+                    @endif
                 </section>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-lg-6">
                 <div class="personal-information">
                     <h4 class="mb-4">Thông tin tài khoản</h4>
-                    <form>
+                    <form id="update_info_form" action="{{ route('mypage.update-info') }}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="id" class="text-personal-infomation">ID</label>
-                                <input type="text" class="form-control input-personal-infomation" id="id"
-                                    placeholder="ID">
+                                <label class="text-personal-infomation">Username</label>
+                                <input type="text" class="form-control input-personal-infomation"
+                                    value="{{ Auth::user()->username }}" disabled>
                             </div>
                             <div class="col-md-6">
-                                <label for="email" class="text-personal-infomation">Email</label>
-                                <input type="email" class="form-control input-personal-infomation" id="email"
-                                    placeholder="Email">
+                                <label class="text-personal-infomation">Email</label>
+                                <input type="email" class="form-control input-personal-infomation"
+                                    value="{{ Auth::user()->email }}" disabled>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="name" class="text-personal-infomation">Họ và tên</label>
-                                <input type="text" class="form-control input-personal-infomation" id="name"
-                                    placeholder="Họ và tên">
+                                <input type="text" name="name"
+                                    class="form-control input-personal-infomation {{ $errors->has('name') ? 'is-invalid' : '' }}"
+                                    value="{{ old('name', Auth::user()->name) }}" placeholder="Họ và tên">
+                                    <span class="text-danger invalid-feedback">{{ $errors->first('name') }}</span>
                             </div>
                             <div class="col-md-6">
                                 <label for="phone" class="text-personal-infomation">Số điện thoại</label>
-                                <input type="text" class="form-control input-personal-infomation" id="phone"
-                                    placeholder="Số điện thoại">
+                                <input type="text" name="phone"
+                                    class="form-control input-personal-infomation {{ $errors->has('phone') ? 'is-invalid' : '' }}"
+                                    value="{{ old('phone', Auth::user()->phone) }}" placeholder="Số điện thoại">
+                                <span class="text-danger invalid-feedback">{{ $errors->first('phone') }}</span>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="address" class="text-personal-infomation">Địa chỉ</label>
-                            <input type="text" class="form-control input-personal-infomation" id="address"
-                                placeholder="Địa chỉ">
+                            <label for="old_password" class="text-personal-infomation">Mật khẩu cũ</label>
+                            <input type="password" class="form-control input-personal-infomation {{ $errors->has('old_password') ? 'is-invalid' : '' }}"
+                                name="old_password" placeholder="">
+                            <span class="text-danger invalid-feedback">{{ $errors->first('old_password') }}</span>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="password" class="text-personal-infomation">Mật khẩu mới</label>
+                                <input type="password" class="form-control input-personal-infomation {{ $errors->has('password') ? 'is-invalid' : '' }}"
+                                    name="password" placeholder="">
+                                <span class="text-danger invalid-feedback">{{ $errors->first('password') }}</span>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="password_confirmation" class="text-personal-infomation">Xác nhận mật khẩu mới</label>
+                                <input type="password" class="form-control input-personal-infomation" name="password_confirmation" placeholder="">
+                            </div>
                         </div>
                         <div class="row mb-3 dropzone-file-section">
                             <label for="dropzone_file" class="text-personal-infomation">Cập nhật ảnh đại diện</label>
                             <div class="col-xl-6 d-flex justify-content-center">
                                 <div id="file-list" class="mt-3">
-                                    <div class="file-list-information position-relative">
-                                        <img src="{{ asset('images/icons/avatar-icon.svg') }}" alt="ảnh mặc định"
-                                            class="file-image-list">
+                                    <div class="file-list-information position-relative {{ $errors->has('avatar') ? 'is-invalid' : '' }}">
+                                        @if (Auth::user()->image)
+                                            <img src="{{ asset('uploads/users/thumbnail/' . Auth::user()->image) }}"
+                                                class="rounded-circle object-fit-cover size-full file-image-list" alt="Avatar" />
+                                        @else
+                                            <img src="{{ asset('images/no-avatar.png') }}" class="rounded-circle object-fit-cover size-full file-image-list" alt="Avatar" />
+                                        @endif
                                         <div class="change-file" data-index="${index}">Chỉnh sửa</div>
                                     </div>
+                                    <span class="text-danger invalid-feedback">{{ $errors->first('avatar') }}</span>
                                 </div>
                                 <div id="file-error mt-1"></div>
                             </div>
-                            <div class="col-xl-6 col-">
+                            <div class="col-xl-6">
                                 <div class="dropzone" id="dropzone_file">
-                                    <label for="files" class="dropzone-container">
+                                    <label for="files" class="dropzone-container" role="button">
                                         <div class="file-icon">
                                             <i class="bi bi-file-earmark-plus-fill"></i>
                                         </div>
@@ -132,8 +151,8 @@
                                             </p>
                                         </div>
                                     </label>
-                                    <input id="files" name="files[]" type="file" class="file-input"
-                                        accept="image/*" />
+                                    <input id="files" name="avatar" type="file" class="file-input"
+                                        accept=".png, .jpeg, .jpg" />
                                 </div>
                             </div>
                         </div>
@@ -163,7 +182,7 @@
                             const imgHtml = `
                             <div>
                                 <div class="file-list-information position-relative">
-                                    <img src="${e.target.result}" alt="${file.name}" class="file-image-list">
+                                    <img src="${e.target.result}" alt="${file.name}" class="file-image-list object-fit-cover">
                                     <div class="change-file" data-index="${index}">Chỉnh sửa</div>
                                 </div>
                             </div>`;

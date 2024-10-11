@@ -67,8 +67,12 @@ class ImageService
      * @param int|string $id
      * @param string $path
      */
-    public function removeAllImagesWithTheSameName($id, string $path)
+    public function removeAllImagesWithTheSameName($id, string $path = '')
     {
+        if ($path == '') {
+            $path = public_path($this->destinationPath);
+        }
+
         $files = File::glob($path . $id . '.*');
         foreach ($files as $file) {
             File::delete($file);

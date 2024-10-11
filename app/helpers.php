@@ -1,6 +1,7 @@
 <?php
 
 use App\Services\Logger;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -1642,4 +1643,55 @@ function convertToHoursMins($time)
         'minutes' => $time % 60,
         'seconds' => 0
     ];
+}
+
+/**
+ * Compare dates to string
+ *
+ * @param string $date
+ * @return string
+ */
+function compareDates($date)
+{
+    $now = Carbon::now();
+    $givenDate = Carbon::parse($date);
+    $diffInDays = $now->diffInDays($givenDate, false);
+    $diffInMonths = $now->diffInMonths($givenDate, false);
+    $diffInYears = $now->diffInYears($givenDate, false);
+
+    if (abs($diffInDays) <= 7) {
+        return abs($diffInDays) . ' ngày ' . ($diffInDays >= 0 ? 'sau' : 'trước');
+    } elseif (abs($diffInMonths) <= 1) {
+        $weeks = floor(abs($diffInDays) / 7);
+        return $weeks . ' tuần ' . ($diffInDays >= 0 ? 'sau' : 'trước');
+    } elseif (abs($diffInMonths) <= 12) {
+        return $diffInMonths . ' tháng ' . ($diffInMonths >= 0 ? 'sau' : 'trước');
+    } else {
+        return abs($diffInYears) . ' năm ' . ($diffInYears >= 0 ? 'sau' : 'trước');
+    }
+}
+
+/**
+ * Compare time to string
+ *
+ * @param string $date
+ * @return string
+ */
+function compareTime($date) {
+    $now = Carbon::now();
+    $givenDate = Carbon::parse($date);
+
+    $diffInSeconds = $now->diffInSeconds($givenDate, false);
+    $diffInMinutes = $now->diffInMinutes($givenDate, false);
+    $diffInHours = $now->diffInHours($givenDate, false);
+
+    if (abs($diffInSeconds) < 60) {
+        return abs($diffInSeconds) . ' giây ' . ($diffInSeconds >= 0 ? 'sau' : 'trước');
+    } elseif (abs($diffInMinutes) < 60) {
+        return abs($diffInMinutes) . ' phút ' . ($diffInMinutes >= 0 ? 'sau' : 'trước');
+    } elseif (abs($diffInHours) < 24) {
+        return abs($diffInHours) . ' giờ ' . ($diffInHours >= 0 ? 'sau' : 'trước');
+    } else {
+        return compareDates($date);
+    }
 }

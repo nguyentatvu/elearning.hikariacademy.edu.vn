@@ -6,12 +6,18 @@ use App\ExamSeries;
 use App\PaymentMethod;
 use App\Services\CoinRechargePackageService;
 use App\Services\LmsSeriesComboService;
+use App\Services\LmsSeriesService;
 use App\Services\PaymentMethodService;
+use App\Services\UserService;
 use App\Services\WeeklyLeaderboardService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class MyPageController extends Controller
 {
@@ -19,18 +25,24 @@ class MyPageController extends Controller
     private $paymentMethodService;
     private $coinRechargeService;
     private $lmsSeriesComboService;
+    private $userService;
+    private $lmsSeriesService;
 
     public function __construct(
         WeeklyLeaderboardService $weeklyLearboardService,
         PaymentMethodService $paymentMethodService,
         CoinRechargePackageService $coinRechargeService,
-        LmsSeriesComboService $lmsSeriesComboService
+        LmsSeriesComboService $lmsSeriesComboService,
+        UserService $userService,
+        LmsSeriesService $lmsSeriesService
     )
     {
         $this->weeklyLearboardService = $weeklyLearboardService;
         $this->paymentMethodService = $paymentMethodService;
         $this->coinRechargeService = $coinRechargeService;
         $this->lmsSeriesComboService = $lmsSeriesComboService;
+        $this->userService = $userService;
+        $this->lmsSeriesService = $lmsSeriesService;
         $this->middleware('auth');
     }
 
@@ -201,5 +213,88 @@ class MyPageController extends Controller
         $data['right_bar_data']     = ['item' => $record];
 
         return view('client.mypage.mock-exam.overview-detail', $data);
+    }
+
+    /**
+     * Show personal info
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    function showPersonal() {
+        $data['view_series_history'] = $this->lmsSeriesService
+            ->getHistoryViews(Auth::user()->series_views_history ?? [], Auth::user());
+        return view('client.mypage.personal', $data);
+    }
+
+    /**
+     * Update user info
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateUserInfo(Request $request) {
+        $filteredData = array_filter($request->all(), function ($value) {
+            return $value !== null && $value !== '';
+        });
+
+        $rules = [
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'regex:/^\d{10}$/', Rule::unique('users', 'phone')->ignore(Auth::user()->id)],
+            'old_password' => ['required_with:password', 'string', function ($attribute, $value, $fail) {
+                if (!Hash::check($value, Auth::user()->password)) {
+                    $fail('Mật khẩu cũ sai!');
+                }
+            }],
+            'password' => ['required_with:old_password', 'different:old_password', 'string', 'min:6', 'confirmed'],
+            'avatar' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:2048'],
+        ];
+
+        $messages = [
+            'phone.regex' => 'Số điện thoại không đúng định dạng!',
+            'old_password.required_with' => 'Nhập thiếu mật khẩu cũ!',
+            'password.required_with' => 'Nhập thiếu mật khẩu mới!',
+            'password.different' => 'Không được nhập mật khẩu mới trùng với mật khẩu cũ!',
+            'password.min' => 'Mật khẩu mới quá ngắn, tối thiểu 6 kí tự!',
+            'password.confirmed' => 'Mật khẩu mới xác nhận không trùng!',
+            'avatar.mimes' => 'Vui lòng tải ảnh thuộc những định dạng: jpg, jpeg, png!',
+            'avatar.max' => 'Vui lòng tải ảnh có dung lượng dưới 2MB!',
+            'avatar.uploaded' => 'Vui lòng tải ảnh có dung lượng dưới 2MB!',
+        ];
+
+        $attributes = [
+            'name' => 'Tên',
+            'phone' => 'Số điện thoại',
+            'old_password' => 'Mật khẩu cũ',
+            'password' => 'Mật khẩu cũ',
+            'avatar' => 'Ảnh đại diện',
+        ];
+
+        $validator = Validator::make($filteredData, $rules, $messages, $attributes);
+
+        if ($validator->fails()) {
+            flash('Thông báo', 'Cập nhật thông tin cá nhân thất bại!', 'error');
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        try {
+            if ($request->hasFile('avatar')) {
+                $this->userService->updateAvatar(Auth::user()->id, $request->file('avatar'));
+            }
+
+            $validatedData = array_intersect_key($filteredData, $validator->valid());
+            if (isset($validatedData['password'])) {
+                $validatedData['password'] = Hash::make($validatedData['password']);
+            }
+            $this->userService->update(Auth::user()->id, $validatedData);
+        }
+        catch (Exception $e) {
+            app_log()->error('Error updating user avatar: ' . $e->getMessage());
+            flash('Thông báo', 'Quá trình cập nhật thông tin của hệ thống gặp lỗi, vui lòng báo lại BQT để giải quyết!', 'error');
+        }
+
+        flash('Thông báo', 'Cập nhật thông tin cá nhân thành công!', 'success');
+        return redirect()->back();
     }
 }

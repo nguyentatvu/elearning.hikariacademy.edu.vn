@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light px-5">
+<nav class="app-navbar navbar navbar-expand-lg navbar-light px-5">
     <div class="w-100 px-5 d-flex align-items-center justify-conten-center">
         <div class="me-auto">
             <a class="navbar-brand" href="/">
@@ -165,15 +165,15 @@
                 </div>
                 <ul class="dropdown-menu dropdown-menu-end w-200px p-2">
                     <li>
-                        <div class="d-flex justify-content-center align-items-center">
+                        <div class="user-info d-flex align-items-center">
                             @if (Auth::user()->image)
                                 <img src="{{ asset('uploads/users/thumbnail/' . Auth::user()->image) }}" class="rounded-circle object-fit-cover" width="40px" height="40px" alt="Avatar" />
                             @else
                                 <img src="{{ asset('images/no-avatar.png') }}" class="rounded-circle object-fit-cover" height="40px" width="40px" alt="Avatar" />
                             @endif
                             <div>
-                                <div>Học viên A</div>
-                                <div>@hocvienA</div>
+                                <div>{{ Auth::user()->name }}</div>
+                                <div><span>@</span>{{ Auth::user()->username ?? '' }}</div>
                             </div>
                         </div>
                     </li>

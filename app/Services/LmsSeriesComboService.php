@@ -61,7 +61,7 @@ class LmsSeriesComboService extends BaseService
      * @param int $type
      * @return mixed
      */
-    public function getMySeries(int $userId, int $type = LmsSeries::COURSE)
+    public function getMySeries(int $userId, int $type = LmsSeries::COURSE_AND_EXAM)
     {
         $mySeries = $this->repository->getMySeries($userId, $type);
 
