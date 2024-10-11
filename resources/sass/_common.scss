@@ -25,6 +25,15 @@
 .w-100px {
     width: 100px;
 }
+
+.mw-100px {
+    min-width: 100px;
+}
+
+.mw-200px {
+    min-width: 200px;
+}
+
 .text-primary {
     color: var(--primary) !important;
 }
