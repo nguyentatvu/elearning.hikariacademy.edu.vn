@@ -251,6 +251,17 @@ class StudentLmsController extends Controller
         $this->prepContent['is_finished_content'] = optional($studentView)->finish == LmsStudentView::FINISH;
     }
 
+    private function getStudentView() {
+        $this->prepContent['content_view_count'] =
+            $this->lmsStudentViewService->getViewCountOfSeries(
+            $this->prepContent['series_id'], Auth::id()
+            );
+        $this->prepContent['series_content_count'] =
+            $this->lmsContentService->getContentCountBySeries(
+                $this->prepContent['series_id']
+            );
+    }
+
     /**
      * Prepare contents and view
      *
@@ -266,6 +277,7 @@ class StudentLmsController extends Controller
         $this->checkValidURL($params);
         $this->checkValidPayment($params);
         $this->saveStudentView($stt);
+        $this->getStudentView();
         $this->prepareContentList($params);
     }
 
@@ -285,6 +297,8 @@ class StudentLmsController extends Controller
             'seriesCombo' => $this->prepContent['series_combo'],
             'isFinishedContent' => $this->prepContent['is_finished_content'],
             'series' => $this->prepContent['series'],
+            'contentViewCount' => $this->prepContent['content_view_count'],
+            'seriesContentCount' => $this->prepContent['series_content_count'],
         ];
     }
 

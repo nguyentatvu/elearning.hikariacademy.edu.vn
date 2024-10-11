@@ -310,4 +310,14 @@ class LmsContentService extends BaseService
 
         return $handwriting;
     }
+
+    /**
+     * Get content count by series
+     *
+     * @param int $seriesId
+     * @return int
+     */
+    public function getContentCountBySeries(int $seriesId) {
+        return $this->repository->getContentCountBySeries($seriesId);
+    }
 }

@@ -30,4 +30,15 @@ class LmsStudentViewService extends BaseService
     public function getLastViewedContentOfStudent(string $seriesId) {
         return $this->repository->getLastViewedContentOfStudent($seriesId);
     }
+
+    /**
+     * Get the view count of a series
+     *
+     * @param string $seriesId
+     * @param string $userId
+     * @return int
+     */
+    public function getViewCountOfSeries(string $seriesId, string $userId) {
+        return $this->repository->getViewCountOfSeries($seriesId, $userId);
+    }
 }

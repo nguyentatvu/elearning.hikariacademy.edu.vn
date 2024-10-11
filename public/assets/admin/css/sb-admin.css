@@ -10101,3 +10101,8 @@ span.hikari_question_border {
     display: flex;
     gap: 4px;
 }
+
+.side-nav>li>a .mdi {
+    color: #f16a43;
+    margin-right: 7px;
+}

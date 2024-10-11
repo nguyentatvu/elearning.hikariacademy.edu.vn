@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\LmsStudentView;
 use Illuminate\Support\Facades\Auth;
 
 class LmsStudentViewRepository extends BaseRepository
@@ -35,5 +36,22 @@ class LmsStudentViewRepository extends BaseRepository
             ->where('lms_student_view.users_id', Auth::id())
             ->latest('lms_student_view.created_date')
             ->first();
+    }
+
+    /**
+     * Get the view count of a series
+     *
+     * @param string $seriesId
+     * @param string $userId
+     * @return int
+     */
+    public function getViewCountOfSeries(string $seriesId, string $userId) {
+        return $this->model
+            ->join('lmscontents', 'lmscontents.id' , '=', 'lms_student_view.lmscontent_id')
+            ->where([
+                'lms_student_view.users_id' => $userId,
+                'lmscontents.lmsseries_id' => $seriesId,
+                'lms_student_view.finish' => LmsStudentView::FINISH
+            ])->count();
     }
 }

@@ -161,6 +161,16 @@ Route::prefix('mock-exam')
             ->name('ajax-rate');
     });
 
+Route::prefix('point-management')
+    ->name('point-management.')
+    ->group(function () {
+        Route::get('/list', 'PointManagementController@list')
+            ->name('list');
+
+        Route::post('/save-rules', 'PointManagementController@savePointRules')
+            ->name('save-rules');
+    });
+
 
 /**************************
  * ADMIN ROUTES

@@ -16,6 +16,13 @@ class CoinRechargePackageController extends Controller
      */
     public function __construct(CoinRechargePackageService $coinRechargeService){
         $this->middleware('auth');
+        $this->middleware(function ($request, $next) {
+            if (!checkRole(getUserGrade(2))) {
+                prepareBlockUserMessage();
+                return redirect('/');
+            }
+            return $next($request);
+        });
         $this->coinRechargeService = $coinRechargeService;
     }
 

@@ -7,14 +7,28 @@
 @endsection
 
 @section('lesson-detail-content')
-    <video id="my-video" class="video-js vjs-theme-fantasy" controls preload="auto" width="640" height="360" data-setup="{}">
-        <source src="{{ $video_url }}"
-            type="application/x-mpegURL">
+<div class="video-lesson">
+    <video id="my-video" class="video-js vjs-theme-fantasy" controls preload="auto" width="640" height="360"
+        data-setup="{}">
+        <source src="{{ $video_url }}" type="application/x-mpegURL">
         <p class="vjs-no-js">
             To view this video please enable JavaScript, and consider upgrading to a web browser that
             <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
         </p>
     </video>
+    <div class="video-placeholder mb-5" style="display: none;">
+        <div class="card text-center">
+            <div class="card-body py-5">
+                <span class="carbon--video-off-filled error-icon"></span>
+                <h5 class="card-title">Không thể phát video</h5>
+                <p class="card-text">Đã xảy ra lỗi khi tải video bài học. Vui lòng kiểm tra kết nối internet và thử lại.</p>
+                <button class="btn btn-primary btn-reload" onclick="location.reload()">
+                    <i class="bi bi-arrow-clockwise me-1"></i> Tải lại trang web
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('lesson-detail-scripts')
@@ -52,11 +66,25 @@
         }
 
         (function() {
+            let initAttempts = 0;
+            const MAX_ATTEMPTS = 5;
+            let tsSegmentRetries = 0;
+            const MAX_TS_RETRIES = 100;
+
             function initializePlayer() {
+                if (initAttempts >= MAX_ATTEMPTS) {
+                    console.error('Failed to initialize video player after', MAX_ATTEMPTS, 'attempts');
+
+                    $('#my-video').hide();
+                    $('.video-placeholder').show();
+                    return;
+                }
+                initAttempts++;
+
                 // Make sure the video element exists before initializing
                 const videoElement = document.getElementById('my-video');
                 if (!videoElement) {
-                    console.warn('Video element not found, retrying in 100ms');
+                    console.warn(`Video element not found, retrying in 100ms (attempt ${initAttempts}/${MAX_ATTEMPTS})`);
                     setTimeout(initializePlayer, 100);
                     return;
                 }
@@ -78,6 +106,14 @@
                     }
 
                     player.httpSourceSelector();
+
+                    // Add error handling
+                    player.on('error', function(e) {
+                        console.log('Error: ', e);
+                        handlePlayerError(player, e);
+                        // player.error(4);
+                    });
+
                     player.src({
                         src: '{{ $video_url }}',
                         type: 'application/x-mpegURL'
@@ -94,9 +130,41 @@
                         }
                     });
                 } catch (error) {
-                    console.error('Error initializing video player:', error);
-                    // Optionally retry after a delay
-                    setTimeout(initializePlayer, 500);
+                    console.error(`Error initializing video player (attempt ${initAttempts}/${MAX_ATTEMPTS}):`, error);
+                    // Retry after a delay
+                    if (initAttempts < MAX_ATTEMPTS) {
+                        setTimeout(initializePlayer, 500);
+                    }
+                }
+            }
+
+            function handlePlayerError(player, e) {
+                const error = player.error();
+
+                // Handle HLS playlist request error
+                if (
+                    (error.code === 2 || error.status === 404 || error.message.includes('HLS playlist request error')) ||
+                    error.code === 4
+                ) {
+                    // console.error(`HLS playlist request failed (attempt ${initAttempts}/${MAX_ATTEMPTS}):`, error.message);
+                    retryInitialization(player);
+                    return;
+                }
+
+                // Log other errors
+                console.error('Video player error:', error);
+            }
+
+            function retryInitialization(player) {
+                // Clear the error
+                player.error(null);
+
+                // Retry initialization after a delay
+                if (initAttempts < MAX_ATTEMPTS) {
+                    setTimeout(function() {
+                        player.dispose();
+                        initializePlayer();
+                    }, 500);
                 }
             }
 
@@ -107,8 +175,9 @@
         const earnPointsOnVideoEnded = (player) => {
             player.on('ended', function() {
                 @if($isValidPayment && !$isFinishedContent)
-                    earnPointFinishContent('{{$detailContent->id}}', 1, 'video');
-                    animateHicoin(1);
+                    const rewardPoints = {{ getRewardPointRule('learning')['video']['completion_points'] }};
+                    earnPointFinishContent('{{$detailContent->id}}', rewardPoints, 'video');
+                    animateHicoin(rewardPoints);
                     checkFinishContent();
                 @endif
             })
@@ -204,5 +273,5 @@
                 }
             });
         }
-    </script>
+</script>
 @endsection
