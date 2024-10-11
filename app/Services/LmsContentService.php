@@ -192,7 +192,7 @@ class LmsContentService extends BaseService
      * @param int $flashcardId
      * @return mixed
      */
-    protected function getFlashcardContent(int $flashcardId)
+    public function getFlashcardContent(int $flashcardId)
     {
         $flashcard = $this->lmsFlashcardService->getFlashcardContentById($flashcardId);
 

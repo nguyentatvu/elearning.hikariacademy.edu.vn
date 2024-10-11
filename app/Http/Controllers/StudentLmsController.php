@@ -348,10 +348,14 @@ class StudentLmsController extends Controller
     public function showFlashcard(string $combo_slug = '', string $slug = '', string $stt = '')
     {
         $this->processLessonContent($combo_slug, $slug, $stt);
+        $preparedContent = $this->getPreparedContentVariables();
+        $flashcardId = $preparedContent['detailContent']->flashcard_id;
+        $flashcard = $this->lmsContentService->getFlashcardContent($flashcardId);
 
         return view('client.lesson-detail.flashcard', array_merge(
-            $this->getPreparedContentVariables(),
-            ['type' => 'flashcard']
+            $preparedContent,
+            ['type' => 'flashcard'],
+            ['flashcard' => $flashcard]
         ));
     }
 

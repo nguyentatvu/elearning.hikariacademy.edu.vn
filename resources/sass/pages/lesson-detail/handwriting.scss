@@ -1,9 +1,6 @@
 @import "../../mixins";
 
 .handwriting-container {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
     width: 100%;
     height: 100%;
     padding: 8px;
@@ -12,20 +9,16 @@
         display: flex;
         flex-direction: row;
         width: 100%;
-        height: 450px;
         border-radius: 12px;
         border: 1px solid #ccc;
         overflow: hidden;
 
         @include mq(max-sp) {
             flex-direction: column;
-            align-items: center;
-            height: 100%;
         }
 
         .handwriting-tabs {
             width: 10%;
-            height: 100%;
             border-right: 1px solid #ccc;
 
             @include mq(max-sp) {
@@ -35,6 +28,7 @@
                 flex-direction: row;
                 border-bottom: 1px solid #ccc;
                 border-right: none;
+                overflow-x: scroll;
             }
 
             .handwriting-tab {
@@ -48,7 +42,7 @@
                 transition: background-color 0.3s, color 0.3s;
 
                 @include mq(max-sp) {
-                    width: 80px;
+                    width: 60px;
                     height: 100%;
                     border-right: 1px solid #ccc;
                     border-bottom: none;
@@ -60,10 +54,10 @@
                 }
 
                 .handwriting-tab-title {
-                    font-size: 16px;
+                    font-size: 14px;
 
                     @include mq(max-sp) {
-                        font-size: 14px;
+                        font-size: 12px;
                     }
                 }
             }
@@ -74,6 +68,7 @@
             height: 100%;
             display: flex;
             flex-direction: row;
+            padding: 8px 0;
 
             @include mq(max-sp) {
                 flex-direction: column;
@@ -92,7 +87,7 @@
 
                 @include mq(max-sp) {
                     width: 100%;
-                    height: 50%;
+   
                     border-bottom: 1px solid #ccc;
                     border-right: none;
                 }
@@ -113,6 +108,7 @@
                     .handwriting-content {
                         width: 300px;
                         height: 300px;
+                        min-height: 300px;
                         border: 1px solid #ccc;
 
                         .canvas-wrapper {
@@ -177,11 +173,11 @@
         }
 
         .handwriting-label {
-            font-size: 20px;
+            font-size: 16px;
             color: #166ac9;
 
             @include mq(max-sp) {
-                font-size: 16px;
+                font-size: 14px;
             }
         }
 
