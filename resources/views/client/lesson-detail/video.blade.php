@@ -52,27 +52,56 @@
         }
 
         (function() {
-            const existingPlayers = videojs.getPlayers();
-            for (const playerId in existingPlayers) {
-                if (existingPlayers[playerId]) {
-                    existingPlayers[playerId].dispose();
+            function initializePlayer() {
+                // Make sure the video element exists before initializing
+                const videoElement = document.getElementById('my-video');
+                if (!videoElement) {
+                    console.warn('Video element not found, retrying in 100ms');
+                    setTimeout(initializePlayer, 100);
+                    return;
+                }
+
+                // Dispose existing players
+                const existingPlayers = videojs.getPlayers();
+                for (const playerId in existingPlayers) {
+                    if (existingPlayers[playerId]) {
+                        existingPlayers[playerId].dispose();
+                    }
+                }
+
+                try {
+                    // Initialize new player
+                    const player = videojs('my-video', getVideoConfig());
+
+                    if (!player) {
+                        throw new Error('Failed to initialize video player');
+                    }
+
+                    player.httpSourceSelector();
+                    player.src({
+                        src: '{{ $video_url }}',
+                        type: 'application/x-mpegURL'
+                    });
+
+                    // Wait for the player to be ready before accessing menus
+                    player.ready(function() {
+                        try {
+                            addSkipButton(player);
+                            allowQualitySelect(player);
+                            earnPointsOnVideoEnded(player);
+                        } catch (error) {
+                            console.error('Error in player ready callback:', error);
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error initializing video player:', error);
+                    // Optionally retry after a delay
+                    setTimeout(initializePlayer, 500);
                 }
             }
 
-            const player = videojs('my-video', getVideoConfig());
-
-            player.httpSourceSelector();
-            player.src({
-                src: '{{ $video_url }}',
-                type: 'application/x-mpegURL'
-            });
-
-            // Wait for the player to be ready before accessing menus
-            player.ready(function() {
-                addSkipButton(player);
-                allowQualitySelect(player);
-                earnPointsOnVideoEnded(player);
-            });
+            // Start initialization
+            initializePlayer();
         })();
 
         const earnPointsOnVideoEnded = (player) => {

@@ -485,42 +485,69 @@
                 "tags": [
                     "Banner"
                 ],
-                "summary": "List of banners",
+                "summary": "Get Banners by group",
+                "description": "This API returns Banners by group.\n     *           Enum\n     *           BannerGroup: 1 - LOGIN, 2 - HOME, 3 - CONTACT, 4 - COURSE_DETAIL\n     *           BannerDisplayType: 1 - SINGLE, 2 - SLIDER",
+                "parameters": [
+                    {
+                        "name": "group",
+                        "in": "query",
+                        "description": "Banner Group: 1 - Login, 2 - Home, 3 - Contact, 4 - Course Detail",
+                        "required": true,
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            4
+                        ]
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "List of banners",
+                        "description": "Successful operation",
                         "schema": {
-                            "properties": {
-                                "id": {
-                                    "type": "integer",
-                                    "example": "1"
+                            "type": "array",
+                            "items": {
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "order": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Title"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Description"
+                                    },
+                                    "display_type": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "group": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "image": {
+                                        "type": "string",
+                                        "example": "Link image"
+                                    },
+                                    "to_url": {
+                                        "type": "string",
+                                        "example": "Url"
+                                    },
+                                    "created_at": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    }
                                 },
-                                "title": {
-                                    "type": "string",
-                                    "example": "Banner A"
-                                },
-                                "description": {
-                                    "type": "string",
-                                    "example": "Description of Banner A"
-                                },
-                                "type": {
-                                    "type": "string",
-                                    "example": "Type of Banner A"
-                                },
-                                "image": {
-                                    "type": "string",
-                                    "example": "Link image of Banner A"
-                                },
-                                "created_at": {
-                                    "type": "datetime",
-                                    "example": "2025-01-01 00:00:00"
-                                },
-                                "updated_at": {
-                                    "type": "datetime",
-                                    "example": "2025-01-01 00:00:00"
-                                }
-                            },
-                            "type": "object"
+                                "type": "object"
+                            }
                         }
                     },
                     "401": {

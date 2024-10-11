@@ -86,7 +86,7 @@
                         </td>
                     </tr>
                     <tr class="current-user">
-                        <td class="rank text-primary">{{ $userRank->rank }}</td>
+                        <td class="rank text-primary">{{ optional($userRank)->rank ?? 'N/A' }}</td>
                         <td>
                         @if ($ranking->user->image)
                             <img src="{{ getFullUserImage($ranking->user->image) }}" alt="student avatar" class="avatar" />
@@ -95,7 +95,7 @@
                         @endif
                         </td>
                         <td class="text-primary">Bạn</td>
-                        <td class="score">{{ $userRank->reward_point }}</td>
+                        <td class="score">{{ optional($userRank)->reward_point ?? 0 }}</td>
                     </tr>
                 </tbody>
             </table>

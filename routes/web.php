@@ -17,22 +17,31 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('learning-management')->name('learning-management.')->group(function () {
     Route::get('lesson/next', 'StudentLmsController@getNextLesson')
         ->name('next-lesson');
+
     Route::get('lesson/show/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showLesson')
         ->name('lesson.show');
+
+    Route::post('lesson/exercise/finish-content', 'StudentLmsController@finishContent')
+        ->name('lesson.exercise.finish-content');
+
     Route::post('lesson/exercise/save-score', 'StudentLmsController@saveExerciseScore')
         ->name('lesson.exercise.save-score');
+
     Route::get('lesson/exercise/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showExercise')
         ->name('lesson.exercise');
+
     Route::get('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@studentAudittest')
         ->name('lesson.audit');
+
     Route::post('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@storeResuttest')
         ->name('lesson.audit.store');
+
     Route::get('lesson/flashcard/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showFlashcard')
         ->name('lesson.flashcard');
+
     Route::get('lesson/handwriting/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showHandwriting')
         ->name('lesson.handwriting');
 });
-
 
 // Page (Client)
 Route::get('/', function () {
@@ -53,30 +62,6 @@ Route::get('/contact', function () {
 Route::get('/mypage/leaderboard', function () {
     return view('client.mypage.leaderboard');
 })->name('mypage.leaderboard');
-action:
-
-Route::get('/reward-point', 'MyPageController@rewardPoint')
-    ->name('reward-point');
-
-Route::get('/mypage/recharge-point', function () {
-    return view('client.mypage.recharge-point');
-})->name('mypage.recharge-point');
-
-Route::get('/mypage/my-personal', function () {
-    return view('client.mypage.personal');
-})->name('mypage.personal');
-
-Route::get('/mypage/my-courses', function () {
-    return view('client.mypage.my-courses');
-})->name('mypage.courses');
-
-Route::get('/mypage/my-exams', function () {
-    return view('client.mypage.my-exams');
-})->name('mypage.exams');
-
-Route::get('/mypage/my-comments', function () {
-    return view('client.mypage.my-comments');
-})->name('mypage.my-comments');
 
 Route::prefix('mypage')->name('mypage.')->group(function () {
     Route::get('/leaderboard', 'MyPageController@leaderboard')
@@ -88,17 +73,23 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
     Route::get('/recharge-point', 'MyPageController@rechargePoint')
         ->name('recharge-point');
 
-    Route::get('/my-personal', function () {
-        return view('client.mypage.personal');
-    })->name('personal');
+    Route::get('/mock-exam/list', 'MyPageController@mockExamList')
+        ->name('mock-exam.list');
 
-    Route::get('/my-courses', function () {
-        return view('client.mypage.my-courses');
-    })->name('courses');
+    Route::get('/mock-exam/{slug}', 'MyPageController@mockExamDetail')
+        ->name('mock-exam.detail');
 
-    Route::get('/my-exams', function () {
-        return view('client.mypage.my-exams');
-    })->name('exams');
+    Route::get('/my-personal', 'MypageController@showPersonal')
+        ->name('personal');
+
+    Route::post('/update-info', 'MypageController@updateUserInfo')
+        ->name('update-info');
+
+    Route::get('/my-courses', 'LmsSeriesController@listCategories')
+        ->name('courses');
+
+    Route::get('/my-exams', 'LmsSeriesController@listCategoriesStudy')
+        ->name('exams');
 
     Route::get('/my-comments', function () {
         return view('client.mypage.my-comments');
@@ -112,22 +103,6 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
         return view('client.mypage.payment-management');
     })->name('payment-management');
 });
-
-Route::prefix('learning-management')->name('learning-management.')->group(function () {
-    Route::get('lesson/next', 'StudentLmsController@getNextLesson')
-        ->name('next-lesson');
-    Route::get('lesson/show/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showLesson')
-        ->name('lesson.show');
-    Route::post('lesson/exercise/finish-content', 'StudentLmsController@finishContent')
-        ->name('lesson.exercise.finish-content');
-    Route::get('lesson/exercise/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showExercise')
-        ->name('lesson.exercise');
-    Route::get('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showAudit')
-        ->name('lesson.audit');
-    Route::get('lesson/flashcard/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showFlashcard')
-        ->name('lesson.flashcard');
-});
-
 // Payment
 
 Route::get('payments/lms/{slug}', 'PaymentsController@lmsPayments');
@@ -163,6 +138,25 @@ Route::prefix('payments/coin')
             ->name('transfer');
     });
 
+
+Route::prefix('mock-exam')
+    ->name('mock-exam.')
+    ->group(function () {
+        Route::get('/instruction/{slug}', 'MockExamController@getInstruction')
+            ->name('instruction');
+
+        Route::post('/start-exam/{slug}', 'MockExamController@startExam')
+            ->name('start-exam');
+
+        Route::post('/finish-exam/{slug}', 'MockExamController@finishExam')
+            ->name('finish-exam');
+
+        Route::get('/finish-exam-result/{result_id}', 'MockExamController@finishExamResult')
+            ->name('finish-exam-result');
+
+        Route::post('/ajax-rate', 'MockExamController@ajaxRate')
+            ->name('ajax-rate');
+    });
 
 
 /**************************
@@ -431,19 +425,19 @@ Route::get('exams/student/quiz/getList/{slug?}', 'StudentQuizController@getDatat
 
 Route::get('exams/student/quiz/take-exam/{slug?}', 'StudentQuizController@instructions');
 
-Route::post('exams/student/start-exam/{slug}', 'StudentQuizController@startExam');
+// Route::post('exams/student/start-exam/{slug}', 'StudentQuizController@startExam');
 
-Route::get('exams/student/start-exam/{slug}', 'ExamSeriesController@listSeries');
+// Route::get('exams/student/start-exam/{slug}', 'ExamSeriesController@listSeries');
 
 Route::get('exams/check/start-exam/{slug}', 'StudentQuizController@startExam');
 
-Route::get('exams/student/finish-exam-result/{slug}', 'StudentQuizController@finishExamResult');
+// Route::get('exams/student/finish-exam-result/{slug}', 'StudentQuizController@finishExamResult');
 
-Route::get('exams/student/finish-exam-result/result/{slug}', 'StudentQuizController@finishResult');
+// Route::get('exams/student/finish-exam-result/result/{slug}', 'StudentQuizController@finishResult');
 
 Route::get('exams/student/test_result1', 'StudentQuizController@test_result');
 
-Route::post('exams/student/finish-exam/{slug}', 'StudentQuizController@finishExam');
+// Route::post('exams/student/finish-exam/{slug}', 'StudentQuizController@finishExam');
 
 Route::get('exams/student/reports/{slug}', 'StudentQuizController@reports');
 
@@ -542,9 +536,9 @@ Route::get('exams/exam-series-free/total/{slug}', 'ExamSeriesfreeController@tota
 
 //EXAM SERIES STUDENT LINKS
 
-Route::get('exams/student-exam-series/list', 'ExamSeriesController@listSeries');
+// Route::get('exams/student-exam-series/list', 'ExamSeriesController@listSeries');
 
-Route::get('exams/student-exam-series/{slug}', 'ExamSeriesController@viewItem');
+// Route::get('exams/student-exam-series/{slug}', 'ExamSeriesController@viewItem');
 
 Route::get('exams/view-exam-series/{slug}', 'ExamSeriesController@viewExam');
 
@@ -664,17 +658,17 @@ Route::get('exams/instructions/getList', 'InstructionsController@getDatatable');
 
 //BOOKMARKS MODULE
 
-Route::get('student/bookmarks/{slug}', 'BookmarksController@index');
+// Route::get('student/bookmarks/{slug}', 'BookmarksController@index');
 
-Route::post('student/bookmarks/add', 'BookmarksController@create');
+// Route::post('student/bookmarks/add', 'BookmarksController@create');
 
-Route::delete('student/bookmarks/delete/{id}', 'BookmarksController@delete');
+// Route::delete('student/bookmarks/delete/{id}', 'BookmarksController@delete');
 
-Route::delete('student/bookmarks/delete_id/{id}', 'BookmarksController@deleteById');
+// Route::delete('student/bookmarks/delete_id/{id}', 'BookmarksController@deleteById');
 
-Route::get('student/bookmarks/getList/{slug}', 'BookmarksController@getDatatable');
+// Route::get('student/bookmarks/getList/{slug}', 'BookmarksController@getDatatable');
 
-Route::post('student/bookmarks/getSavedList', 'BookmarksController@getSavedBookmarks');
+// Route::post('student/bookmarks/getSavedList', 'BookmarksController@getSavedBookmarks');
 
 //////////////////////////
 
@@ -800,9 +794,9 @@ Route::delete('lms/seriescombo/delete/{slug}', 'LmsComboController@delete');
 
 //LMS SERIES STUDENT LINKS
 
-Route::get('lms/exam-categories/list', 'LmsSeriesController@listCategories');
+// Route::get('lms/exam-categories/list', 'LmsSeriesController@listCategories');
 
-Route::get('lms/exam-categories/study', 'LmsSeriesController@listCategoriesstudy');
+Route::get('lms/exam-categories/study', 'LmsSeriesController@listCategoriesStudy');
 
 Route::get('lms/exam-categories/payment', 'LmsSeriesController@listPayments');
 
@@ -1148,7 +1142,7 @@ Route::get('lms/series', 'LmsSeriesController@index');
 
 Route::get('lms/series/add', 'LmsSeriesController@create');
 
-Route::get('lms/seriessexam/add', 'LmsSeriesController@createexam');
+Route::get('lms/seriessexam/add', 'LmsSeriesController@createExam');
 
 Route::post('lms/series/add', 'LmsSeriesController@store');
 
@@ -1298,30 +1292,30 @@ Route::get('lms/exam-categories/comments/getExamList', 'CommentController@listge
 Route::prefix('lms')
     ->name('lms.')
     ->group(function () {
-    Route::prefix('handwriting')
-        ->name('handwriting.')
-        ->group(function () {
-            Route::get('', 'HandwritingController@index')->name('index');
-            Route::get('getList', 'HandwritingController@getDatatable')->name('list');
-            Route::get('{id}/view', 'HandwritingController@show')->name('view');
-            Route::get('{id}/show', 'HandwritingController@getHandwriting')->name('show');
-            Route::get('add', 'HandwritingController@create')->name('create');
-            Route::post('add', 'HandwritingController@store')->name('store');
-            Route::get('{id}/edit', 'HandwritingController@edit')->name('edit');
-            Route::patch('{id}/edit', 'HandwritingController@update')->name('update');
-            Route::delete('delete/{id}', 'HandwritingController@delete')->name('delete');
-
-        Route::prefix('{id}/detail')
-            ->name('detail.')
+        Route::prefix('handwriting')
+            ->name('handwriting.')
             ->group(function () {
-                Route::get('add', 'HandwritingController@createDetail')->name('create');
-                Route::post('add', 'HandwritingController@storeDetail')->name('store');
-                Route::get('{detailId}/edit', 'HandwritingController@editDetail')->name('edit');
-                Route::patch('{detailId}/edit', 'HandwritingController@updateDetail')->name('update');
-                Route::delete('delete/{detailId}', 'HandwritingController@deleteDetail')->name('delete');
-        });
+                Route::get('', 'HandwritingController@index')->name('index');
+                Route::get('getList', 'HandwritingController@getDatatable')->name('list');
+                Route::get('{id}/view', 'HandwritingController@show')->name('view');
+                Route::get('{id}/show', 'HandwritingController@getHandwriting')->name('show');
+                Route::get('add', 'HandwritingController@create')->name('create');
+                Route::post('add', 'HandwritingController@store')->name('store');
+                Route::get('{id}/edit', 'HandwritingController@edit')->name('edit');
+                Route::patch('{id}/edit', 'HandwritingController@update')->name('update');
+                Route::delete('delete/{id}', 'HandwritingController@delete')->name('delete');
+
+                Route::prefix('{id}/detail')
+                    ->name('detail.')
+                    ->group(function () {
+                        Route::get('add', 'HandwritingController@createDetail')->name('create');
+                        Route::post('add', 'HandwritingController@storeDetail')->name('store');
+                        Route::get('{detailId}/edit', 'HandwritingController@editDetail')->name('edit');
+                        Route::patch('{detailId}/edit', 'HandwritingController@updateDetail')->name('update');
+                        Route::delete('delete/{detailId}', 'HandwritingController@deleteDetail')->name('delete');
+                    });
+            });
     });
-});
 
 //Flash card
 Route::get('lms/flashcard', 'FlashcardController@index');

@@ -8,7 +8,7 @@ $base = $base_http . '://'. $http_host . str_replace(basename($_SERVER['SCRIPT_N
 $base_home = $base_http . '://' . $server_name;
 
 
-define('BASE_PATH', $base.'/');
+// define('BASE_PATH', $base.'/');
 
 define('PREFIX', $base);
 

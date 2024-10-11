@@ -2,95 +2,123 @@
 @extends('client.app')
 
 @section('styles')
-<style>
-    .form-container h1 span {
-        color: var(--primary);
-    }
+    <style>
+        .form-container h1 span {
+            color: var(--primary);
+        }
 
-    .form-container p span {
-        color: var(--primary);
-    }
+        .form-container p span {
+            color: var(--primary);
+        }
 
-    .form-container .form-label {
-        color: var(--primary);
-    }
+        .form-container .form-label {
+            color: var(--primary);
+        }
 
-    .form-container .form-control {
-        border-radius: 8px;
-        height: 48px;
-        font-size: 16px;
-    }
+        .form-container .form-control {
+            border-radius: 8px;
+            height: 48px;
+            font-size: 16px;
+        }
 
-    .form-container .btn-primary {
-        background-color: var(--primary);
-        border: none;
-        border-radius: 8px;
-        height: 48px;
-        font-size: 16px;
-        font-weight: 500;
-    }
+        .form-container .btn-primary {
+            background-color: var(--primary);
+            border: none;
+            border-radius: 8px;
+            height: 48px;
+            font-size: 16px;
+            font-weight: 500;
+        }
 
-    .form-container .btn-primary:hover {
-        background-color: #1558b0;
-    }
+        .form-container .btn-primary:hover {
+            background-color: #1558b0;
+        }
 
-    .form-container .divider {
-        display: flex;
-        align-items: center;
-        text-align: center;
-        margin: 20px 0;
-    }
+        .form-container .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+        }
 
-    .form-container .divider::before,
-    .form-container .divider::after {
-        content: '';
-        flex: 1;
-        border-bottom: 1px solid #dadce0;
-    }
+        .form-container .divider::before,
+        .form-container .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #dadce0;
+        }
 
-    .form-container .social-login {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-    }
+        .form-container .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
 
-    .form-container .social-login a {
-        font-size: 24px;
-        color: #5f6368;
-    }
+        .form-container .social-login a {
+            font-size: 24px;
+            color: #5f6368;
+        }
 
-    .form-container .social-login a:hover {
-        color: var(--primary);
-    }
+        .form-container .social-login a:hover {
+            color: var(--primary);
+        }
 
-    .form-container .login-link {
-        text-align: center;
-        margin-top: 20px;
-    }
+        .form-container .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
 
-    .form-container .login-link a {
-        color: var(--primary);
-        text-decoration: none;
-    }
+        .form-container .login-link a {
+            color: var(--primary);
+            text-decoration: none;
+        }
 
-    .form-container .login-link a:hover {
-        text-decoration: underline;
-    }
+        .form-container .login-link a:hover {
+            text-decoration: underline;
+        }
 
-    .image-container img {
-        width: 100%;
-        border-radius: 16px;
-    }
+        .image-container img {
+            width: 100%;
+            border-radius: 16px;
+        }
 
-    .social-icon {
-        background-color: #F3F9FA;
-        padding: 10px;
-        height: 40px;
-        width: 40px;
-        display: flex;
-        border-radius: 12px;
-    }
-</style>
+        .social-icon {
+            background-color: #F3F9FA;
+            padding: 10px;
+            height: 40px;
+            width: 40px;
+            display: flex;
+            border-radius: 12px;
+        }
+
+        .sptb .sptb-item {
+            margin: 10px 0;
+        }
+
+        .sptb .sptb-item .card-body {
+            min-height: 150px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .fea-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #F3F9FA;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .img-fluid {
+            height: 100px;
+            width: 100px;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -105,18 +133,7 @@
         </div>
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="{{ asset('images/asset/slider/banner-slider-n2.jpg') }}" class="d-block w-100"
-                    alt="...">
-                <div class="carousel-caption d-flex flex-column h-100 align-items-center justify-content-center bottom-0">
-                    <h2 class="bg-dark bg-opacity-50 py-2 px-4">First slide label</h2>
-                    <p class="bg-dark bg-opacity-50 py-2 px-4">Some representative placeholder content for the first
-                        slide.</p>
-                    <a href="#" class="btn btn-outline-light px-4 py-2 rounded-0">Learn More</a>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img src="{{ asset('images/asset/slider/banner-slider-n3.jpg') }}" class="d-block w-100"
-                    alt="...">
+                <img src="{{ asset('images/asset/slider/banner-slider-n3.jpg') }}" class="d-block w-100" alt="...">
                 <div class="carousel-caption d-flex flex-column h-100 align-items-center justify-content-center bottom-0 ">
                     <h2 class="bg-dark bg-opacity-50 py-2 px-4">Second slide label</h2>
                     <p class="bg-dark bg-opacity-50 py-2 px-4">Some representative placeholder content for the second
@@ -125,8 +142,16 @@
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="{{ asset('images/asset/slider/banner-slider-n4.jpg') }}" class="d-block w-100"
-                    alt="...">
+                <img src="{{ asset('images/asset/slider/banner-slider-n3.jpg') }}" class="d-block w-100" alt="...">
+                <div class="carousel-caption d-flex flex-column h-100 align-items-center justify-content-center bottom-0 ">
+                    <h2 class="bg-dark bg-opacity-50 py-2 px-4">Second slide label</h2>
+                    <p class="bg-dark bg-opacity-50 py-2 px-4">Some representative placeholder content for the second
+                        slide.</p>
+                    <a href="#" class="btn btn-outline-light px-4 py-2 rounded-0">Learn More</a>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="{{ asset('images/asset/slider/banner-slider-n4.jpg') }}" class="d-block w-100" alt="...">
                 <div class="carousel-caption d-flex flex-column h-100 align-items-center justify-content-center bottom-0">
                     <h2 class="bg-dark bg-opacity-50 py-2 px-4">Third slide label</h2>
                     <p class="bg-dark bg-opacity-50 py-2 px-4">Some representative placeholder content for the third
@@ -522,6 +547,25 @@
         </div>
     </div>
 
+    <div class="cover-image about-widget sptb bg-background-color my-5 p-5"
+        style="background: url('{{ asset('images/banner/background-logan-2.jpg') }}') no-repeat;
+           background-size: cover;">
+        <div class="content-text mb-0">
+            <div class="container">
+                <div class="text-center">
+                    <h2 class="mb-2 fw-normal">HỌC TIẾNG NHẬT CÙNG HIKARI ACADEMY</h2>
+                    <p>Hikari Academy không ngừng chú trọng phát triển nội dung nhằm đạt chất lượng cao, luôn
+                        lắng nghe phản
+                        hồi của khách hàng và hành động, ngày càng góp phần nâng cao lòng tin của khách hàng.
+                    </p>
+                    <div class="mt-5">
+                        <a href="/register" class="btn btn-lg btn-primary">Đăng ký ngay</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- Student review --}}
     <div class="row mt-5">
         <div class="col-md-12" data-wow-delay="0.2s">
@@ -742,6 +786,163 @@
             </button>
         </div>
     </div>
+    <div class="cover-image sptb bg-background-color text-white p-5 w-100 mb-5"
+        data-image-src="{{ asset('images/banner/background-logan-4.jpg') }}"
+        style="background: url('{{ asset('images/banner/background-logan-4.jpg') }}')  no-repeat;
+    background-size: cover;">
+        <div class="content-text mb-0">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="widgets-cards mb-5 d-flex">
+                                    <div class="widgets-cards-icons me-5">
+                                        <i class="fe fe-wifi"></i>
+                                    </div>
+                                    <div class="widgets-cards-data">
+                                        <h4>
+                                            <a class="text-white fs-25" href="#">
+                                                Đào tạo khoa học
+                                            </a>
+                                        </h4>
+                                        <p class="text-white mt-2 mb-0">
+                                            Cùng lộ trình giảng dạy bài bản, chuyên sâu xây dựng bởi đội ngũ
+                                            giảng viên tiếng Nhật giàu kinh nghiệm
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="widgets-cards mb-5 d-flex">
+                                    <div class="widgets-cards-icons me-5">
+                                        <i class="fe fe-wifi-off"></i>
+                                    </div>
+                                    <div class="widgets-cards-data">
+                                        <h4>
+                                            <a class="text-white fs-25" href="#">
+                                                Mô phỏng thực tế
+                                            </a>
+                                        </h4>
+                                        <p class="text-white mt-2 mb-0">
+                                            Thời gian thực làm quen cùng kỳ thi JLPT cùng kho tàng đề thi đa
+                                            dạng - đầy đủ nhất Việt Nam
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="widgets-cards d-flex">
+                                    <div class="widgets-cards-icons me-5">
+                                        <i class="fe fe-book-open"></i>
+                                    </div>
+                                    <div class="widgets-cards-data">
+                                        <h4>
+                                            <a class="text-white fs-25" href="#">
+                                                Cơ hội việc làm
+                                            </a>
+                                        </h4>
+                                        <p class="text-white mt-2 mb-0">
+                                            Cung cấp cơ hội việc làm và du học tại Nhật Bản với tính năng tìm
+                                            việc cùng thông tin du học đa dạng.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="clients-img">
+                            <img alt="img" class="bg-white br-3 p-1 img-fluid"
+                                src="{{ asset('images/banner/about-hikari01.jpg') }}">
+                            <img alt="img" class="bg-white br-3 p-1 img-fluid"
+                                src="{{ asset('images/banner/cong-ty-quang-viet.png') }}">
+                            <img alt="img" class="bg-white br-3 p-1 img-fluid"
+                                src="{{ asset('images/banner/khoa-hoc-offline.jpg') }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="sptb my-5">
+        <div class="container">
+            <div class="section-title text-center">
+                <h2>TIẾNG NHẬT KHÓ ĐÃ CÓ HIKARI ACADEMY</h2>
+                <p>Hikari Academy đem đến cho bạn một khóa học với các bài giảng xuyên suốt các chủ đề rõ ràng và quen
+                    thuộc
+                    với hầu hết những kĩ năng cần thiết.</p>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-lg-4 sptb-item">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="fea-icon bg-success mb-3 text-white">
+                                <i class="bi bi-megaphone-fill"></i>
+                            </div>
+                            <h3 class="fw-semibold">KHÓA HỌC</h3>
+                            <p>Đa dạng theo mọi trình độ từ N5 đến N1</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 sptb-item">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="fea-icon bg-danger mb-3 text-white">
+                                <i class="bi bi-heart-fill"></i>
+                            </div>
+                            <h3 class="fw-semibold">LỚP HỌC</h3>
+                            <p>Tính năng lớp học dành riêng cho doanh nghiệp, trường học</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 sptb-item">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="fea-icon bg-warning mb-3 text-white">
+                                <i class="bi bi-bookmark-fill"></i>
+                            </div>
+                            <h3 class="fw-semibold">KỸ NĂNG TOÀN DIỆN</h3>
+                            <p>Từ vựng, ngữ pháp, đọc hiểu, nghe, thoại hội, luyện tập</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 sptb-item">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="fea-icon bg-secondary mb-3 text-white">
+                                <i class="bi bi-mic-fill"></i>
+                            </div>
+                            <h3 class="fw-semibold">LUYỆN PHÁT ÂM</h3>
+                            <p>Ứng dụng công nghệ hàng đầu kiểm tra phát âm theo giọng bản xứ</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 sptb-item">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="fea-icon bg-primary mb-3 text-white">
+                                <i class="bi bi-spellcheck"></i>
+                            </div>
+                            <h3 class="fw-semibold">CHỮ HÁN</h3>
+                            <p>Tính năng thông minh hỗ trợ nhớ nhanh Hán Tự</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 sptb-item">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="fea-icon bg-info mb-3 text-white">
+                                <i class="bi bi-card-checklist"></i>
+                            </div>
+                            <h3 class="fw-semibold">ĐỀ THI</h3>
+                            <p>Phong phú, đa dạng mọi trình độ JLPT N5 - N1</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 @endsection
 
 @section('scripts')

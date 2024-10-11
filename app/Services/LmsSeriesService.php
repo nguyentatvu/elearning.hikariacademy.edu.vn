@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\LmsContent;
+use App\LmsSeries;
 use App\Repositories\LmsSeriesRepository;
 
 class LmsSeriesService extends BaseService
@@ -12,12 +13,23 @@ class LmsSeriesService extends BaseService
 
     public function __construct(
         LmsSeriesRepository $repository,
-        PaymentMethodService $paymentMethodService,
-        LmsSeriesComboService $lmsSeriesComboService
+        PaymentMethodService $paymentMethodService
     ) {
         parent::__construct($repository);
         $this->paymentMethodService = $paymentMethodService;
-        $this->lmsSeriesComboService = $lmsSeriesComboService;
+    }
+
+    /**
+     * Get LmsSeriesService
+     *
+     * @return LmsSeriesComboService
+     */
+    public function getLmsSeriesComboService()
+    {
+        if (!$this->lmsSeriesComboService) {
+            $this->lmsSeriesComboService = app(LmsSeriesComboService::class);
+        }
+        return $this->lmsSeriesComboService;
     }
 
     /**
@@ -58,5 +70,36 @@ class LmsSeriesService extends BaseService
         $seriesDetail->time = $seriesCombo->time;
 
         return $seriesDetail;
+    }
+
+    /**
+     * Get History Views
+     *
+     * @param array $viewHistory
+     * @param User $user
+     * @return Collection
+     */
+    public function getHistoryViews(array $viewHistory, $user) {
+        $seriesId = array_column($viewHistory, 'series_id');
+        $series = $this->repository->getByColumnIn('id', $seriesId);
+
+        $seriesCombo = $this->getLmsSeriesComboService()->getMySeries($user->id, LmsSeries::COURSE_AND_EXAM);
+        $seriesCombo = collect($seriesCombo->items());
+        // dd($seriesCombo);
+
+        // Create a map from 'series_id' to view info
+        $viewMap = collect($viewHistory)->keyBy('series_id');
+
+        return $series->map(function ($seriesItem) use ($viewMap, $seriesCombo) {
+            $viewInfo = $viewMap->get($seriesItem->id);
+            $seriesItem->viewed_time = $viewInfo['viewed_time'] ?? null;
+
+            $seriesComboItem = $seriesCombo->where('series_id', $seriesItem->id)->first();
+            $seriesItem->order = $viewInfo['order'] ?? null;
+            $seriesItem->progressPercent = (int) (($seriesComboItem->completed_lessons / $seriesComboItem->total_lessons) * 100);
+            $seriesItem->combo_slug = $seriesComboItem->combo_slug ?? '';
+
+            return $seriesItem;
+        })->sortBy('order')->values();
     }
 }

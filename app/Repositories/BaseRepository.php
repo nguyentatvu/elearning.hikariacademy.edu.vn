@@ -219,4 +219,18 @@ class BaseRepository
     {
         return $this->model->firstOrCreate(...$condition);
     }
+
+    /**
+     * Get data by column in
+     *
+     * @param string $column
+     * @param array $values
+     * @return mixed(\Illuminate\Database\Eloquent\Collection | null)
+     */
+    public function getByColumnIn(string $column, array $values)
+    {
+        return $this->model
+            ->whereIn($column, $values)
+            ->get();
+    }
 }

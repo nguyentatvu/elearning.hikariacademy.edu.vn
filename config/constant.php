@@ -6,7 +6,7 @@ return [
             '1' => "Bản nháp",
             '2' => "Bài đăng",
         ],
-        'uploadPath' => 'uploads/articles/',
+        'upload_path' => 'uploads/articles/',
     ],
     'login' => [
         'streak' => [
@@ -36,12 +36,13 @@ return [
             1 => 'grammar.png',
             2 => 'exercise.png',
             3 => 'jap-character.svg',
-            4 => 'flashcard.png',
+            4 => 'jap-character.svg',
             5 => 'jap-character.svg',
             6 => 'jap-character.svg',
             7 => 'jap-character.svg',
             8 => 'jap-character.svg',
             9 => 'jap-character.svg',
+            10 => 'jap-character.svg',
         ],
         'chapter_icons' => [
             5 => 'score.png',

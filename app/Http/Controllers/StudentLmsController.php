@@ -17,15 +17,15 @@ use App\Services\LmsStudentViewService;
 use App\Services\PaymentMethodService;
 use App\Services\UserService;
 use Carbon\Carbon;
-use mysql_xdevapi\Exception;
+use Exception;
 use PhpParser\Node\Stmt\If_;
-use DB;
 use Image;
 use ImageSettings;
 use File;
 use Response;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 class StudentLmsController extends Controller
@@ -39,6 +39,7 @@ class StudentLmsController extends Controller
     private $lmsStudentViewService;
     private $lmsSeriesComboService;
     private $paymentMethodService;
+    private $userService;
 
     public function __construct(
         LmsContentService $lmsContentService,
@@ -64,10 +65,13 @@ class StudentLmsController extends Controller
      */
     private function checkValidURL(array &$params)
     {
+        $this->prepContent['series'] =
+            $this->lmsSeriesService->getByCondition('slug', $params['slug']);
         $this->prepContent['series_id'] =
-            optional($this->lmsSeriesService->getByCondition('slug', $params['slug']))->id;
+            optional($this->prepContent['series'])->id;
         $this->prepContent['series_combo'] =
             $this->lmsSeriesComboService->getByCondition('slug', $params['combo_slug']);
+
         $this->prepContent['series_type'] =
             optional($this->prepContent['series_combo'])->type;
         $this->prepContent['series_combo_id'] =
@@ -86,7 +90,7 @@ class StudentLmsController extends Controller
             !$this->prepContent['series_combo_id'] ||
             !$content
         ) {
-            // return redirect()->to('/');
+            return redirect()->to('/');
         }
     }
 
@@ -105,7 +109,8 @@ class StudentLmsController extends Controller
         $seriesId = $this->prepContent['series_id'];
         $seriesComboId = $this->prepContent['series_combo_id'];
 
-        $this->prepContent['is_valid_payment'] = $this->paymentMethodService->checkSerieValidity($userId, $seriesComboId);
+        $this->prepContent['is_valid_payment']
+            = $this->paymentMethodService->checkSerieValidity($userId, $seriesComboId);
 
         if (
             $this->prepContent['series_combo']
@@ -228,6 +233,7 @@ class StudentLmsController extends Controller
                 'lmscontent_id' => $contentId,
                 'users_id' => Auth::id(),
             ]);
+
         if (!$studentView) {
             $this->lmsStudentViewService->insert([
                 'lmscontent_id' => $contentId,
@@ -235,6 +241,11 @@ class StudentLmsController extends Controller
                 'finish' => LmsStudentView::NOT_FINISHED,
                 'created_date' => date('Y-m-d H:i:s'),
             ]);
+
+            $this->userService->updateSeriesViewsHistory(
+                Auth::user()->series_views_history ?? [],
+                $this->prepContent['series_id']
+            );
         }
 
         $this->prepContent['is_finished_content'] = optional($studentView)->finish == LmsStudentView::FINISH;
@@ -273,6 +284,7 @@ class StudentLmsController extends Controller
             'detailContent' => $this->prepContent['detail_content'],
             'seriesCombo' => $this->prepContent['series_combo'],
             'isFinishedContent' => $this->prepContent['is_finished_content'],
+            'series' => $this->prepContent['series'],
         ];
     }
 
@@ -308,7 +320,6 @@ class StudentLmsController extends Controller
                 'count_records' => count($exercises),
                 'records' => $exercises,
                 'slug' => $stt,
-                'series' => $slug,
                 'combo_slug' => $combo_slug
             ]
         ));
