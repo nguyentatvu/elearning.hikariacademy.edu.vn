@@ -119,7 +119,7 @@ class LmsSeriesController extends Controller
 	 * This method loads the create view
 	 * @return void
 	 */
-	public function createexam()
+	public function createExam()
 	{
 		if (!checkRole(getUserGrade(2))) {
 			prepareBlockUserMessage();
@@ -530,7 +530,7 @@ class LmsSeriesController extends Controller
 		return view($view_name, $data);
 	}
 
-	public function listCategoriesstudy()
+	public function listCategoriesStudy()
 	{
 		$data['active_class'] = 'lmsstudy';
 		$data['title'] = 'Khóa luyện thi';

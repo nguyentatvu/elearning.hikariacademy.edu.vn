@@ -86,10 +86,10 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
         ->name('update-info');
 
     Route::get('/my-courses', 'LmsSeriesController@listCategories')
-    ->name('courses');
+        ->name('courses');
 
-    Route::get('/my-exams', 'LmsSeriesController@listCategoriesstudy')
-    ->name('exams');
+    Route::get('/my-exams', 'LmsSeriesController@listCategoriesStudy')
+        ->name('exams');
 
     Route::get('/my-comments', function () {
         return view('client.mypage.my-comments');
@@ -796,7 +796,7 @@ Route::delete('lms/seriescombo/delete/{slug}', 'LmsComboController@delete');
 
 // Route::get('lms/exam-categories/list', 'LmsSeriesController@listCategories');
 
-Route::get('lms/exam-categories/study', 'LmsSeriesController@listCategoriesstudy');
+Route::get('lms/exam-categories/study', 'LmsSeriesController@listCategoriesStudy');
 
 Route::get('lms/exam-categories/payment', 'LmsSeriesController@listPayments');
 
@@ -1142,7 +1142,7 @@ Route::get('lms/series', 'LmsSeriesController@index');
 
 Route::get('lms/series/add', 'LmsSeriesController@create');
 
-Route::get('lms/seriessexam/add', 'LmsSeriesController@createexam');
+Route::get('lms/seriessexam/add', 'LmsSeriesController@createExam');
 
 Route::post('lms/series/add', 'LmsSeriesController@store');
 
@@ -1292,30 +1292,30 @@ Route::get('lms/exam-categories/comments/getExamList', 'CommentController@listge
 Route::prefix('lms')
     ->name('lms.')
     ->group(function () {
-    Route::prefix('handwriting')
-        ->name('handwriting.')
-        ->group(function () {
-            Route::get('', 'HandwritingController@index')->name('index');
-            Route::get('getList', 'HandwritingController@getDatatable')->name('list');
-            Route::get('{id}/view', 'HandwritingController@show')->name('view');
-            Route::get('{id}/show', 'HandwritingController@getHandwriting')->name('show');
-            Route::get('add', 'HandwritingController@create')->name('create');
-            Route::post('add', 'HandwritingController@store')->name('store');
-            Route::get('{id}/edit', 'HandwritingController@edit')->name('edit');
-            Route::patch('{id}/edit', 'HandwritingController@update')->name('update');
-            Route::delete('delete/{id}', 'HandwritingController@delete')->name('delete');
-
-        Route::prefix('{id}/detail')
-            ->name('detail.')
+        Route::prefix('handwriting')
+            ->name('handwriting.')
             ->group(function () {
-                Route::get('add', 'HandwritingController@createDetail')->name('create');
-                Route::post('add', 'HandwritingController@storeDetail')->name('store');
-                Route::get('{detailId}/edit', 'HandwritingController@editDetail')->name('edit');
-                Route::patch('{detailId}/edit', 'HandwritingController@updateDetail')->name('update');
-                Route::delete('delete/{detailId}', 'HandwritingController@deleteDetail')->name('delete');
-        });
+                Route::get('', 'HandwritingController@index')->name('index');
+                Route::get('getList', 'HandwritingController@getDatatable')->name('list');
+                Route::get('{id}/view', 'HandwritingController@show')->name('view');
+                Route::get('{id}/show', 'HandwritingController@getHandwriting')->name('show');
+                Route::get('add', 'HandwritingController@create')->name('create');
+                Route::post('add', 'HandwritingController@store')->name('store');
+                Route::get('{id}/edit', 'HandwritingController@edit')->name('edit');
+                Route::patch('{id}/edit', 'HandwritingController@update')->name('update');
+                Route::delete('delete/{id}', 'HandwritingController@delete')->name('delete');
+
+                Route::prefix('{id}/detail')
+                    ->name('detail.')
+                    ->group(function () {
+                        Route::get('add', 'HandwritingController@createDetail')->name('create');
+                        Route::post('add', 'HandwritingController@storeDetail')->name('store');
+                        Route::get('{detailId}/edit', 'HandwritingController@editDetail')->name('edit');
+                        Route::patch('{detailId}/edit', 'HandwritingController@updateDetail')->name('update');
+                        Route::delete('delete/{detailId}', 'HandwritingController@deleteDetail')->name('delete');
+                    });
+            });
     });
-});
 
 //Flash card
 Route::get('lms/flashcard', 'FlashcardController@index');

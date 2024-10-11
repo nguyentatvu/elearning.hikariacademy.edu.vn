@@ -140,7 +140,7 @@
                                             <button type="button" class="btn btn-primary mt-3"
                                                 onclick="loadSeriesModal('{{ $item->slug }}', '{{ $item->combo_slug }}')"
                                                 data-toggle="modal" data-target="#series_detail_modal_{{ $item->slug }}">
-                                                <i class="fa fa-info mr-1"></i> Tổng quan
+                                                <i class="bi bi-info-circle"></i> Tổng quan
                                             </button>
                                         </div>
                                         <div class="media-body">
@@ -250,7 +250,7 @@
                             $('#series_detail_modal_' + seriesSlug).modal('show');
                         },
                         error: function() {
-                            swal({
+                            Swal.fire({
                                 title: 'Thông báo',
                                 text: 'Tạm thời không thể xem tổng quan khóa học, vui lòng thử lại sau.',
                                 type: 'warning',
