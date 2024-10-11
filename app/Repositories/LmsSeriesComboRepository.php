@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\LmsContent;
+use App\LmsSeries;
 use App\PaymentMethod;
 use Illuminate\Support\Facades\DB;
 
@@ -66,20 +67,28 @@ class LmsSeriesComboRepository extends BaseRepository
                 'payment_method.created_at',
                 'payment_method.status',
                 'payment_method.month_extend',
-                DB::raw("(SELECT COUNT(lmscontents.id)  FROM lmscontents
-        WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) AND
-            lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5) ) as total_lessons"),
-                DB::raw("(SELECT COUNT(lms_student_view.id)  FROM lms_student_view
-                join lmscontents on lms_student_view.lmscontent_id = lmscontents.id
-        WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) AND lms_student_view.users_id = " . $userId . " AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
-             ) as completed_lessons")
+                'lmsseries_combo.slug as combo_slug',
+                DB::raw("(SELECT COUNT(lmscontents.id) FROM lmscontents
+                            WHERE lmscontents.delete_status = 0
+                                AND lmscontents.type NOT IN(0,8)
+                                AND lmscontents.lmsseries_id = lmsseries.id)
+                            as total_lessons"),
+                DB::raw("(SELECT COUNT(lms_student_view.id) FROM lms_student_view
+                            join lmscontents on lms_student_view.lmscontent_id = lmscontents.id
+                            WHERE lmscontents.delete_status = 0
+                                AND lmscontents.type NOT IN(0,8)
+                                AND lms_student_view.users_id = " . $userId . "
+                                AND lmscontents.lmsseries_id = lmsseries.id)
+                            as completed_lessons")
             )
             ->where([
                 ['payment_method.user_id', $userId],
                 ['payment_method.status', PaymentMethod::PAYMENT_SUCCESS],
                 ['lmsseries_combo.delete_status', 0],
-                ['lmsseries_combo.type', $type],
             ])
+            ->when($type != LmsSeries::COURSE_AND_EXAM, function ($query) use ($type) {
+                $query->where('lmsseries_combo.type', $type);
+            })
             ->distinct()
             ->orderBy('payment_method.created_at', 'desc')
             ->paginate(10);

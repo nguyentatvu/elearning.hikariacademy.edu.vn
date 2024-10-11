@@ -1,9 +1,30 @@
 <nav class="navbar navbar-expand-lg navbar-light px-5">
     <div class="container-fluid px-5">
-        <!-- Logo -->
-        <a class="navbar-brand me-auto" href="/">
-            <img src="{{ asset('images/Logo-hikari.png') }}" alt="Logo" class="d-inline-block align-text-top">
-        </a>
+        <div class="me-auto">
+            <a class="navbar-brand me-auto" href="/">
+                <img src="{{ asset('images/Logo-hikari.png') }}" alt="Logo" class="d-inline-block align-text-top">
+            </a>
+        </div>
+        <div class="me-auto" id="navbarSupportedContent">
+            <div class="row height d-flex justify-content-center align-items-center">
+                <div class="form-search">
+                    <i class="bi bi-search"></i>
+                    <input type="text" spellcheck="false" class="form-input"
+                        placeholder="Tìm kiếm khoá học, bài viết, video, ...">
+                </div>
+            </div>
+        </div>
+        @if (Auth::check())
+            <div class="header-my-coin">
+                <a href="{{ route('mypage.reward-point') }}" class="owned-point">
+                    {{ formatNumber(Auth::user()->reward_point + Auth::user()->recharge_point) }}
+                </a>
+                <img src="{{ asset('images/icons/coin.svg') }}" class="rounded-circle object-fit-cover">
+                <div class="hicoin-animation">
+                    <span class="me-1 fs-5">+<span class="increased-point"></span></span>
+                    <img width="20" alt="hi-coin" src="{{ asset('images/icons/coin.svg') }}">
+                </div>
+            </div>
 
         <!-- Navbar Toggler for Mobile -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -246,6 +267,37 @@
                         </div>
                     @endif
                 </div>
+                <ul class="dropdown-menu dropdown-menu-end w-200px p-2">
+                    <li>
+                        <div class="user-info d-flex align-items-center">
+                            @if (Auth::user()->image)
+                                <img src="{{ asset('uploads/users/thumbnail/' . Auth::user()->image) }}" class="rounded-circle object-fit-cover" width="40px" height="40px" alt="Avatar" />
+                            @else
+                                <img src="{{ asset('images/no-avatar.png') }}" class="rounded-circle object-fit-cover" height="40px" width="40px" alt="Avatar" />
+                            @endif
+                            <div>
+                                <div>{{ Auth::user()->name }}</div>
+                                <div><span>@</span>{{ Auth::user()->username ?? '' }}</div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.personal') }}">Trang cá nhân</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.leaderboard') }}">Bảng xếp hạng</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.reward-point') }}">Điễm tích luỹ</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.courses') }}">Khoá học</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.exams') }}">Khoá luyện thi</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.mock-exam.list') }}">Phòng thi</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.my-result-exam') }}">Kết quả thi</a></li>
+                    <li><a class="dropdown-item" data-toggle="modal" data-target="#loginModal">Đổi mật khẩu</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.recharge-point') }}">Nạp</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="{{ route('logout') }}">Đăng xuất</a></li>
+                </ul>
             </div>
         </div>
     </div>

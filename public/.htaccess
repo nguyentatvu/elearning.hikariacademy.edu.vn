@@ -5,10 +5,19 @@
 
     RewriteEngine On
 
+    # Handle public folder assets
+    RewriteRule ^public/images/(.*) images/$1
+    RewriteRule ^public/assets/(.*) assets/$1
+    RewriteRule ^public/uploads/(.*) uploads/$1
+    RewriteRule ^public/js/(.*\.js) js/$1
+    RewriteRule ^public/css/(.*\.css) css/$1
+
+    # Handle plugins
+    RewriteRule ^public/js/plugins/(.*) js/plugins/$1 [L]
+
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_URI} (.+)/$
-    RewriteRule ^ %1 [L,R=301]
+    RewriteRule ^(.*)/$ /$1 [L,R=301]
 
     # Handle Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d

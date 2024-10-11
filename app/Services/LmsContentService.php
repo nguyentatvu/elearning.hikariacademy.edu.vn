@@ -242,7 +242,7 @@ class LmsContentService extends BaseService
      * @return boolean
      */
     public function checkTrialContent(string $contentId) {
-        return $this->repository->findById((int) $contentId)->el_try === LmsContent::TRIAL_TYPE;
+        return optional($this->repository->findById((int) $contentId))->el_try === LmsContent::TRIAL_TYPE;
     }
 
     /**

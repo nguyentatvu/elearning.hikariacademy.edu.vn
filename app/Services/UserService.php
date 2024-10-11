@@ -208,7 +208,7 @@ class UserService extends BaseService
      * @param int $type
      * @return Collection
      */
-    public function getMySeries(int $userId, int $type = LmsSeries::COURSE)
+    public function getMySeries(int $userId, int $type = LmsSeries::COURSE_AND_EXAM)
     {
         return $this->lmsSeriesComboService->getMySeries($userId, $type);
     }
@@ -287,5 +287,42 @@ class UserService extends BaseService
      */
     public function updatePointHistory($data, string $userId = '') {
         $this->repository->updatePointHistory($data, $userId);
+    }
+
+    /**
+     * Update series views history
+     *
+     * @param array $historyArray
+     * @param string $seriesId
+     * @return void
+     */
+    public function updateSeriesViewsHistory(array $historyArray, string $seriesId)
+    {
+        $currentTime = date('Y-m-d H:i:s');
+        $newItem = [
+            'order' => 1,
+            'series_id' => $seriesId,
+            'viewed_time' => $currentTime
+        ];
+
+        $existingIndex = array_search($seriesId, array_column($historyArray, 'series_id'));
+
+        if ($existingIndex !== false) {
+            unset($historyArray[$existingIndex]);
+        }
+
+        foreach ($historyArray as &$item) {
+            $item['order']++;
+        }
+
+        array_unshift($historyArray, $newItem);
+
+        $historyArray = array_slice($historyArray, 0, 3);
+
+        foreach ($historyArray as $index => &$item) {
+            $item['order'] = $index + 1;
+        }
+
+        $this->repository->update(Auth::user()->id, ['series_views_history' => $historyArray]);
     }
 }

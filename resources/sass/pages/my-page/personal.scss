@@ -1,5 +1,5 @@
 .banner {
-    background-color: #d9d9d9;
+    border: 1px solid var(--primary);
     width: 100%;
     height: 300px;
     border-radius: 10px;
@@ -8,7 +8,6 @@
 }
 
 .profile-pic {
-    background-color: #d9d9d9;
     width: 150px;
     height: 150px;
     border-radius: 50%;
@@ -20,7 +19,7 @@
 
 .profile-name {
     position: absolute;
-    bottom: -70px;
+    bottom: -62px;
     left: 200px;
     font-weight: bold;
 }
@@ -75,10 +74,15 @@
     color: #6c757d;
 }
 
+@media screen and (max-width: 1199px) {
+    .dropzone {
+        margin-top: 20px;
+    }
+}
+
 /* Responsive styles */
 @media (max-width: 768px) {
     .banner {
-        background-color: #d9d9d9;
         width: 100%;
         height: 200px;
         border-radius: 10px;
@@ -213,6 +217,25 @@
     display: block;
 }
 
+img.series-image {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+}
+
+.size-full {
+    width: 100%;
+    height: 100%;
+}
+
+.app-navbar {
+    box-shadow: rgba(0, 0, 0, 0.09) 0px 0px 12px;
+}
+
+.progress-bar {
+    position: relative;
+}
+
 @media (max-width: 576px) {
     .banner {
         margin-bottom: 80px;
@@ -221,6 +244,35 @@
     .profile-name {
         bottom: -80px;
         font-size: 1rem;
+    }
+
+    .personal-wrapper {
+        padding-left: 2px !important;
+        padding-right: 2px !important;
+    }
+
+    .course-item {
+        flex-direction: column;
+        margin-top: 8px;
+    }
+
+    .course-item > .series-image {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 3 / 2;
+    }
+
+    .course-item > .course-info {
+        width: 100%;
+        margin-top: 12px;
+    }
+
+    .section-introduction {
+        margin-top: 18px;
+    }
+
+    button.btn.btn-primary.w-200px {
+        width: 100% !important;
     }
 }
 

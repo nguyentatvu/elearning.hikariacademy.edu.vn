@@ -16,13 +16,13 @@ class BannerResource extends Resource
     {
         return [
             'id' => $this->id,
+            'order' => $this->order,
             'title' => $this->title,
             'description' => $this->description,
-            'type' => $this->type,
+            'display_type' => (int) $this->display_type,
+            'group' => (int) $this->group,
             'image' => $this->image,
-            'link' => $this->link,
-            'created_at' => $this->created_at->toISOString(),
-            'updated_at' => $this->updated_at->toISOString(),
+            'to_url' => $this->to_url,
         ];
     }
 }

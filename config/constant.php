@@ -6,7 +6,7 @@ return [
             '1' => "Bản nháp",
             '2' => "Bài đăng",
         ],
-        'uploadPath' => 'uploads/articles/',
+        'upload_path' => 'uploads/articles/',
     ],
     'login' => [
         'streak' => [
