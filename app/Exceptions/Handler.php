@@ -81,6 +81,10 @@ class Handler extends ExceptionHandler
             }
         }
 
+        if ($exception instanceof RedirectException) {
+            return $exception->getResponse();
+        }
+
         return parent::render($request, $exception);
     }
 }

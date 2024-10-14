@@ -256,6 +256,16 @@ class LmsContentService extends BaseService
     }
 
     /**
+     * Get the first trial content of the series
+     *
+     * @param string $seriesId
+     * @return mixed(LmsContent|null)
+     */
+    public function getFirstTrialContentOfSeries(string $seriesId) {
+        return $this->repository->getFirstTrialContentOfSeries($seriesId);
+    }
+
+    /**
      * Get next content
      *
      * @param mixed $contentId

@@ -159,6 +159,26 @@ class LmsContentRepository extends BaseRepository
     }
 
     /**
+     * Get the first trial content of the series
+     *
+     * @param string $seriesId
+     * @return mixed(LmsContent|null)
+     */
+    public function getFirstTrialContentOfSeries(?string $seriesId)
+    {
+        if ($seriesId === null) {
+            return null;
+        }
+
+        return $this->model
+            ->where('lmsseries_id', $seriesId)
+            ->where('el_try', LmsContent::TRIAL_TYPE)
+            ->orderBy('stt', 'asc')
+            ->whereNotIn('type', [LmsContent::LESSON, LmsContent::LESSON_TOPIC])
+            ->first();
+    }
+
+    /**
      * Get next content
      *
      * @param string $contentOrder
