@@ -246,8 +246,6 @@
         e.preventDefault();
 
         const rules = collectFormData();
-        if (!rules) {
-        }
 
         $.ajax({
             headers: {
