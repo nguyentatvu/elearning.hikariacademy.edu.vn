@@ -145,7 +145,7 @@
                         </tbody>
                     </table>
                 </div>
-                <button class="btn btn-success btn-lg submit-button">Lưu Thay Đổi</button>
+                <button class="btn btn-success submit-button">Lưu Thay Đổi</button>
             </div>
         </form>
     </div>

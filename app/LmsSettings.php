@@ -10,7 +10,7 @@ class LmsSettings extends Model
      'categoryImagepath'        => "public/uploads/lms/categories/",
      'contentImagepath'     	=> "public/uploads/lms/content/",
      'contentPDFpath'     	    => "public/uploads/lms/pdf/",
-     'seriesImagepath'          => "public/uploads/lms/series/",
+     'seriesImagepath'          => "uploads/lms/series/",
      'seriesThumbImagepath'     => "public/uploads/lms/series/thumb/",
      'defaultCategoryImage'     => "default.png",
      'imageSize'                => 300,

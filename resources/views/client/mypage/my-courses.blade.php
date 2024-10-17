@@ -219,7 +219,7 @@
             </table>
         </div>
     @endsection
-    @section('mypage-script')
+    @section('mypage-scripts')
         <script>
             function toggleQA(event) {
                 const btnToggle = $(event.target);

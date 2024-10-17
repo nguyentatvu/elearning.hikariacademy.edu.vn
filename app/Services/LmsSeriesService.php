@@ -105,4 +105,15 @@ class LmsSeriesService extends BaseService
             return $seriesItem;
         })->sortBy('order')->values()->filter();
     }
+
+
+    /**
+     * Get all series with roadmap
+     *
+     * @return Collection
+     */
+    public function getAllWithRoadmapsAndLessons()
+    {
+        return $this->repository->getAllWithRoadmapsAndLessons();
+    }
 }

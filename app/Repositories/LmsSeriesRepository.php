@@ -43,4 +43,20 @@ class LmsSeriesRepository extends BaseRepository
 
         return $seriesDetail;
     }
+
+    /**
+     * Get all series with roadmap
+     *
+     * @return Collection
+     */
+    public function getAllWithRoadmapsAndLessons(){
+        return $this->model
+            ->with([
+                'roadmaps', 'lmscontents' => function ($query) {
+                    $query->orderBy('stt', 'asc');
+                }
+            ])
+            ->where('delete_status', 0)
+            ->get();
+    }
 }

@@ -57,13 +57,13 @@
         <div class="redeem-reward">
             <h4>Quy đổi điểm</h4>
             <div class="redeem-reward__list">
-                @foreach ($redeemed_series as $series)
+                @foreach ($redeemed_series_combo as $series)
                     <div class="redeem-reward__item {{ $series->is_payable ? '' : 'gray-filter' }}">
                         <div class="redeem-reward__img">
                             <div class="dark-overlay">
                                 <div class="off-price-percent">Giảm {{ $series->redeemed_percent }}%</div>
                             </div>
-                            <img src="{{ asset('/public/' . $series_upload_path . $series->image) }}" alt="series image">
+                            <img src="{{ asset($series_combo_image_url . $series->image) }}" alt="series image">
                         </div>
                         <div class="redeem-reward__info">
                             <div class="d-flex justify-content-between align-items-start">

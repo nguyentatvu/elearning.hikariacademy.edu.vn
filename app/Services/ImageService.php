@@ -78,4 +78,20 @@ class ImageService
             File::delete($file);
         }
     }
+
+    /**
+     * Upload Image File
+     *
+     * @param string $name
+     * @param UploadedFile $file
+     * @return string
+     */
+    public function uploadImageFile(string $name, UploadedFile $file)
+    {
+        $filename = $name . '.' . $file->guessClientExtension();
+        $this->removeAllImagesWithTheSameName($name);
+        $this->save($file, $filename);
+
+        return $filename;
+    }
 }
