@@ -318,12 +318,12 @@ class LmsSeriesController extends Controller
 		if ($request->hasFile($file_name)) {
 			$examSettings = getSettings('lms');
 			$imageObject = new ImageSettings();
-			$destinationPath            = $examSettings->seriesImagepath;
+			$destinationPath            = public_path($examSettings->seriesImagepath);
 			$destinationPathThumb       = $examSettings->seriesThumbImagepath;
 			$fileName = $record->id.'-'.$file_name.'.'.$request->$file_name->guessClientExtension();
 			$request->file($file_name)->move($destinationPath, $fileName);
-		 //Save Normal Image with 300x300
-			Image::make($destinationPath.$fileName)->fit($examSettings->imageSize)->save($destinationPath.$fileName);
+		 	//Save Normal Image with 300x300
+			Image::make($destinationPath . $fileName)->fit($examSettings->imageSize)->save($destinationPath . $fileName);
 			//Image::make($destinationPath.$fileName)->fit($imageObject->getThumbnailSize())->save($destinationPathThumb.$fileName);
 			return $fileName;
 		}

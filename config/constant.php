@@ -15,8 +15,13 @@ return [
             '15' => 15,
         ]
     ],
-    'series' => [
+    'series_combo' => [
+        'image_url' => 'public/uploads/lms/combo/',
         'upload_path' => 'uploads/lms/combo/',
+        'test' => 1,
+    ],
+    'series' => [
+        'upload_path' => 'uploads/lms/series/',
         'image_url' => 'public/uploads/lms/series/',
         'time' => [
             0 => 3,

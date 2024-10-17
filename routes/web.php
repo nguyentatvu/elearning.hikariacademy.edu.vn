@@ -161,6 +161,10 @@ Route::prefix('mock-exam')
             ->name('ajax-rate');
     });
 
+/**************************
+ * ADMIN ROUTES
+ *************************/
+
 Route::prefix('point-management')
     ->name('point-management.')
     ->group(function () {
@@ -171,10 +175,18 @@ Route::prefix('point-management')
             ->name('save-rules');
     });
 
+Route::prefix('roadmap')
+    ->name('roadmap.')
+    ->group(function () {
+        Route::get('/list', 'RoadmapController@list')
+            ->name('list');
 
-/**************************
- * ADMIN ROUTES
- *************************/
+        Route::post('/save-roadmap', 'RoadmapController@saveRoadmap')
+            ->name('save-roadmap');
+
+        Route::delete('/delete-roadmap', 'RoadmapController@deleteRoadmap')
+            ->name('delete-roadmap');
+    });
 
 Route::get('/', 'SiteController@redirectHomePage');
 

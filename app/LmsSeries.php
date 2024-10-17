@@ -19,6 +19,16 @@ class LmsSeries extends Model
     }
 
     /**
+     * Define relationship with Roadmap
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function roadmaps()
+    {
+        return $this->hasMany('App\Roadmap', 'lmsseries_id');
+    }
+
+    /**
      * This method lists all the items available in selected series
      * @return [type] [description]
      */
