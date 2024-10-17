@@ -1,7 +1,7 @@
 <!-- Footer -->
-<footer class="bg-color-primary">
+<footer class="bg-color-primary main-footer p-60px">
     <!-- Grid container -->
-    <div class="p-60px text-light">
+    <div class="text-light">
         <!-- Section: Links -->
         <section>
             <!--Grid row-->

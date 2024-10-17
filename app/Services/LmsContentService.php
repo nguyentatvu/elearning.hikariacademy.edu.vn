@@ -192,7 +192,7 @@ class LmsContentService extends BaseService
      * @param int $flashcardId
      * @return mixed
      */
-    protected function getFlashcardContent(int $flashcardId)
+    public function getFlashcardContent(int $flashcardId)
     {
         $flashcard = $this->lmsFlashcardService->getFlashcardContentById($flashcardId);
 
@@ -253,6 +253,16 @@ class LmsContentService extends BaseService
      */
     public function getFirstContentOfSeries(string $seriesId) {
         return $this->repository->getFirstContentOfSeries($seriesId);
+    }
+
+    /**
+     * Get the first trial content of the series
+     *
+     * @param string $seriesId
+     * @return mixed(LmsContent|null)
+     */
+    public function getFirstTrialContentOfSeries(string $seriesId) {
+        return $this->repository->getFirstTrialContentOfSeries($seriesId);
     }
 
     /**

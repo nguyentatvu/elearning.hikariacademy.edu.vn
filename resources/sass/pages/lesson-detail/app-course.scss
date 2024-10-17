@@ -102,10 +102,6 @@ html {
 .study-main-content {
   height: calc(100vh - 45px);
   overflow-y: auto;
-
-    .study-content {
-        margin-bottom: 4px;
-    }
 }
 
 .topic-content-link {
@@ -218,6 +214,10 @@ html {
 
 .tab-content {
   overflow-y: auto;
+
+  .lesson-container {
+    padding: 4px 8px;
+  }
 }
 
 .study-main-content {

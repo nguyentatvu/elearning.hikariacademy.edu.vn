@@ -7,7 +7,7 @@
 
 @section('content')
     <div class="w-100">
-        <div class="container pb-5">
+        <div class="container pb-5 layout-my-page">
             <a href="/" class="navigate-back">
                 <i class="bi bi-chevron-left fs-4"></i>
                 <span class="fs-3">Điểm tích lũy</span>

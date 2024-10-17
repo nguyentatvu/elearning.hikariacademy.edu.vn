@@ -33,13 +33,21 @@ return [
             'exercise' => [3, 4, 7],
             'audit' => [5],
             'flashcard' => [10],
-            'title' => [0, 8]
+            'title' => [0, 8],
+            'handwriting' => [11],
         ],
         'topic_icons' => [
             0 => 'vocab.png',
             1 => 'grammar.png',
             2 => 'exercise.png',
-            3 => 'jap-character.svg'
+            3 => 'jap-character.svg',
+            4 => 'jap-character.svg',
+            5 => 'jap-character.svg',
+            6 => 'jap-character.svg',
+            7 => 'jap-character.svg',
+            8 => 'jap-character.svg',
+            9 => 'jap-character.svg',
+            10 => 'jap-character.svg',
         ],
         'chapter_icons' => [
             5 => 'score.png',
@@ -58,8 +66,9 @@ return [
             'video' => 'learning-management.lesson.show',
             'exercise' => 'learning-management.lesson.exercise',
             'audit' => 'learning-management.lesson.audit',
-            'flashcard' => 'learning-management.lesson.flashcard'
-        ]
+            'flashcard' => 'learning-management.lesson.flashcard',
+            'handwriting' => 'learning-management.lesson.handwriting',
+        ],
     ],
     'redeemed_coin' => [
         'vnd_convert_rate' => 1000
