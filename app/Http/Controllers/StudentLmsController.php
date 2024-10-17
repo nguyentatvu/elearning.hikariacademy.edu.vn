@@ -284,11 +284,21 @@ class StudentLmsController extends Controller
         $this->prepContent['is_finished_content'] = optional($studentView)->finish == LmsStudentView::FINISH;
     }
 
+    /**
+     * Get student view
+     *
+     * @return void
+     */
     private function getStudentView() {
-        $this->prepContent['content_view_count'] =
-            $this->lmsStudentViewService->getViewCountOfSeries(
-            $this->prepContent['series_id'], Auth::id()
-            );
+        if (!Auth::check()) {
+            $this->prepContent['content_view_count'] = 0;
+        } else {
+            $this->prepContent['content_view_count'] =
+                $this->lmsStudentViewService->getViewCountOfSeries(
+                    $this->prepContent['series_id'], Auth::id()
+                );
+        }
+
         $this->prepContent['series_content_count'] =
             $this->lmsContentService->getContentCountBySeries(
                 $this->prepContent['series_id']
