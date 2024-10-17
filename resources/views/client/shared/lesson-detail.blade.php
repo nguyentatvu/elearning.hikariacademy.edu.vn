@@ -1,7 +1,6 @@
 @extends('client.app-course')
 
 @section('styles')
-    {{-- <link rel="stylesheet" href="{{ asset('assets/admin/css/exercise/bundle.min.css') }}"> --}}
     <link href="{{ asset('css/pages/lesson-detail/app-course.css') }}" rel="stylesheet">
     @yield('styles-content')
     @yield('lesson-detail-styles')

@@ -166,10 +166,12 @@
                         <li><a href="{{ route('payments-order.coin-recharge-packages.index') }}"> <i class="mdi mdi-coin"></i>Quản lý các gói nạp HiCoin</a></li>
                     </ul>
                 </li>
-				{{-- <li {{ isActive($active_class, 'notifications') }} >
-					<a href="{{URL_ADMIN_NOTIFICATIONS}}" ><i class="fa fa-fw fa-bell" aria-hidden="true"></i>
-					Thông báo </a>
-				</li> --}}
+                <li {{ isActive($active_class, 'point-management' ) }}>
+                        <a data-toggle="collapse" data-target="#point_management"><i class="mdi mdi-coin"></i> Quản lý điểm tích luỹ </a>
+                        <ul id="point_management" class="collapse sidemenu-dropdown">
+                            <li><a href="{{ route('point-management.list') }}"> <i class="mdi mdi-coin"></i>Danh sách những loại điểm tích luỹ</a></li>
+                        </ul>
+                    </li>
 				<li {{ isActive($active_class, 'notifications') }} >
 					<a href="/learning-process" ><i class="fa fa-fw fa-bell" aria-hidden="true"></i>
 					Tiến trình học </a>

@@ -213,4 +213,20 @@ class LmsContentRepository extends BaseRepository
             ->select('lms_exams.id', 'label', 'dang', 'cau', 'mota', 'dapan', DB::raw("CONCAT_WS('-,-',luachon1,luachon2,luachon3,luachon4) AS answers"))
             ->get();
     }
+
+    /**
+     * Get content count by series
+     *
+     * @param int $seriesId
+     * @return int
+     */
+    public function getContentCountBySeries(int $seriesId)
+    {
+        return $this->model
+            ->select('id')
+            ->where('lmsseries_id', $seriesId)
+            ->where('delete_status', LmsContent::ACTIVE)
+            ->whereNotIn('type', [LmsContent::LESSON, LmsContent::LESSON_TOPIC])
+            ->count();
+    }
 }

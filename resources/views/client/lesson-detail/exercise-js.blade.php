@@ -34,13 +34,13 @@
     }
 
     function calculatePointsForExercise(score, totalScore) {
+        const percentages = @json(getRewardPointRule('learning')['exercise']['thresholds']);
         const exerciseScore = (score / totalScore) * 100;
-        if (exerciseScore == 100) {
-            return 3;
-        } else if (exerciseScore > 80) {
-            return 2;
-        } else if (exerciseScore > 65) {
-            return 1;
+
+        for (let i = percentages.length - 1; i >= 0; i--) {
+            if (exerciseScore >= percentages[i].percentage) {
+                return percentages[i].points;
+            }
         }
 
         return 0;
