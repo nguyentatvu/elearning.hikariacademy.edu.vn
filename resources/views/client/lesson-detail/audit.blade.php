@@ -168,6 +168,13 @@
 @section('scripts-content')
     <script>
         $(document).ready(function() {
+            let lastLogin = '{{ \Carbon\Carbon::parse(Auth::user()->last_login_date)->format('Y-m-d') }}';
+            let today = '{{ \Carbon\Carbon::today()->format('Y-m-d') }}';
+
+            if (lastLogin != today) {
+                showDailyStreak('{{ $detailContent->id }}');
+            }
+
             $("#accordian a").click(function() {
                 let link = $(this);
                 let closest_ul = link.closest("ul");

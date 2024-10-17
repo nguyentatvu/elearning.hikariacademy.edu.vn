@@ -106,7 +106,7 @@ class UserService extends BaseService
      * @param  array $streak_conditions
      * @return int $rewarded_point
      */
-    private function caculateRewardPoints(int $login_streak, array $streak_conditions) {
+    public function caculateRewardPoints(int $login_streak, array $streak_conditions) {
         $rewarded_point = 0;
         foreach ($streak_conditions as $min_streak => $coin_value) {
             if ($login_streak >= $min_streak) {

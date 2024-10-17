@@ -200,6 +200,7 @@
             </div>
         </div>
     </div>
+    @include('client.components.streak');
 @endsection
 
 @section('scripts')
@@ -271,7 +272,8 @@
                 } else {
                     // Calculate the percentage height for tab content based on total fixed elements
                     var studyContentVh = (studyContentHeight / windowHeight) * 100;
-                    const totalVH = (headerHeight + footerHeight + navTabHeight + studyContentVh) / windowHeight * 100;
+                    const totalVH = (headerHeight + footerHeight + navTabHeight + studyContentVh) /
+                        windowHeight * 100;
                     const tabContentHeightVH = 100 - totalVH;
 
                     $('.tab-content').css('height', `${tabContentHeightVH}vh`);
@@ -299,6 +301,8 @@
             // Initial layout adjustment and bind the adjustLayout function to window resize
             adjustLayout();
             $(window).resize(adjustLayout);
+            $('#modalLoginStreak').modal('show');
+
         });
 
         function animateHicoin(increasedPoints = 0) {
@@ -320,8 +324,8 @@
                 count: party.variation.range(30, 40),
                 spread: party.variation.range(40, 50),
                 origin: {
-                x: 0.5,
-                y: 0.5 + (50 / pointContainer[0].offsetHeight)
+                    x: 0.5,
+                    y: 0.5 + (50 / pointContainer[0].offsetHeight)
                 }
             });
 
@@ -338,7 +342,7 @@
         const earnPointFinishContent = (contentId, earnedPoints = 1, contentType = '') => {
             $.ajax({
                 headers: {
-                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 url: '{{ route('learning-management.lesson.exercise.finish-content') }}',
                 type: "post",
@@ -350,7 +354,27 @@
             });
         }
 
-        const checkFinishContent = () => {
+        function showDailyStreak(contentId) {
+            $.ajax({
+                url: '{{ route('learning-management.lesson.daily-streak') }}', // Gọi route với tên đầy đủ
+                type: 'POST', // Sử dụng phương thức POST
+                data: {
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Bảo mật với CSRF token
+                },
+                success: function(response) {
+                    earnPointFinishContent(contentId, response, 'streak');
+                    animateHicoin(response);
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+
+
+        function checkFinishContent() {
             const contentId = '{{ $detailContent->id }}';
             const checkImage = $('img[data-content-id="' + contentId + '"]');
             imageSource = checkImage.attr('src').replace('empty-box.svg', 'checked-box.png');
