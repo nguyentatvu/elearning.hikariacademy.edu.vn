@@ -145,6 +145,13 @@
                             <li><a href="{{PREFIX.'lms/seriescombo/add'}}"> <i class="fa fa-fw fa-plus"></i>Thêm mới</a></li>
                         </ul>
                     </li>
+                    <li {{ isActive($active_class, 'roadmap' ) }}>
+                        <a data-toggle="collapse" data-target="#roadmap"><i class="mdi mdi-map"></i>Quản lý lộ trình</a>
+                        <ul id="lms" class="collapse sidemenu-dropdown">
+                            <li><a href="{{ route('roadmap.list') }}"> <i class="mdi mdi-format-list-bulleted"></i>Danh sách lộ trình của khoá học</a>
+                            </li>
+                        </ul>
+                    </li>
 					<li {{ isActive($active_class, 'handwriting') }} >
 						<a data-toggle="collapse" data-target="#handwriting"><i class="fa fa-fw fa-pencil"></i>Luyện viết</a>
 						<ul id="handwriting" class="collapse sidemenu-dropdown">
