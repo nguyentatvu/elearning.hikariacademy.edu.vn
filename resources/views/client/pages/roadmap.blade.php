@@ -84,6 +84,7 @@
             transform: translateX(-50%);
             bottom: 0;
             z-index: 11;
+            width: 100%;
         }
 
         .left-side .finish-line {
@@ -102,6 +103,8 @@
             left: 50%;
             transform: translateX(-50%);
             top: 0;
+            z-index: 11;
+            width: 100%;
         }
 
         .left-side .start-line {
@@ -110,6 +113,7 @@
             left: 50%;
             transform: translateX(-50%);
             top: 30px;
+            width: 100%;
         }
 
         .star {
@@ -119,43 +123,97 @@
             transition: transform 0.5s ease, opacity 0.5s ease;
         }
 
-        /* Mobile (phones) */
-        @media (max-width: 575.98px) {
-            /* CSS cho thiết bị di động */
+        .serie-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* Tablet (small devices) */
-        @media (min-width: 576px) and (max-width: 767.98px) {
-            /* CSS cho tablet nhỏ */
+        .serie-image {
+            height: 100%;
+            background-size: fit;
+            border-radius: 8px;
         }
 
-        /* Tablet (large devices) */
-        @media (min-width: 768px) and (max-width: 991.98px) {
-            /* CSS cho tablet lớn */
+        .serie-content {
+            flex: 1;
+            padding-left: 16px;
         }
 
-        /* Laptop (small desktops) */
-        @media (min-width: 992px) and (max-width: 1199.98px) {
-            /* CSS cho laptop */
+        .serie-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
         }
 
-        /* Desktop (large screens) */
-        @media (min-width: 1200px) {
-            /* CSS cho PC và màn hình lớn */
+        .serie-info {
+            margin-top: 8px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .serie-info p {
+            margin: 0;
+        }
+
+        .serie-info p+p {
+            margin-top: 4px;
+        }
+
+        .serie-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+
+        .roadmap-select {
+            width: 50%;
+            margin-left: 5px;
         }
     </style>
 @endsection
 
 @section('content')
+    <div id="serie_card" class="serie-card row">
+        <div class="serie-image col-12 col-sm-2">
+            <img src="{{ asset('uploads/exams/series/site/n5.png') }}" alt="" srcset="">
+        </div>
+        <div class="serie-content col-12 col-sm-10">
+            <div class="serie-info">
+                <h4 class="card-title">{{ $serie->title }}</h4>
+                <div class="d-flex align-items-center">
+                    <label for="roadmap_select"><strong>Lộ trình:</strong></label>
+                    <select id="roadmap_select" class="form-select roadmap-select" aria-label="Default select example">
+                        <option value="" selected>Vui lòng chọn lộ trình</option>
+                        @foreach ($road_map as $item)
+                            <option value="{{ $item->duration_months }}">{{ $item->duration_months }} tháng</option>
+                        @endforeach
+                    </select>
+                </div>
+                @if (isset($last_view))
+                    <div><strong>Bài học gần đây:</strong> <a href="#car" rel="noopener noreferrer">{{ $last_view->bai }}</a></div>
+                @endif
+            </div>
+        </div>
+    </div>
+
     <div class="container-fluid">
         <div class="row">
             <!-- Left side (1 column) -->
             <div class="col-2 col-sm-1 left-side">
                 <div class="row"></div>
                 <img class="start-line" src="{{ asset('images/icons/start-line.svg') }}" alt="">
-                <img class="car" src="{{ asset('images/icons/car.svg') }}" alt="">
+                <img id="car" class="car" src="{{ asset('images/icons/car.svg') }}" alt="">
                 <img class="start-gate" src="{{ asset('images/icons/start-gate.svg') }}" alt="">
                 <img class="finish" src="{{ asset('images/icons/finish.png') }}" alt="">
+
+                <div class="location-days"></div>
             </div>
 
             <!-- Right side (11 columns) -->
@@ -168,444 +226,145 @@
 
 @section('scripts')
     <script>
-        const sections = [{
-                week: "Tuần 1",
-                message: "Các sự kiện nổi bật tuần 1",
-                days: [{
-                        day: "Thứ 2, 16/10",
-                        items: [{
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 1 ngày thứ 2",
-                                lms_id: "LMS001"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 2 ngày thứ 2",
-                                lms_id: "LMS002"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 3 ngày thứ 2",
-                                lms_id: "LMS003"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 4 ngày thứ 2",
-                                lms_id: "LMS004"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 5 ngày thứ 2",
-                                lms_id: "LMS005"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 6 ngày thứ 2",
-                                lms_id: "LMS006"
-                            }
-                        ]
-                    },
-                    {
-                        day: "Thứ 3, 17/10",
-                        items: [{
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 1 ngày thứ 3",
-                                lms_id: "LMS007"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 2 ngày thứ 3",
-                                lms_id: "LMS008"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 3 ngày thứ 3",
-                                lms_id: "LMS009"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 4 ngày thứ 3",
-                                lms_id: "LMS010"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 5 ngày thứ 3",
-                                lms_id: "LMS011"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 6 ngày thứ 3",
-                                lms_id: "LMS012"
-                            }
-                        ]
-                    },
-                    {
-                        day: "Thứ 4, 18/10",
-                        items: [{
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 1 ngày thứ 4",
-                                lms_id: "LMS013"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 2 ngày thứ 4",
-                                lms_id: "LMS014"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 3 ngày thứ 4",
-                                lms_id: "LMS015"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 4 ngày thứ 4",
-                                lms_id: "LMS016"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 5 ngày thứ 4",
-                                lms_id: "LMS017"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 6 ngày thứ 4",
-                                lms_id: "LMS018"
-                            }
-                        ]
-                    },
-                    {
-                        day: "Thứ 5, 19/10",
-                        items: [{
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 1 ngày thứ 5",
-                                lms_id: "LMS019"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 2 ngày thứ 5",
-                                lms_id: "LMS020"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 3 ngày thứ 5",
-                                lms_id: "LMS021"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 4 ngày thứ 5",
-                                lms_id: "LMS022"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 5 ngày thứ 5",
-                                lms_id: "LMS023"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 6 ngày thứ 5",
-                                lms_id: "LMS024"
-                            }
-                        ]
-                    },
-                    {
-                        day: "Thứ 6, 20/10",
-                        items: [{
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 1 ngày thứ 6",
-                                lms_id: "LMS025"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 2 ngày thứ 6",
-                                lms_id: "LMS026"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 3 ngày thứ 6",
-                                lms_id: "LMS027"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 4 ngày thứ 6",
-                                lms_id: "LMS028"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 5 ngày thứ 6",
-                                lms_id: "LMS029"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 6 ngày thứ 6",
-                                lms_id: "LMS030"
-                            }
-                        ]
-                    },
-                    {
-                        day: "Thứ 7, 21/10",
-                        items: [{
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 1 ngày thứ 7",
-                                lms_id: "LMS031"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 2 ngày thứ 7",
-                                lms_id: "LMS032"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 3 ngày thứ 7",
-                                lms_id: "LMS033"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 4 ngày thứ 7",
-                                lms_id: "LMS034"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 5 ngày thứ 7",
-                                lms_id: "LMS035"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 6 ngày thứ 7",
-                                lms_id: "LMS036"
-                            }
-                        ]
-                    },
-                    {
-                        day: "Chủ nhật, 22/10",
-                        items: [{
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 1 ngày chủ nhật",
-                                lms_id: "LMS037"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 2 ngày chủ nhật",
-                                lms_id: "LMS038"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 3 ngày chủ nhật",
-                                lms_id: "LMS039"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 4 ngày chủ nhật",
-                                lms_id: "LMS040"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 5 ngày chủ nhật",
-                                lms_id: "LMS041"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 6 ngày chủ nhật",
-                                lms_id: "LMS042"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                week: "Tuần 2",
-                message: "Các sự kiện nổi bật tuần 2",
-                days: [{
-                        day: "Thứ 2, 23/10",
-                        items: [{
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 1 ngày thứ 2",
-                                lms_id: "LMS043"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 2 ngày thứ 2",
-                                lms_id: "LMS044"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 3 ngày thứ 2",
-                                lms_id: "LMS045"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 4 ngày thứ 2",
-                                lms_id: "LMS046"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 5 ngày thứ 2",
-                                lms_id: "LMS047"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 6 ngày thứ 2",
-                                lms_id: "LMS048"
-                            }
-                        ]
-                    },
-                    {
-                        day: "Thứ 3, 24/10",
-                        items: [{
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 1 ngày thứ 3",
-                                lms_id: "LMS049"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 2 ngày thứ 3",
-                                lms_id: "LMS050"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 3 ngày thứ 3",
-                                lms_id: "LMS051"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 4 ngày thứ 3",
-                                lms_id: "LMS052"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 5 ngày thứ 3",
-                                lms_id: "LMS053"
-                            },
-                            {
-                                img: "https://placehold.co/50x50",
-                                content: "Bài viết 6 ngày thứ 3",
-                                lms_id: "LMS054"
-                            }
-                        ]
-                    },
-                ]
-            }
-        ];
-
-        // Hàm để tạo màu gradient pastel ngẫu nhiên
-        function getRandomPastelGradient() {
-            const colors = [];
-            for (let i = 0; i < 2; i++) {
-                const hue = Math.random() * 360; // H hue
-                const saturation = Math.random() * 30 + 50; // S saturation từ 50% đến 80%
-                const lightness = Math.random() * 20 + 70; // L lightness từ 70% đến 90%
-                colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
-            }
-            return `linear-gradient(to right, ${colors.join(', ')})`;
-        }
-
-        function getDatesForWeek(startDate) {
-            const dates = [];
-            for (let i = 0; i < 7; i++) {
-                const currentDate = new Date(startDate);
-                currentDate.setDate(startDate.getDate() + i);
-                const formattedDate = currentDate.toLocaleDateString("vi-VN", {
-                    weekday: 'short',
-                    day: 'numeric',
-                    month: 'numeric'
-                });
-                dates.push(formattedDate);
-            }
-            return dates;
-        }
-
-        const container = document.getElementById("news-sections");
-
-        // Ngày hiện tại làm mốc
-        const today = new Date();
-
-        sections.forEach((section, sectionIndex) => {
-            // Tạo phần header
-            const header = document.createElement('div');
-            header.classList.add('header', 'd-flex', 'align-items-center', 'header-week');
-            header.style.background = getRandomPastelGradient(); // Áp dụng gradient pastel ngẫu nhiên
-            header.innerHTML = `
-    <h1 class="me-auto">${section.week}</h1>
-    <p>${section.message}</p>
-    <img alt="Copilot icon" src="https://placehold.co/30x30" />
-`;
-            container.appendChild(header);
-
-            // Load các ngày từ section.days
-            section.days.forEach(dayData => {
-                const dayHeader = document.createElement('h4');
-                dayHeader.textContent = dayData.day;
-                container.appendChild(dayHeader);
-
-                // Tạo hàng cho các mục tin tức của mỗi ngày
-                const row = document.createElement('div');
-                row.classList.add('row');
-
-                dayData.items.forEach(item => {
-                    const col = document.createElement('div');
-                    col.classList.add('col-12', 'col-md-6', 'col-lg-4', 'd-flex');
-                    col.innerHTML = `
-            <div class="news-item">
-                <img alt="Fudan University logo" src="${item.img}" />
-                <div class="content-lesson">
-                    <p>${item.content}</p>
-                </div>
-                <i class="fas fa-link"></i>
-            </div>
-        `;
-                    row.appendChild(col);
-                });
-
-                container.appendChild(row);
-            });
-        });
-
+        let sections = [];
 
         // jQuery function
         $(document).ready(function() {
+            // Function to create a random pastel gradient
+            function getRandomPastelGradient() {
+                const colors = [];
+                for (let i = 0; i < 2; i++) {
+                    const hue = Math.random() * 360; // H hue
+                    const saturation = Math.random() * 30 + 50; // S saturation from 50% to 80%
+                    const lightness = Math.random() * 20 + 70; // L lightness from 70% to 90%
+                    colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
+                }
+                return `linear-gradient(to right, ${colors.join(', ')})`;
+            }
+
+            $('.left-side').hide();
+
+            const container = document.getElementById("news-sections");
+
+            // Current date as reference
+            const today = new Date();
+
+            function loadDataRoadMap(sections) {
+                sections.forEach((section, sectionIndex) => {
+                    // Create header section
+                    const header = document.createElement('div');
+                    header.classList.add('header', 'd-flex', 'align-items-center', 'header-week');
+                    header.style.background = getRandomPastelGradient();
+                    header.innerHTML = `
+                        <h1 class="me-auto">${section.week}</h1>
+                        <p>${section.message}</p>
+                        <img class="ms-2" alt="Daily icon" src="{{ asset('images/icons/schedule-icon.png') }}" />
+                    `;
+                    container.appendChild(header);
+
+                    // Load the days from section.days
+                    section.days.forEach(dayData => {
+                        const dayHeader = document.createElement('h4');
+                        dayHeader.textContent =
+                            `Ngày ${dayData.day_number}`; // Set value for h4 tag
+                        dayHeader.setAttribute('data-day', dayData
+                            .day_number); // Add data-day attribute
+                        container.appendChild(dayHeader); // Add h4 tag to container
+
+                        // Create a row for each day's news items
+                        const row = document.createElement('div');
+                        row.classList.add('row');
+
+                        dayData.lesson_list.forEach(item => {
+                            const col = document.createElement('div');
+                            col.classList.add('col-12', 'col-md-6', 'col-lg-4', 'd-flex');
+                            col.innerHTML = `
+                                <div class="news-item">
+                                    <div class="content-lesson d-flex align-items-center">
+                                        <img src="${checkType(item.type)}" alt="${item.name}" />
+                                        <p>${item.name}</p>
+                                    </div>
+                                    <i class="fas fa-link"></i>
+                                </div>
+                            `;
+                            row.appendChild(col);
+                        });
+
+                        container.appendChild(row);
+                    });
+                });
+            }
+
+            function checkType(type) {
+                let linkIcon = '';
+                if (type == 'video') {
+                    linkIcon = "{{ asset('images/icons/lesson.png') }}";
+                }
+                if (type == 'exercise') {
+                    linkIcon = "{{ asset('images/icons/exercise.png') }}";
+                }
+                if (type == 'audit') {
+                    linkIcon = "{{ asset('images/icons/score.png') }}";
+                }
+                if (type == 'flashcard') {
+                    linkIcon = "{{ asset('images/icons/flashcard.svg') }}";
+                }
+                if (type == 'title') {
+                    linkIcon = "{{ asset('images/icons/tittle.svg') }}";
+                }
+                if (type == 'handwriting') {
+                    linkIcon = "{{ asset('images/icons/handwriting.svg') }}";
+                }
+                return linkIcon;
+            }
+
             let dayPositions = [];
-            let roadMapHeight = $('.roadmap').outerHeight();
-            let headerHeight = $('#header').outerHeight();
 
-            $('.left-side').css('height', roadMapHeight);
+            function locationIcon() {
+                let roadMapHeight = $('.roadmap').outerHeight();
+                let headerHeight = $('#header').outerHeight();
+                let seriecCardHeight = $('#serie_card').outerHeight();
 
-            $('h4').each(function(index, element) {
-                const positionFromTop = $(element).offset().top;
-                dayPositions.push({
-                    day: $(element).text(),
-                    position: positionFromTop - headerHeight
-                });
-            });
+                $('.left-side').css('height', roadMapHeight);
 
-            dayPositions.forEach((dayPosition) => {
-                const icon = $('<span class="location-day"><i class="bi bi-geo-alt-fill"></i></span>');
-
-                // Set the top position for each icon based on the dayPositions
-                icon.css({
-                    backgroundColor: '#DDDDDD',
-                    borderRadius: '50%',
-                    padding: '5px 10px',
-                    position: 'absolute',
-                    top: `${dayPosition.position}px`,
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    color: 'white', // Use your preferred color
-                    fontSize: '16px',
-                    zIndex: 10,
+                $('h4').each(function(index, element) {
+                    const positionFromTop = $(element).offset().top;
+                    dayPositions.push({
+                        day: $(element).data('day'),
+                        position: positionFromTop - headerHeight - seriecCardHeight
+                    });
                 });
 
-                // Append the icon to the left-side div
-                $('.left-side').append(icon);
-            });
+                dayPositions.forEach((dayPosition) => {
+                    const icon = $('<span class="location-day"><i class="bi bi-geo-alt-fill"></i></span>');
+
+                    // Set the top position for each icon based on the dayPositions
+                    icon.css({
+                        backgroundColor: '#DDDDDD',
+                        borderRadius: '50%',
+                        padding: '5px 10px',
+                        position: 'absolute',
+                        top: `${dayPosition.position}px`,
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        color: 'white', // Use your preferred color
+                        fontSize: '16px',
+                        zIndex: 10,
+                    });
+
+                    // Append the icon to the left-side div
+                    $('.location-days').append(icon);
+                });
+            }
 
             function setCarPosition(date, lms_id) {
-                const currentDayPosition = dayPositions.find(dp => dp.day.trim() === date);
-
+                const currentDayPosition = dayPositions.find(dp => dp.day == date);
                 if (!currentDayPosition) {
                     console.error('Day not found in dayPositions');
                     return;
                 }
 
-                const currentDayIndex = dayPositions.findIndex(dp => dp.day.trim() === date);
+                const currentDayIndex = dayPositions.findIndex(dp => dp.day == date);
                 const nextDayPosition = dayPositions[currentDayIndex + 1];
 
                 const leftSideHeight = $('.left-side').outerHeight();
@@ -614,7 +373,7 @@
                     leftSideHeight - currentDayPosition.position;
 
                 const sectionForDate = sections.find(section => {
-                    return section.days.some(day => day.day.trim() === date);
+                    return section.days.some(day => (day.day_number) == date);
                 });
 
                 if (!sectionForDate) {
@@ -622,15 +381,15 @@
                     return;
                 }
 
-                const dayData = sectionForDate.days.find(day => day.day.trim() === date);
-                const itemIndex = dayData.items.findIndex(item => item.lms_id === lms_id);
+                const dayData = sectionForDate.days.find(day => day.day_number == date);
+                const itemIndex = dayData.lesson_list.findIndex(item => item.id == lms_id);
 
-                if (itemIndex === -1) {
+                if (itemIndex == -1) {
                     console.error('LMS ID not found in sections');
                     return;
                 }
 
-                const totalItems = dayData.items.length;
+                const totalItems = dayData.lesson_list.length;
 
                 const offsetPercentage = itemIndex / totalItems;
                 const itemOffsetWithinDay = distanceToNextDay * offsetPercentage;
@@ -641,21 +400,20 @@
 
                 const speed = 1000;
                 const animationDuration = distance / speed * 1000;
+                // Find the last day in the last week
+                const lastWeek = sections[sections.length - 1]; // Last week
+                const lastDay = lastWeek.days[lastWeek.days.length - 1]; // Last day of the last week
+                const lastItemIndex = lastDay.lesson_list.length - 1; // Last item index
 
-                // Tìm ngày cuối cùng trong tuần cuối cùng
-                const lastWeek = sections[sections.length - 1]; // Tuần cuối cùng
-                const lastDay = lastWeek.days[lastWeek.days.length - 1]; // Ngày cuối cùng của tuần cuối
-                const lastItemIndex = lastDay.items.length - 1; // Chỉ số bài viết cuối cùng
-
-                if (itemIndex === lastItemIndex && sectionForDate.days === lastWeek.days) {
+                if (itemIndex == lastItemIndex && sectionForDate.days == lastWeek.days) {
                     $('.car').animate({
                         top: leftSideHeight - 10
                     }, animationDuration, function() {
                         Swal.fire({
-                            title: 'Chúc mừng!',
-                            text: 'Bạn đã hoàn thành khóa học.',
+                            title: 'Congratulations!',
+                            text: 'You have completed the course.',
                             icon: 'success',
-                            confirmButtonText: 'Đóng'
+                            confirmButtonText: 'Close'
                         });
                     });
                     updateLocationDayColors(leftSideHeight - 10);
@@ -669,45 +427,80 @@
                 }
             }
 
-
-            // Example usage of the function
-            setCarPosition('Thứ 3, 24/10', 'LMS053'); // Sửa lại ngày cho phù hợp với dữ liệu thực tế
-
             const finishGateWaytHeight = $('.finish').outerHeight(true);
 
-            // Hàm để cập nhật màu sắc cho các biểu tượng .location-day dựa trên trạng thái của ngày
+            // Function to update the color of .location-day icons based on the current day's status
             function updateLocationDayColors(carTopPosition) {
-                // Bắt đầu từ ngày đầu tiên trong danh sách dayPositions
+                // Start from the first day in the dayPositions list
                 dayPositions.forEach((dayPosition, index) => {
                     const icon = $('.location-day').eq(index);
 
                     let backgroundColor;
 
-                    // Kiểm tra nếu xe nằm giữa ngày hiện tại và ngày tiếp theo (nghĩa là vẫn đang học ngày hiện tại)
+                    // Check if the car is between the current day and the next day (still studying the current day)
                     if (index < dayPositions.length - 1 &&
                         carTopPosition > dayPosition.position &&
                         carTopPosition < dayPositions[index + 1].position) {
-                        backgroundColor = '#ffc107'; // Màu vàng cho ngày đang học
+                        backgroundColor = '#ffc107'; // Yellow for the current day being studied
                     } else if (carTopPosition >= dayPosition.position) {
-                        // Kiểm tra nếu là ngày cuối cùng
-                        if (index === dayPositions.length - 1) {
-                            // Nếu xe chưa đến cuối chiều cao của .left-side thì vẫn hiển thị màu vàng
+                        // Check if it's the last day
+                        if (index == dayPositions.length - 1) {
+                            // If the car hasn't reached the bottom of the .left-side, still show yellow
                             const leftSideHeight = $('.left-side').outerHeight();
                             if (carTopPosition == (leftSideHeight - 10)) {
-                                backgroundColor = '#198754'; // Màu vàng nếu chưa đến cuối
+                                backgroundColor = '#198754'; // Green if reached the end
                             } else if (carTopPosition < (leftSideHeight - 10)) {
-                                backgroundColor = '#ffc107'; // Màu vàng nếu chưa đến cuối
+                                backgroundColor = '#ffc107'; // Yellow if not at the end yet
                             }
                         } else {
-                            backgroundColor = 'green'; // Màu xanh lá cây cho ngày đã học qua
+                            backgroundColor = 'green'; // Green for days already studied
                         }
                     } else {
-                        backgroundColor = 'gray'; // Màu xám cho ngày chưa học
+                        backgroundColor = 'gray'; // Gray for days not yet studied
                     }
-                    // Cập nhật màu nền cho biểu tượng
-                    icon.css('backgroundColor', backgroundColor);
+                    // Update the background color of the icon
+                    icon.css('background-color', backgroundColor);
                 });
             }
+            $('.roadmap-select').on('change', function() {
+                const selectedValue = $(this).val();
+                const selectedMonth = parseInt(selectedValue);
+                loadRoadMap(selectedMonth, 'khoa-hoc-n5-4fd338484641a026d2c76a6cc7dddaa23a50e59e-2',
+                    'khoa-hoc-n5-8caf4720ced649c1602c132ec4a3eaf09189d0f9-2');
+            });
+
+            function loadRoadMap(month, comboSlug, slug) {
+                let url = '{{ route('home.load-roadmap', ['comboSlug' => ':comboSlug', 'slug' => ':slug']) }}';
+                url = url.replace(':comboSlug', comboSlug).replace(':slug', slug);
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        month: month,
+                        combo_slug: comboSlug,
+                        slug: slug,
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                            'content')
+                    },
+                    success: function(response) {
+                        $("#news-sections").html('');
+                        $('.location-days').html('');
+                        sections = response.road_map;
+                        dayPositions = [];
+                        $('.left-side').show();
+                        loadDataRoadMap(response.road_map)
+                        locationIcon();
+                        setCarPosition(response.day_last_view, response.last_view);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Lỗi không tải dữ liệu:');
+                    }
+                });
+            }
+
         });
     </script>
 @endsection

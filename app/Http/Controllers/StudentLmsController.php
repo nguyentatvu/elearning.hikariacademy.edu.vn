@@ -166,7 +166,7 @@ class StudentLmsController extends Controller
         $routeMap = config('constant.series.routes');
 
         if (isset($content)) {
-            foreach($typeMap as $key => $value) {
+            foreach ($typeMap as $key => $value) {
                 if (in_array($content->type, $value)) {
                     $type = $key;
                     break;
@@ -255,7 +255,8 @@ class StudentLmsController extends Controller
     /**
      * Save student view
      */
-    private function saveStudentView(string $contentId) {
+    private function saveStudentView(string $contentId)
+    {
         $this->prepContent['is_finished_content'] = false;
         if (!$this->prepContent['is_valid_payment']) {
             return;
@@ -284,10 +285,12 @@ class StudentLmsController extends Controller
         $this->prepContent['is_finished_content'] = optional($studentView)->finish == LmsStudentView::FINISH;
     }
 
-    private function getStudentView() {
+    private function getStudentView()
+    {
         $this->prepContent['content_view_count'] =
             $this->lmsStudentViewService->getViewCountOfSeries(
-            $this->prepContent['series_id'], Auth::id()
+                $this->prepContent['series_id'],
+                Auth::id()
             );
         $this->prepContent['series_content_count'] =
             $this->lmsContentService->getContentCountBySeries(
@@ -450,7 +453,8 @@ class StudentLmsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return void
      */
-    public function finishContent(Request $request) {
+    public function finishContent(Request $request)
+    {
         $contentId = $request->get('content_id');
         $earnedPoints = $request->get('earned_points');
         $contentType = $request->get('content_type');
@@ -848,15 +852,106 @@ class StudentLmsController extends Controller
      * @param string $stt
      * @return \Illuminate\Http\Response
      */
-    public function showHandwriting(string $combo_slug = '', string  $slug = '', string $stt = '') {
+    public function showHandwriting(string $combo_slug = '', string $slug = '', string $stt = '')
+    {
         $this->processLessonContent($combo_slug, $slug, $stt);
         $preparedContent = $this->getPreparedContentVariables();
         $japaneseHandwritingPracticeId = $preparedContent['detailContent']->japanese_writing_practice_id;
         $handwriting = $this->lmsContentService->getHandwritingContent($japaneseHandwritingPracticeId);
 
-        return view('client.lesson-detail.handwriting', array_merge($preparedContent,
+        return view('client.lesson-detail.handwriting', array_merge(
+            $preparedContent,
             ['type' => 'handwriting'],
             ['handwriting' => $handwriting]
         ));
+    }
+
+    public function roadMap(Request $request, $comboSlug, $slug)
+    {
+        $data['title'] = 'Roadmap';
+        $data['class'] = 'roadmap';
+        if (!auth()->check()) {
+            flash('Thông báo', 'Bạn chưa đăng nhập', 'error');
+            return redirect()->route('home.index');
+        } else {
+            $serie = DB::table('lmsseries')->where('slug', $slug)->first();
+            $serieId = $serie->id;
+
+            $lastViewedContent = $this->lmsStudentViewService->getLastViewedContentOfStudent($serieId);
+
+            $roadMap = DB::table('roadmaps')->where('lmsseries_id', $serieId)->orderBy('duration_months')->get();
+
+            $data['road_map'] = $roadMap;
+            $data['last_view'] = $lastViewedContent;
+            $data['serie'] = $serie;
+        }
+
+        return view('client.pages.roadmap', $data);
+    }
+
+    function groupLessonsByWeek($roadmap)
+    {
+        $weeks = [];
+
+        foreach ($roadmap as $day) {
+            $weekNumber = intval(($day->day_number - 1) / 7) + 1; // Tính số tuần
+
+            if (!isset($weeks[$weekNumber])) {
+                $weeks[$weekNumber] = [
+                    'week' => "Tuần $weekNumber",
+                    'message' => "Điểm nổi bật của tuần $weekNumber",
+                    'days' => []
+                ];
+            }
+
+            $weeks[$weekNumber]['days'][] = $day;
+        }
+
+        for ($i = 1; $i <= ceil(count($roadmap) / 7); $i++) {
+            if (!isset($weeks[$i])) {
+                $weeks[$i] = [
+                    'week' => "Week $i",
+                    'message' => "Highlights of Week $i",
+                    'days' => []
+                ];
+            }
+        }
+
+        return array_values($weeks);
+    }
+
+    public function loadRoadMapDetail(Request $request)
+    {
+        $slug = $request->slug;
+        $month = $request->month;
+        $serie = DB::table('lmsseries')->where('slug', $slug)->first();
+        $serieId = $serie->id;
+
+        $lastViewedContent = $this->lmsStudentViewService->getLastViewedContentOfStudent($serieId);
+
+        $roadMap = DB::table('roadmaps')
+            ->where('lmsseries_id', $serieId)
+            ->where('duration_months', $month)
+            ->first();
+
+        $roadMapContent = json_decode($roadMap->contents);
+
+        $dayViewedContent = null;
+        foreach ($roadMapContent as $day) {
+            foreach ($day->lesson_list as $lesson) {
+                if ($lesson->id == $lastViewedContent->lmscontent_id) {
+                    $dayViewedContent = $day->day_number;
+                    break;
+                }
+
+            }
+        }
+
+        $weeks = $this->groupLessonsByWeek($roadMapContent);
+        return response()->json([
+            'road_map' => $weeks,
+            'last_view' => $lastViewedContent->lmscontent_id,
+            'day_last_view' => $dayViewedContent
+        ]);
     }
 }
