@@ -16,8 +16,6 @@ body {
 
        background-color: #eff1f5;
 
-    font-family: 'Sawarabi Gothic', sans-serif;
-
     color: #656f7d;
 
     overflow-x: hidden;
@@ -10100,4 +10098,9 @@ span.hikari_question_border {
 .action-table-data {
     display: flex;
     gap: 4px;
+}
+
+.side-nav>li>a .mdi {
+    color: #f16a43;
+    margin-right: 7px;
 }

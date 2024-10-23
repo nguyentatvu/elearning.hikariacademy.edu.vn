@@ -1,9 +1,4 @@
 <style>
-    /* .navbar-custom {
-        background-color: #000000;
-        color: white;
-    } */
-
     .navbar-custom .navbar-brand,
     .navbar-custom .nav-link {
         color: white;
@@ -19,6 +14,7 @@
     }
     .progress {
         width: 100px;
+        box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
     }
 
     .progress-text {
@@ -28,7 +24,7 @@
 
 <nav class="navbar navbar-custom bg-primary header-study">
     <div class="container-fluid">
-        <a class="navbar-brand me-2 d-flex align-items-center justify-content-center" href="#">
+        <a class="navbar-brand me-2 d-flex align-items-center justify-content-center" href="{{  url('/') }}">
             <i class="bi bi-chevron-left"></i>
             <span class="ms-2 d-inline-block">{{ $series->title }}</span>
         </a>
@@ -45,11 +41,18 @@
                     </div>
                 </div>
             @endif
+            @php $contentProgression = (int) (($contentViewCount / $seriesContentCount) * 100) @endphp
             <div class="progress">
-                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75"
-                    aria-valuemin="0" aria-valuemax="100" style="width: 35%">35%</div>
+                <div class="progress-bar progress-bar-striped progress-bar-animated"
+                    role="progressbar" aria-valuenow="75"
+                    aria-valuemin="0" aria-valuemax="100" style="width: {{ $contentProgression }}%">
+                    <span class="{{ $contentProgression <= 30 ? 'd-none' : '' }}">{{ $contentProgression }}%</span>
+                </div>
+                <span class="ms-1 text-primary {{ $contentProgression <= 30 ? '' : 'd-none' }}">
+                    {{ $contentProgression }}%
+                </span>
             </div>
-            <div class="progress-text mx-2">74/204 bài học</div>
+            <div class="progress-text mx-2">{{ $contentViewCount }}/{{ $seriesContentCount }} bài học</div>
         </div>
     </div>
 </nav>

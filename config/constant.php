@@ -16,8 +16,13 @@ return [
             '15' => 15,
         ]
     ],
-    'series' => [
+    'series_combo' => [
+        'image_url' => 'public/uploads/lms/combo/',
         'upload_path' => 'uploads/lms/combo/',
+        'test' => 1,
+    ],
+    'series' => [
+        'upload_path' => 'uploads/lms/series/',
         'image_url' => 'public/uploads/lms/series/',
         'time' => [
             0 => 3,
@@ -29,7 +34,8 @@ return [
             'exercise' => [3, 4, 7],
             'audit' => [5],
             'flashcard' => [10],
-            'title' => [0, 8]
+            'title' => [0, 8],
+            'handwriting' => [11],
         ],
         'topic_icons' => [
             0 => 'vocab.png',
@@ -61,8 +67,9 @@ return [
             'video' => 'learning-management.lesson.show',
             'exercise' => 'learning-management.lesson.exercise',
             'audit' => 'learning-management.lesson.audit',
-            'flashcard' => 'learning-management.lesson.flashcard'
-        ]
+            'flashcard' => 'learning-management.lesson.flashcard',
+            'handwriting' => 'learning-management.lesson.handwriting',
+        ],
     ],
     'redeemed_coin' => [
         'vnd_convert_rate' => 1000

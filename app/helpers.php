@@ -1,5 +1,6 @@
 <?php
 
+use App\PointRule;
 use App\Services\Logger;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -1694,4 +1695,20 @@ function compareTime($date) {
     } else {
         return compareDates($date);
     }
+}
+
+/**
+ * Get point rule
+ *
+ * @param mixed $type
+ * @return array
+ */
+function getRewardPointRule($type = null) {
+    static $rules = null;
+
+    if (is_null($rules)) {
+        $rules = PointRule::first()->rules;
+    }
+
+    return (isset($rules[$type]) || !is_null($type)) ? $rules[$type] : $rules;
 }

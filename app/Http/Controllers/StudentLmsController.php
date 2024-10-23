@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use \App;
+use App\Exceptions\RedirectException;
 use App\Payment;
 use App\User;
 use Illuminate\Http\Request;
@@ -127,7 +128,7 @@ class StudentLmsController extends Controller
                 $lastViewedContent = $this->lmsStudentViewService->getLastViewedContentOfStudent($seriesId);
                 $params['stt'] = $lastViewedContent->lmscontent_id ?? $this->getFirstContentId($seriesId);
             } else {
-                $params['stt'] = $this->getFirstContentId($seriesId);
+                $this->redirectToFirstTrialContent($seriesId, $params);
             }
 
             return;
@@ -135,7 +136,7 @@ class StudentLmsController extends Controller
 
         $isTrialContent = $this->lmsContentService->checkTrialContent($params['stt']);
         if (!$this->prepContent['is_valid_payment'] && !$isTrialContent) {
-            $params['stt'] = $this->getFirstContentId($seriesId);
+            $this->redirectToFirstTrialContent($seriesId, $params);
         }
     }
 
@@ -149,6 +150,36 @@ class StudentLmsController extends Controller
     {
         $content = $this->lmsContentService->getFirstContentOfSeries($seriesId);
         return $content->id ?? null;
+    }
+
+    /**
+     * Redirect to first trial content
+     *
+     * @param string $seriesId
+     * @param array $params
+     * @return Illuminate\Http\RedirectResponse
+     */
+    private function redirectToFirstTrialContent(string $seriesId, array $params)
+    {
+        $content = $this->lmsContentService->getFirstTrialContentOfSeries($seriesId);
+        $typeMap = config('constant.series.type_map');
+        $routeMap = config('constant.series.routes');
+
+        if (isset($content)) {
+            foreach($typeMap as $key => $value) {
+                if (in_array($content->type, $value)) {
+                    $type = $key;
+                    break;
+                }
+            }
+
+            if (isset($routeMap[$type])) {
+                $params['stt'] = $content->id;
+                throw new RedirectException(redirect()->route($routeMap[$type], $params));
+            }
+        }
+
+        throw new RedirectException(redirect()->to('/'));
     }
 
     /**
@@ -199,6 +230,8 @@ class StudentLmsController extends Controller
             } else {
                 $lms_content->checkbox_icon = 'empty-box.svg';
             }
+        } else {
+            $lms_content->checkbox_icon = 'empty-box.svg';
         }
         if (in_array($lms_content->id, $this->prepContent['active_content_id_list'])) {
             $lms_content->css_class = 'active-content';
@@ -252,6 +285,27 @@ class StudentLmsController extends Controller
     }
 
     /**
+     * Get student view
+     *
+     * @return void
+     */
+    private function getStudentView() {
+        if (!Auth::check()) {
+            $this->prepContent['content_view_count'] = 0;
+        } else {
+            $this->prepContent['content_view_count'] =
+                $this->lmsStudentViewService->getViewCountOfSeries(
+                    $this->prepContent['series_id'], Auth::id()
+                );
+        }
+
+        $this->prepContent['series_content_count'] =
+            $this->lmsContentService->getContentCountBySeries(
+                $this->prepContent['series_id']
+            );
+    }
+
+    /**
      * Prepare contents and view
      *
      * @param string $combo_slug
@@ -266,6 +320,7 @@ class StudentLmsController extends Controller
         $this->checkValidURL($params);
         $this->checkValidPayment($params);
         $this->saveStudentView($stt);
+        $this->getStudentView();
         $this->prepareContentList($params);
     }
 
@@ -285,6 +340,8 @@ class StudentLmsController extends Controller
             'seriesCombo' => $this->prepContent['series_combo'],
             'isFinishedContent' => $this->prepContent['is_finished_content'],
             'series' => $this->prepContent['series'],
+            'contentViewCount' => $this->prepContent['content_view_count'],
+            'seriesContentCount' => $this->prepContent['series_content_count'],
         ];
     }
 
@@ -348,10 +405,14 @@ class StudentLmsController extends Controller
     public function showFlashcard(string $combo_slug = '', string $slug = '', string $stt = '')
     {
         $this->processLessonContent($combo_slug, $slug, $stt);
+        $preparedContent = $this->getPreparedContentVariables();
+        $flashcardId = $preparedContent['detailContent']->flashcard_id;
+        $flashcard = $this->lmsContentService->getFlashcardContent($flashcardId);
 
         return view('client.lesson-detail.flashcard', array_merge(
-            $this->getPreparedContentVariables(),
-            ['type' => 'flashcard']
+            $preparedContent,
+            ['type' => 'flashcard'],
+            ['flashcard' => $flashcard]
         ));
     }
 

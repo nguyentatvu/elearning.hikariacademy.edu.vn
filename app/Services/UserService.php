@@ -86,9 +86,11 @@ class UserService extends BaseService
         }
 
         if ($last_login_date->isYesterday()) {
-            $user->login_streak++;
-            $streak_conditions = config('constant.login.streak');
-            $reward_point = $this->caculateRewardPoints($user->login_streak, $streak_conditions);
+            $rawPointRule = getRewardPointRule('daily_login')['milestones'];
+            $convertedPointRule = collect($rawPointRule)->pluck('points', 'days')->all();
+            $reward_point = $this->caculateRewardPoints($user->login_streak, $convertedPointRule);
+
+            $user->login_streak += 1;
             $user->reward_point += $reward_point;
         }
         else {

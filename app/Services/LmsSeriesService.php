@@ -85,7 +85,6 @@ class LmsSeriesService extends BaseService
 
         $seriesCombo = $this->getLmsSeriesComboService()->getMySeries($user->id, LmsSeries::COURSE_AND_EXAM);
         $seriesCombo = collect($seriesCombo->items());
-        // dd($seriesCombo);
 
         // Create a map from 'series_id' to view info
         $viewMap = collect($viewHistory)->keyBy('series_id');
@@ -95,11 +94,26 @@ class LmsSeriesService extends BaseService
             $seriesItem->viewed_time = $viewInfo['viewed_time'] ?? null;
 
             $seriesComboItem = $seriesCombo->where('series_id', $seriesItem->id)->first();
+            if (!$seriesComboItem) {
+                return null;
+            }
+
             $seriesItem->order = $viewInfo['order'] ?? null;
             $seriesItem->progressPercent = (int) (($seriesComboItem->completed_lessons / $seriesComboItem->total_lessons) * 100);
             $seriesItem->combo_slug = $seriesComboItem->combo_slug ?? '';
 
             return $seriesItem;
-        })->sortBy('order')->values();
+        })->sortBy('order')->values()->filter();
+    }
+
+
+    /**
+     * Get all series with roadmap
+     *
+     * @return Collection
+     */
+    public function getAllWithRoadmapsAndLessons()
+    {
+        return $this->repository->getAllWithRoadmapsAndLessons();
     }
 }

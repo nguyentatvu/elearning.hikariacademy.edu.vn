@@ -5,6 +5,7 @@
 	<meta name="google" content="notranslate"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<meta name="description" content="{{getSetting('meta_description', 'seo_settings')}}">
 	<meta name="keywords" content="{{getSetting('meta_keywords', 'seo_settings')}}">
 	<meta name="csrf_token" content="{{ csrf_token() }}">
@@ -143,6 +144,12 @@
 
 					</ul>
 				</li>
+                <li {{ isActive($active_class, 'roadmap') }} >
+                    <a data-toggle="collapse" data-target="#roadmap"><i class="mdi mdi-map" ></i>Quản lý lộ trình</a>
+                    <ul id="lms" class="collapse sidemenu-dropdown">
+                        <li><a href="{{ route('roadmap.list') }}"> <i class="mdi mdi-format-list-bulleted"></i>Danh sách lộ trình của khoá học</a></li>
+                    </ul>
+                </li>
 				<li {{ isActive($active_class, 'handwriting') }} >
 					<a data-toggle="collapse" data-target="#handwriting"><i class="fa fa-fw fa-pencil"></i>Luyện viết</a>
 					<ul id="handwriting" class="collapse sidemenu-dropdown">
@@ -166,10 +173,12 @@
                         <li><a href="{{ route('payments-order.coin-recharge-packages.index') }}"> <i class="mdi mdi-coin"></i>Quản lý các gói nạp HiCoin</a></li>
                     </ul>
                 </li>
-				{{-- <li {{ isActive($active_class, 'notifications') }} >
-					<a href="{{URL_ADMIN_NOTIFICATIONS}}" ><i class="fa fa-fw fa-bell" aria-hidden="true"></i>
-					Thông báo </a>
-				</li> --}}
+                <li {{ isActive($active_class, 'point-management' ) }}>
+                        <a data-toggle="collapse" data-target="#point_management"><i class="mdi mdi-coin"></i> Quản lý điểm tích luỹ </a>
+                        <ul id="point_management" class="collapse sidemenu-dropdown">
+                            <li><a href="{{ route('point-management.list') }}"> <i class="mdi mdi-coin"></i>Danh sách những loại điểm tích luỹ</a></li>
+                        </ul>
+                    </li>
 				<li {{ isActive($active_class, 'notifications') }} >
 					<a href="/learning-process" ><i class="fa fa-fw fa-bell" aria-hidden="true"></i>
 					Tiến trình học </a>

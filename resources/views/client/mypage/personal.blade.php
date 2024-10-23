@@ -2,7 +2,6 @@
 
 @section('styles')
     <link href="{{ asset('css/pages/mypage.css') }}" rel="stylesheet">
-    
 @endsection
 
 @section('mypage-content')

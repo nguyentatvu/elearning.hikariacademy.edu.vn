@@ -159,6 +159,26 @@ class LmsContentRepository extends BaseRepository
     }
 
     /**
+     * Get the first trial content of the series
+     *
+     * @param string $seriesId
+     * @return mixed(LmsContent|null)
+     */
+    public function getFirstTrialContentOfSeries(?string $seriesId)
+    {
+        if ($seriesId === null) {
+            return null;
+        }
+
+        return $this->model
+            ->where('lmsseries_id', $seriesId)
+            ->where('el_try', LmsContent::TRIAL_TYPE)
+            ->orderBy('stt', 'asc')
+            ->whereNotIn('type', [LmsContent::LESSON, LmsContent::LESSON_TOPIC])
+            ->first();
+    }
+
+    /**
      * Get next content
      *
      * @param string $contentOrder
@@ -192,5 +212,21 @@ class LmsContentRepository extends BaseRepository
             ->whereNotNull('lms_exams.dang')
             ->select('lms_exams.id', 'label', 'dang', 'cau', 'mota', 'dapan', DB::raw("CONCAT_WS('-,-',luachon1,luachon2,luachon3,luachon4) AS answers"))
             ->get();
+    }
+
+    /**
+     * Get content count by series
+     *
+     * @param int $seriesId
+     * @return int
+     */
+    public function getContentCountBySeries(int $seriesId)
+    {
+        return $this->model
+            ->select('id')
+            ->where('lmsseries_id', $seriesId)
+            ->where('delete_status', LmsContent::ACTIVE)
+            ->whereNotIn('type', [LmsContent::LESSON, LmsContent::LESSON_TOPIC])
+            ->count();
     }
 }

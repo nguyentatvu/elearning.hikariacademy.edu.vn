@@ -84,8 +84,8 @@ class MyPageController extends Controller
      */
     public function rewardPoint() {
         $data['point_history'] = Auth::user()->point_history;
-        $data['redeemed_series'] = $this->lmsSeriesComboService->getRedeemedSeries();
-        $data['series_upload_path'] = config('constant.series.upload_path');
+        $data['redeemed_series_combo'] = $this->lmsSeriesComboService->getRedeemedSeries();
+        $data['series_combo_image_url'] = config('constant.series_combo.image_url');
 
         return view('client.mypage.reward-point', $data);
     }

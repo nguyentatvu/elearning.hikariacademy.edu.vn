@@ -610,7 +610,12 @@ class LmsContentController extends Controller
         $record                       = LmsContent::getRecordWithId($slug);
         $listHandwriting = $this->handwritingService->getAll();
         $handwriting = array_pluck($listHandwriting, 'title', 'id');
-        $handwritingType = $this->handwritingService->findById($record->japanese_writing_practice_id)->type;
+        $handwritingType = null;
+
+        if ($record->japanese_writing_practice_id) {
+            $handwritingType = $this->handwritingService->findById($record->japanese_writing_practice_id)->type;
+        }
+
         //dd($series );
         $data['URL_LMS_CONTENT_EDIT'] = PREFIX . "lms/$series/content/edit/" . $slug;
         $data['URL_LMS_CONTENT']      = PREFIX . "lms/$series/content";

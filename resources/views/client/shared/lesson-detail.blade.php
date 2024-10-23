@@ -1,7 +1,6 @@
 @extends('client.app-course')
 
 @section('styles')
-    {{-- <link rel="stylesheet" href="{{ asset('assets/admin/css/exercise/bundle.min.css') }}"> --}}
     <link href="{{ asset('css/pages/lesson-detail/app-course.css') }}" rel="stylesheet">
     @yield('styles-content')
     @yield('lesson-detail-styles')
@@ -16,7 +15,13 @@
 
             <div class="nav nav-tabs navtab-select-menu" id="nav-tab" role="tablist">
                 <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
-                    type="button" role="tab" aria-controls="nav-home" aria-selected="true">Mô tả bài học</button>
+                    type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+                    @if (isset($flashcardDetail))
+                        Danh sách từ vựng
+                    @else
+                        Mô tả bài học
+                    @endif
+                </button>
                 <button class="nav-link" id="nav-questions-tab" data-bs-toggle="tab" data-bs-target="#nav-questions"
                     type="button" role="tab" aria-controls="nav-questions" aria-selected="false">Câu hỏi của
                     bạn</button>
@@ -32,25 +37,30 @@
                 <!-- Mô tả bài học -->
                 <div class="tab-pane fade show active nav_description_content" id="nav-home" role="tabpanel"
                     aria-labelledby="nav-home-tab" tabindex="0">
-                    <div class="lesson-container container">
-                        <h4 class="lesson-title">Bài học tiếng Nhật N5 - Giới thiệu về Kanji</h4>
-                        <div class="lesson-content">
-                            <div class="my-5">
-                                <div class="row">
-                                    <h4 class="text-primary">Khóa Học Tiếng Nhật Cơ Bản</h4>
-                                    <p class="lead">Khám phá ngôn ngữ và văn hóa Nhật Bản qua khóa học cơ bản này, phù hợp
-                                        cho người mới bắt đầu!</p>
-                                    <ul class="list-group list-group-flush mb-4">
-                                        <li class="list-group-item">Thời lượng: 40 giờ</li>
-                                        <li class="list-group-item">Số buổi: 20 buổi</li>
-                                        <li class="list-group-item">Cấp độ: Cơ bản</li>
-                                    </ul>
-                                    <a href="#" class="btn btn-primary btn-lg">Đăng ký ngay</a>
-                                    <a href="#" class="btn btn-outline-secondary btn-lg">Xem chi tiết</a>
+                    <div class="lesson-container">
+                        @if (isset($flashcardDetail))
+                            @include('client.lesson-detail.flashcard-detail')
+                        @else
+                            <h4 class="lesson-title">Bài học tiếng Nhật N5 - Giới thiệu về Kanji</h4>
+                            <div class="lesson-content">
+                                <div class="my-5">
+                                    <div class="row">
+                                        <h4 class="text-primary">Khóa Học Tiếng Nhật Cơ Bản</h4>
+                                        <p class="lead">Khám phá ngôn ngữ và văn hóa Nhật Bản qua khóa học cơ bản này, phù
+                                            hợp
+                                            cho người mới bắt đầu!</p>
+                                        <ul class="list-group list-group-flush mb-4">
+                                            <li class="list-group-item">Thời lượng: 40 giờ</li>
+                                            <li class="list-group-item">Số buổi: 20 buổi</li>
+                                            <li class="list-group-item">Cấp độ: Cơ bản</li>
+                                        </ul>
+                                        <a href="#" class="btn btn-primary btn-lg">Đăng ký ngay</a>
+                                        <a href="#" class="btn btn-outline-secondary btn-lg">Xem chi tiết</a>
+                                    </div>
                                 </div>
-                            </div>
 
-                        </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
 
@@ -211,6 +221,11 @@
         $(document).ready(function() {
             let isHidden = false;
 
+            @if (isset($flashcardDetail) && !empty($flashcardDetail))
+                isHidden = true;
+                $('#btn_hide_tab_content').find('i').toggleClass('bi-chevron-double-up bi-chevron-double-down');
+            @endif
+
             // Helper function to get the outer height of an element or return 0 if not found
             const getOuterHeight = selector => $(selector).outerHeight() || 0;
 
@@ -267,6 +282,13 @@
                             'overflow-y': 'auto',
                             'box-sizing': 'border-box'
                         });
+                    } else if ($('.flashcard-body').length) {
+                        // Set max-height and enable scrolling for exercise content when hidden
+                        $('.flashcard-body').css({
+                            'height': studyContentHeight - additionalHeight,
+                            'overflow-y': 'auto',
+                            'box-sizing': 'border-box'
+                        });
                     }
 
                 } else {
@@ -286,6 +308,11 @@
                         $('.vjs-theme-fantasy').css('min-height', '40vh');
                     } else if ($('.exercise-content').length) {
                         $('.exercise-content').css('height', '40vh');
+                    } else if ($('.handwriting-container').length) {
+                        $('.handwriting-container').css('height', '40vh');
+                    } else if ($('.flashcard-body').length) {
+                        $('.flashcard-body').css('height', '40vh');
+                        $('.flashcard-detail-container').css('height', '80vh');
                     }
                 }
             };

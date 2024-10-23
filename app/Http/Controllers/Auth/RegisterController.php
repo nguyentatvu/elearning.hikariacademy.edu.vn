@@ -123,7 +123,7 @@ class RegisterController extends Controller
         $user->is_register = 1;
         $user->slug = createSlug(User::class, $request->name);
         $user->login_enabled = 1;
-        $user->reward_point = 100;
+        $user->reward_point = getRewardPointRule('registration')['points'];
         $user->last_login_date = now();
         $user->login_streak = 1;
         $user->confirmation_code = str_random(30);

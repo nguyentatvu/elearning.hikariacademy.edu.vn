@@ -192,7 +192,7 @@ class LmsContentService extends BaseService
      * @param int $flashcardId
      * @return mixed
      */
-    protected function getFlashcardContent(int $flashcardId)
+    public function getFlashcardContent(int $flashcardId)
     {
         $flashcard = $this->lmsFlashcardService->getFlashcardContentById($flashcardId);
 
@@ -256,6 +256,16 @@ class LmsContentService extends BaseService
     }
 
     /**
+     * Get the first trial content of the series
+     *
+     * @param string $seriesId
+     * @return mixed(LmsContent|null)
+     */
+    public function getFirstTrialContentOfSeries(string $seriesId) {
+        return $this->repository->getFirstTrialContentOfSeries($seriesId);
+    }
+
+    /**
      * Get next content
      *
      * @param mixed $contentId
@@ -309,5 +319,15 @@ class LmsContentService extends BaseService
         $handwriting = $this->handwritingService->findByIdWithRelations($handwritingId, ['hiraganaWritingPractices', 'kanjiWritingPractices']);
 
         return $handwriting;
+    }
+
+    /**
+     * Get content count by series
+     *
+     * @param int $seriesId
+     * @return int
+     */
+    public function getContentCountBySeries(int $seriesId) {
+        return $this->repository->getContentCountBySeries($seriesId);
     }
 }
