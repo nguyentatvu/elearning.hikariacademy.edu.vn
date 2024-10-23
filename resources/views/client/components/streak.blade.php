@@ -600,7 +600,7 @@
             // Animation for "streak-count" on page load
             const streakAdd = parseInt(streakCurrent) + 1;
             const previousStreak = parseInt(streakCurrent);
-            console.log(previousStreak);
+
             // Set initial value of "streak-count" to the previous streak
             $('.streak-count').text(previousStreak);
 
@@ -829,7 +829,6 @@
                 });
             }
 
-            // Example usage of the function with streakCurrent set to '3'
-            setActiveDays('3');
+            setActiveDays(streakAdd);
         });
     </script>
