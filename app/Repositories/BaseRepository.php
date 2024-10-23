@@ -103,6 +103,17 @@ class BaseRepository
     }
 
     /**
+     * Get all by conditions
+     *
+     * @param array $conditions
+     * @return mixed(Model|Null)
+     */
+    public function getAllByConditions(array $conditions = [])
+    {
+        return $this->model->where($conditions)->get();
+    }
+
+    /**
      * Create data by array attributes
      *
      * @param array $attributes

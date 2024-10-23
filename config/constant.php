@@ -1,5 +1,7 @@
 <?php
 
+$pronunciationUrl = env('PRONUNCIATION_ASSESSMENT_URL');
+
 return [
     'article' => [
         'status' => [
@@ -87,5 +89,33 @@ return [
     ],
     'flash_card' => [
         'audio_url' => 'public/uploads/flashcard/',
-    ]
+    ],
+    'pronunciation' => [
+        'endpoint' => [
+            'upload' => $pronunciationUrl . '/upload',
+            'get-intonation' => $pronunciationUrl . '/get-intonation'
+        ],
+        'comment' => [
+            'excellent' => [
+                0 => 'Tuyệt vời! Bạn đã đạt {score} điểm! Phát âm của bạn rất tự nhiên, gần như hoàn hảo. Hãy tiếp tục duy trì phong độ này nhé!',
+                1 => 'Rất tốt! Với {score} điểm, phát âm của bạn rất chuẩn. Hãy duy trì sự tự tin này, bạn đã làm rất tuyệt!',
+                2 => 'Xuất sắc! {score} điểm cho thấy bạn phát âm rất giống người bản xứ. Hãy luyện thêm để càng hoàn thiện hơn!'
+            ],
+            'good' => [
+                0 => 'Chúc mừng! Bạn đã đạt {score} điểm! Phát âm của bạn khá tốt, chỉ cần luyện thêm một chút nữa để đạt độ tự nhiên hoàn hảo.',
+                1 => 'Điểm số của bạn là {score}, phát âm của bạn ổn rồi, chỉ còn một số âm cần cải thiện để phát âm tự nhiên hơn.',
+                2 => 'Bạn làm rất tốt với {score} điểm! Phát âm của bạn gần chuẩn rồi, hãy chú ý thêm một vài âm để đạt kết quả cao hơn nhé!'
+            ],
+            'average' => [
+                0 => 'Bạn đã đạt {score} điểm! Phát âm của bạn khá ổn, nhưng có một số âm cần điều chỉnh để giọng tự nhiên hơn. Hãy tiếp tục luyện tập!',
+                1 => 'Kết quả {score} điểm cho thấy bạn đang tiến bộ! Phát âm của bạn đang cải thiện, chỉ cần luyện thêm chút nữa là sẽ tự nhiên hơn.',
+                2 => 'Bạn làm khá tốt với {score} điểm, nhưng vẫn còn vài âm chưa chuẩn. Luyện thêm để cùng nhau cải thiện phát âm của bạn nhé!'
+            ],
+            'poor' => [
+                0 => 'Bạn đã đạt {score} điểm! Phát âm của bạn cần cải thiện nhiều, nhưng đây chỉ là bước khởi đầu. Cứ luyện tập đều đặn là sẽ thấy kết quả rõ rệt!',
+                1 => 'Cố lên! Mặc dù điểm của bạn là {score}, phát âm cần thêm luyện tập, chỉ cần kiên trì là bạn sẽ thấy sự thay đổi lớn!',
+                2 => 'Kết quả chưa cao ({score} điểm), nhưng đừng nản lòng! Phát âm cần nhiều luyện tập, và bạn sẽ thấy mình tiến bộ nhanh chóng nếu tiếp tục cố gắng'
+            ]
+        ]
+    ],
 ];

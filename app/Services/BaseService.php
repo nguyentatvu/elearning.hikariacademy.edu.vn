@@ -96,6 +96,17 @@ abstract class BaseService
     }
 
     /**
+     * Get all by conditions
+     *
+     * @param array $conditions
+     * @return mixed(Model|Null)
+     */
+    public function getAllByConditions(array $conditions = [])
+    {
+        return $this->repository->getAllByConditions($conditions);
+    }
+
+    /**
      * Create data by array attributes
      *
      * @param array $attributes

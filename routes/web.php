@@ -41,6 +41,9 @@ Route::prefix('learning-management')->name('learning-management.')->group(functi
 
     Route::get('lesson/handwriting/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showHandwriting')
         ->name('lesson.handwriting');
+
+    Route::get('lesson/pronunciation/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showPronunciation')
+        ->name('lesson.pronunciation');
 });
 
 // Page (Client)
@@ -1459,4 +1462,12 @@ Route::prefix('bai-viet')
             ->name('list_by_category');
         Route::get('/{article_slug}', 'UserArticleController@detail')
             ->name('detail');
+    });
+
+
+Route::prefix('pronunciation')
+    ->name('pronunciation.')
+    ->group(function () {
+        Route::post('', 'PronunciationController@assess')
+            ->name('assess');
     });
