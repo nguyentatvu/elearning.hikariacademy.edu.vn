@@ -22,6 +22,9 @@ use App\{
     JapaneseWritingPractice,
     HiraganaWritingPractice,
     KanjiWritingPractice,
+    Pronunciation,
+    PronunciationDetail,
+    Intonation
 };
 
 use Illuminate\Support\ServiceProvider;
@@ -83,6 +86,15 @@ class RepositoryServiceProvider extends ServiceProvider
         });
         $this->app->bind(KanjiWritingPracticeRepository::class, function () {
             return new KanjiWritingPracticeRepository(new KanjiWritingPractice);
+        });
+        $this->app->bind(PronunciationRepository::class, function () {
+            return new PronunciationRepository(new Pronunciation);
+        });
+        $this->app->bind(PronunciationDetailRepository::class, function () {
+            return new PronunciationDetailRepository(new PronunciationDetail);
+        });
+        $this->app->bind(IntonationRepository::class, function () {
+            return new IntonationRepository(new Intonation);
         });
     }
 }

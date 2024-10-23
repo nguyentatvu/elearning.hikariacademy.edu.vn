@@ -288,6 +288,13 @@
                             'overflow-y': 'auto',
                             'box-sizing': 'border-box'
                         });
+                    } else if ($('.pronunciation-body').length) {
+                        // Set max-height and enable scrolling for exercise content when hidden
+                        $('.pronunciation-body').css({
+                            'height': studyContentHeight - additionalHeight,
+                            'overflow-y': 'auto',
+                            'box-sizing': 'border-box'
+                        });
                     }
 
                 } else {
@@ -311,6 +318,8 @@
                     } else if ($('.flashcard-body').length) {
                         $('.flashcard-body').css('height', '40vh');
                         $('.flashcard-detail-container').css('height', '80vh');
+                    } else if ($('.pronunciation-body').length) {
+                        $('.pronunciation-body').css('height', '40vh');
                     }
                 }
             };

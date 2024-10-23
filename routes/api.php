@@ -12,6 +12,11 @@ Route::name('auth.')
         Route::patch('change-password', 'Api\AuthController@changePassword');
     });
 
+Route::prefix('pronunciation')
+    ->group(function () {
+        Route::post('', 'Api\PronunciationController@test');
+    });
+
 Route::group(['middleware' => 'auth:api'], function () {
     Route::name('user.')
         ->prefix('user')
