@@ -168,8 +168,20 @@
                 }
             }
 
-            // Start initialization
-            initializePlayer();
+            const player = videojs('my-video', getVideoConfig());
+
+            player.httpSourceSelector();
+            player.src({
+                src: '{{ $video_url }}',
+                type: 'application/x-mpegURL'
+            });
+
+            // Wait for the player to be ready before accessing menus
+            player.ready(function() {
+                addSkipButton(player);
+                allowQualitySelect(player);
+                earnPointsOnVideoEnded(player);
+            });
         })();
 
         const earnPointsOnVideoEnded = (player) => {
@@ -180,8 +192,14 @@
                     animateHicoin(rewardPoints);
                     checkFinishContent();
                 @endif
+                let lastLogin = '{{ \Carbon\Carbon::parse(Auth::user()->last_login_date)->format('Y-m-d') }}';
+                let today = '{{ \Carbon\Carbon::today()->format('Y-m-d') }}';
+
+                if (lastLogin != today) {
+                    showDailyStreak('{{ $detailContent->id }}');
+                }
             })
-        }
+        };
 
         const allowQualitySelect = (player) => {
             // Ensure HTTP Source Selector is fully initialized
@@ -273,5 +291,5 @@
                 }
             });
         }
-</script>
+    </script>
 @endsection

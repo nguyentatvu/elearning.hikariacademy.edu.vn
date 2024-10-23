@@ -475,6 +475,12 @@
                 await earnPointFinishContent('{{$detailContent->id}}', rewardPoint, 'exercise_test');
                 await animateHicoin(rewardPoint);
                 await checkFinishContent();
+                let lastLogin = '{{ \Carbon\Carbon::parse(Auth::user()->last_login_date)->format('Y-m-d') }}';
+                let today = '{{ \Carbon\Carbon::today()->format('Y-m-d') }}';
+
+                if (lastLogin != today) {
+                    showDailyStreak('{{ $detailContent->id }}');
+                }
             @endif
         })
         $(document).on('click','.button-rest',function(){

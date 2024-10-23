@@ -475,7 +475,7 @@ class UsersController extends Controller
         if (!isEligible($slug)) {
             return back();
         }
- 
+
         $this->validate($request, $validation);
         $name             = $request->name;
         $record->name  = $name;
@@ -483,7 +483,7 @@ class UsersController extends Controller
         $record->level   = 5;
         $record->address = $request->address;
         $record->save();
-       
+
         if (!env('DEMO_MODE')) {
             $this->processUpload($request, $record);
         }
@@ -1188,19 +1188,19 @@ class UsersController extends Controller
 		$userId = $request->id;
 		$data['active_class']       = 'resource';
 		$data['title']              = 'Xem khóa học-khóa luyện thi';
-	
+
 		// Get data course
 		$data['series'] = DB::table('lmsseries_combo')
 			->join('payment_method', 'payment_method.item_id', '=', 'lmsseries_combo.id')
 			->join('payments','payment_method.id','=','payments.payments_method_id')
 			->join('lmsseries','lmsseries.id','=','payments.item_id')
 			->select('lmsseries.*',DB::raw("(lmsseries_combo.slug) as combo_slug"),'payments.time','payment_method.created_at','payment_method.id AS idPayment','payment_method.status','payment_method.month_extend',
-				DB::raw("(SELECT COUNT(lmscontents.id)  FROM lmscontents  
-		WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) AND 
+				DB::raw("(SELECT COUNT(lmscontents.id)  FROM lmscontents
+		WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) AND
 			lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5) ) as total_course"),
-				DB::raw("(SELECT COUNT(lms_student_view.id)  FROM lms_student_view  
-				join lmscontents on lms_student_view.lmscontent_id = lmscontents.id 
-		WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) AND lms_student_view.users_id = ".$userId." AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5) 
+				DB::raw("(SELECT COUNT(lms_student_view.id)  FROM lms_student_view
+				join lmscontents on lms_student_view.lmscontent_id = lmscontents.id
+		WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) AND lms_student_view.users_id = ".$userId." AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
 			 ) as current_course"))
 			->where([
 				['payment_method.user_id',$userId],
@@ -1209,19 +1209,19 @@ class UsersController extends Controller
 			])
 			->distinct()
 			->get();
-	
+
 		// Get data course test
 		$couseList = DB::table('lmsseries_combo')
 			->join('payment_method', 'payment_method.item_id', '=', 'lmsseries_combo.id')
 			->join('payments','payment_method.id','=','payments.payments_method_id')
 			->join('lmsseries','lmsseries.id','=','payments.item_id')
 			->select('lmsseries.*',DB::raw("(lmsseries_combo.slug) as combo_slug"),'payments.time','payment_method.created_at','payment_method.id AS idPayment','payment_method.status','payment_method.month_extend',
-				DB::raw("(SELECT COUNT(lmscontents.id)  FROM lmscontents  
-		WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) AND 
+				DB::raw("(SELECT COUNT(lmscontents.id)  FROM lmscontents
+		WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) AND
 			lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5) ) as total_course"),
-				DB::raw("(SELECT COUNT(lms_student_view.id)  FROM lms_student_view  
-				join lmscontents on lms_student_view.lmscontent_id = lmscontents.id 
-		WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) AND lms_student_view.users_id = ".$userId." AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5) 
+				DB::raw("(SELECT COUNT(lms_student_view.id)  FROM lms_student_view
+				join lmscontents on lms_student_view.lmscontent_id = lmscontents.id
+		WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) AND lms_student_view.users_id = ".$userId." AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
 			 ) as current_course"))
 			->where([
 				['payment_method.user_id',$userId],
@@ -1230,7 +1230,7 @@ class UsersController extends Controller
 			])
 			->distinct()
 			->get();
-	
+
 		$data['series_selected'] = DB::table('lmsseries')
 			->join('lms_class','lmsseries.id','=','lms_class.lmsseries_id')
 			->join('classes','lms_class.classes_id','=','classes.id')
@@ -1242,22 +1242,22 @@ class UsersController extends Controller
 			])
 			->orderBy('order_by')
 			->get();
-		
-		
+
+
 		if($couseList != null) {
 			if($data['series'] == null) {
 				$data['series'] = collect([]);
 			}
-	
+
 			foreach ($couseList as $r) {
 				$data['series']->push($r);
 			}
-		}		
-			
+		}
+
 		$data['user'] = DB::table('users')
 			->where('users.id', '=',$userId)
 			->first();
-	
+
 		$data['layout']       = getLayout();
 		$view_name            = 'admin.users.resource-list';
 		return view($view_name, $data);
@@ -1266,7 +1266,7 @@ class UsersController extends Controller
 	public function postDisable(Request $request) {
 		$data['MessageCode'] = 500;
 		$data['MessageText'] = 'Lỗi không thể vô hiệu lớp học này';
-		
+
 		$id = $request->id;
 		$record = PaymentMethod::where('id', $id)->first();
 
@@ -1291,7 +1291,7 @@ class UsersController extends Controller
 		$data['MessageCode'] = 500;
 
 		$record = PaymentMethod::where('id', $id)->first();
-		
+
 		// Check record is exist
 		if($record == null) {
 			$data['MessageText'] = 'Dữ liệu không tồn tại';
@@ -1322,7 +1322,7 @@ class UsersController extends Controller
 			 	'examseries.category_id',
 				'quizresultfinish.id',
 				'quizresultfinish.finish',
-				'quizresultfinish.created_at', 
+				'quizresultfinish.created_at',
 				'quizresultfinish.quiz_1_total',
 				'quizresultfinish.quiz_2_total',
 				'quizresultfinish.quiz_3_total',
@@ -1339,13 +1339,13 @@ class UsersController extends Controller
 			foreach ($data['results'] as $record) {
 				# code...
 				if ($record->category_id <= 3) {
-					$style1 = ($this->checkKijunTen($record->category_id, 1, $record->quiz_1_total))? "info" : "danger"; 
-					$style2 = ($this->checkKijunTen($record->category_id, 2, $record->quiz_2_total))? "info" : "danger"; 
-					$style3 = ($this->checkKijunTen($record->category_id, 3, $record->quiz_3_total))? "info" : "danger"; 
+					$style1 = ($this->checkKijunTen($record->category_id, 1, $record->quiz_1_total))? "info" : "danger";
+					$style2 = ($this->checkKijunTen($record->category_id, 2, $record->quiz_2_total))? "info" : "danger";
+					$style3 = ($this->checkKijunTen($record->category_id, 3, $record->quiz_3_total))? "info" : "danger";
 					$detail = '言語知識（文字・語彙・文法）: <span class="label label-'.$style1.'">'.$record->quiz_1_total.'</span><br><br>読解: <span class="label label-'.$style2.'">'.$record->quiz_2_total.'</span><br><br>聴解: <span class="label label-'.$style3.'">'.$record->quiz_3_total.'</span>';
 				} else {
-					$style1 = ($this->checkKijunTen($record->category_id, 1, $record->quiz_1_total))? "info" : "danger"; 
-					$style3 = ($this->checkKijunTen($record->category_id, 2, $record->quiz_3_total))? "info" : "danger"; 
+					$style1 = ($this->checkKijunTen($record->category_id, 1, $record->quiz_1_total))? "info" : "danger";
+					$style3 = ($this->checkKijunTen($record->category_id, 2, $record->quiz_3_total))? "info" : "danger";
 					$detail = '言語知識（文字・語彙・文法）: <span class="label label-'.$style1.'">'.$record->quiz_1_total.'</span><br><br>聴解: <span class="label label-'.$style3.'">'.$record->quiz_3_total.'</span>';
 				}
 				$record->detail = $detail;
@@ -1356,7 +1356,7 @@ class UsersController extends Controller
 					} else{
 						$ketqua = '<span class="label label-warning">Chưa đạt</span>';
 					}
-	
+
 				} else {
 					$ketqua = '<span class="label label-danger">Chưa hoàn thành</span>';
 				}
@@ -1369,7 +1369,7 @@ class UsersController extends Controller
 		return view($view_name, $data);
 	}
 
-	
+
 	public function postCertificate(Request $request) {
 		$id = $request->id;
 		$data = array();
@@ -1405,7 +1405,7 @@ class UsersController extends Controller
 					break;
 				case 2:
 					return ($score>19)?true:false;
-					break;			
+					break;
 			break;
 		}
 	}
@@ -1465,7 +1465,7 @@ class UsersController extends Controller
 
     /**
      * The detailed learning progress screen
-     * 
+     *
      * @param string $slug
      * @return view
      */
@@ -1475,7 +1475,7 @@ class UsersController extends Controller
         if ($isValid = $this->isValidRecord($record)) {
             return redirect($isValid);
         }
-        
+
         /**
          * Validate the non-admin user wether is trying to access other user profile
          * If so return the user back to previous page with message
@@ -1497,7 +1497,7 @@ class UsersController extends Controller
 
     /**
      * Init data for learning function
-     * 
+     *
      * @param int $userId
      * @return array
      */
@@ -1517,7 +1517,7 @@ class UsersController extends Controller
         $data['series_completion'] = $recordVideos->series_completion;
         $data['overall_completion'] = $recordVideos->overall_completion;
         $data['average_videos_per_month'] = $recordVideos->average_videos_per_month;
-        
+
         // Get data related to score
         $avgScore = $this->calculateAverageScore($userId);
         $data['total_score'] = $avgScore->average_all_time;
@@ -1543,7 +1543,7 @@ class UsersController extends Controller
 
     /**
      * Get all videos by user id
-     * 
+     *
      * @param int $userId
      * @param bool $excludeUnwatchedCourses
      * @param Carbon $time
@@ -1560,7 +1560,7 @@ class UsersController extends Controller
         if ($time) {
             $startOfMonth = $time->startOfMonth()->format('Y-m-d');
             $endOfMonth = $time->endOfMonth()->format('Y-m-d');
-            
+
             // Filter by month
             $query->whereBetween('lms_student_view.created_date', [$startOfMonth, $endOfMonth]);
         }
@@ -1630,7 +1630,7 @@ class UsersController extends Controller
 
     /**
      * Caculator average score of test
-     * 
+     *
      * @param int $userId
      * @param Carbon $time
      * @return object
@@ -1640,14 +1640,14 @@ class UsersController extends Controller
         // Create the query to fetch test results
         $query = User::join('lms_test_result', 'lms_test_result.users_id', '=', 'users.id')
             ->where('users.id', $userId);
-    
+
         // If a time is provided, filter the results by the given time period
         if ($time) {
             $startOfMonth = $time->startOfMonth()->format('Y-m-d');
             $endOfMonth = $time->endOfMonth()->format('Y-m-d');
             $query->whereBetween('lms_test_result.created_at', [$startOfMonth, $endOfMonth]);
         }
-    
+
         // Get test results
         $testResults = $query->get();
 
@@ -1658,46 +1658,46 @@ class UsersController extends Controller
                 'average_per_month' => 0.0
             ];
         }
-    
+
         // Calculate averages
         $totalPointsAchieved = $testResults->sum('point');
         $totalPointsPossible = $testResults->sum('total_point');
         $averageAllTime = $totalPointsPossible > 0 ? ($totalPointsAchieved / $totalPointsPossible) * 100 : 0;
-    
+
         // Group results by month
         $monthlyScores = collect();
         $startDate = $testResults->min('created_at');
         $endDate = $testResults->max('created_at');
-    
+
         $startDate = Carbon::parse($startDate);
         $endDate = Carbon::parse($endDate);
-    
+
         while ($startDate->lte($endDate)) {
             $monthStart = $startDate->copy()->startOfMonth();
             $monthEnd = $startDate->copy()->endOfMonth();
-    
+
             $monthlyResults = $testResults->filter(function ($result) use ($monthStart, $monthEnd) {
                 $createdAt = Carbon::parse($result->created_at);
                 return $createdAt->between($monthStart, $monthEnd);
             });
-    
+
             $totalPointsAchievedMonth = $monthlyResults->sum('point');
             $totalPointsPossibleMonth = $monthlyResults->sum('total_point');
-    
+
             $monthlyScores->push([
                 'total_points_achieved' => $totalPointsAchievedMonth,
                 'total_points_possible' => $totalPointsPossibleMonth,
             ]);
-    
+
             $startDate->addMonth();
         }
-    
+
         $monthlyAverages = $monthlyScores->map(function ($monthlyScore) {
             return $monthlyScore['total_points_possible'] > 0 ?
                 ($monthlyScore['total_points_achieved'] / $monthlyScore['total_points_possible']) * 100 :
                 0;
         });
-    
+
         $averagePerMonth = $monthlyAverages->avg();
 
         return (object)[
@@ -1708,7 +1708,7 @@ class UsersController extends Controller
 
     /**
      * Take the time when students start (study, take exams, and do exercises)
-     * 
+     *
      * @param int $userId
      * @return object
      */
@@ -1739,7 +1739,7 @@ class UsersController extends Controller
 
     /**
      * Get scores of tests and exams in the course
-     * 
+     *
      * @param int $userId
      * @return collection|null
      */
@@ -1756,7 +1756,7 @@ class UsersController extends Controller
 
     /**
      * Get data total number of course for chart
-     * 
+     *
      * @param int $userId
      * @return array
      */
@@ -1772,12 +1772,12 @@ class UsersController extends Controller
                 'lmsseries.id',
                 'users.slug',
                 DB::raw("(SELECT COUNT(lmscontents.id) FROM lmscontents
-                        WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) 
+                        WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8)
                         AND lmscontents.lmsseries_id = lmsseries.id ) as total_course"),
-                DB::raw("(SELECT COUNT(lms_student_view.id) FROM lms_student_view  
-                        join lmscontents on lms_student_view.lmscontent_id = lmscontents.id 
-                        WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) 
-                        AND lms_student_view.users_id = users.id AND lmscontents.lmsseries_id = lmsseries.id) 
+                DB::raw("(SELECT COUNT(lms_student_view.id) FROM lms_student_view
+                        join lmscontents on lms_student_view.lmscontent_id = lmscontents.id
+                        WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8)
+                        AND lms_student_view.users_id = users.id AND lmscontents.lmsseries_id = lmsseries.id)
                         as current_course")
             ])
             ->where('users.id', $userId)
@@ -1821,7 +1821,7 @@ class UsersController extends Controller
 
     /**
      * Get data percentage of course by user for charts
-     * 
+     *
      * @param int $userId
      * @return array
      */
@@ -1832,7 +1832,7 @@ class UsersController extends Controller
             'lmsseries.title',
             'lmsseries.slug',
             DB::raw("(SELECT COUNT(lmscontents.id) FROM lmscontents
-                    WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) 
+                    WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8)
                     AND lmscontents.lmsseries_id = lmsseries.id) as total_course")
         ])
         ->get();
@@ -1862,7 +1862,7 @@ class UsersController extends Controller
             $notViewedCourses = max(0, $totalCourses - $viewedCourses);
             $purchasedCourses = $userPurchasedCourses->get($seriesId, 0);
             $notPurchasedCourses = $totalCourses - $purchasedCourses;
-        
+
             return [
                 'id' => $seriesId,
                 'title' => $series->title,
@@ -1878,14 +1878,14 @@ class UsersController extends Controller
         $borderColor = [];
         $borderColorDefault = [];
         $color_number = rand(0,999);
-        
+
         // Make color to column
         foreach ($result as $index => $item) {
             $bgcolor[] = getColor('background', $index);
             $border_color[] = getColor('background', $index);
             $borderColorDefault[] = getColor('', $color_number);
         }
-        
+
         $labelsVideo = $result->pluck('title')->toArray();
         $dataView = $result->pluck('viewed_courses')->toArray();
         $dataNotView = $result->pluck('not_viewed_courses')->toArray();
@@ -1960,5 +1960,13 @@ class UsersController extends Controller
         $data['layout']       = 'admin.layouts.student.studentsettinglayout';
         $view_name = 'admin.users.reward-points-leaderboard';
         return view($view_name, $data);
+    }
+
+    public function dailyStreak() {
+        $loginStreak = Auth::user()->login_streak;
+        $loginStreakConditions = config('constant.login.streak');
+        $this->userService->updateLoginStreak();
+        $totalPoint = $this->userService->caculateRewardPoints($loginStreak, $loginStreakConditions);
+        return $totalPoint;
     }
 }
