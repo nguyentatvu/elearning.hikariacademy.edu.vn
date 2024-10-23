@@ -44,9 +44,13 @@ Route::prefix('learning-management')->name('learning-management.')->group(functi
 });
 
 // Page (Client)
-Route::get('/', function () {
+Route::get('/index', function () {
     return view('client.pages.home');
-});
+})->name('home.index');
+
+
+Route::get('/roadmap/{comboSlug}/{slug}', 'StudentLmsController@roadmap')->name('home.roadmap');
+Route::post('/roadmap/{comboSlug}/{slug}', 'StudentLmsController@loadRoadMapDetail')->name('home.load-roadmap');
 
 Route::group([], function () {
     Route::match(['get', 'post'], '/login', 'Auth\LoginController@login')->name('login');

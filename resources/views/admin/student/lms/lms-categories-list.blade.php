@@ -197,7 +197,7 @@ $dr_trinhdo = array(
                                                 Hoàn thành: {{$r->current_course}}/{{$r->total_course}} bài học
                                             </span>
                                         </p>
-                                        <?php 
+                                        <?php
                                         $percent = 0;
                                         if($r->current_course > 0) {
                                             $percent =	(int)ceil((($r->current_course/$r->total_course)*100));
@@ -211,7 +211,7 @@ $dr_trinhdo = array(
                                                 {{$percent}}%
                                             </small>
                                         </div>
-                    
+
                                     </div>
                                 </div>
                             </div>
