@@ -2,7 +2,7 @@
 
 @section('header_scripts')
     <link href="{{ admin_asset('css/sweetalert2.css') }}" rel="stylesheet">
-    <script src="{{ asset('public/js/plugins/tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/tinymce/tinymce.min.js') }}"></script>
     <style>
         .file-upload {
             font-size: 16px;
