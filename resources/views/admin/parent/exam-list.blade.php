@@ -24,8 +24,7 @@
 			</div>
 			<div class="panel-body packages">
 				<!-- Form thêm bài thi -->
-				{{ Form::model('', array('url' => Request::url(), 'method'=>'post')) }}
-				<h3></h3>
+				{{ Form::model('', array('url' => 'parent/exam_list/' . $slug, 'method'=>'post')) }}
 				<?php 
 				$user_record = '';
 				?>

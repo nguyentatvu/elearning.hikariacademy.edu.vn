@@ -1,8 +1,8 @@
-<nav class="navbar navbar-expand-lg navbar-light px-5">
-    <div class="container-fluid px-5">
+<nav class="navbar navbar-expand-lg navbar-light px-lg-5 px-sm-4 px-3">
+    <div class="container-fluid">
         <!-- Logo -->
         <a class="navbar-brand me-auto" href="/">
-            <img src="{{ asset('images/Logo-hikari.png') }}" alt="Logo" class="d-inline-block align-text-top">
+            <img src="{{ asset('images/Logo-hikari.png') }}" alt="Logo" class="d-inline-block align-text-top logo-img">
         </a>
 
         <!-- Navbar Toggler for Mobile -->
@@ -14,18 +14,7 @@
 
         <!-- Main Navbar Content -->
         <div class="collapse navbar-collapse navbar-support-mobile" id="navbarSupportedContentMobile">
-            <div class="d-flex w-100 justify-content-between align-items-center">
-                <!-- Search Bar (Hidden on Mobile) -->
-                <div class="me-auto" id="navbarSupportedContent">
-                    <div class="row height d-flex justify-content-center align-items-center">
-                        <div class="form-search">
-                            <i class="bi bi-search"></i>
-                            <input type="text" spellcheck="false" class="form-input"
-                                placeholder="Tìm kiếm khoá học, bài viết, video, ...">
-                        </div>
-                    </div>
-                </div>
-
+            <div class="d-flex w-100 justify-content-end align-items-center">
                 <!-- Right Side: Coins, Courses, Notifications, and User Profile -->
                 <div class="d-flex align-items-center">
                     @if (Auth::check())

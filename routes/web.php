@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', 'SiteController@redirectHomePage');
+
+Route::get('home', function () {
+    return view('client.pages.home');
+});
+
 Route::prefix('learning-management')->name('learning-management.')->group(function () {
     Route::get('lesson/next', 'StudentLmsController@getNextLesson')
         ->name('next-lesson');
@@ -44,11 +50,22 @@ Route::prefix('learning-management')->name('learning-management.')->group(functi
 
     Route::get('lesson/pronunciation/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showPronunciation')
         ->name('lesson.pronunciation');
+
+    Route::post('daily-streak', 'UsersController@dailyStreak')
+        ->name('lesson.daily-streak');
 });
 
 // Page (Client)
-Route::get('/', function () {
+Route::get('/index', function () {
     return view('client.pages.home');
+})->name('home.index');
+
+
+Route::get('/roadmap/{comboSlug}/{slug}', 'StudentLmsController@roadmap')->name('home.roadmap');
+Route::post('/roadmap/{comboSlug}/{slug}', 'StudentLmsController@loadRoadMapDetail')->name('home.load-roadmap');
+
+Route::get('/roadmap', function () {
+    return view('client.pages.roadmap');
 });
 
 Route::group([], function () {
@@ -82,10 +99,10 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
     Route::get('/mock-exam/{slug}', 'MyPageController@mockExamDetail')
         ->name('mock-exam.detail');
 
-    Route::get('/my-personal', 'MypageController@showPersonal')
+    Route::get('/my-personal', 'MyPageController@showPersonal')
         ->name('personal');
 
-    Route::post('/update-info', 'MypageController@updateUserInfo')
+    Route::post('/update-info', 'MyPageController@updateUserInfo')
         ->name('update-info');
 
     Route::get('/my-courses', 'LmsSeriesController@listCategories')
@@ -108,7 +125,7 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
 });
 // Payment
 
-Route::get('payments/lms/{slug}', 'PaymentsController@lmsPayments');
+Route::get('payments/lms/{slug}', 'PaymentsController@lmsPayments')->name('payments.lms');
 
 Route::get('payments/momoqr/{slug}', 'PaymentsController@getMomoQr');
 
@@ -161,6 +178,15 @@ Route::prefix('mock-exam')
             ->name('ajax-rate');
     });
 
+Route::prefix('series')
+    ->name('series.')
+    ->group(function () {
+        Route::get('/introduction-detail/{combo_slug}', 'LmsSeriesController@introductionDetailForCombo')
+            ->name('introduction-detail-combo');
+        Route::get('/introduction-detail/{combo_slug}/{slug}', 'LmsSeriesController@introductionDetail')
+            ->name('introduction-detail');
+    });
+
 /**************************
  * ADMIN ROUTES
  *************************/
@@ -187,12 +213,6 @@ Route::prefix('roadmap')
         Route::delete('/delete-roadmap', 'RoadmapController@deleteRoadmap')
             ->name('delete-roadmap');
     });
-
-Route::get('/', 'SiteController@redirectHomePage');
-
-Route::get('home', function () {
-    return view('client.pages.home');
-});
 
 Route::get('dashboard', 'DashboardController@index');
 

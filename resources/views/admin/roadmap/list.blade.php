@@ -236,7 +236,7 @@
     <div class="container-fluid">
         <div class="roadmap-wrapper">
             <!-- Section 1: Course List -->
-            <h3>Danh sách khoá học</h3>
+            <h3 style="width: fit-content; margin-bottom: 0;">Danh sách khoá học</h3>
             <div class="row">
                 <div class="col-md-6">
                     <h4>Khoá học</h4>

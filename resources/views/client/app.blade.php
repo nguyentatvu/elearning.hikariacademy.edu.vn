@@ -25,12 +25,14 @@
             z-index: 99999;
             background: #ffffff;
             border: 1px solid #e6e6e6;
-            padding: 10px 0;
+            padding: 2px 0;
+            box-shadow: rgba(0, 0, 0, 0.09) 0px 1px 5px;
         }
 
         .main-content {
             position: relative;
             overflow: scroll;
+            overflow-x: hidden;
         }
 
         .main-content .content {

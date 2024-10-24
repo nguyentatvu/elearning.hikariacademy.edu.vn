@@ -6,6 +6,8 @@
 }
 
 $breakpoints: (
+    'pc-lg': '(min-width: 1400px)',
+    'max-pc-lg': 'screen and (max-width: 1399px)',
     'pc': '(min-width: 1200px)',
     'max-pc': 'screen and (max-width: 1199px)',
     'tb': '(min-width: 992px)',
