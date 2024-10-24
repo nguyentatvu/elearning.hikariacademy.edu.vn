@@ -38,9 +38,8 @@ class LmsSeriesController extends Controller
         LmsSeriesComboService $lmsSeriesComboService,
         LmsContentService $lmsContentService,
         PaymentMethodService $paymentMethodService
-    )
-	{
-		$this->middleware('auth')->except(['introductionDetail', 'introductionDetailForCombo']);
+    ) {
+        $this->middleware('auth')->except(['introductionDetail', 'introductionDetailForCombo']);
         $this->lmsSeriesService = $lmsSeriesService;
         $this->lmsSeriesComboService = $lmsSeriesComboService;
         $this->lmsContentService = $lmsContentService;
@@ -1127,8 +1126,8 @@ class LmsSeriesController extends Controller
      * Introduction detail
      *
      * @param  \Illuminate\Http\Request  $request
-	 * @param  string $combo_slug
-	 * @param  string $slug
+     * @param  string $combo_slug
+     * @param  string $slug
      * @return \Illuminate\Http\Response
      */
     function introductionDetail(Request $request, string $combo_slug, string $slug) {
