@@ -10,8 +10,8 @@
             </a>
         </li>
 
-        <li class="sidebar-item nav-item {{ Request::is('news') ? 'active' : '' }}">
-            <a href="#" class="nav-link d-flex flex-column justify-content-center align-items-center"
+        <li class="sidebar-item nav-item {{ Request::is('bai-viet') ? 'active' : '' }}">
+            <a href="{{ route('user-articles.list') }}" class="nav-link d-flex flex-column justify-content-center align-items-center"
                 title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Orders">
                 <img src="{{ asset('images/icons/News.svg') }}" alt="" srcset="">
                 <span>Bài viết</span>
@@ -24,14 +24,6 @@
                 data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Contact">
                 <img src="{{ asset('images/icons/Contact.svg') }}" alt="" srcset="">
                 <span>Liên hệ</span>
-            </a>
-        </li>
-
-        <li class="sidebar-item nav-item {{ Request::is('chat') ? 'active' : '' }}">
-            <a href="#" class="nav-link d-flex flex-column justify-content-center align-items-center"
-                title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Chat">
-                <img src="{{ asset('images/icons/Message-Bot.svg') }}" alt="" srcset="">
-                <span>Chat</span>
             </a>
         </li>
     </ul>

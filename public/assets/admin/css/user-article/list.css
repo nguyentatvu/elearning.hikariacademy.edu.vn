@@ -27,7 +27,7 @@ body {
 }
 
 a:hover {
-    color: #156ac8;
+    color: #156ac8 !important;
     text-decoration: none;
 }
 
@@ -43,14 +43,14 @@ a:hover {
 
 @media (min-width: 1280px) {
     .main-container .container {
-        max-width: 1100px;
+        max-width: 1200px;
     }
 }
 
 .search-featured-section {
     background-color: #e0effa;
     width: 100%;
-    border-bottom: 1px solid #cfcfcf;
+    /* border-bottom: 1px solid #cfcfcf; */
 }
 
 .search-section-container {
@@ -79,6 +79,10 @@ a:hover {
     border-radius: 30px;
     border: 3px solid #156ac8;
     box-shadow: rgba(14, 63, 126, 0.04) 0px 0px 0px 1px, rgba(42, 51, 69, 0.04) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.04) 0px 6px 6px -3px, rgba(14, 63, 126, 0.04) 0px 12px 12px -6px, rgba(14, 63, 126, 0.04) 0px 24px 24px -12px;
+}
+
+.search-input:focus-visible {
+    border-color: #6AC4F3;
 }
 
 .latest-article-section {
@@ -169,6 +173,7 @@ a:hover {
 
 .latest-article .article-description {
     margin-top: 10px;
+    color: rgb(75, 93, 115);
 }
 
 .latest-article .article-info {
@@ -190,6 +195,10 @@ a:hover {
 
 .article-list-container {
     width: 70%;
+}
+
+.article-description {
+    color: rgb(75, 93, 115);
 }
 
 .article-list {
@@ -303,10 +312,10 @@ a:hover {
     position: relative;
 }
 
-.search-box .fa-search {
+.search-box .bi-search {
     position: absolute;
-    top: 10px;
-    left: 10px;
+    top: 8px;
+    left: 11px;
     font-size: 18px;
     color: #156ac8;
 }
@@ -379,6 +388,19 @@ a:hover {
     margin-top: 40px;
 }
 
+.featured-section a, .article-section a {
+    color: rgb(46, 56, 77) !important;
+}
+
+.featured-section a:hover, .article-section a:hover {
+    color: #156ac8 !important;
+}
+
+.container-fluid {
+    padding-right: 0;
+    padding-left: 0;
+}
+
 @media (max-width:991px) {
     .featured-section {
         flex-direction: column;
@@ -410,5 +432,13 @@ a:hover {
 @media (max-width:575px) {
     .search-text {
         display: none;
+    }
+
+    .main-container .container {
+        padding: 10px;
+    }
+
+    .search-section {
+        height: 70px;
     }
 }

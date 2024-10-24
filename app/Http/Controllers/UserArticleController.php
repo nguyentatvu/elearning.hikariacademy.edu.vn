@@ -37,7 +37,7 @@ class UserArticleController extends Controller
             ->latest('published_at')
             ->paginate(PAGE_ITEMS_LIMIT);
 
-        return view('admin.user-articles.list', compact('articles', 'latest_articles', 'search', 'categories', 'featured_article_number', 'active_class', 'title'));
+        return view('client.user-articles.list', compact('articles', 'latest_articles', 'search', 'categories', 'featured_article_number', 'active_class', 'title'));
     }
 
     /**
@@ -63,7 +63,7 @@ class UserArticleController extends Controller
             ->latest('published_at')
             ->paginate(PAGE_ITEMS_LIMIT);
 
-        return view('admin.user-articles.list-by-category', compact('articles', 'categories', 'page_category', 'active_class', 'title'));
+        return view('client.user-articles.list-by-category', compact('articles', 'categories', 'page_category', 'active_class', 'title'));
     }
 
     /**
@@ -90,6 +90,6 @@ class UserArticleController extends Controller
             ->take(4)
             ->get();
 
-        return view('admin.user-articles.detail', compact('categories', 'article', 'related_articles', 'active_class', 'title'));
+        return view('client.user-articles.detail', compact('categories', 'article', 'related_articles', 'active_class', 'title'));
     }
 }
