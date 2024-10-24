@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class LmsSeriesComboService extends BaseService
 {
     private $lmsSeriesService;
+    private $lmsContentService;
 
     public function __construct(LmsSeriesComboRepository $repository)
     {
@@ -28,6 +29,19 @@ class LmsSeriesComboService extends BaseService
             $this->lmsSeriesService = app(LmsSeriesService::class);
         }
         return $this->lmsSeriesService;
+    }
+
+    /**
+     * Get LmsContentService
+     *
+     * @return LmsContentService
+     */
+    public function getLmsContentService()
+    {
+        if (!$this->lmsContentService) {
+            $this->lmsContentService = app(LmsContentService::class);
+        }
+        return $this->lmsContentService;
     }
 
     /**
@@ -109,5 +123,85 @@ class LmsSeriesComboService extends BaseService
     public function getBySeriesId(int $seriesComboId, int $seriesId, array $select = ['*'])
     {
         return $this->repository->getBySeriesId($seriesComboId, $seriesId, $select);
+    }
+
+    /**
+     * Get all series by type exclude combo series id
+     *
+     * @param $type
+     * @param $comboSeriesId
+     * @return mixed
+     */
+    public function getAllPaidSeriesByTypeExcludeComboId($type, $comboSeriesId)
+    {
+        $allPaidComboSeries =  $this->repository->getAllPaidSeriesByTypeExcludeComboId($type, $comboSeriesId);
+        $allPaidComboSeries->map(function ($item) {
+            $seriesIdList = [];
+
+            for($i = 1; $i <= 5; $i++) {
+                if (!is_null($item->{'n'.$i})) {
+                    $seriesIdList[] = $item->{'n'.$i};
+                }
+            }
+
+            if (count($seriesIdList) == 1) {
+                $item->content_count = $this->getLmsContentService()->getContentCountBySeries($seriesIdList[0]);
+                $item->chapter_count = $this->getLmsContentService()->getChapterCountBySeries($seriesIdList[0]);
+                $item->seriesList = [$this->getLmsSeriesService()->findById($seriesIdList[0])];
+            } elseif (count($seriesIdList) > 1) {
+                $chapterCount = 0;
+                $contentCount = 0;
+                $seriesList = [];
+
+                foreach ($seriesIdList as $seriesId) {
+                    $chapterCount += $this->getLmsContentService()->getChapterCountBySeries($seriesId);
+                    $contentCount += $this->getLmsContentService()->getContentCountBySeries($seriesId);
+                    $seriesList[] = $this->getLmsSeriesService()->findById($seriesId);
+                }
+
+                $item->content_count = $contentCount;
+                $item->chapter_count = $chapterCount;
+                $item->seriesList = $seriesList;
+            }
+
+            return $item;
+        });
+
+        return $allPaidComboSeries;
+    }
+
+    /**
+     * Get series combo by slug with its series
+     *
+     * @param string $combo_slug
+     * @return mixed
+     */
+    public function getSeriesComboBySlugWithSeries(string $combo_slug) {
+        $seriesCombo = $this->getByCondition('slug', $combo_slug);
+
+        $seriesList = [];
+        for($index = 1; $index <= 5; $index++) {
+            if ($seriesCombo->{"n{$index}"}) {
+                $series = $this->getLmsSeriesService()->findById($seriesCombo->{"n{$index}"});
+                $series->content_count = $this->getLmsContentService()->getContentCountBySeries($series->id);
+                $series->comboSeries = $this->getSingleSeriesComboBySeriesId($series->id);
+                $series->month_duration = config('constant.series_combo.month_duration_map')[$series->comboSeries->time];
+                $seriesList[] = $series;
+            }
+        }
+        $seriesCombo->seriesList = $seriesList;
+        $seriesCombo->month_duration = config('constant.series_combo.month_duration_map')[$seriesCombo->time];
+
+        return $seriesCombo;
+    }
+
+    /**
+     * Get single series combo by series id
+     *
+     * @param string $seriesId
+     * @return mixed
+     */
+    public function getSingleSeriesComboBySeriesId(string $seriesId) {
+        return $this->repository->getSingleSeriesComboBySeriesId($seriesId);
     }
 }

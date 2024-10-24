@@ -98,4 +98,8 @@
         display: flex;
         gap: 6px;
     }
+
+    .content {
+        min-height: fit-content !important;
+    }
 }

@@ -75,8 +75,8 @@
                 if (initAttempts >= MAX_ATTEMPTS) {
                     console.error('Failed to initialize video player after', MAX_ATTEMPTS, 'attempts');
 
-                    $('#my-video').hide();
-                    $('.video-placeholder').show();
+                    // $('#my-video').hide();
+                    // $('.video-placeholder').show();
                     return;
                 }
                 initAttempts++;

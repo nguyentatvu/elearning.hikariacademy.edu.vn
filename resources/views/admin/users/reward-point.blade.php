@@ -556,7 +556,7 @@
                                             <div class="dark-overlay">
                                                 <div class="off-price-percent">Giảm {{ $series->redeemed_percent }}%</div>
                                             </div>
-                                            <img src="{{ asset('/public/' . $series_upload_path . $series->image) }}" alt="series image">
+                                            <img src="{{ asset('/public/' . config('constant.series.upload_path') . $series->image) }}" alt="series image">
                                         </div>
                                         <div class="redeem-reward-info">
                                             <div class="d-flex justify-content-between align-items-start">

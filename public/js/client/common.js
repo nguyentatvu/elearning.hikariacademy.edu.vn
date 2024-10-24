@@ -153,7 +153,7 @@ const submitLogin = () => {
 }
 
 // Show auth modal
-const showAuthModal = (isLogin) => {
+const showAuthModal = (isLogin = true) => {
     if (isLogin)
         $('[data-tab="#login_content"]').trigger('click');
     else

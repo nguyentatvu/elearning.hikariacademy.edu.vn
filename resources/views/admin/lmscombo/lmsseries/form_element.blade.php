@@ -384,20 +384,31 @@
 
 	</fieldset>
 
-	<fieldset class="form-group  col-md-12">
+    @php
+        if ($record) {
+            $description = json_decode($record->description);
+        } else {
+            $description = null;
+        }
+    @endphp
 
-
-
-		{{ Form::label('description', getphrase('description')) }}
-
-
-
-		{{ Form::textarea('description', $value = null , $attributes = array('class'=>'form-control ckeditor', 'rows'=>'5', 'placeholder' => getPhrase('description'))) }}
-
-	</fieldset>
-
-
-
+    <fieldset class="form-group col-md-12">
+        <legend>Mô tả về combo khoá học</legend>
+        {{ Form::label('content_description', 'Mô tả nội dung chính') }}
+        {{ Form::textarea('content_description', $value = optional($description)->content_description , $attributes = array('class'=>'form-control ckeditor', 'rows'=>'7', 'placeholder' => '')) }}
+    </fieldset>
+    <fieldset class="form-group col-md-6">
+        {{ Form::label('time_description', 'Mô tả thời gian học') }}
+        {{ Form::textarea('time_description', $value = optional($description)->time_description , $attributes = array('class'=>'form-control ckeditor', 'rows'=>'3', 'placeholder' => '')) }}
+    </fieldset>
+    <fieldset class="form-group col-md-6">
+        {{ Form::label('curriculum_description', 'Mô tả giáo trình') }}
+        {{ Form::textarea('curriculum_description', $value = optional($description)->curriculum_description , $attributes = array('class'=>'form-control ckeditor', 'rows'=>'3', 'placeholder' => '')) }}
+    </fieldset>
+    <fieldset class="form-group col-md-6">
+        {{ Form::label('teacher_description', 'Mô tả giảng viên') }}
+        {{ Form::textarea('teacher_description', $value = optional($description)->teacher_description , $attributes = array('class'=>'form-control ckeditor', 'rows'=>'3', 'placeholder' => '')) }}
+    </fieldset>
 </div>
 
 <div class="buttons text-center">

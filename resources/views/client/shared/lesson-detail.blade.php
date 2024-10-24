@@ -69,7 +69,7 @@
                     aria-labelledby="nav-questions-tab" tabindex="0">
                     <div class="comment-section">
                         <div class="comment-input">
-                            <img alt="User avatar" height="40" src="user-avatar-url.png" width="40" />
+                            <img alt="User avatar" height="40" src="{{ asset('images/no-avatar.png') }}" width="40" />
                             <input placeholder="Nhập bình luận mới của bạn" type="text" />
                         </div>
 
@@ -81,7 +81,7 @@
 
                         <!-- Bình luận 1 -->
                         <div class="comment">
-                            <img alt="User avatar" height="40" src="user-avatar-url.png" width="40" />
+                            <img alt="User avatar" height="40" src="{{ asset('images/no-avatar.png') }}" width="40" />
                             <div class="comment-body">
                                 <div class="name">Học viên A</div>
                                 <div class="time">2 tháng trước</div>
@@ -93,7 +93,7 @@
 
                         <!-- Bình luận 1 -->
                         <div class="comment">
-                            <img alt="User avatar" height="40" src="user-avatar-url.png" width="40" />
+                            <img alt="User avatar" height="40" src="{{ asset('images/no-avatar.png') }}" width="40" />
                             <div class="comment-body">
                                 <div class="name">Học viên A</div>
                                 <div class="time">2 tháng trước</div>
@@ -105,7 +105,7 @@
 
                         <!-- Bình luận 1 -->
                         <div class="comment">
-                            <img alt="User avatar" height="40" src="user-avatar-url.png" width="40" />
+                            <img alt="User avatar" height="40" src="{{ asset('images/no-avatar.png') }}" width="40" />
                             <div class="comment-body">
                                 <div class="name">Học viên A</div>
                                 <div class="time">2 tháng trước</div>
@@ -117,7 +117,7 @@
 
                         <!-- Bình luận 1 -->
                         <div class="comment">
-                            <img alt="User avatar" height="40" src="user-avatar-url.png" width="40" />
+                            <img alt="User avatar" height="40" src="{{ asset('images/no-avatar.png') }}" width="40" />
                             <div class="comment-body">
                                 <div class="name">Học viên A</div>
                                 <div class="time">2 tháng trước</div>
@@ -129,7 +129,7 @@
 
                         <!-- Bình luận 1 -->
                         <div class="comment">
-                            <img alt="User avatar" height="40" src="user-avatar-url.png" width="40" />
+                            <img alt="User avatar" height="40" src="{{ asset('images/no-avatar.png') }}" width="40" />
                             <div class="comment-body">
                                 <div class="name">Học viên A</div>
                                 <div class="time">2 tháng trước</div>
@@ -141,7 +141,7 @@
 
                         <!-- Bình luận 1 -->
                         <div class="comment">
-                            <img alt="User avatar" height="40" src="user-avatar-url.png" width="40" />
+                            <img alt="User avatar" height="40" src="{{ asset('images/no-avatar.png') }}" width="40" />
                             <div class="comment-body">
                                 <div class="name">Học viên A</div>
                                 <div class="time">2 tháng trước</div>
@@ -153,7 +153,7 @@
 
                         <!-- Bình luận 2 -->
                         <div class="comment">
-                            <img alt="User avatar" height="40" src="user-avatar-url.png" width="40" />
+                            <img alt="User avatar" height="40" src="{{ asset('images/no-avatar.png') }}" width="40" />
                             <div class="comment-body">
                                 <div class="name">Học viên B</div>
                                 <div class="time">3 tháng trước</div>

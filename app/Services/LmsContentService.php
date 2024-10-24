@@ -330,4 +330,17 @@ class LmsContentService extends BaseService
     public function getContentCountBySeries(int $seriesId) {
         return $this->repository->getContentCountBySeries($seriesId);
     }
+
+
+
+    /**
+     * Get content count by series
+     *
+     * @param int $seriesId
+     * @return int
+     */
+    public function getChapterCountBySeries(int $seriesId)
+    {
+        return $this->repository->getChapterCountBySeries($seriesId);
+    }
 }

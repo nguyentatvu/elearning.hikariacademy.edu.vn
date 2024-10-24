@@ -19,7 +19,11 @@ return [
     'series_combo' => [
         'image_url' => 'public/uploads/lms/combo/',
         'upload_path' => 'uploads/lms/combo/',
-        'test' => 1,
+        'month_duration_map' => [
+            "0" => 3,
+            "1" => 6,
+            "2" => 12
+        ]
     ],
     'series' => [
         'upload_path' => 'uploads/lms/series/',
@@ -87,9 +91,6 @@ return [
             '1' => 'Hiển thị',
             '0' => 'Ẩn',
         ]
-    ],
-    'series_combo' => [
-        'image_url' => 'public/uploads/lms/combo/',
     ],
     'flash_card' => [
         'audio_url' => 'public/uploads/flashcard/',
