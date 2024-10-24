@@ -131,4 +131,42 @@ class LmsSeriesComboRepository extends BaseRepository
 
         return $seriesCombo;
     }
+
+    /**
+     * Get all series by type exclude combo series id
+     *
+     * @param $type
+     * @param $comboSeriesId
+     * @return mixed
+     */
+    public function getAllPaidSeriesByTypeExcludeComboId($type, $comboSeriesId)
+    {
+        return $this->model::where('type', $type)
+            ->where('id', '<>', $comboSeriesId)
+            ->where('delete_status', 0)
+            ->where('cost', '>', 0)
+            ->get();
+    }
+
+    /**
+     * Get single series combo by series id
+     *
+     * @param string $seriesId
+     * @return mixed
+     */
+    public function getSingleSeriesComboBySeriesId(string $seriesId) {
+        return $this->model::where(function ($query) use ($seriesId) {
+            $query->where('n1', $seriesId)
+                ->orWhere('n2', $seriesId)
+                ->orWhere('n3', $seriesId)
+                ->orWhere('n4', $seriesId)
+                ->orWhere('n5', $seriesId);
+        })->whereRaw('(
+            (n1 is not null) +
+            (n2 is not null) +
+            (n3 is not null) +
+            (n4 is not null) +
+            (n5 is not null)) = 1')
+            ->first();
+    }
 }

@@ -81,9 +81,9 @@ class StudentLmsController extends Controller
         // If 'stt' does not exist, there's no need to check it.
         // If 'stt' exists, perform the check.
         if ($params['stt'] === '') {
-            $content = $this->lmsContentService->findById((int) $params['stt']);
-        } else {
             $content = true;
+        } else {
+            $content = $this->lmsContentService->findById((int) $params['stt']);
         }
 
         if (
@@ -91,7 +91,7 @@ class StudentLmsController extends Controller
             !$this->prepContent['series_combo_id'] ||
             !$content
         ) {
-            return redirect()->to('/');
+            throw new RedirectException(redirect()->to('/'));
         }
     }
 

@@ -34,7 +34,6 @@ function showCourseRoadmaps(courseId) {
         roadmapList.append(li);
     });
 
-    console.log(roadmapList.children().length);
     if (roadmapList.children().length == 0) {
         roadmapList.append(
             $('<p>')
@@ -287,9 +286,10 @@ function scrollToItem(container, targetItem, offset = 0) {
     });
 }
 
-function addLessonToDay(lessonId, lessonType) {
+function addLessonToDay(lessonId, lessonNumType) {
     if (currentDayElement) {
         const lesson = lessons[currentCourseId].find(l => l.id === parseInt(lessonId));
+        const lessonType = getTextTypeOfLesson(lessonNumType);
         const lessonElement = $('<div>')
             .addClass('lesson-item')
             .attr('data-lesson-id', lessonId)
@@ -303,7 +303,7 @@ function showLessonToDayForSavedRoadmap(lesson, dayElement) {
     const lessonElement = $('<div>')
         .addClass('lesson-item')
         .attr('data-lesson-id', lesson.id)
-        .attr('data-lesson-type', lesson.num_type)
+        .attr('data-lesson-type', lesson.type)
         .text(lesson.name);
     dayElement.append(lessonElement);
 }
@@ -429,11 +429,10 @@ function saveRoadmap() {
         $(roadmapDay).find('.lesson-item').each(function(lessonIndex, dayLesson) {
             dayLessons.push({
                 id: $(dayLesson).data('lesson-id'),
-                type: getTextTypeOfLesson($(dayLesson).data('lesson-type')),
+                type: $(dayLesson).data('lesson-type'),
                 name: $(dayLesson).text().trim()
             });
         });
-        console.log($(roadmapDay).data('day'), $(roadmapDay).find('.lesson-item').length, roadmapDay);
 
         if (dayLessons.length == 0) return;
 

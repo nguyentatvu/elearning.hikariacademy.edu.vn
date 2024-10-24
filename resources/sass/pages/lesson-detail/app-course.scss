@@ -39,10 +39,9 @@ html {
   margin-bottom: 20px;
 
   img {
-    width: 40px;
-    height: 40px;
     border-radius: 50%;
     margin-right: 10px;
+    object-fit: cover;
   }
 }
 
@@ -108,7 +107,7 @@ html {
   font-weight: 700;
   display: block;
   color: black;
-  padding: 16px 20px;
+  padding: 16px 16px;
   transition: color 0.3s ease;
 
   &:hover {

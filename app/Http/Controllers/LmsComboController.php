@@ -268,7 +268,13 @@ class LmsComboController extends Controller
 
             $record->total_items    = $total;
             $record->short_description  = $request->short_description;
-            $record->description    = $request->description;
+            $description_object = [
+                'content_description' => $request->content_description ?? '',
+                'time_description' => $request->time_description ?? '',
+                'curriculum_description' => $request->curriculum_description ?? '',
+                'teacher_description' => $request->teacher_description ?? ''
+            ];
+            $record->description = json_encode($description_object);
 
 
             $record->time   = $request->time;
@@ -489,7 +495,13 @@ class LmsComboController extends Controller
 
             $record->total_items    = $total;
             $record->short_description  = $request->short_description;
-            $record->description    = $request->description;
+            $description_object = [
+                'content_description' => $request->content_description ?? '',
+                'time_description' => $request->time_description ?? '',
+                'curriculum_description' => $request->curriculum_description ?? '',
+                'teacher_description' => $request->teacher_description ?? ''
+            ];
+            $record->description = json_encode($description_object);
 
 
             $record->time   = $request->time;

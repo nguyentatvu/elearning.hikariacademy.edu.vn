@@ -4,12 +4,17 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use \App;
 use App\Comment;
+use App\Exceptions\RedirectException;
 use App\LmsContent;
 use App\Subject;
 use App\LmsSeries;
 use App\LmsSeriesCombo;
 use App\PaymentMethod;
 use App\QuizResultReview;
+use App\Services\LmsContentService;
+use App\Services\LmsSeriesComboService;
+use App\Services\LmsSeriesService;
+use App\Services\PaymentMethodService;
 use Yajra\DataTables\DataTables;
 use DB;
 use Auth;
@@ -20,9 +25,26 @@ use Input;
 use Excel;
 class LmsSeriesController extends Controller
 {
-	public function __construct()
+    // Content preparation properties
+    private $prepContent = [];
+
+    private $lmsSeriesService;
+    private $lmsSeriesComboService;
+    private $paymentMethodService;
+    private $lmsContentService;
+
+	public function __construct(
+        LmsSeriesService $lmsSeriesService,
+        LmsSeriesComboService $lmsSeriesComboService,
+        LmsContentService $lmsContentService,
+        PaymentMethodService $paymentMethodService
+    )
 	{
-		$this->middleware('auth');
+		$this->middleware('auth')->except(['introductionDetail', 'introductionDetailForCombo']);
+        $this->lmsSeriesService = $lmsSeriesService;
+        $this->lmsSeriesComboService = $lmsSeriesComboService;
+        $this->lmsContentService = $lmsContentService;
+        $this->paymentMethodService = $paymentMethodService;
 	}
 	/**
 	 * Course listing method
@@ -1100,4 +1122,202 @@ class LmsSeriesController extends Controller
 			'view_name' => $viewContent,
 		]);
 	}
+
+    /**
+     * Introduction detail
+     *
+     * @param  \Illuminate\Http\Request  $request
+	 * @param  string $combo_slug
+	 * @param  string $slug
+     * @return \Illuminate\Http\Response
+     */
+    function introductionDetail(Request $request, string $combo_slug, string $slug) {
+        $data['is_multiple_combo'] = $this->checkMultipleSeriesCombo($combo_slug);
+        if ($data['is_multiple_combo']) {
+            abort(404);
+        }
+
+        $this->processLessonContent($combo_slug, $slug);
+        $data['series_learning_description'] = $this->prepContent['series_combo']->description;
+        $data['other_combo_series'] = $this->lmsSeriesComboService->getAllPaidSeriesByTypeExcludeComboId(
+            $this->prepContent['series_combo']->type,
+            $this->prepContent['series_combo']->id
+        );
+
+        $this->prepContent['series_combo']->content_count =
+            $this->lmsContentService->getContentCountBySeries($this->prepContent['series']->id);
+        $this->prepContent['series_combo']->chapter_count =
+            $this->lmsContentService->getChapterCountBySeries($this->prepContent['series']->id);
+
+        return view('client.pages.series-introduction', array_merge(
+            $this->getPreparedContentVariables(),
+            $data
+        ));
+    }
+
+    /**
+     * Introduction detail for combo
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string $combo_slug
+     * @return \Illuminate\Http\Response
+     */
+    function introductionDetailForCombo(Request $request, string $combo_slug) {
+        $data['is_multiple_combo'] = $this->checkMultipleSeriesCombo($combo_slug);
+        if (!$data['is_multiple_combo']) {
+            abort(404);
+        }
+        $data['seriesCombo'] = $this->lmsSeriesComboService->getSeriesComboBySlugWithSeries($combo_slug);
+        $data['other_combo_series'] = $this->lmsSeriesComboService->getAllPaidSeriesByTypeExcludeComboId(
+            $data['seriesCombo']->type,
+            $data['seriesCombo']->id
+        );
+        $data['series_learning_description'] = $data['seriesCombo']->description;
+
+        // Check valid payment
+
+        $data['isValidPayment']
+            = $this->paymentMethodService->checkSerieValidity(auth()->id() ?? -1, $data['seriesCombo']->id);
+
+        return view('client.pages.series-introduction', $data);
+    }
+
+
+
+    /**
+     * Check if multiple series combo is selected
+     *
+     * @param string $combo_slug
+     * @return void
+     */
+    private function checkMultipleSeriesCombo(string $combo_slug) {
+        $this->prepContent['series_combo'] =
+            $this->lmsSeriesComboService->getByCondition('slug', $combo_slug);
+        $this->prepContent['series_combo']->month_duration = config('constant.series_combo.month_duration_map')[$this->prepContent['series_combo']->time];
+
+        if (!$this->prepContent['series_combo']) {
+            abort(404);
+        }
+
+        $seriesCount = 0;
+        for($index = 1; $index <= 5; $index++) {
+            $this->prepContent['series_combo']->{"n{$index}"} ? $seriesCount++ : null;
+        }
+
+        return $seriesCount > 1;
+    }
+
+    /**
+     * Get prepared content variables that will be used in view
+     *
+     * @return array
+     */
+    private function getPreparedContentVariables() {
+        return [
+            'contents' => $this->prepContent['contents'],
+            'series_content' => $this->prepContent['contents'],
+            'isValidPayment' => $this->prepContent['is_valid_payment'],
+            'seriesType' => $this->prepContent['series_type'],
+            'seriesCombo' => $this->prepContent['series_combo'],
+        ];
+    }
+
+    /**
+     * Prepare contents and view
+     *
+     * @param string $combo_slug
+     * @param string $slug
+     * @return void
+     */
+    private function processLessonContent(string $combo_slug, string $slug)
+    {
+        $params = compact('combo_slug', 'slug');
+
+        $this->checkValidPayment($params);
+        $this->prepareContentList($params);
+    }
+
+    /**
+     * Check validity of payment,
+     * if user (or guest) access the purchase content, redirect first content of the series
+     *
+     * @param array $params
+     * @return mixed
+     */
+    private function checkValidPayment(array &$params)
+    {
+        $this->prepContent['series'] =
+            $this->lmsSeriesService->getByCondition('slug', $params['slug']);
+        $this->prepContent['series_id'] =
+            optional($this->prepContent['series'])->id;
+
+        $this->prepContent['series_combo_id'] =
+            optional($this->prepContent['series_combo'])->id;
+        $this->prepContent['series_type'] =
+            optional($this->prepContent['series_combo'])->type;
+
+        if (
+            !$this->prepContent['series_id'] ||
+            !$this->prepContent['series_combo_id']
+        ) {
+            throw new RedirectException(redirect()->to('/'));
+        }
+
+        // Both a guest user and a student who hasn't purchased the series have the same trial access.
+        // A student who has purchased the series is granted full access to all content in the series.
+        $userId = auth()->id() ?? -1;
+        $seriesComboId = $this->prepContent['series_combo_id'];
+
+        $this->prepContent['is_valid_payment']
+            = $this->paymentMethodService->checkSerieValidity($userId, $seriesComboId);
+    }
+
+    /**
+     * Prepare content list
+     *
+     * @param array $params
+     * @return void
+     */
+    private function prepareContentList(array &$params)
+    {
+        $this->prepContent['contents'] =
+            $this->lmsContentService->getListContents(
+                $this->prepContent['series_id']
+            )->sortBy('stt');
+
+        $this->prepContent['contents']->each(function ($item) use ($params) {
+            $this->setURLToPurchasedContents($item, $params);
+        });
+    }
+
+    /**
+     * Set URL to owned nested content
+     *
+     * @param App\LmsContent $lms_content
+     * @param array $params
+     * @return void
+     */
+    private function setURLToPurchasedContents(LmsContent &$lms_content, array &$params, int $chapter_index = 0)
+    {
+        $typeMap = config('constant.series.type_map');
+        if (in_array($lms_content->type, $typeMap['title'])) {
+            foreach ($lms_content->childContents as $childContent) {
+                $this->setURLToPurchasedContents($childContent, $params, $chapter_index);
+            }
+        }
+
+        // Set route
+        $routes = config('constant.series.routes');
+        $params['stt'] = $lms_content->id;
+        foreach ($routes as $type => $route) {
+            if (in_array($lms_content->type, $typeMap[$type])) {
+                $lms_content->url = route($route, $params);
+                break;
+            }
+        }
+
+        if ($chapter_index > 0 && !$this->prepContent['is_valid_payment']) {
+            return;
+        }
+    }
 }

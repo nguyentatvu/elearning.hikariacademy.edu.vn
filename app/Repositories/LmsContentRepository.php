@@ -229,4 +229,20 @@ class LmsContentRepository extends BaseRepository
             ->whereNotIn('type', [LmsContent::LESSON, LmsContent::LESSON_TOPIC])
             ->count();
     }
+
+    /**
+     * Get content count by series
+     *
+     * @param int $seriesId
+     * @return int
+     */
+    public function getChapterCountBySeries(int $seriesId)
+    {
+        return $this->model
+            ->select('id')
+            ->where('lmsseries_id', $seriesId)
+            ->where('delete_status', LmsContent::ACTIVE)
+            ->where('type', LmsContent::LESSON)
+            ->count();
+    }
 }
