@@ -37,6 +37,7 @@ return [
             'flashcard' => [10],
             'title' => [0, 8],
             'handwriting' => [11],
+            'pronunciation-assessment' => [12],
         ],
         'topic_icons' => [
             0 => 'vocab.png',
@@ -70,6 +71,7 @@ return [
             'audit' => 'learning-management.lesson.audit',
             'flashcard' => 'learning-management.lesson.flashcard',
             'handwriting' => 'learning-management.lesson.handwriting',
+            'pronunciation-assessment' => 'learning-management.lesson.pronunciation-assessment'
         ],
     ],
     'redeemed_coin' => [

@@ -16,7 +16,6 @@ class CreatePronunciationDetailsTable extends Migration
         Schema::create('pronunciation_details', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('pronunciation_id');
-            $table->string('audio_input_name');
             $table->string('text');
             $table->string('audio');
             $table->timestamps();

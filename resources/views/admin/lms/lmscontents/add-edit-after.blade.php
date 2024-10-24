@@ -108,7 +108,7 @@
 
           array('button_name'=> $button_name),
 
-          array('record'=>$record,'series_slug'=>$series_slug, 'lms_content_after'=>$lms_content_after, 'flashcard'=>$flashcard, 'handwriting'=>$handwriting))
+          array('record'=>$record,'series_slug'=>$series_slug, 'lms_content_after'=>$lms_content_after, 'flashcard'=>$flashcard, 'handwriting'=>$handwriting, 'pronunciation' => $pronunciation))
 
 
 

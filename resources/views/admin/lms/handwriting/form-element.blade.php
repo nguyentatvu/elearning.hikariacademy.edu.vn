@@ -24,7 +24,7 @@
     </div>
     <div class="col-md-6">
         <fieldset class="form-group">
-            {{ Form::label('file_import', 'Nhập file excel bài luyện viết') }}
+            {{ Form::label('file_import', 'Nhập file excel các bài tập của bài luyện viết') }}
             {{ Form::file('file_import', $value = null, ['class' => 'form-control', 'placeholder' => '', 'accept' => '.xls,.xlsx']) }}
         </fieldset>
     </div>

@@ -2,4 +2,11 @@
 
 namespace App\Services;
 
-class PronunciationDetailService extends BaseService {}
+use App\Repositories\PronunciationDetailRepository;
+
+class PronunciationDetailService extends BaseService {
+    public function __construct(PronunciationDetailRepository $repository)
+    {
+        parent::__construct($repository);
+    }
+}
