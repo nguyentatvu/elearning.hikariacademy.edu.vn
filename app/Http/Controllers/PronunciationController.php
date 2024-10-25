@@ -361,14 +361,14 @@ class PronunciationController extends Controller
             $path = public_path('uploads/pronunciation');
             $newFilePath = $path . '/' . $filename;
 
-            $relativePath = $this->storeAudio($file, $filename, $path);
-
             $detail = $this->pronunciationDetailService->findById($detailId);
 
             // Remove old file if has
             if ($detail->audio && file_exists(public_path($detail->audio))) {
                 unlink(public_path($detail->audio));
             }
+
+            $relativePath = $this->storeAudio($file, $filename, $path);
 
             $detail->audio = $relativePath;
             $detail->save();
