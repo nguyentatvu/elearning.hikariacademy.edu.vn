@@ -110,7 +110,6 @@
 @section('mypage-scripts')
     <script>
         function openModalStreak() {
-            console.log(2222);
             $('#modalLoginStreak').modal('show');
         }
     </script>
