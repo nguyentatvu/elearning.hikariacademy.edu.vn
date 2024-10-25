@@ -354,7 +354,7 @@
         }
 
         .streak-container {
-            width: 100%%;
+            width: 100%;
             margin-bottom: 20px;
         }
 
@@ -389,6 +389,9 @@
             display: flex;
             justify-content: space-between;
             margin-top: 10px;
+            margin-bottom: 10px;
+            position: relative;
+            width: 100%;
         }
 
         .streak-dates span {
@@ -465,6 +468,10 @@
         .checkmark.inactive {
             background-color: #ced4da;
             color: #868e96;
+        }
+
+        .milestone {
+            position: absolute;
         }
     </style>
     <div class="modal fade" id="modalLoginStreak" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -598,8 +605,7 @@
         const currentDay = currentDate.getDay();
         $(document).ready(function() {
             // Animation for "streak-count" on page load
-            const streakAdd = parseInt(streakCurrent) + 1;
-            const previousStreak = parseInt(streakCurrent);
+            const previousStreak = parseInt(streakCurrent - 1);
 
             // Set initial value of "streak-count" to the previous streak
             $('.streak-count').text(previousStreak);
@@ -687,7 +693,8 @@
                 const today = new Date(); // Define "today" to compare
                 // Set startDate to today minus the number of days equal to the streak
                 const startDate = new Date(today);
-                startDate.setDate(today.getDate() - streakCurrent);
+                startDate.setDate(today.getDate() - previousStreak);
+                console.log(startDate);
 
                 const endDate = today; // endDate is today
 
@@ -722,10 +729,11 @@
                         if (streakCurrent > 1) {
                             if (date >= startDate && date <= endDate && date <= today) {
                                 $td.removeClass().addClass(
-                                'selected-range'); // Reset classes and add 'selected-range'
+                                    'selected-range'); // Reset classes and add 'selected-range'
                             } else {
                                 $td.removeClass(
-                                'selected-range'); // Remove 'selected-range' if conditions are not met
+                                    'selected-range'
+                                ); // Remove 'selected-range' if conditions are not met
                             }
 
                             // Add 'start-range' class if the date matches the start date
@@ -762,38 +770,41 @@
 
             renderCalendar(); // Initial render of the calendar
 
-            let totalDays = 45; // Total number of days for the progress bar
-            let milestones = [3, 15, 30, 45, 100]; // Milestones to display on the progress bar
+            let totalDays = 100;
+            let milestones = [0, 5, 15, 30, 45, 100];
 
-            // Initial progress bar width based on streak and totalDays
-            let initialProgressWidth = (streakCurrent / totalDays) * 100;
-            $(".streak-fill").css("width", initialProgressWidth + "%");
-
-            // Function to dynamically create milestone markers
             function createMilestones(milestones, totalDays) {
-                $(".streak-dates").empty(); // Clear previous milestones
-                milestones.forEach(function(day) {
-                    // Calculate the left position of each milestone based on totalDays
+                $(".streak-dates").empty();
+
+                milestones.forEach(function(day, index) {
                     let leftPosition = (day / totalDays) * 100;
-                    if (day <= totalDays) {
-                        // Append the milestone to the progress bar with its position
-                        $(".streak-dates").append('<span class="milestone" style="left:' + leftPosition +
-                            '%">' + day + '</span>');
+                    let transformStyle = 'translateX(-10px)';
+                    let displayStyle = '';
+
+                    if (index === milestones.length - 1) {
+                        transformStyle = 'translateX(-30px)';
                     }
+
+                    if (index === 0) {
+                        displayStyle = 'display: none;';
+                    }
+
+                    $(".streak-dates").append('<span class="milestone" style="left:' + leftPosition +
+                        '%; transform: ' + transformStyle + '; ' + displayStyle + '">' + day + '</span>'
+                    );
                 });
+
             }
 
-            // Call the function to create milestones
+            // Gọi hàm tạo milestones
             createMilestones(milestones, totalDays);
 
-            // Simulate streak progress and update the bar after 2 seconds
-            if (streakCurrent < totalDays) {
-                setTimeout(function() {
-                    let streakAdd = streakCurrent + 1;
-                    let progressWidth = (streakAdd / totalDays) * 100;
-                    $(".streak-fill").css("width", progressWidth + "%");
-                }, 1000);
+            if (streakCurrent <= totalDays) {
+                let progressWidth = (5 / totalDays) * 100;
+                $(".streak-fill").css("width", progressWidth + "%");
             }
+
+
 
             $('#btnViewDetail').click(function() {
                 $('#modalLoginStreak').modal('hide');
@@ -819,7 +830,7 @@
                     const $checkmark = $this.find('.checkmark'); // Find the associated checkmark
 
                     // If the index is less than the number of active days and the index is less than or equal to the current day, activate it
-                    if (index < activeDays - 1 && index <= currentDay - 1) {
+                    if (index < activeDays && index <= currentDay) {
                         $this.removeClass('inactive').addClass('active'); // Activate the day
                         $checkmark.removeClass('inactive').addClass('active'); // Activate the checkmark
                     } else {
@@ -829,6 +840,6 @@
                 });
             }
 
-            setActiveDays(streakAdd);
+            setActiveDays(streakCurrent);
         });
     </script>
