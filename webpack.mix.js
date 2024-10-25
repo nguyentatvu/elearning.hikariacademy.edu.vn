@@ -13,7 +13,7 @@ mix
   .js("resources/js/app.js", "public/js")
   .version()
   .browserSync({
-    proxy: "127.0.0.1:8000",
+    proxy: "127.0.0.1:8765",
     files: [
       "app/**/*.php",
       "resources/views/**/*.blade.php",
