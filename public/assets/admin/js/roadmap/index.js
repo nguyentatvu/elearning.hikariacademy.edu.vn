@@ -444,7 +444,7 @@ function saveRoadmap() {
 
     $.ajax({
         headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         url: SAVE_ROADMAP_URL,
         type: "post",
@@ -507,7 +507,7 @@ const deleteRoadmap = (roadmapId) => {
 
         $.ajax({
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             url: DELETE_ROADMAP_URL,
             type: "post",

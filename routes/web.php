@@ -109,9 +109,8 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
     Route::get('/my-exams', 'LmsSeriesController@listCategoriesStudy')
         ->name('exams');
 
-    Route::get('/my-comments', function () {
-        return view('client.mypage.my-comments');
-    })->name('my-comments');
+    Route::get('/my-comments', 'MyPageController@showMyComments')
+        ->name('my-comments');
 
     Route::get('/my-result-exam', function () {
         return view('client.mypage.my-result-exam');
