@@ -349,6 +349,10 @@
             }
 
             function setCarPosition(date, lms_id) {
+                if (!date && !lms_id) {
+                    return;
+                }
+
                 const currentDayPosition = dayPositions.find(dp => dp.day == date);
                 if (!currentDayPosition) {
                     console.error('Day not found in dayPositions');
