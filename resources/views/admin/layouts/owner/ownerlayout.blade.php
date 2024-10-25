@@ -7,7 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="{{getSetting('meta_description', 'seo_settings')}}">
 	<meta name="keywords" content="{{getSetting('meta_keywords', 'seo_settings')}}">
-	<meta name="csrf_token" content="{{ csrf_token() }}">
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<link rel="icon" href="/public/uploads/settings/favicon.png" type="image/x-icon" />
 	<title>@yield('title') {{ isset($title) ? $title : getSetting('site_title','site_settings') }}</title>
 	<!-- Bootstrap Core CSS -->
@@ -166,6 +166,13 @@
                             <li><a href="/lms/flashcard/add"> <i class="fa fa-fw fa-plus"></i>Thêm mới</a></li>
                         </ul>
                     </li>
+					<li {{ isActive($active_class, 'pronunciation-assessment') }} >
+						<a data-toggle="collapse" data-target="#coupons"><i class="fa fa-fw fa-microphone"></i>Luyện phát âm</a>
+						<ul id="coupons" class="collapse sidemenu-dropdown">
+							<li><a href="/lms/pronunciation-assessment"> <i class="fa fa-fw fa-list"></i>Danh sách bài Luyện phát âm</a></li>
+							<li><a href="/lms/pronunciation-assessment/add"> <i class="fa fa-fw fa-plus"></i>Thêm mới</a></li>
+						</ul>
+					</li>
                     <li {{ isActive($active_class, 'reports' ) }}>
                         <a data-toggle="collapse" data-target="#reports"><i class="fa fa-fw fa-credit-card"></i> Báo cáo thanh toán </a>
                         <ul id="reports" class="collapse sidemenu-dropdown">

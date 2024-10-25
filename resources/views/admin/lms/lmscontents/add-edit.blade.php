@@ -56,7 +56,8 @@
           array('record'=>$record,
             'series_slug'=>$series_slug,
             'handwriting' => $handwriting,
-            'handwriting_type' => $handwriting_type
+            'handwriting_type' => $handwriting_type,
+            'pronunciation' => $pronunciation
           ))
 
           {!! Form::close() !!}

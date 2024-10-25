@@ -41,7 +41,7 @@
     }
 </script>
 <script
-    src="{{ env('CHAT_BOT_URL') }}/embed.min.js"
+    src="{{ admin_asset('js/embed.min.js') }}"
     id="{{ env('CHAT_BOT_TOKEN') }}"
     defer>
 </script>

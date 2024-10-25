@@ -874,6 +874,26 @@ class StudentLmsController extends Controller
         ));
     }
 
+    /**
+     * Show pronunciation
+     *
+     * @param string $combo_slug
+     * @param string $slug
+     * @param string $stt
+     * @return \Illuminate\Http\Response
+     */
+    public function showPronunciation(string $combo_slug = '', string $slug = '', string $stt = '') {
+        $this->processLessonContent($combo_slug, $slug, $stt);
+        $preparedContent = $this->getPreparedContentVariables();
+        $pronunciationId = $preparedContent['detailContent']->pronunciation_id;
+        $pronunciation = $this->lmsContentService->getPronunciationContent(1);
+
+        return view('client.lesson-detail.pronunciation', array_merge($preparedContent,
+            ['type' => 'pronunciation'],
+            ['pronunciation' => $pronunciation]
+        ));
+    }
+
     public function roadMap(Request $request, $comboSlug, $slug)
     {
         $data['title'] = 'Roadmap';
