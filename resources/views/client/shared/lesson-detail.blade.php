@@ -337,8 +337,6 @@
             // Initial layout adjustment and bind the adjustLayout function to window resize
             adjustLayout();
             $(window).resize(adjustLayout);
-            $('#modalLoginStreak').modal('show');
-
         });
 
         function animateHicoin(increasedPoints = 0) {
@@ -402,6 +400,7 @@
                 success: function(response) {
                     earnPointFinishContent(contentId, response, 'streak');
                     animateHicoin(response);
+                    $('#modalLoginStreak').modal('show');
                 },
                 error: function(xhr, status, error) {
                     console.log(error);
