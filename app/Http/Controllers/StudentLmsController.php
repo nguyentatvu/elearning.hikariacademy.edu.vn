@@ -290,13 +290,15 @@ class StudentLmsController extends Controller
      *
      * @return void
      */
-    private function getStudentView() {
+    private function getStudentView()
+    {
         if (!Auth::check()) {
             $this->prepContent['content_view_count'] = 0;
         } else {
             $this->prepContent['content_view_count'] =
                 $this->lmsStudentViewService->getViewCountOfSeries(
-                    $this->prepContent['series_id'], Auth::id()
+                    $this->prepContent['series_id'],
+                    Auth::id()
                 );
         }
 
@@ -874,6 +876,9 @@ class StudentLmsController extends Controller
         ));
     }
 
+    /**
+     * Show roadmap
+     */
     public function roadMap(Request $request, $comboSlug, $slug)
     {
         $data['title'] = 'Roadmap';
@@ -897,12 +902,22 @@ class StudentLmsController extends Controller
         return view('client.pages.roadmap', $data);
     }
 
+    /**
+     * Filter and group day by week
+     */
     function groupLessonsByWeek($roadmap)
     {
         $weeks = [];
+        $maxDayNumber = 0;
 
+        // Find the maximum day number in the roadmap
         foreach ($roadmap as $day) {
-            $weekNumber = intval(($day->day_number - 1) / 7) + 1; // Tính số tuần
+            $maxDayNumber = max($maxDayNumber, $day->day_number);
+        }
+
+        // First, group existing days into weeks
+        foreach ($roadmap as $day) {
+            $weekNumber = intval(($day->day_number - 1) / 7) + 1;
 
             if (!isset($weeks[$weekNumber])) {
                 $weeks[$weekNumber] = [
@@ -912,22 +927,60 @@ class StudentLmsController extends Controller
                 ];
             }
 
-            $weeks[$weekNumber]['days'][] = $day;
+            // Store days in an associative array with day_number as key
+            $weeks[$weekNumber]['days'][$day->day_number] = $day;
         }
 
-        for ($i = 1; $i <= ceil(count($roadmap) / 7); $i++) {
-            if (!isset($weeks[$i])) {
-                $weeks[$i] = [
-                    'week' => "Week $i",
-                    'message' => "Highlights of Week $i",
+        // Fill in missing days up to maxDayNumber
+        $totalWeeks = ceil($maxDayNumber / 7);
+        for ($weekNum = 1; $weekNum <= $totalWeeks; $weekNum++) {
+            // Create week if it doesn't exist
+            if (!isset($weeks[$weekNum])) {
+                $weeks[$weekNum] = [
+                    'week' => "Tuần $weekNum",
+                    'message' => "Điểm nổi bật của tuần $weekNum",
                     'days' => []
                 ];
             }
+
+            // Calculate start and end day numbers for this week
+            $startDay = ($weekNum - 1) * 7 + 1;
+            $endDay = $weekNum * 7;
+
+            // For the last week, only go up to maxDayNumber
+            if ($weekNum == $totalWeeks) {
+                $endDay = $maxDayNumber;
+            }
+
+            // Fill in missing days
+            for ($dayNum = $startDay; $dayNum <= $endDay; $dayNum++) {
+                if (!isset($weeks[$weekNum]['days'][$dayNum])) {
+                    // Create rest day object
+                    $restDay = (object) [
+                        'day_number' => $dayNum,
+                        'lesson_list' => [
+                            (object) [
+                                'id' => null,
+                                'name' => 'Ngày nghỉ',
+                                'type' => 'rest'
+                            ]
+                        ]
+                    ];
+                    $weeks[$weekNum]['days'][$dayNum] = $restDay;
+                }
+            }
+
+            // Sort days by day_number and reset array keys
+            ksort($weeks[$weekNum]['days']);
+            $weeks[$weekNum]['days'] = array_values($weeks[$weekNum]['days']);
         }
 
         return array_values($weeks);
     }
 
+    /**
+     * Load roadmap detail
+     */
     public function loadRoadMapDetail(Request $request)
     {
         $slug = $request->slug;
@@ -956,6 +1009,7 @@ class StudentLmsController extends Controller
         }
 
         $weeks = $this->groupLessonsByWeek($roadMapContent);
+
         return response()->json([
             'road_map' => $weeks,
             'last_view' => $lastViewedContent->lmscontent_id,

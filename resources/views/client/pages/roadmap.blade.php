@@ -55,6 +55,7 @@
             background-size: contain;
             position: relative;
             overflow-y: hidden;
+            display: none;
         }
 
         .location-day {
@@ -242,8 +243,6 @@
                 return `linear-gradient(to right, ${colors.join(', ')})`;
             }
 
-            $('.left-side').hide();
-
             const container = document.getElementById("news-sections");
 
             // Current date as reference
@@ -296,27 +295,19 @@
             }
 
             function checkType(type) {
-                let linkIcon = '';
-                if (type == 'video') {
-                    linkIcon = "{{ asset('images/icons/lesson.png') }}";
-                }
-                if (type == 'exercise') {
-                    linkIcon = "{{ asset('images/icons/exercise.png') }}";
-                }
-                if (type == 'audit') {
-                    linkIcon = "{{ asset('images/icons/score.png') }}";
-                }
-                if (type == 'flashcard') {
-                    linkIcon = "{{ asset('images/icons/flashcard.svg') }}";
-                }
-                if (type == 'title') {
-                    linkIcon = "{{ asset('images/icons/tittle.svg') }}";
-                }
-                if (type == 'handwriting') {
-                    linkIcon = "{{ asset('images/icons/handwriting.svg') }}";
-                }
-                return linkIcon;
+                const icons = {
+                    video: "{{ asset('images/icons/lesson.png') }}",
+                    exercise: "{{ asset('images/icons/exercise.png') }}",
+                    audit: "{{ asset('images/icons/score.png') }}",
+                    flashcard: "{{ asset('images/icons/flashcard.svg') }}",
+                    title: "{{ asset('images/icons/tittle.svg') }}",
+                    handwriting: "{{ asset('images/icons/handwriting.svg') }}",
+                    rest: "{{ asset('images/icons/Paradise-icon.svg') }}",
+                };
+
+                return icons[type] || "";
             }
+
 
             let dayPositions = [];
 
