@@ -1,5 +1,11 @@
 @extends('client.shared.mypage')
-
+@section('mypage-styles')
+    <style>
+        .modal-header {
+            border: 0;
+        }
+    </style>
+@endsection
 @section('mypage-content')
     <div class="reward-point">
         <div class="reward-point__wrapper">
@@ -36,7 +42,7 @@
                     </div>
                     <span>Xem video</span>
                 </div>
-                <div class="reward-point__detail-item">
+                <div class="reward-point__detail-item" onclick="openModalStreak()">
                     <img src="{{ asset('images/mypage/login-streak.png') }}" alt="Login streak">
                     <div class="d-flex gap-1 align-items-center">
                         <img src="{{ asset('images/icons/coin.svg') }}" class="rounded-circle coin-size">
@@ -78,23 +84,34 @@
                             <div class="d-flex align-items-center">
                                 <span class="font-weight-semibold fs-14">Giá:</span>
                                 <div class="d-flex align-items-center">
-                                    <span class="redeem-reward__new-price ms-1">{{ formatCurrencyVND($series->cost - $series->redeemed_amount) }}</span>
+                                    <span
+                                        class="redeem-reward__new-price ms-1">{{ formatCurrencyVND($series->cost - $series->redeemed_amount) }}</span>
                                     <span class="redeem-reward__old-price">{{ formatCurrencyVND($series->cost) }}</span>
                                 </div>
                             </div>
                         </div>
                         @if ($series->is_payable)
-                        <div class="redeem-reward__submit">
-                            <a href="{{ url('payments/lms/' . $series->slug . '?is_redeemed=1') }}">Quy đổi</a>
-                        </div>
+                            <div class="redeem-reward__submit">
+                                <a href="{{ url('payments/lms/' . $series->slug . '?is_redeemed=1') }}">Quy đổi</a>
+                            </div>
                         @else
-                        <div class="redeem-reward__submit not-allowed">
-                            <a href="#">Quy đổi</a>
-                        </div>
+                            <div class="redeem-reward__submit not-allowed">
+                                <a href="#">Quy đổi</a>
+                            </div>
                         @endif
                     </div>
                 @endforeach
             </div>
         </div>
     </div>
+    @include('client.components.streak');
+@endsection
+
+@section('mypage-scripts')
+    <script>
+        function openModalStreak() {
+            console.log(2222);
+            $('#modalLoginStreak').modal('show');
+        }
+    </script>
 @endsection
