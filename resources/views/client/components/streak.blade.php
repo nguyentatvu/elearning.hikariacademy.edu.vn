@@ -800,7 +800,7 @@
             createMilestones(milestones, totalDays);
 
             if (streakCurrent <= totalDays) {
-                let progressWidth = (5 / totalDays) * 100;
+                let progressWidth = (streakCurrent / totalDays) * 100;
                 $(".streak-fill").css("width", progressWidth + "%");
             }
 
