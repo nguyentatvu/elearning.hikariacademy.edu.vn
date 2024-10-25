@@ -421,6 +421,10 @@
         .swiper-button-next,
         .swiper-button-prev {
             color: #2563eb;
+            background: rgba(219, 219, 219, 0.2);
+            border-radius: 99px;
+            width: 60px;
+            height: 60px;
 
             @include mq (max-sp-sl) {
                 transform: scale(0.7);

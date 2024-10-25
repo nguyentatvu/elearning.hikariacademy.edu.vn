@@ -133,6 +133,20 @@ class LmsSeriesComboRepository extends BaseRepository
     }
 
     /**
+     * Get all series by type
+     *
+     * @param $type
+     * @return mixed
+     */
+    public function getAllPaidSeriesByType($type)
+    {
+        return $this->model::where('type', $type)
+            ->where('delete_status', 0)
+            ->where('cost', '>', 0)
+            ->get();
+    }
+
+    /**
      * Get all series by type exclude combo series id
      *
      * @param $type

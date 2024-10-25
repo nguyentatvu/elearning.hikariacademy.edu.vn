@@ -476,9 +476,6 @@ class StudentLmsController extends Controller
         ]);
         $content = $this->lmsContentService->findById($contentId);
 
-        // if ($earnedPoints < 1 || !$studentView || !$content) {
-        //     return;
-        // }
         // Remove exceeded points
         $earnedPoints = max(0, min($earnedPoints, 3));
 

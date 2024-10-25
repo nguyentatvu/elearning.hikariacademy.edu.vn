@@ -24,6 +24,7 @@ use App\Payment;
 use App\QuizResultfinish;
 use App\Role;
 use App\Services\LmsSeriesComboService;
+use App\Services\LmsSeriesService;
 use App\Services\UserService;
 use App\WeeklyLeaderboard;
 use Carbon\Carbon;
@@ -33,11 +34,18 @@ class UsersController extends Controller
 {
     public $excel_data = array();
     private $userService;
-    public function __construct(UserService $userService, LmsSeriesComboService $lmsSeriesComboService)
-    {
-        $currentUser = \Auth::user();
+    private $lmsSeriesService;
+
+    public function __construct(
+        UserService $userService,
+        LmsSeriesComboService $lmsSeriesComboService,
+        LmsSeriesService $lmsSeriesService
+    ) {
+        $currentUser = Auth::user();
         $this->userService = $userService;
         $this->lmsSeriesComboService = $lmsSeriesComboService;
+        $this->lmsSeriesService = $lmsSeriesService;
+
         $this->middleware('auth');
     }
     /**
@@ -1968,5 +1976,19 @@ class UsersController extends Controller
         $this->userService->updateLoginStreak();
         $totalPoint = $this->userService->caculateRewardPoints($loginStreak, $loginStreakConditions);
         return $totalPoint;
+    }
+
+    /**
+     * Get my courses dropdown
+     *
+     * @return mixed
+     */
+    public function getMyCoursesDropdown() {
+        $view_series_history = $this->lmsSeriesService
+            ->getHistoryViews(Auth::user()->series_views_history ?? [], Auth::user());
+
+        return response()->json([
+            'html' => view('client.components.my-courses-dropdown', compact('view_series_history'))->render()
+        ], 200);
     }
 }

@@ -180,6 +180,7 @@
         <div class="swiper swiper-container">
             <div class="swiper-wrapper">
                 @foreach ($other_combo_series as $recommended_series)
+                @if (isset($recommended_series->seriesList) && count($recommended_series->seriesList) > 0)
                     <div class="swiper-slide">
                         <div class="course-card">
                             <img alt="course image" height="400" width="600"
@@ -206,11 +207,30 @@
                                         </button>
                                     @endif
                                 </div>
-                                <button class="btn btn-primary w-100 mt-3" onclick="location.href='{{ route('payments.lms', $recommended_series->slug) }}'">
-                                    Mua ngay</button>
+                                @if (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) > 1)
+                                    <button class="btn btn-primary w-100 mt-3"
+                                        onclick="location.href='{{ route('mypage.courses') }}'">
+                                        Học ngay
+                                    </button>
+                                @elseif (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) == 1)
+                                    <button class="btn btn-primary w-100 mt-3"
+                                        onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'">
+                                        Học ngay
+                                    </button>
+                                @elseif (Auth::check())
+                                    <button class="btn btn-primary w-100 mt-3"
+                                        onclick="location.href='{{ route('payments.lms', $recommended_series->slug) }}'">
+                                        Mua ngay
+                                    </button>
+                                @else
+                                    <button class="btn btn-primary w-100 mt-3" onclick="showAuthModal()">
+                                        Mua ngay
+                                    </button>
+                                @endif
                             </div>
                         </div>
                     </div>
+                @endif
                 @endforeach
             </div>
         </div>

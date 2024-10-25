@@ -205,6 +205,7 @@
 .carousel-item blockquote small {
   position: relative;
   font-style: italic;
+  font-size: 15px;
 }
 .carousel-item blockquote small:before {
   content: open-quote;
@@ -363,6 +364,125 @@
 .carousel-control-next-icon {
   background-color: #007bff;
   border-radius: 50%;
+}
+
+.carousel-control-prev-icon, .carousel-control-next-icon {
+  transform: scale(2);
+}
+
+.carousel-inner.slider {
+  box-shadow: rgba(14, 63, 126, 0.04) 0px 0px 0px 1px, rgba(42, 51, 69, 0.04) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.04) 0px 6px 6px -3px, rgba(14, 63, 126, 0.04) 0px 12px 12px -6px, rgba(14, 63, 126, 0.04) 0px 24px 24px -12px;
+}
+
+.gradient-title {
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 2px 2px 6px rgba(22, 106, 201, 0.3);
+  font-weight: bold;
+  line-height: 1.5;
+}
+
+.gradient-title-sm {
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 2px 2px 4px rgba(62, 135, 218, 0.3);
+  font-weight: bold;
+  line-height: 1.5;
+}
+
+.learning-series-list, .exam-series-list {
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+  position: relative;
+}
+.learning-series-list .course-card-description, .exam-series-list .course-card-description {
+  min-height: 64px;
+}
+.learning-series-list .swiper-exam-series,
+.learning-series-list .swiper-learning-series, .exam-series-list .swiper-exam-series,
+.exam-series-list .swiper-learning-series {
+  width: 1100px;
+  padding-bottom: 20px;
+}
+@media screen and (max-width: 1399px) {
+  .learning-series-list .swiper-exam-series,
+  .learning-series-list .swiper-learning-series, .exam-series-list .swiper-exam-series,
+  .exam-series-list .swiper-learning-series {
+    width: 1100px;
+  }
+}
+@media screen and (max-width: 1199px) {
+  .learning-series-list .swiper-exam-series,
+  .learning-series-list .swiper-learning-series, .exam-series-list .swiper-exam-series,
+  .exam-series-list .swiper-learning-series {
+    width: 800px;
+  }
+}
+@media screen and (max-width: 991px) {
+  .learning-series-list .swiper-exam-series,
+  .learning-series-list .swiper-learning-series, .exam-series-list .swiper-exam-series,
+  .exam-series-list .swiper-learning-series {
+    width: 700px;
+  }
+}
+@media screen and (max-width: 767px) {
+  .learning-series-list .swiper-exam-series,
+  .learning-series-list .swiper-learning-series, .exam-series-list .swiper-exam-series,
+  .exam-series-list .swiper-learning-series {
+    width: 350px;
+  }
+}
+@media screen and (max-width: 575px) {
+  .learning-series-list .swiper-exam-series,
+  .learning-series-list .swiper-learning-series, .exam-series-list .swiper-exam-series,
+  .exam-series-list .swiper-learning-series {
+    width: 90%;
+  }
+}
+.learning-series-list .swiper-button-next,
+.learning-series-list .swiper-button-prev, .exam-series-list .swiper-button-next,
+.exam-series-list .swiper-button-prev {
+  color: #2563eb;
+  background: rgba(219, 219, 219, 0.2);
+  width: 60px;
+  height: 60px;
+  border-radius: 99px;
+}
+@media screen and (max-width: 575px) {
+  .learning-series-list .swiper-button-next,
+  .learning-series-list .swiper-button-prev, .exam-series-list .swiper-button-next,
+  .exam-series-list .swiper-button-prev {
+    transform: scale(0.7);
+  }
+}
+@media screen and (max-width: 767px) {
+  .learning-series-list .swiper-button-next, .exam-series-list .swiper-button-next {
+    right: -8px;
+  }
+}
+@media screen and (max-width: 1399px) {
+  .learning-series-list .swiper-button-next, .exam-series-list .swiper-button-next {
+    right: -8px;
+  }
+}
+@media screen and (max-width: 767px) {
+  .learning-series-list .swiper-button-prev, .exam-series-list .swiper-button-prev {
+    left: -8px;
+  }
+}
+@media screen and (max-width: 1399px) {
+  .learning-series-list .swiper-button-prev, .exam-series-list .swiper-button-prev {
+    left: -8px;
+  }
+}
+.learning-series-list .swiper-slide, .exam-series-list .swiper-slide {
+  height: auto;
 }
 
 @media (min-width: 576px) {

@@ -161,3 +161,24 @@ const showAuthModal = (isLogin = true) => {
 
     $('.modal.auth-modal').modal('show');
 }
+
+/************************
+ * OTHERS
+ ***********************/
+
+const showMyCoursesDropdown = () => {
+    if ($('.dropdown-my-course.no-content').length > 0) {
+        $.ajax({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            type: "GET",
+            url: '/users/my-courses-dropdown',
+            success: function(data) {
+                $('.dropdown-my-course')
+                    .removeClass('no-content')
+                    .html(data.html);
+            }
+        });
+    }
+}

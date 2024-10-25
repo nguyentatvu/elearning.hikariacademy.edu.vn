@@ -2,8 +2,8 @@
 
 namespace App;
 
+use App\Services\LmsSeriesComboService;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class LmsSeriesCombo extends Model
 {
@@ -30,5 +30,9 @@ class LmsSeriesCombo extends Model
         }
 
         return $seriesCount > 1;
+    }
+
+    public function getCheckValidComboAttribute() {
+
     }
 }
