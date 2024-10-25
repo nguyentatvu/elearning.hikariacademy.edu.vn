@@ -8,6 +8,7 @@ use App\{
     User,
     Banner,
     CoinRechargePackage,
+    Comment,
     LmsSeriesCombo,
     LmsContent,
     LmsStudentView,
@@ -95,6 +96,9 @@ class RepositoryServiceProvider extends ServiceProvider
         });
         $this->app->bind(IntonationRepository::class, function () {
             return new IntonationRepository(new Intonation);
+        });
+        $this->app->bind(CommentRepository::class, function () {
+            return new CommentRepository(new Comment);
         });
     }
 }

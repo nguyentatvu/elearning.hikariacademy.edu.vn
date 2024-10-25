@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\ExamSeries;
 use App\PaymentMethod;
 use App\Services\CoinRechargePackageService;
+use App\Services\CommentService;
 use App\Services\LmsSeriesComboService;
 use App\Services\LmsSeriesService;
 use App\Services\PaymentMethodService;
@@ -27,6 +28,7 @@ class MyPageController extends Controller
     private $lmsSeriesComboService;
     private $userService;
     private $lmsSeriesService;
+    private $commentService;
 
     public function __construct(
         WeeklyLeaderboardService $weeklyLearboardService,
@@ -34,7 +36,8 @@ class MyPageController extends Controller
         CoinRechargePackageService $coinRechargeService,
         LmsSeriesComboService $lmsSeriesComboService,
         UserService $userService,
-        LmsSeriesService $lmsSeriesService
+        LmsSeriesService $lmsSeriesService,
+        CommentService $commentService
     )
     {
         $this->weeklyLearboardService = $weeklyLearboardService;
@@ -43,6 +46,8 @@ class MyPageController extends Controller
         $this->lmsSeriesComboService = $lmsSeriesComboService;
         $this->userService = $userService;
         $this->lmsSeriesService = $lmsSeriesService;
+        $this->commentService = $commentService;
+
         $this->middleware('auth');
     }
 
@@ -224,6 +229,17 @@ class MyPageController extends Controller
         $data['view_series_history'] = $this->lmsSeriesService
             ->getHistoryViews(Auth::user()->series_views_history ?? [], Auth::user());
         return view('client.mypage.personal', $data);
+    }
+
+    /**
+     * Show my comments
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    function showMyComments() {
+        $comments = $this->commentService->getStudentComments(Auth::user()->id);
+
+        return view('client.mypage.my-comments', compact('comments'));
     }
 
     /**
