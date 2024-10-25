@@ -167,39 +167,39 @@
                 @endif
             </div>
         </div>
-    </section>
+        <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        @if (isset($point))
+                            <div class="ct-cpl-screen">
 
-    <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    @if (isset($point))
-                        <div class="ct-cpl-screen">
+                                <div class="info-cpl text-center">
 
-                            <div class="info-cpl text-center">
-
-                                {{--   @php
+                                    {{--   @php
                                     if (!$value){$value = 0;}
                                 @endphp --}}
-                                <h4 class="above-text text-primary">Kết quả: {{ $totalValue }} / {{ $point }}
-                                    điểm</h4>
+                                    <h4 class="above-text text-primary">Kết quả: {{ $totalValue }} / {{ $point }}
+                                        điểm</h4>
 
-                                {{-- <h4 class="below-text text-danger">Tổng:  điểm</h4> --}}
+                                    {{-- <h4 class="below-text text-danger">Tổng:  điểm</h4> --}}
 
-                                <h5 class="below-text {{ $passed == 0 ? 'text-danger' : 'text-success' }}">
-                                    {{ $passed == 0 ? 'Chưa đạt yêu cầu bài kiểm tra' : 'Đạt yêu cầu bài kiểm tra' }}</h5>
+                                    <h5 class="below-text {{ $passed == 0 ? 'text-danger' : 'text-success' }}">
+                                        {{ $passed == 0 ? 'Chưa đạt yêu cầu bài kiểm tra' : 'Đạt yêu cầu bài kiểm tra' }}
+                                    </h5>
 
-                                <div class="score-bg-title"><img src="{{ admin_asset('images/exercise/score-bg.png') }}"
-                                        alt=""></div>
+                                    <div class="score-bg-title"><img
+                                            src="{{ admin_asset('images/exercise/score-bg.png') }}" alt=""></div>
 
-                            </div>
-                    @endif
+                                </div>
+                        @endif
 
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 @endsection
 
 @section('scripts-content')
