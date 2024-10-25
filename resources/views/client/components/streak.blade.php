@@ -473,6 +473,10 @@
         .milestone {
             position: absolute;
         }
+
+        .checkmark i {
+            margin: 0;
+        }
     </style>
     <div class="modal fade" id="modalLoginStreak" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
