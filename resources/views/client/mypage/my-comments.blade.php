@@ -19,6 +19,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @if ($comments->count() > 0)
                     @foreach ($comments as $comment_index => $comment)
                     <tr>
                         <td>{{ $comment_index + 1 }}</td>
@@ -42,6 +43,15 @@
                         </td>
                     </tr>
                     @endforeach
+                    @else
+                    <tr>
+                        <td colspan="6">
+                            <h5 style="color: #ee2833!important">
+                                Bạn chưa có Câu hỏi
+                            </h5>
+                        </td>
+                    </tr>
+                    @endif
                 </tbody>
             </table>
             <div class="mt-4">
