@@ -368,10 +368,6 @@ class LmsComboController extends Controller
                 ['delete_status','=', 0],
                 ['type_series','=', 0]
             ])->get(), 'title', 'id');
-        /*$data['n6']         = array(null => 'Select')+ array_pluck(DB::table('lmsseries')->where([
-                ['lms_category_id','=', 6],
-                ['delete_status','=', 0],
-            ])->get(), 'title', 'id');*/
 // khóa luyện thi
         $data['en1']         = array(null => 'Select')+ array_pluck(DB::table('lmsseries')->where([
                 ['lms_category_id','=', 1],
