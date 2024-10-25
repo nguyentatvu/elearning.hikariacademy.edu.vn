@@ -1548,7 +1548,7 @@ function getFullUserImage(string $userImageFile) {
  * @param array $data
  * @return mixed
  */
-function callApi(string $url, string $httpMethod, array $data)
+function callApi(string $url, string $httpMethod, array $data, string $contentType = 'multipart/form-data')
 {
     $curl = curl_init();
     curl_setopt_array($curl, [
@@ -1561,7 +1561,7 @@ function callApi(string $url, string $httpMethod, array $data)
         CURLOPT_CUSTOMREQUEST => $httpMethod,
         CURLOPT_POSTFIELDS => $data,
         CURLOPT_HTTPHEADER => array(
-            'Content-Type: multipart/form-data',
+            'Content-Type: ' . $contentType,
         ),
     ]);
 
