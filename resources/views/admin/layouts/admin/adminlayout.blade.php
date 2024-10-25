@@ -164,6 +164,13 @@
 						<li><a href="/lms/flashcard/add"> <i class="fa fa-fw fa-plus"></i>Thêm mới</a></li>
 					</ul>
 				</li>
+				<li {{ isActive($active_class, 'pronunciation-assessment') }} >
+					<a data-toggle="collapse" data-target="#coupons"><i class="fa fa-fw fa-microphone"></i>Luyện phát âm</a>
+					<ul id="coupons" class="collapse sidemenu-dropdown">
+						<li><a href="/lms/pronunciation-assessment"> <i class="fa fa-fw fa-list"></i>Danh sách bài Luyện phát âm</a></li>
+						<li><a href="/lms/pronunciation-assessment/add"> <i class="fa fa-fw fa-plus"></i>Thêm mới</a></li>
+					</ul>
+				</li>
                 <li {{ isActive($active_class, 'reports' ) }}>
                     <a data-toggle="collapse" data-target="#reports"><i class="fa fa-fw fa-credit-card"></i> Báo cáo thanh toán </a>
                     <ul id="reports" class="collapse sidemenu-dropdown">

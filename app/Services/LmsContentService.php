@@ -20,6 +20,7 @@ class LmsContentService extends BaseService
     private $lmsSeriesService;
     private $handwritingService;
     private $lmsSeriesComboService;
+    private $pronunciationService;
 
     public function __construct(
         LmsContentRepository $repository,
@@ -29,7 +30,8 @@ class LmsContentService extends BaseService
         LmsFlashcardService $lmsFlashcardService,
         LmsSeriesService $lmsSeriesService,
         HandwritingService $handwritingService,
-        LmsSeriesComboService $lmsSeriesComboService
+        LmsSeriesComboService $lmsSeriesComboService,
+        PronunciationService $pronunciationService
     ) {
         parent::__construct($repository);
         $this->paymentMethodRepository = $paymentMethodRepository;
@@ -39,6 +41,7 @@ class LmsContentService extends BaseService
         $this->lmsSeriesService = $lmsSeriesService;
         $this->handwritingService = $handwritingService;
         $this->lmsSeriesComboService = $lmsSeriesComboService;
+        $this->pronunciationService = $pronunciationService;
     }
 
     /**
@@ -329,6 +332,19 @@ class LmsContentService extends BaseService
      */
     public function getContentCountBySeries(int $seriesId) {
         return $this->repository->getContentCountBySeries($seriesId);
+    }
+
+    /**
+     * Get pronunciation content by id
+     *
+     * @param int $pronunciationId
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getPronunciationContent(int $pronunciationId)
+    {
+        $pronunciation = $this->pronunciationService->findByIdWithRelations($pronunciationId, ['pronunciationDetails']);
+
+        return $pronunciation;
     }
 
 

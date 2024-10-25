@@ -1,7 +1,7 @@
 <?php $settings = getSettings('lms');?>
 <input type="hidden" name="series_slug" value="{{$series_slug}}">
 <?php
-  $dr_loai = ['0'=>'Menu', '8'=>'Sub menu', '1'=>'Từ vựng','2'=>'Bài học','3'=>'Bài tập','4'=>'Bài tập toàn bài','5'=>'Bài test','6'=>'Hán tự','7'=>'Bài ôn tập', '9'=>'Giới thiệu', 10=>'Flashcard', 11 => 'Luyện viết'];
+  $dr_loai = ['0'=>'Menu', '8'=>'Sub menu', '1'=>'Từ vựng','2'=>'Bài học','3'=>'Bài tập','4'=>'Bài tập toàn bài','5'=>'Bài test','6'=>'Hán tự','7'=>'Bài ôn tập', '9'=>'Giới thiệu', 10=>'Flashcard', 11 => 'Luyện viết', 12 => 'Luyện phát âm'];
   $loai_selected = (isset($record->type)) ? $record->type : null;
 ?>
 <div class="row">
@@ -143,6 +143,16 @@
         'ng-class'=>'{"has-error": formHandwriting.type.$touched && formHandwriting.type.$invalid}',
       ])
     }}
+  </fieldset>
+  <fieldset class="form-group col-md-6" ng-if="loai=='12'">
+    {{ Form::label('pronunciation', 'Chọn bài luyện phát âm') }}
+    {{ Form::select('pronunciation', $pronunciation, $value = $record->pronunciation_id , $attributes = array('class'=>'form-control',
+      'ng-model'=>'pronunciation',
+      'ng-class'=>'{"has-error": formLms.pronunciation.$touched}',
+      )) }}
+    <div class="validation-error" ng-messages="formLms.pronunciation.$error">
+        {!! getValidationMessage()!!}
+    </div>
   </fieldset>
   @if($record)
   @if($record->image!='')

@@ -48,6 +48,9 @@ Route::prefix('learning-management')->name('learning-management.')->group(functi
     Route::get('lesson/handwriting/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showHandwriting')
         ->name('lesson.handwriting');
 
+    Route::get('lesson/pronunciation/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showPronunciation')
+        ->name('lesson.pronunciation');
+
     Route::post('daily-streak', 'UsersController@dailyStreak')
         ->name('lesson.daily-streak');
 });
@@ -1357,6 +1360,31 @@ Route::prefix('lms')
                         Route::delete('delete/{detailId}', 'HandwritingController@deleteDetail')->name('delete');
                     });
             });
+
+        Route::prefix('pronunciation-assessment')
+            ->name('pronunciation_assessment.')
+            ->group(function () {
+                Route::get('', 'PronunciationController@index')->name('index');
+                Route::get('getList', 'PronunciationController@getDatatable')->name('list');
+                Route::get('{id}/view', 'PronunciationController@show')->name('view');
+                Route::get('{id}/show', 'PronunciationController@getPronunciation')->name('show');
+                Route::get('add', 'PronunciationController@create')->name('create');
+                Route::post('add', 'PronunciationController@store')->name('store');
+                Route::get('{id}/edit', 'PronunciationController@edit')->name('edit');
+                Route::patch('{id}/edit', 'PronunciationController@update')->name('update');
+                Route::delete('delete/{id}', 'PronunciationController@delete')->name('delete');
+
+                Route::prefix('{id}/detail')
+                    ->name('detail.')
+                    ->group(function () {
+                        Route::get('add', 'PronunciationController@createDetail')->name('create');
+                        Route::post('add', 'PronunciationController@storeDetail')->name('store');
+                        Route::post('{detailId}/upload-audio', 'PronunciationController@uploadAudio')->name('upload_audio');
+                        Route::get('{detailId}/edit', 'PronunciationController@editDetail')->name('edit');
+                        Route::patch('{detailId}/edit', 'PronunciationController@updateDetail')->name('update');
+                        Route::delete('delete/{detailId}', 'PronunciationController@deleteDetail')->name('delete');
+                    });
+            });
     });
 
 //Flash card
@@ -1501,4 +1529,12 @@ Route::prefix('bai-viet')
             ->name('list_by_category');
         Route::get('/{article_slug}', 'UserArticleController@detail')
             ->name('detail');
+    });
+
+
+Route::prefix('pronunciation')
+    ->name('pronunciation.')
+    ->group(function () {
+        Route::post('', 'PronunciationController@assess')
+            ->name('assess');
     });

@@ -121,8 +121,7 @@
 </div>
 
 
-{{-- <div class="row" ng-if="type == 0">
-
+<div class="row" ng-if="type == 0">
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n1', 'Khóa học N1') }}
 		<span class="text-red">*</span>
@@ -164,8 +163,9 @@
             <span ng-show="formLms.redeem_point.$viewValue > cost">Số coin không được lớn hơn giá khoá học</span>
 		</div>
 	</fieldset>
-</div> --}}
-<div class="row">
+</div>
+
+<div class="row" ng-if="type == 1">
 
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n1', 'Khóa luyện thi N1') }}
