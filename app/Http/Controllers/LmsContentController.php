@@ -639,7 +639,6 @@ class LmsContentController extends Controller
      */
     public function update(Request $request, $series, $slug)
     {
-        //dd($slug);
         $record    = LmsContent::getRecordWithId($slug);
         $file_path = $record->file_path;
         //dd($file_path);

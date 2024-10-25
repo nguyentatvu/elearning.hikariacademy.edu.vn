@@ -16,9 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'SiteController@redirectHomePage');
 
-Route::get('home', function () {
-    return view('client.pages.home');
-});
+Route::get('/home', 'SiteController@homePage');
 
 Route::prefix('learning-management')->name('learning-management.')->group(function () {
     Route::get('lesson/next', 'StudentLmsController@getNextLesson')
@@ -313,6 +311,8 @@ Route::post('users/search/parent', 'UsersController@getParentsOnSearch');
 Route::get('users/reward-point/{slug}', 'UsersController@rewardPoint')->name('users.reward_point');
 
 Route::get('users/reward-points-leaderboard/{slug}', 'UsersController@showLeaderboard')->name('users.reward_points_leaderboard');
+
+Route::get('users/my-courses-dropdown', 'UsersController@getMyCoursesDropdown')->name('users.my_courses_dropdown');
 
 //////////////////////
 

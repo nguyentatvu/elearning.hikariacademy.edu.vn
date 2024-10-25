@@ -1,3 +1,5 @@
+@import '../_mixins';
+
 #news-slider {
   margin-top: 80px;
 }
@@ -193,6 +195,7 @@ $border-color_1: #166ac9;
     small {
       position: relative;
       font-style: italic;
+      font-size: 15px;
       &:before {
         content: open-quote; // Dấu mở ngoặc
         font-size: 1.5em;
@@ -343,6 +346,109 @@ $border-color_1: #166ac9;
 .carousel-control-next-icon {
   background-color: #007bff;
   border-radius: 50%;
+}
+
+.carousel-control-prev-icon, .carousel-control-next-icon {
+  transform: scale(2);
+}
+
+.carousel-inner.slider {
+  box-shadow: rgba(14, 63, 126, 0.04) 0px 0px 0px 1px, rgba(42, 51, 69, 0.04) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.04) 0px 6px 6px -3px, rgba(14, 63, 126, 0.04) 0px 12px 12px -6px, rgba(14, 63, 126, 0.04) 0px 24px 24px -12px;
+}
+
+.gradient-title {
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 2px 2px 6px rgba(22, 106, 201, 0.3);
+  font-weight: bold;
+  line-height: 1.5;
+}
+
+.gradient-title-sm {
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 2px 2px 4px rgb(62 135 218 / 30%);
+  font-weight: bold;
+  line-height: 1.5;
+}
+
+.learning-series-list, .exam-series-list {
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+  position: relative;
+
+  .course-card-description {
+      min-height: 64px;
+  }
+
+    .swiper-exam-series,
+    .swiper-learning-series {
+      width: 1100px;
+      padding-bottom: 20px;
+
+      @include mq (max-pc-lg) {
+          width: 1100px;
+      }
+
+      @include mq (max-pc) {
+          width: 800px;
+      }
+
+      @include mq (max-tb) {
+          width: 700px;
+      }
+
+      @include mq (max-sp) {
+          width: 350px;
+      }
+
+      @include mq (max-sp-sl) {
+          width: 90%;
+      }
+  }
+
+  .swiper-button-next,
+  .swiper-button-prev {
+      color: #2563eb;
+      background: rgb(219 219 219 / 20%);
+      width: 60px;
+      height: 60px;
+      border-radius: 99px;
+
+      @include mq (max-sp-sl) {
+          transform: scale(0.7);
+      }
+  }
+
+  .swiper-button-next {
+      @include mq (max-sp) {
+          right: -8px;
+      }
+
+      @include mq (max-pc-lg) {
+        right: -8px;
+      }
+  }
+
+  .swiper-button-prev {
+      @include mq (max-sp) {
+          left: -8px;
+      }
+
+      @include mq (max-pc-lg) {
+        left: -8px;
+      }
+  }
+
+  .swiper-slide {
+      height: auto;
+  }
 }
 
 @media (min-width: 576px) {

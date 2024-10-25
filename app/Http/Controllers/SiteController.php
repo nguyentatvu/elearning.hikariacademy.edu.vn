@@ -8,14 +8,23 @@ use \App\UserSubscription;
 use \App\Quiz;
 use App\User;
 use \App\LmsSeries;
+use App\LmsSeriesCombo;
 use \App\PaymentMethod;
 use Illuminate\Support\Facades\Auth;
 use Response;
 use Exception;
 use App\Logger;
+use App\Services\LmsSeriesComboService;
 use DB;
 class SiteController extends Controller
 {
+    private $lmsSeriesComboService;
+
+    public function __construct(LmsSeriesComboService $lmsSeriesComboService)
+    {
+        $this->lmsSeriesComboService = $lmsSeriesComboService;
+    }
+
   public function index()
   {
     $current_theme            = getDefaultTheme();
@@ -1292,5 +1301,18 @@ public function getSeriesContents(Request $request)
         }
 
         return redirect(PREFIX . 'home');
+    }
+
+    /**
+     * Redirect to home page
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function homePage() {
+        $data = [];
+        $data['learning_series_list'] = $this->lmsSeriesComboService->getAllPaidSeriesByType(LmsSeriesCombo::LEARNING_TYPE);
+        $data['exam_series_list'] = $this->lmsSeriesComboService->getAllPaidSeriesByType(LmsSeriesCombo::EXAM_TYPE);
+
+        return view('client.pages.home', $data);
     }
 }

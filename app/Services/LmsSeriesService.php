@@ -20,7 +20,7 @@ class LmsSeriesService extends BaseService
     }
 
     /**
-     * Get LmsSeriesService
+     * Get LmsSeriesComboService
      *
      * @return LmsSeriesComboService
      */

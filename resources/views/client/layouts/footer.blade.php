@@ -16,55 +16,13 @@
                             <div class="col-lg-6">
                                 <ul class="list-unstyled">
                                     <li class="mb-2">
-                                        <a class="text-light text-decoration-none" href="#!">Về chúng tôi</a>
+                                        <a class="text-light text-decoration-none" href="https://hikariacademy.edu.vn">HIKARI ACADEMY</a>
                                     </li>
                                     <li class="mb-2">
-                                        <a class="text-light text-decoration-none" href="#!">Chính sách đổi trả</a>
+                                        <a class="text-light text-decoration-none" href="#!">Bảo mật thông tin</a>
                                     </li>
                                     <li class="mb-2">
-                                        <a class="text-light text-decoration-none" href="#!">Chính sách gia hạn</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="col-lg-6">
-                                <ul class="list-unstyled">
-                                    <li class="mb-2">
-                                        <a class="text-light text-decoration-none" href="#!">Điều khoản sử dụng</a>
-                                    </li>
-                                    <li class="mb-2">
-                                        <a class="text-light text-decoration-none" href="#!">Chính sách bảo mật</a>
-                                    </li>
-                                    <li class="mb-2">
-                                        <a class="text-light text-decoration-none" href="#!">Tuyển dụng</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Fanpage section -->
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="border-bottom mb-2">
-                            <h5>Fanpage</h5>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <ul class="list-unstyled">
-                                    <li class="mb-2">
-                                        <a class="text-light text-decoration-none" href="#!">HIKARI</a>
-                                    </li>
-                                    <li class="mb-2">
-                                        <a class="text-light text-decoration-none" href="#!">Nhật ngữ HIKARI</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="col-lg-6">
-                                <ul class="list-unstyled">
-                                    <li class="mb-2">
-                                        <a class="text-light text-decoration-none" href="#!">Tiếng Nhật giao tiếp</a>
-                                    </li>
-                                    <li class="mb-2">
-                                        <a class="text-light text-decoration-none" href="#!">Luyện thi JLPT</a>
+                                        <a class="text-light text-decoration-none" href="#!">Chính sách hoàn tiền</a>
                                     </li>
                                 </ul>
                             </div>
@@ -89,6 +47,20 @@
                             <a href="https://zalo.me/0902390885">
                                 <img style="height: 45px;" src="{{ asset('images/icon-zalo.jpg') }}" alt="icon-zalo">
                             </a>
+                        </div>
+                    </div>
+
+                    <!-- Website info section -->
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="border-bottom mb-2">
+                            <h5>Thông tin website</h5>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <a href="http://online.gov.vn/Home/WebDetails/63991" target="_blank">
+                                    <img class="logo-bocongthuong ms-2 mt-2" src="{{ asset('images/bocongthuong.png') }}" alt="" height="70">
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
