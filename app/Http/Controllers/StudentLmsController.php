@@ -1016,23 +1016,26 @@ class StudentLmsController extends Controller
             ->first();
 
         $roadMapContent = json_decode($roadMap->contents);
-
         $dayViewedContent = null;
-        foreach ($roadMapContent as $day) {
-            foreach ($day->lesson_list as $lesson) {
-                if ($lesson->id == $lastViewedContent->lmscontent_id) {
-                    $dayViewedContent = $day->day_number;
-                    break;
-                }
+        $lastViewedContent = null;
+        if ($lastViewedContent) {
+            foreach ($roadMapContent as $day) {
+                foreach ($day->lesson_list as $lesson) {
+                    if ($lesson->id == $lastViewedContent->lmscontent_id) {
+                        $dayViewedContent = $day->day_number;
+                        break;
+                    }
 
+                }
             }
+            $lastViewedContent = $lastViewedContent->lmscontent_id;
         }
 
         $weeks = $this->groupLessonsByWeek($roadMapContent);
 
         return response()->json([
             'road_map' => $weeks,
-            'last_view' => $lastViewedContent->lmscontent_id,
+            'last_view' => $lastViewedContent,
             'day_last_view' => $dayViewedContent
         ]);
     }
