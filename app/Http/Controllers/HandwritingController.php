@@ -210,7 +210,7 @@ class HandwritingController extends Controller
         try {
             $handwriting = $this->handwritingService->create([
                 'title' => $data['title'],
-                'slug' => createSlug(JapaneseWritingPractice::class, $data['title']),
+                'slug' => createSlug($data['title']),
                 'type' => $data['type'],
             ]);
 

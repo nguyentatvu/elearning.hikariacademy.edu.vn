@@ -332,7 +332,7 @@ class UsersController extends Controller
         $user->role_id       = $role_id;
         $user->login_enabled = 1;
         $user->username      = $request->username;
-        $slug                = createSlug(User::class, $name);
+        $slug                = createSlug($name);
         $user->slug          = $slug;
         $user->phone         = $request->phone;
         $user->address = '';
@@ -572,7 +572,7 @@ class UsersController extends Controller
         $name             = $request->name;
         $previous_role_id = $record->role_id;
         if ($name != $record->name) {
-            $record->slug = createSlug(User::class, $name);
+            $record->slug = createSlug($name);
         }
         $record->name  = $name;
         $record->email = $request->email;
@@ -948,7 +948,7 @@ class UsersController extends Controller
             $user->password      = bcrypt($request->password);
             $user->role_id       = $request->role_id;
             $user->login_enabled = 1;
-            $user->slug          = createSlug(User::class, $name);
+            $user->slug          = createSlug($name);
             $user->phone         = $request->phone;
             // $user->address      = $request->address;
             $user->address = '';
@@ -1102,7 +1102,7 @@ class UsersController extends Controller
             $parent_user->name     = $request->parent_name;
             $parent_user->username = $request->parent_user_name;
             $parent_user->role_id  = $role_id;
-            $parent_user->slug     = createSlug(User::class, $request->parent_user_name);
+            $parent_user->slug     = createSlug($request->parent_user_name);
             $parent_user->email    = $request->parent_email;
             $parent_user->password = bcrypt('password');
             try {

@@ -164,7 +164,7 @@ class ExamSeriesController extends Controller
         */
        $name = $request->title;
         if($name != $record->title)
-            $record->slug = $record->createSlug(ExamSeries::class, $name);
+            $record->slug = $record->createSlug($name);
        //Validate the overall request
        $this->validate($request, $rules);
       $record->title        = $name;
@@ -218,7 +218,7 @@ class ExamSeriesController extends Controller
         $record = new ExamSeries();
         $name             =  $request->title;
         $record->title        = $name;
-        $record->slug         = createSlug(ExamSeries::class, $name);
+        $record->slug         = createSlug($name);
         $record->is_paid      = $request->is_paid;
         $record->validity     = -1;
         $record->cost       = 0;

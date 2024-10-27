@@ -344,7 +344,7 @@ class LmsContentController extends Controller
             //insert bai hoc
             $record               = new LmsContent();
             $name                 = $request->bai;
-            $slug_insert          = createSlug(LmsContent::class, $name);
+            $slug_insert          = createSlug($name);
             // $record->title        = $name;
             $record->slug         = $slug_insert;
             $record->parent_id    = $parent_id;
@@ -668,7 +668,7 @@ class LmsContentController extends Controller
         try {
             $name = $request->title;
             if ($name != $record->title) {
-                $slug_insert  = createSlug(LmsContent::class, $name);
+                $slug_insert  = createSlug($name);
                 $record->slug = $slug_insert;
             } else {
                 $slug_insert = $slug;
@@ -1021,7 +1021,7 @@ class LmsContentController extends Controller
                 ->get()->first();
             $record               = new LmsContent();
             $name                 = $request->title;
-            $slug_insert          = createSlug(LmsContent::class, $name);
+            $slug_insert          = createSlug($name);
             $record->title        = $name;
             $record->slug         = $slug_insert;
             $record->lmsseries_id = $lmsseries_id_q->id;

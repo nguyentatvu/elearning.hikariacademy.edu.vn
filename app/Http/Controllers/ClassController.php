@@ -176,7 +176,7 @@ class ClassesController extends Controller
         */
        $name = $request->category;
         if($name != $record->category)
-            $record->slug = createSlug(QuizCategory::class, $name);
+            $record->slug = createSlug($name);
       
        //Validate the overall request
        $this->validate($request, $rules);
@@ -220,7 +220,7 @@ class ClassesController extends Controller
         $record = new QuizCategory();
         $name             =  $request->category;
     $record->category       = $name;
-        $record->slug         = createSlug(QuizCategory::class, $name);
+        $record->slug         = createSlug($name);
         $record->description    = $request->description;
         $record->record_updated_by  = Auth::user()->id;
         $record->save();

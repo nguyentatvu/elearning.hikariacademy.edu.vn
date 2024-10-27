@@ -160,9 +160,9 @@ class TopicsController extends Controller
         * if changed update the slug value based on the new title
         */
         if($name != $record->topic_name)
-            $record->slug = createSlug(Topic::class, $name);
+            $record->slug = createSlug($name);
         $record->topic_name       = $name;
-        $record->slug               = createSlug(Topic::class, $name) . time();
+        $record->slug               = createSlug($name) . time();
         $record->parent_id        = $request->parent_id;
         $record->subject_id       = $request->subject_id;
         $record->description      = '';
@@ -192,7 +192,7 @@ class TopicsController extends Controller
       $record = new Topic();
         $name                   = $request->topic_name;
         $record->topic_name       = $name;
-        $record->slug               = createSlug(Topic::class, $name) . time();
+        $record->slug               = createSlug($name) . time();
         $record->parent_id        = $request->parent_id;
         $record->subject_id       = $request->subject_id;
         $record->description      = $request->description;
@@ -474,7 +474,7 @@ public function downloadExcel()
         $name                 = $request->topic_name;
         $topic->topic_name    = $name;
         $topic->parent_id     = $request->parent_id;
-        $topic->slug          = createSlug(Topic::class, getHashCode());
+        $topic->slug          = createSlug(getHashCode());
         $topic->subject_id    = $request->subject_id;
         $topic->description   = '';
         if($request->description)

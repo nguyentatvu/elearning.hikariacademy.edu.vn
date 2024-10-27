@@ -176,7 +176,7 @@ class SettingsController extends Controller
         * if changed update the slug value based on the new title
         */
         if($name != $record->key)
-            $record->slug = createSlug(Settings::class, $name);
+            $record->slug = createSlug($name);
     	$record->title                 =$request->title;
         $record->key 			        = $name;
         $record->description 			= $request->description;
@@ -218,7 +218,7 @@ class SettingsController extends Controller
         $record->title                  = $request->title;
         $name 					        = $request->key;
         $record->key 					= $name;
-        $record->slug 			        = createSlug(Settings::class, $name);
+        $record->slug 			        = createSlug($name);
         $record->description 			= $request->description;
         $record->save();
         

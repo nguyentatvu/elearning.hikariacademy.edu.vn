@@ -121,7 +121,7 @@ class RegisterController extends Controller
         $user->level = 5;
         $user->role_id = 5;
         $user->is_register = 1;
-        $user->slug = createSlug(User::class, $request->name);
+        $user->slug = createSlug($request->name);
         $user->login_enabled = 1;
         $user->reward_point = getRewardPointRule('registration')['points'];
         $user->last_login_date = now();

@@ -874,7 +874,7 @@ try_again:
         $payment->item_name       = $item->title;
         $payment->plan_type       = $package_type;
         $payment->payment_gateway = $payment_method;
-        $payment->slug            = createSlug(Payment::class, getHashCode());
+        $payment->slug            = createSlug(getHashCode());
         $payment->cost            = $item->cost;
         $payment->user_id         = $user->id;
         $payment->paid_by_parent  = $other_details['paid_by_parent'];
@@ -1742,7 +1742,7 @@ try_again:
                 $payment_record->item_name       = $item->title;
                 $payment_record->plan_type       = $request->type;
                 $payment_record->payment_gateway = 'Razorpay';
-                $payment_record->slug            = createSlug(Payment::class, getHashCode());
+                $payment_record->slug            = createSlug(getHashCode());
                 $payment_record->cost            = $item->cost;
                 $payment_record->user_id         = $user->id;
                 $payment_record->payment_status  = PAYMENT_STATUS_SUCCESS;

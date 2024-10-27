@@ -471,7 +471,7 @@ class QuestionBankController extends Controller
         $record = new QuestionBank();
         $name                           = $request->question;
         $record->question           = $name;
-        $record->slug               = createSlug(QuestionBank::class, getHashCode());
+        $record->slug               = createSlug(getHashCode());
         $record->subject_id         = $request->subject_id;
         $record->topic_id           = $request->topic_id;
         $record->question           = $request->question;

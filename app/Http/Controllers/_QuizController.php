@@ -195,7 +195,7 @@ class QuizController extends Controller
         */
          $name = $request->title;
          if($name != $record->title)
-          $record->slug = createSlug(Quiz::class, $name);
+          $record->slug = createSlug($name);
        //Validate the overall request
         $this->validate($request, $rules);
         if($request->show_in_front == 1){
@@ -287,7 +287,7 @@ class QuizController extends Controller
     $record = new Quiz();
     $name             =  $request->title;
     $record->title        = $name;
-    $record->slug         = createSlug(Quiz::class, $name);
+    $record->slug         = createSlug($name);
     $record->category_id    = $request->category_id;
     $record->type           = $request->type;
     $record->dueration      = $request->dueration;

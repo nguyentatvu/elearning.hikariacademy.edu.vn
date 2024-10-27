@@ -229,7 +229,7 @@ class LmsSeriesController extends Controller
 		$rules = ['title' => 'bail|required|max:30'];
 		$name = $request->title;
 		if ($name != $record->title)
-			$record->slug = createSlug(LmsSeries::class, $name);
+			$record->slug = createSlug($name);
 		$this->validate($request, $rules);
 		$record->title = $name;
 		$record->is_paid = $request->is_paid;
@@ -287,7 +287,7 @@ class LmsSeriesController extends Controller
 		$record = new LmsSeries();
 		$name = $request->title;
 		$record->title = $name;
-		$record->slug = createSlug(LmsSeries::class, $name);
+		$record->slug = createSlug($name);
 		$record->cost = 0;
 		$record->lms_category_id = $request->lms_category_id;
 		$record->type_series = $request->type_series;

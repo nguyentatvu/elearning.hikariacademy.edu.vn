@@ -1394,14 +1394,10 @@ function makeRandomPassword(int $length = 6)
  * @param string $field
  * @return string
  */
-function createSlug($model, $name, $field = 'slug')
+function createSlug($name)
 {
     $slug = Str::slug($name);
-    $existingSlugCount = $model::where($field, 'like', $slug . '%')->count();
-
-    if ($existingSlugCount > 0) {
-        $slug .= '-' . ($existingSlugCount);
-    }
+    $slug .= '-' . now()->timestamp;
 
     return $slug;
 }

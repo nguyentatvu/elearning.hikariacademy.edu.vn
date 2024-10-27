@@ -262,7 +262,7 @@ class LmsComboController extends Controller
             $record->redeem_point = $request->redeem_point / config('constant.redeemed_coin.vnd_convert_rate');
             $name                 =  $request->title;
             $record->title        = $name;
-            $record->slug         = createSlug(LmsCombo::class, $name);
+            $record->slug         = createSlug($name);
             $record->cost         = $request->cost ;
             $record->selloff         = $request->selloff ;
 
@@ -480,7 +480,7 @@ class LmsComboController extends Controller
             ]);*/
             $name = $request->title;
             if($name != $record->title){
-                $record->slug = createSlug(LmsCombo::class, $name);
+                $record->slug = createSlug($name);
             }
 
 
