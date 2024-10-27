@@ -131,7 +131,7 @@ class PlansController extends Controller
         * if changed update the slug value based on the new title
         */
         if($name != $record->name)
-            $record->slug = createSlug(Plan::class, $name);
+            $record->slug = createSlug($name);
     	
      
         $record->name = $name;
@@ -161,7 +161,7 @@ class PlansController extends Controller
     	$record = new Plan();
         $name 					        = $request->name;
         $record->name 					= $name;
-        $record->slug 			        = createSlug(Plan::class, $name);
+        $record->slug 			        = createSlug($name);
         $record->title					= $request->title;
         $record->type					= $request->type;
         $record->amount					= $request->amount;

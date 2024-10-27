@@ -137,9 +137,9 @@ class SubjectsController extends Controller
         * if changed update the slug value based on the new title
         */
        if($name != $record->subject_title)
-        $record->slug = createSlug(Subject::class, $name);
+        $record->slug = createSlug($name);
       $record->subject_title      = $name;
-      $record->slug               = createSlug(Subject::class, $name);
+      $record->slug               = createSlug($name);
       $record->subject_code     = $request->subject_code;
       $record->maximum_marks      = 0;
       $record->pass_marks       = 0;
@@ -183,7 +183,7 @@ class SubjectsController extends Controller
         $record = new Subject();
         $name                   = $request->subject_title;
         $record->subject_title      = $name;
-        $record->slug               = createSlug(Subject::class, $name);
+        $record->slug               = createSlug($name);
         $record->subject_code     = $request->subject_code;
         $record->maximum_marks      = 0;
         $record->pass_marks       = 0;
@@ -420,7 +420,7 @@ public function downloadExcel()
         $name                   = $request->subject_title;
         $subject->subject_title = $name;
         $subject->subject_code  = $request->subject_code;
-        $subject->slug          = createSlug(Subject::class, $name);
+        $subject->slug          = createSlug($name);
         $subject->maximum_marks = 0;
         $subject->pass_marks = 0;
         $subject->save();

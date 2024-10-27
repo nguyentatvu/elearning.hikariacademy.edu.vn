@@ -163,7 +163,7 @@ class LmsExamController extends Controller
 		*/
 		$name = $request->title;
 		if($name != $record->title)
-			$record->slug = createSlug(LmsSeries::class, $name);
+			$record->slug = createSlug($name);
 	   //Validate the overall request
 		$this->validate($request, $rules);
 		if($request->has('show_in_front')){
@@ -233,7 +233,7 @@ class LmsExamController extends Controller
 		}
 		$name                 =  $request->title;
 		$record->title        = $name;
-		$record->slug         = createSlug(LmsSeries::class, $name);
+		$record->slug         = createSlug($name);
 		$record->cost       = 0;
 
 		$record->total_items    = $request->total_items;

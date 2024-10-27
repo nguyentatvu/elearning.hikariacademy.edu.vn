@@ -139,7 +139,7 @@ class InstallatationController extends Controller
 
           
 
-        $user->slug = createSlug(User::class, $name);
+        $user->slug = createSlug($name);
         
         
         $user->save();

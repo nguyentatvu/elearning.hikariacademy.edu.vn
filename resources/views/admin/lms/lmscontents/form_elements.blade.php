@@ -122,8 +122,10 @@
   </fieldset>
   <fieldset class="form-group col-md-6" ng-if="loai=='11'">
     {{ Form::label('handwriting', 'Chọn bài luyện viết') }}
+    <span class="text-red">*</span>
     {{ Form::select('handwriting', $handwriting, $value = $record->japanese_writing_practice_id , $attributes = array('class'=>'form-control',
       'ng-model'=>'handwriting',
+      'required' => true,
       'ng-class'=>'{"has-error": formLms.handwriting.$touched}',
       )) }}
     <div class="validation-error" ng-messages="formLms.handwriting.$error">
@@ -146,8 +148,10 @@
   </fieldset>
   <fieldset class="form-group col-md-6" ng-if="loai=='12'">
     {{ Form::label('pronunciation', 'Chọn bài luyện phát âm') }}
+    <span class="text-red">*</span>
     {{ Form::select('pronunciation', $pronunciation, $value = $record->pronunciation_id , $attributes = array('class'=>'form-control',
       'ng-model'=>'pronunciation',
+      'required' => true,
       'ng-class'=>'{"has-error": formLms.pronunciation.$touched}',
       )) }}
     <div class="validation-error" ng-messages="formLms.pronunciation.$error">

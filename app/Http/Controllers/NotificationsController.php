@@ -168,7 +168,7 @@ class NotificationsController extends Controller
         */
        $name = $request->title;
         if($name != $record->title)
-            $record->slug = createSlug(Notification::class, $name);
+            $record->slug = createSlug($name);
       
        //Validate the overall request
        $this->validate($request, $rules);
@@ -208,7 +208,7 @@ class NotificationsController extends Controller
         $record = new Notification();
       	$name  						=  $request->title;
 		$record->title 				= $name;
-       	$record->slug 				= createSlug(Notification::class, $name);
+       	$record->slug 				= createSlug($name);
         $record->valid_from			= $request->valid_from;
         $record->valid_to			= $request->valid_to;
         $record->url				= $request->url;

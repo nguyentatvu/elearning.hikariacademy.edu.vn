@@ -139,7 +139,7 @@ class FeedbackController extends Controller
         $record = new Feedback();
       	$name  						=  $request->title;
 		$record->title 				= $name;
-       	$record->slug 				= createSlug(Feedback::class, $name);
+       	$record->slug 				= createSlug($name);
         $record->subject			= $request->subject;
         $record->description		= $request->description;
         $record->user_id			= Auth::user()->id;

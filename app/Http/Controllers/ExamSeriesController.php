@@ -191,11 +191,11 @@ class ExamSeriesController extends Controller
         */
        $name = $request->title;
         if($name != $record->title)
-            $record->slug = createSlug(ExamSeries::class, $name);
+            $record->slug = createSlug($name);
        //Validate the overall request
        $this->validate($request, $rules);
       $record->title        = $name;
-        $record->slug         = createSlug(ExamSeries::class, $name);
+        $record->slug         = createSlug($name);
         $record->is_paid      = $request->is_paid;
         $record->category_id      = $request->category_id;
         $record->validity     = -1;
@@ -253,7 +253,7 @@ class ExamSeriesController extends Controller
         $record               = new ExamSeries();
         $name                 =  $request->title . ' - ' . $de;
         $record->title        = $name;
-        $record->slug         = createSlug(ExamSeries::class, $name);
+        $record->slug         = createSlug($name);
         $record->is_paid      = $request->is_paid;
         $record->validity     = -1;
         $record->cost         = 0;
@@ -292,7 +292,7 @@ class ExamSeriesController extends Controller
               $record_quiz = new Quiz();
               $name_quiz = $name . $dethi;
               $record_quiz->title        = $name_quiz;
-              $record_quiz->slug         = createSlug(Quiz::class, $name_quiz);
+              $record_quiz->slug         = createSlug($name_quiz);
               $record_quiz->category_id  = $request->category_id;
               $record_quiz->type         = $i;
               $record_quiz->dueration    = $dueration;
@@ -576,7 +576,7 @@ class ExamSeriesController extends Controller
               $record_quiz = new Quiz();
               $name_quiz = $name . $dethi;
               $record_quiz->title        = $name_quiz;
-              $record_quiz->slug         = createSlug(Quiz::class, $name_quiz);
+              $record_quiz->slug         = createSlug($name_quiz);
               $record_quiz->category_id  = $request->category_id;
               $record_quiz->type         = $i;
               $record_quiz->dueration    = $dueration;
@@ -852,7 +852,7 @@ class ExamSeriesController extends Controller
               $record_quiz = new Quiz();
               $name_quiz = $name . $dethi;
               $record_quiz->title        = $name_quiz;
-              $record_quiz->slug         = createSlug(Quiz::class, $name_quiz);
+              $record_quiz->slug         = createSlug($name_quiz);
               $record_quiz->category_id  = $request->category_id;
               $record_quiz->type         = $i;
               $record_quiz->dueration    = $dueration;

@@ -161,7 +161,7 @@ class InstructionsController extends Controller
         */
        $name = $request->title;
         if($name != $record->title)
-            $record->slug = createSlug(Instruction::class, $name);
+            $record->slug = createSlug($name);
       
        //Validate the overall request
        $this->validate($request, $rules);
@@ -195,7 +195,7 @@ class InstructionsController extends Controller
         $record = new Instruction();
       	$name  						=  $request->title;
 		$record->title 				= $name;
-       	$record->slug 				= createSlug(Instruction::class, $name);
+       	$record->slug 				= createSlug($name);
         
         $record->content		= $request->content;
         $record->save();

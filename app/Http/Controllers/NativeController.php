@@ -186,10 +186,10 @@ class NativeController extends Controller
         * if changed update the slug value based on the new title
         */
         if($name != $record->language)
-            $record->slug = createSlug(Language::class, $name);
+            $record->slug = createSlug($name);
     	
      	$record->language 			 = $name;
-        $record->slug 			   = createSlug(Language::class, $name);
+        $record->slug 			   = createSlug($name);
         $record->code					 = $request->code;
         $record->is_rtl				 = $request->is_rtl;
         $record->save();
@@ -218,7 +218,7 @@ class NativeController extends Controller
     	$record = new Language();
         $name 					        = $request->language;
         $record->language 				= $name;
-        $record->slug 			        = createSlug(Language::class, $name);
+        $record->slug 			        = createSlug($name);
         $record->code					= $request->code;
         $record->is_rtl					= $request->is_rtl;
         $record->save();

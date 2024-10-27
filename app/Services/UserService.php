@@ -140,7 +140,7 @@ class UserService extends BaseService
             $data['role_id'] = Role::STUDENT;
             $data['is_register'] = 1;
             $data['password'] = bcrypt($password);
-            $data['slug'] = createSlug(User::class, $data['name']);
+            $data['slug'] = createSlug($data['name']);
             $data['login_enabled'] = 1;
             $data['reward_point'] = 0;
 

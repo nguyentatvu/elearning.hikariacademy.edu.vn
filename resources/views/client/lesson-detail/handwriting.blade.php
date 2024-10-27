@@ -8,15 +8,27 @@
     @php
         if ($handwriting->type == \App\JapaneseWritingPractice::HIRAGANA) {
             $handwritingDetail = $handwriting->hiraganaWritingPractices;
+            $character = '';
+
+            if ($handwritingDetail->isNotEmpty()) {
+                $character = $handwritingDetail[0]->character;
+            }
         } else {
             $handwritingDetail = $handwriting->kanjiWritingPractices;
-            $question = str_replace(
-                $handwritingDetail[0]->underlined_word,
-                '<u>' . $handwritingDetail[0]->underlined_word . '</u>',
-                $handwritingDetail[0]->full_word
-            );
-            $kanji = $handwritingDetail[0]->kanji;
-            $totalKanji = mb_strlen($kanji);
+
+            if ($handwritingDetail->isNotEmpty()) {
+                $question = str_replace(
+                    $handwritingDetail[0]->underlined_word,
+                    '<u>' . $handwritingDetail[0]->underlined_word . '</u>',
+                    $handwritingDetail[0]->full_word
+                );
+                $kanji = $handwritingDetail[0]->kanji;
+                $totalKanji = mb_strlen($kanji);
+            } else {
+                $question = '';
+                $kanji = '';
+                $totalKanji = 0;
+            }
         }
         $total = $handwritingDetail->count();
     @endphp
@@ -26,7 +38,7 @@
                 Đề bài:
                 @if ($handwriting->type == \App\JapaneseWritingPractice::HIRAGANA)
                     <span id="handwriting_lesson_content" class="handwriting-lesson-content">
-                        {{ $handwritingDetail[0]->character }}</span>
+                        {{ $character }}</span>
                 @else
                     <span id="handwriting_lesson_content" class="handwriting-lesson-content">
                         {!! $question !!}</span>
@@ -37,8 +49,8 @@
             <div id="handwriting_tabs" class="handwriting-tabs">
                 @if ($handwriting->type == \App\JapaneseWritingPractice::HIRAGANA)
                     <div class="handwriting-tab">
-                        <span class="handwriting-tab-title" data-kanji="{{ $handwritingDetail[0]->character }}">
-                            {{ $handwritingDetail[0]->character }}
+                        <span class="handwriting-tab-title" data-kanji="{{ $character }}">
+                            {{ $character }}
                         </span>
                     </div>
                 @else
@@ -94,7 +106,13 @@
         <div id="handwriting_arrow" class="handwriting-arrow">
             <i id="arrow_left" class="bi bi-arrow-left arrow disabled"></i>
             <div class="handwriting-page">
-                <span id="current_page">1</span> / {{ $total }}
+                <span id="current_page">
+                    @if ($handwritingDetail->isNotEmpty())
+                        1
+                    @else
+                        0
+                    @endif
+                </span> / {{ $total }}
             </div>
             <i id="arrow_right" class="bi bi-arrow-right arrow"></i>
         </div>
@@ -180,8 +198,8 @@
 
                     let $tabClone = $('.handwriting-tab-template').first().clone();
                     $tabClone.find('.handwriting-tab-title')
-                            .attr('data-kanji', kanjiChar)
-                            .text(`Hán tự ${i + 1}`);
+                        .attr('data-kanji', kanjiChar)
+                        .text(`Hán tự ${i + 1}`);
                     handwritingTabs.append($tabClone.children());
                 }
             } else {
@@ -196,10 +214,10 @@
         /**
          * Handle Arrow Event
          */
-         function handleArrowLeftEvent() {
+        function handleArrowLeftEvent() {
             $('#arrow_left').on('click', function() {
                 if (currentIndex > 0) {
-                    saveCurrentCanvasData(currentIndex + 1 );
+                    saveCurrentCanvasData(currentIndex + 1);
                     currentIndex--;
                     updateHandwriting(currentIndex);
                 }

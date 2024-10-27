@@ -133,7 +133,7 @@ class BooksController extends Controller
         */
          $name = $request->category;
          if($name != $record->category)
-            $record->slug = createSlug(QuizCategory::class, $name);
+            $record->slug = createSlug($name);
        //Validate the overall request
       $this->validate($request, $rules);
       $record->category       = $name;

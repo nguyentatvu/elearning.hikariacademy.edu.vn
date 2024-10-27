@@ -225,7 +225,7 @@ class EmailTemplatesController extends Controller
         */
        $name = $request->title;
         if($name != $record->title)
-            $record->slug = createSlug(EmailTemplate::class, $name);
+            $record->slug = createSlug($name);
        //Validate the overall request
         $this->validate($request, $rules);
         $record->title              = $name;
@@ -261,7 +261,7 @@ class EmailTemplatesController extends Controller
         $record = new EmailTemplate();
         $name                       =  $request->title;
         $record->title              = $name;
-        $record->slug               = createSlug(EmailTemplate::class, $name);
+        $record->slug               = createSlug($name);
         $record->content            = $request->content;
         $record->type               = $request->type;
         $record->subject            = $request->subject;

@@ -168,7 +168,7 @@ class CouponcodesController extends Controller
         */
        $name = $request->title;
         if($name != $record->title)
-            $record->slug = createSlug(Couponcode::class, $name);
+            $record->slug = createSlug($name);
       
        //Validate the overall request
        $this->validate($request, $rules);
@@ -224,7 +224,7 @@ class CouponcodesController extends Controller
         $record = new Couponcode();
       	$name  						=  $request->title;
 		    $record->title 				= $name;
-       	$record->slug 				= createSlug(Couponcode::class, $name);
+       	$record->slug 				= createSlug($name);
         $record->coupon_code		= $request->coupon_code;
         $record->discount_type			= $request->discount_type;
         $record->discount_value		= $request->discount_value;
