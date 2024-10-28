@@ -53,8 +53,8 @@
 <div class="custom-container d-flex justify-content-center align-items-center footer-study">
     <span></span>
     <div>
-        <button class="btn btn-custom"><i class="bi bi-chevron-left"></i> bài trước</button>
-        <button class="btn btn-custom-primary">bài tiếp theo <i class="bi bi-chevron-right"></i></button>
+        <button class="btn btn-custom" onclick="goToPreviousLesson()"><i class="bi bi-chevron-left"></i> bài trước</button>
+        <button class="btn btn-custom-primary" onclick="goToNextLesson()">bài tiếp theo <i class="bi bi-chevron-right"></i></button>
     </div>
     <div class="text-custom me-4">
         {{ $detailContent->bai }}
@@ -62,9 +62,59 @@
 </div>
 
 <div class="custom-container d-flex justify-content-between align-items-center mobile-footer-study">
-    <button class="btn btn-custom"><i class="bi bi-chevron-left"></i></button>
+    <button class="btn btn-custom" onclick="goToPreviousLesson()"><i class="bi bi-chevron-left"></i></button>
     <div class="text-custom">
         {{ $detailContent->bai }}
     </div>
-    <button class="btn btn-custom-primary"><i class="bi bi-chevron-right"></i></button>
+    <button class="btn btn-custom-primary" onclick="goToNextLesson()"><i class="bi bi-chevron-right"></i></button>
 </div>
+
+<script>
+    function goToNextLesson() {
+        let seriesSlug = "{{ request()->route('slug') }}";
+        let seriesComboSlug = "{{ request()->route('combo_slug') }}";
+        let contentId = "{{ request()->route('stt') }}";
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            url: "{{ route('learning-management.next-lesson') }}",
+            type: "get",
+            data: {
+                series_slug: seriesSlug,
+                series_combo_slug: seriesComboSlug,
+                content_id: contentId
+            },
+            success: function(response) {
+                if (response.success) {
+                    window.location.href = response.url;
+                }
+            }
+        });
+    }
+
+    function goToPreviousLesson() {
+        let seriesSlug = "{{ request()->route('slug') }}";
+        let seriesComboSlug = "{{ request()->route('combo_slug') }}";
+        let contentId = "{{ request()->route('stt') }}";
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            url: "{{ route('learning-management.previous-lesson') }}",
+            type: "get",
+            data: {
+                series_slug: seriesSlug,
+                series_combo_slug: seriesComboSlug,
+                content_id: contentId
+            },
+            success: function(response) {
+                if (response.success) {
+                    window.location.href = response.url;
+                }
+            }
+        });
+    }
+</script>

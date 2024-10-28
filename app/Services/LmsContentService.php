@@ -286,6 +286,23 @@ class LmsContentService extends BaseService
     }
 
     /**
+     * Get previous content
+     *
+     * @param mixed $contentId
+     * @param mixed $seriesSlug
+     * @return mixed(LmsContent|null)
+     */
+    public function getPreviousContent($contentId, $seriesSlug) {
+        $seriesId = optional($this->lmsSeriesService->getByCondition('slug', $seriesSlug))->id;
+        $contentOrder = optional($this->repository->findById($contentId))->stt;
+        if (is_null($seriesId) || is_null($contentOrder)) {
+            return null;
+        }
+
+        return $this->repository->getPreviousContent($contentOrder, $seriesId);
+    }
+
+    /**
      * Get exercise content
      *
      * @param string $contentId
