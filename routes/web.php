@@ -22,6 +22,9 @@ Route::prefix('learning-management')->name('learning-management.')->group(functi
     Route::get('lesson/next', 'StudentLmsController@getNextLesson')
         ->name('next-lesson');
 
+    Route::get('lesson/previous', 'StudentLmsController@getPreviousLesson')
+        ->name('previous-lesson');
+
     Route::get('lesson/show/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showLesson')
         ->name('lesson.show');
 

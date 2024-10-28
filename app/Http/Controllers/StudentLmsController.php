@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use \App;
 use App\Exceptions\RedirectException;
 use App\Payment;
@@ -457,6 +459,44 @@ class StudentLmsController extends Controller
     }
 
     /**
+     * Get previous lesson
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getPreviousLesson(Request $request)
+    {
+        $series_combo_slug = $request->get('series_combo_slug');
+        $series_slug = $request->get('series_slug');
+        $content_id = $request->get('content_id');
+
+        $previousContent = $this->lmsContentService->getPreviousContent($content_id, $series_slug);
+        if (!$previousContent) {
+            return response()->json([
+                'success' => false,
+                'url' => null
+            ]);
+        }
+
+        $typeMap = config('constant.series.type_map');
+        $routes = config('constant.series.routes');
+        $params = [
+            'combo_slug' => $series_combo_slug,
+            'slug' => $series_slug,
+            'stt' => $previousContent->id
+        ];
+
+        foreach ($routes as $type => $route) {
+            if (in_array($previousContent->type, $typeMap[$type])) {
+                return response()->json([
+                    'success' => true,
+                    'url' => route($route, $params)
+                ]);
+            }
+        }
+    }
+
+    /**
      * Save exercise score
      *
      * @param  \Illuminate\Http\Request  $request
@@ -473,24 +513,27 @@ class StudentLmsController extends Controller
             'users_id' => Auth::id(),
             'finish' => LmsStudentView::NOT_FINISHED
         ]);
-        $content = $this->lmsContentService->findById($contentId);
 
-        // Remove exceeded points
-        $earnedPoints = max(0, min($earnedPoints, 3));
+        if ($studentView) {
+            $content = $this->lmsContentService->findById($contentId);
 
-        $user = Auth::user();
-        $this->userService->updatePointHistory([$contentType => $earnedPoints]);
-        $user->update([
-            'reward_point' => $user->reward_point + $earnedPoints
-        ]);
+            // Remove exceeded points
+            $earnedPoints = max(0, min($earnedPoints, 3));
 
-        $studentView->update([
-            'finish' => LmsStudentView::FINISH,
-            'reward_point' => $earnedPoints
-        ], [
-            'lmscontent_id' => $contentId,
-            'users_id' => Auth::id(),
-        ]);
+            $user = Auth::user();
+            $this->userService->updatePointHistory([$contentType => $earnedPoints]);
+            $user->update([
+                'reward_point' => $user->reward_point + $earnedPoints
+            ]);
+
+            $studentView->update([
+                'finish' => LmsStudentView::FINISH,
+                'reward_point' => $earnedPoints
+            ], [
+                'lmscontent_id' => $contentId,
+                'users_id' => Auth::id(),
+            ]);
+        }
     }
 
     /**
@@ -880,13 +923,15 @@ class StudentLmsController extends Controller
      * @param string $stt
      * @return \Illuminate\Http\Response
      */
-    public function showPronunciation(string $combo_slug = '', string $slug = '', string $stt = '') {
+    public function showPronunciation(string $combo_slug = '', string $slug = '', string $stt = '')
+    {
         $this->processLessonContent($combo_slug, $slug, $stt);
         $preparedContent = $this->getPreparedContentVariables();
         $pronunciationId = $preparedContent['detailContent']->pronunciation_id;
         $pronunciation = $this->lmsContentService->getPronunciationContent(1);
 
-        return view('client.lesson-detail.pronunciation', array_merge($preparedContent,
+        return view('client.lesson-detail.pronunciation', array_merge(
+            $preparedContent,
             ['type' => 'pronunciation'],
             ['pronunciation' => $pronunciation]
         ));
@@ -1021,7 +1066,6 @@ class StudentLmsController extends Controller
                         $dayViewedContent = $day->day_number;
                         break;
                     }
-
                 }
             }
             $lastViewedContent = $lastViewedContent->lmscontent_id;

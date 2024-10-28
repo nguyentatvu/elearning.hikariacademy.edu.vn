@@ -86,8 +86,14 @@
          * Handle click arrow right
          */
         function handleClickArrowRight() {
-            $('#flashcard_arrow_right').on('click', function() {
+            $('#flashcard_arrow_right').on('click', async function() {
                 var currentCardId = $(".flashcard.active").data("card-id");
+
+                if (currentCardId == $('.flashcard-content > .flashcard').length - 1) {
+                    @if($isValidPayment && !$isFinishedContent)
+                            await earnPointFinishContent('{{ $detailContent->id }}', 0, '');
+                    @endif
+                }
 
                 if (currentCardId == $('.flashcard-content > .flashcard').length) {
                     return;
@@ -170,7 +176,6 @@
             updatePageNumber(cardId);
 
             if (option === 'auto') {
-                console.log(22)
                 setTimeout(function() {
                     $('#card' + cardId).addClass('flipped');
                 }, 3500);

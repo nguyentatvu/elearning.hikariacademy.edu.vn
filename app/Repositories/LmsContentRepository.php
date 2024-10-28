@@ -119,9 +119,22 @@ class LmsContentRepository extends BaseRepository
      */
     public function getListContents(string $seriesId)
     {
-        return $this->model->with('childContents.childContents.childContents')
-            ->whereNull('parent_id')->where('lmsseries_id', $seriesId)
-            ->where('delete_status', 0)->orderBy('stt', 'asc')
+        return $this->model->with(['childContents' => function ($query) {
+            $query->where('delete_status', 0)
+                ->orderBy('stt', 'asc')
+                ->with(['childContents' => function ($query) {
+                    $query->where('delete_status', 0)
+                        ->orderBy('stt', 'asc')
+                        ->with(['childContents' => function ($query) {
+                            $query->where('delete_status', 0)
+                                ->orderBy('stt', 'asc');
+                        }]);
+                }]);
+        }])
+            ->whereNull('parent_id')
+            ->where('lmsseries_id', $seriesId)
+            ->where('delete_status', 0)
+            ->orderBy('stt', 'asc')
             ->get();
     }
 
@@ -193,6 +206,24 @@ class LmsContentRepository extends BaseRepository
             ->where('delete_status', LmsContent::ACTIVE)
             ->whereNotIn('type', [LmsContent::LESSON, LmsContent::LESSON_TOPIC])
             ->orderby('stt')
+            ->first();
+    }
+
+    /**
+     * Get previous content
+     *
+     * @param string $contentOrder
+     * @param string $seriesId
+     * @return mixed(LmsContent|null)
+     */
+    public function getPreviousContent(string $contentOrder, string $seriesId)
+    {
+        return $this->model
+            ->where('stt', '<=', ((int) $contentOrder - 1))
+            ->where('lmsseries_id', $seriesId)
+            ->where('delete_status', LmsContent::ACTIVE)
+            ->whereNotIn('type', [LmsContent::LESSON, LmsContent::LESSON_TOPIC])
+            ->orderBy('stt', 'desc')
             ->first();
     }
 
