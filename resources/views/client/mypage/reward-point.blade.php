@@ -4,6 +4,10 @@
         .modal-header {
             border: 0;
         }
+
+        .reward-point__detail-item.streak-point{
+            cursor: pointer;
+        }
     </style>
 @endsection
 @section('mypage-content')
@@ -42,7 +46,7 @@
                     </div>
                     <span>Xem video</span>
                 </div>
-                <div class="reward-point__detail-item" onclick="openModalStreak()">
+                <div class="reward-point__detail-item streak-point" onclick="openModalStreak()">
                     <img src="{{ asset('images/mypage/login-streak.png') }}" alt="Login streak">
                     <div class="d-flex gap-1 align-items-center">
                         <img src="{{ asset('images/icons/coin.svg') }}" class="rounded-circle coin-size">
