@@ -183,7 +183,10 @@
 @section('content')
     <div id="serie_card" class="serie-card row">
         <div class="serie-image col-12 col-sm-2">
-            <img src="{{ asset('uploads/exams/series/site/n5.png') }}" alt="" srcset="">
+            @if ($serie->image)
+                <img src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $serie->image) }}"
+                    alt="" srcset="">
+            @endif
         </div>
         <div class="serie-content col-12 col-sm-10">
             <div class="serie-info">
@@ -460,8 +463,7 @@
             $('.roadmap-select').on('change', function() {
                 const selectedValue = $(this).val();
                 const selectedMonth = parseInt(selectedValue);
-                loadRoadMap(selectedMonth, 'khoa-hoc-n5-4fd338484641a026d2c76a6cc7dddaa23a50e59e-2',
-                    'khoa-hoc-n5-8caf4720ced649c1602c132ec4a3eaf09189d0f9-2');
+                loadRoadMap(selectedMonth, '{{ $serie_combo->slug }}', '{{ $serie->slug }}');
             });
 
             function loadRoadMap(month, comboSlug, slug) {
