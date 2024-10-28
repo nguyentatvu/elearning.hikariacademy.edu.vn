@@ -1013,7 +1013,7 @@ class StudentLmsController extends Controller
 
         $roadMapContent = json_decode($roadMap->contents);
         $dayViewedContent = null;
-        $lastViewedContent = null;
+
         if ($lastViewedContent) {
             foreach ($roadMapContent as $day) {
                 foreach ($day->lesson_list as $lesson) {
@@ -1025,6 +1025,8 @@ class StudentLmsController extends Controller
                 }
             }
             $lastViewedContent = $lastViewedContent->lmscontent_id;
+        } else {
+            $lastViewedContent = null;
         }
 
         $weeks = $this->groupLessonsByWeek($roadMapContent);
