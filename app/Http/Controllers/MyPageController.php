@@ -9,6 +9,7 @@ use App\Services\CommentService;
 use App\Services\LmsSeriesComboService;
 use App\Services\LmsSeriesService;
 use App\Services\PaymentMethodService;
+use App\Services\QuizResultFinishService;
 use App\Services\UserService;
 use App\Services\WeeklyLeaderboardService;
 use Carbon\Carbon;
@@ -29,6 +30,7 @@ class MyPageController extends Controller
     private $userService;
     private $lmsSeriesService;
     private $commentService;
+    private $quizResultFinishService;
 
     public function __construct(
         WeeklyLeaderboardService $weeklyLearboardService,
@@ -37,7 +39,8 @@ class MyPageController extends Controller
         LmsSeriesComboService $lmsSeriesComboService,
         UserService $userService,
         LmsSeriesService $lmsSeriesService,
-        CommentService $commentService
+        CommentService $commentService,
+        QuizResultFinishService $quizResultFinishService
     )
     {
         $this->weeklyLearboardService = $weeklyLearboardService;
@@ -47,6 +50,7 @@ class MyPageController extends Controller
         $this->userService = $userService;
         $this->lmsSeriesService = $lmsSeriesService;
         $this->commentService = $commentService;
+        $this->quizResultFinishService = $quizResultFinishService;
 
         $this->middleware('auth');
     }
@@ -243,6 +247,50 @@ class MyPageController extends Controller
     }
 
     /**
+     * Show my exam result
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    function showMyExamResult() {
+
+        $userId = Auth::user()->id;
+        $data['user'] = Auth::user();
+
+        // Get data result exam
+        $data['results'] = $this->quizResultFinishService->getStudentResultExam($userId);
+
+        if ($data['results'] != null) {
+            foreach ($data['results'] as $record) {
+                if ($record->category_id <= 3) {
+                    $style1 = ($this->checkKijunTen($record->category_id, 1, $record->quiz_1_total)) ? "info" : "danger";
+                    $style2 = ($this->checkKijunTen($record->category_id, 2, $record->quiz_2_total)) ? "info" : "danger";
+                    $style3 = ($this->checkKijunTen($record->category_id, 3, $record->quiz_3_total)) ? "info" : "danger";
+                    $detail = '言語知識（文字・語彙・文法）: <span class="badge bg-' . $style1 . '">' . $record->quiz_1_total . '</span><br><br>読解: <span class="badge bg-' . $style2 . '">' . $record->quiz_2_total . '</span><br><br>聴解: <span class="badge bg-' . $style3 . '">' . $record->quiz_3_total . '</span>';
+                } else {
+                    $style1 = ($this->checkKijunTen($record->category_id, 1, $record->quiz_1_total)) ? "info" : "danger";
+                    $style3 = ($this->checkKijunTen($record->category_id, 2, $record->quiz_3_total)) ? "info" : "danger";
+                    $detail = '言語知識（文字・語彙・文法）: <span class="badge bg-' . $style1 . '">' . $record->quiz_1_total . '</span><br><br>聴解: <span class="badge bg-' . $style3 . '">' . $record->quiz_3_total . '</span>';
+                }
+                $record->detail = $detail;
+
+                if ($record->finish == 3) {
+                    if ($this->checkPassingscore($record->category_id, $record->total_marks) && $this->checkKijunTenAnyKubun($record->category_id, $record->quiz_1_total, $record->quiz_2_total, $record->quiz_3_total)) {
+                        $ketqua = '<span class="badge bg-success">Đạt</span>';
+                    } else {
+                        $ketqua = '<span class="badge bg-warning">Chưa đạt</span>';
+                    }
+
+                } else {
+                    $ketqua = '<span class="badge bg-danger">Chưa hoàn thành</span>';
+                }
+                $record->ketqua = $ketqua;
+            }
+        }
+
+        return view('client.mypage.my-exam-result', $data);
+    }
+
+    /**
      * Update user info
      *
      * @param  \Illuminate\Http\Request  $request
@@ -312,5 +360,99 @@ class MyPageController extends Controller
 
         flash('Thông báo', 'Cập nhật thông tin cá nhân thành công!', 'success');
         return redirect()->back();
+    }
+
+    /*
+        Check if the given score is beyond the jikunten
+        level: 1~5
+        kubun: 1: 言語知識（文字・語彙・文法）; 2: 読解; 3: 聴解
+        score: score to check
+        return: true if the given score is over the jikunten and else
+    */
+    private function checkKijunTen($level, $kubun, $score)
+    {
+        switch ($level) {
+            case 1:
+            case 2:
+            case 3:
+                switch ($kubun) {
+                    case 1:
+                    case 2:
+                    case 3:
+                        return ($score > 19) ? true : false;
+                        break;
+                }
+                break;
+            case 4:
+            case 5:
+                switch ($kubun) {
+                    case 1:
+                        return ($score > 38) ? true : false;
+                        break;
+                    case 2:
+                        return ($score > 19) ? true : false;
+                        break;
+                        break;
+                }
+        }
+        return false;
+    }
+
+    /*
+        Check if the given total score is beyond the Passing score
+        level: 1~5
+        total_score: score to check
+        return: true if the given total score is over the Passing score and else
+    */
+    private function checkPassingscore($level, $total_score)
+    {
+        switch ($level) {
+            case 1:
+                return ($total_score >= 100) ? true : false;
+                break;
+            case 2:
+            case 4:
+                return ($total_score >= 90) ? true : false;
+                break;
+            case 3:
+                return ($total_score >= 95) ? true : false;
+                break;
+            case 5:
+                return ($total_score >= 80) ? true : false;
+                break;
+        }
+        return false;
+    }
+
+    /*
+        Check if the given scores is beyond the jikunten in any kubun
+        level: 1~5
+        score_kubun1~3: score to check
+        return: false if the given scores is under any jikunten and else
+    */
+    private function checkKijunTenAnyKubun($level, $score_kubun1, $score_kubun2, $score_kubun3)
+    {
+        switch ($level) {
+            case 1:
+            case 2:
+            case 3:
+                if (!$this->checkKijunTen($level, 1, $score_kubun1))
+                    return false;
+                if (!$this->checkKijunTen($level, 2, $score_kubun2))
+                    return false;
+                if (!$this->checkKijunTen($level, 3, $score_kubun3))
+                    return false;
+                return true;
+                break;
+            case 4:
+            case 5:
+                if (!$this->checkKijunTen($level, 1, $score_kubun1))
+                    return false;
+                if (!$this->checkKijunTen($level, 2, $score_kubun3))
+                    return false;
+                return true;
+                break;
+        }
+        return false;
     }
 }

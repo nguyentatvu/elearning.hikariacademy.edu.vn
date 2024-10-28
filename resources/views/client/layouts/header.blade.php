@@ -53,7 +53,7 @@
                 <li><a class="dropdown-item" href="{{ route('mypage.courses') }}">Khoá học</a></li>
                 <li><a class="dropdown-item" href="{{ route('mypage.exams') }}">Khoá luyện thi</a>
                 </li>
-                <li><a class="dropdown-item" href="{{ route('mypage.my-result-exam') }}">Kết quả
+                <li><a class="dropdown-item" href="{{ route('mypage.my-exam-result') }}">Kết quả
                         thi</a></li>
                 <li><a class="dropdown-item" data-bs-toggle="modal"
                         data-bs-target="#changePasswordModal">Đổi mật khẩu</a></li>
@@ -190,7 +190,7 @@
                                 <li><a class="dropdown-item" href="{{ route('mypage.courses') }}">Khoá học</a></li>
                                 <li><a class="dropdown-item" href="{{ route('mypage.exams') }}">Khoá luyện thi</a>
                                 </li>
-                                <li><a class="dropdown-item" href="{{ route('mypage.my-result-exam') }}">Kết quả
+                                <li><a class="dropdown-item" href="{{ route('mypage.my-exam-result') }}">Kết quả
                                         thi</a></li>
                                 <li><a class="dropdown-item" data-bs-toggle="modal"
                                         data-bs-target="#changePasswordModal">Đổi mật khẩu</a></li>

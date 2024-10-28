@@ -237,6 +237,11 @@
         position: relative;
     }
 
+    .personal-wrapper .section {
+        max-height: 496px;
+        overflow-y: auto;
+    }
+
     @media (max-width: 576px) {
         .banner {
             margin-bottom: 80px;

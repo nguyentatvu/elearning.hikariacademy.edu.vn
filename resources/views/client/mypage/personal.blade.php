@@ -36,9 +36,9 @@
                         </h5>
                     </div>
                     @if ($view_series_history->count() > 0)
-                        @foreach ($view_series_history as $series)
+                        @foreach ($view_series_history as $index => $series)
                         <div class="course-item d-flex align-items-center pb-3">
-                            <img class="series-image" alt="series image" src="{{ '/public/uploads/lms/combo/'.$series->image }}" />
+                            <img class="series-image" alt="series image" src="{{ '/public/uploads/lms/series/'.$series->image }}" />
                             <div class="course-info flex-grow-1">
                                 <div class="course-title">{{ $series->title }}</div>
                                 <div class="course-time mb-1">Học cách đây {{ compareTime($series->viewed_time) }}</div>
