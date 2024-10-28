@@ -1534,3 +1534,16 @@ Route::prefix('pronunciation')
         Route::post('', 'PronunciationController@assess')
             ->name('assess');
     });
+
+// Banner page
+Route::prefix('banner')
+    ->name('admin.banners.')
+    ->group(function () {
+        Route::get('/', 'BannerController@index')->name('index');
+        Route::get('/getList', 'BannerController@getDatatable')->name('load');
+        Route::post('/add', 'BannerController@create')->name('create');
+        Route::post('/{id}/edit', 'BannerController@update')->name('update');
+        Route::post('/{id}/edit_status', 'BannerController@updateStatus')->name('update_status');
+        Route::delete('/{id}', 'BannerController@destroy')->name('delete');
+        Route::get('/{id}', 'BannerController@show')->name('show');
+    });
