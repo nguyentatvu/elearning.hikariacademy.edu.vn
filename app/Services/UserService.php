@@ -319,8 +319,6 @@ class UserService extends BaseService
 
         array_unshift($historyArray, $newItem);
 
-        $historyArray = array_slice($historyArray, 0, 3);
-
         foreach ($historyArray as $index => &$item) {
             $item['order'] = $index + 1;
         }
