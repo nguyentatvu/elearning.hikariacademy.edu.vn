@@ -47,6 +47,7 @@ class UpdateLeaderboardCommand extends Command
 
         $users = User::orderByDesc('reward_point')
             ->where('role_id', Role::STUDENT)
+            ->where('reward_point', '!=', 0)
             ->get();
 
         $data = [];
