@@ -482,7 +482,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="btn-close" aria-label="Close"><i class="bi bi-x"></i></button>
+                    <button type="button" class="btn-close btn-close-streak" aria-label="Close"><i class="bi bi-x"></i></button>
                 </div>
                 <div class="modal-body text-center">
                     <div class="streak-header">
@@ -535,6 +535,8 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
+                    <button type="button" class="btn-close btn-close-streak" aria-label="Close"><i class="bi bi-x"></i></button>
+
                     <button type="button" class="btn btn-link" id="btnBackToStreak">
                         <i class="bi bi-chevron-left"></i>
                     </button>
@@ -614,6 +616,10 @@
             // Set initial value of "streak-count" to the previous streak
             $('.streak-count').text(previousStreak);
 
+            $('.btn-close-streak').on('click', function () {
+                $('#modalLoginStreak').modal('hide');
+                $('#modalLoginStreakDetail').modal('hide');
+            });
             // After a short delay, update the value and add the animation
             setTimeout(function() {
                 $('.streak-count').text(streakCurrent);
