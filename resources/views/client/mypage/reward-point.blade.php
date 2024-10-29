@@ -5,7 +5,7 @@
             border: 0;
         }
 
-        .reward-point__detail-item.streak-point{
+        .reward-point__detail-item.streak-point {
             cursor: pointer;
         }
     </style>
@@ -108,7 +108,6 @@
             </div>
         </div>
     </div>
-    @include('client.components.streak');
 @endsection
 
 @section('mypage-scripts')
@@ -117,4 +116,5 @@
             $('#modalLoginStreak').modal('show');
         }
     </script>
+    @include('client.components.streak');
 @endsection

@@ -604,7 +604,6 @@
             </div>
         </div>
     </div>
-    <script src="{{ asset('js/app.js') }}"></script>
     <script>
         const streakCurrent = '{{ Auth::user()->login_streak }}'; // Current streak value
         const currentDate = new Date(); // Ensure this is defined
