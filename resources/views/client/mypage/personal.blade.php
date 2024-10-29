@@ -40,24 +40,17 @@
                         </h5>
                     </div>
                     @if ($view_series_history->count() > 0)
-                        @foreach ($view_series_history as $series)
-                            <div class="course-item d-flex align-items-center pb-3">
-                                <img class="series-image" alt="series image"
-                                    src="{{ '/public/uploads/lms/combo/' . $series->image }}" />
-                                <div class="course-info flex-grow-1">
-                                    <div class="course-title">{{ $series->title }}</div>
-                                    <div class="course-time mb-1">Học cách đây {{ compareTime($series->viewed_time) }}</div>
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-striped progress-bar-animated"
-                                            role="progressbar" aria-valuenow="{{ $series->progressPercent }}"
-                                            aria-valuemin="0" aria-valuemax="100"
-                                            style="width: {{ $series->progressPercent }}%">
-                                            <span class="{{ $series->progressPercent <= 10 ? 'd-none' : '' }}">
-                                                {{ $series->progressPercent }}%
-                                            </span>
-                                        </div>
-                                        <span
-                                            class="ms-1 text-primary {{ $series->progressPercent <= 10 ? '' : 'd-none' }}">
+                        @foreach ($view_series_history as $index => $series)
+                        <div class="course-item d-flex align-items-center pb-3">
+                            <img class="series-image" alt="series image" src="{{ '/public/uploads/lms/series/'.$series->image }}" />
+                            <div class="course-info flex-grow-1">
+                                <div class="course-title">{{ $series->title }}</div>
+                                <div class="course-time mb-1">Học cách đây {{ compareTime($series->viewed_time) }}</div>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                                        aria-valuenow="{{ $series->progressPercent }}" aria-valuemin="0" aria-valuemax="100"
+                                        style="width: {{ $series->progressPercent }}%">
+                                        <span class="{{ $series->progressPercent <= 10 ? 'd-none' : '' }}">
                                             {{ $series->progressPercent }}%
                                         </span>
                                     </div>

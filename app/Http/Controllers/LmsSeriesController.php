@@ -15,14 +15,16 @@ use App\Services\LmsContentService;
 use App\Services\LmsSeriesComboService;
 use App\Services\LmsSeriesService;
 use App\Services\PaymentMethodService;
+use App\Services\QuizResultFinishService;
 use Yajra\DataTables\DataTables;
-use DB;
-use Auth;
 use Image;
 use ImageSettings;
 use File;
 use Input;
 use Excel;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 class LmsSeriesController extends Controller
 {
     // Content preparation properties
@@ -32,18 +34,21 @@ class LmsSeriesController extends Controller
     private $lmsSeriesComboService;
     private $paymentMethodService;
     private $lmsContentService;
+    private $quizResultFinishService;
 
 	public function __construct(
         LmsSeriesService $lmsSeriesService,
         LmsSeriesComboService $lmsSeriesComboService,
         LmsContentService $lmsContentService,
-        PaymentMethodService $paymentMethodService
+        PaymentMethodService $paymentMethodService,
+        QuizResultFinishService $quizResultFinishService
     ) {
         $this->middleware('auth')->except(['introductionDetail', 'introductionDetailForCombo']);
         $this->lmsSeriesService = $lmsSeriesService;
         $this->lmsSeriesComboService = $lmsSeriesComboService;
         $this->lmsContentService = $lmsContentService;
         $this->paymentMethodService = $paymentMethodService;
+        $this->quizResultFinishService = $quizResultFinishService;
 	}
 	/**
 	 * Course listing method
@@ -869,65 +874,43 @@ class LmsSeriesController extends Controller
 	public function getResultExam(Request $request)
 	{
 
-		$userId = Auth::user()->id;
-		$data['active_class'] = 'users';
-		$data['title'] = 'Kết quả thi';
-		$data['active_class'] = 'resultexam';
-		// Get data result exam
-		$data['results'] = DB::table('quizresultfinish')
-			->join('examseries', 'examseries.id', '=', 'quizresultfinish.examseri_id')
-			->where('quizresultfinish.user_id', '=', $userId)
-			->orderBy('quizresultfinish.created_at', 'desc')
-			->select(
-				'examseries.title',
-				'examseries.category_id',
-				'quizresultfinish.id',
-				'quizresultfinish.created_at',
-				'quizresultfinish.finish',
-				'quizresultfinish.quiz_1_total',
-				'quizresultfinish.quiz_2_total',
-				'quizresultfinish.quiz_3_total',
-				'quizresultfinish.total_marks',
-				'quizresultfinish.status'
-			)
-			->get();
+        $userId = Auth::user()->id;
+        $data['user'] = Auth::user();
 
-		if ($data['results'] != null) {
-			foreach ($data['results'] as $record) {
-				# code...
-				if ($record->category_id <= 3) {
-					$style1 = ($this->checkKijunTen($record->category_id, 1, $record->quiz_1_total)) ? "info" : "danger";
-					$style2 = ($this->checkKijunTen($record->category_id, 2, $record->quiz_2_total)) ? "info" : "danger";
-					$style3 = ($this->checkKijunTen($record->category_id, 3, $record->quiz_3_total)) ? "info" : "danger";
-					$detail = '言語知識（文字・語彙・文法）: <span class="label label-' . $style1 . '">' . $record->quiz_1_total . '</span><br><br>読解: <span class="label label-' . $style2 . '">' . $record->quiz_2_total . '</span><br><br>聴解: <span class="label label-' . $style3 . '">' . $record->quiz_3_total . '</span>';
-				} else {
-					$style1 = ($this->checkKijunTen($record->category_id, 1, $record->quiz_1_total)) ? "info" : "danger";
-					$style3 = ($this->checkKijunTen($record->category_id, 2, $record->quiz_3_total)) ? "info" : "danger";
-					$detail = '言語知識（文字・語彙・文法）: <span class="label label-' . $style1 . '">' . $record->quiz_1_total . '</span><br><br>聴解: <span class="label label-' . $style3 . '">' . $record->quiz_3_total . '</span>';
-				}
-				$record->detail = $detail;
+        // Get data result exam
+        $data['results'] = $this->quizResultFinishService->getStudentResultExam($userId);
 
-				if ($record->finish == 3) {
-					if ($this->checkPassingscore($record->category_id, $record->total_marks) && $this->checkKijunTenAnyKubun($record->category_id, $record->quiz_1_total, $record->quiz_2_total, $record->quiz_3_total)) {
-						$ketqua = '<span class="label label-success">Đạt</span>';
-					} else {
-						$ketqua = '<span class="label label-warning">Chưa đạt</span>';
-					}
+        if ($data['results'] != null) {
+            foreach ($data['results'] as $record) {
+                # code...
+                if ($record->category_id <= 3) {
+                    $style1 = ($this->checkKijunTen($record->category_id, 1, $record->quiz_1_total)) ? "info" : "danger";
+                    $style2 = ($this->checkKijunTen($record->category_id, 2, $record->quiz_2_total)) ? "info" : "danger";
+                    $style3 = ($this->checkKijunTen($record->category_id, 3, $record->quiz_3_total)) ? "info" : "danger";
+                    $detail = '言語知識（文字・語彙・文法）: <span class="label label-' . $style1 . '">' . $record->quiz_1_total . '</span><br><br>読解: <span class="label label-' . $style2 . '">' . $record->quiz_2_total . '</span><br><br>聴解: <span class="label label-' . $style3 . '">' . $record->quiz_3_total . '</span>';
+                } else {
+                    $style1 = ($this->checkKijunTen($record->category_id, 1, $record->quiz_1_total)) ? "info" : "danger";
+                    $style3 = ($this->checkKijunTen($record->category_id, 2, $record->quiz_3_total)) ? "info" : "danger";
+                    $detail = '言語知識（文字・語彙・文法）: <span class="label label-' . $style1 . '">' . $record->quiz_1_total . '</span><br><br>聴解: <span class="label label-' . $style3 . '">' . $record->quiz_3_total . '</span>';
+                }
+                $record->detail = $detail;
 
-				} else {
-					$ketqua = '<span class="label label-danger">Chưa hoàn thành</span>';
-				}
-				$record->ketqua = $ketqua;
-			}
-		}
+                if ($record->finish == 3) {
+                    if ($this->checkPassingscore($record->category_id, $record->total_marks) && $this->checkKijunTenAnyKubun($record->category_id, $record->quiz_1_total, $record->quiz_2_total, $record->quiz_3_total)) {
+                        $ketqua = '<span class="label label-success">Đạt</span>';
+                    } else {
+                        $ketqua = '<span class="label label-warning">Chưa đạt</span>';
+                    }
 
-		$data['user'] = DB::table('users')
-			->where('users.id', '=', $userId)
-			->first();
+                } else {
+                    $ketqua = '<span class="label label-danger">Chưa hoàn thành</span>';
+                }
+                $record->ketqua = $ketqua;
+            }
+        }
 
-		$data['layout'] = 'admin.layouts.student.studentsettinglayout';
-		$view_name = 'admin.lms.result-exam-list';
-		return view($view_name, $data);
+        $view_name = 'admin.lms.result-exam-list';
+        return view($view_name, $data);
 	}
 
 	/*
@@ -1114,7 +1097,7 @@ class LmsSeriesController extends Controller
 		];
 
 		// Render the view with enriched data
-		$viewContent = view('admin.lms.modal_content.result-exam-detail', compact('data'))->render();
+		$viewContent = view('client.components.result-exam-detail-modal-body', compact('data'))->render();
 
 		return response()->json([
 			'layout' => 'admin.layouts.student.studentsettinglayout',

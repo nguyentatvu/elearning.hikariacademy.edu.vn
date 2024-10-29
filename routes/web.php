@@ -22,6 +22,9 @@ Route::prefix('learning-management')->name('learning-management.')->group(functi
     Route::get('lesson/next', 'StudentLmsController@getNextLesson')
         ->name('next-lesson');
 
+    Route::get('lesson/previous', 'StudentLmsController@getPreviousLesson')
+        ->name('previous-lesson');
+
     Route::get('lesson/show/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showLesson')
         ->name('lesson.show');
 
@@ -109,9 +112,8 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
     Route::get('/my-comments', 'MyPageController@showMyComments')
         ->name('my-comments');
 
-    Route::get('/my-result-exam', function () {
-        return view('client.mypage.my-result-exam');
-    })->name('my-result-exam');
+    Route::get('/my-exam-result', 'MyPageController@showMyExamResult')
+        ->name('my-exam-result');
 
     Route::get('/payment-management', function () {
         return view('client.mypage.payment-management');

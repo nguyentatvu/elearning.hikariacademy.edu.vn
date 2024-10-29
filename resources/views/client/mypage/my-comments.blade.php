@@ -19,10 +19,11 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php $page = request()->input('page', 1) - 1; @endphp
                     @if ($comments->count() > 0)
                     @foreach ($comments as $comment_index => $comment)
                     <tr>
-                        <td>{{ $comment_index + 1 }}</td>
+                        <td>{{ $page * 15 + $comment_index + 1 }}</td>
                         <td>{{ $comment->body }}</td>
                         <td>{{ $comment->lesson->bai }}</td>
                         <td class="text-center">{{ $comment->created_at }}</td>
@@ -46,7 +47,7 @@
                     @else
                     <tr>
                         <td colspan="6">
-                            <h5 style="color: #ee2833!important">
+                            <h5 style="color: #ee2833!important" class="mb-0">
                                 Bạn chưa có Câu hỏi
                             </h5>
                         </td>
@@ -55,86 +56,9 @@
                 </tbody>
             </table>
             <div class="mt-4">
-                @if ($comments->hasPages())
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-center">
-                            {{-- Previous Page Link --}}
-                            @if ($comments->onFirstPage())
-                                <li class="page-item disabled">
-                                    <span class="page-link">Trước</span>
-                                </li>
-                            @else
-                                <li class="page-item">
-                                    <a class="page-link" href="{{ $comments->previousPageUrl() }}" rel="prev">Trước</a>
-                                </li>
-                            @endif
-
-                            {{-- Pagination Elements --}}
-                            @php
-                                $start = $comments->currentPage() - 2;
-                                $end = $comments->currentPage() + 2;
-
-                                if($start < 1) {
-                                    $start = 1;
-                                    $end = min(6, $comments->lastPage());
-                                }
-
-                                if($end > $comments->lastPage()) {
-                                    $end = $comments->lastPage();
-                                    $start = max(1, $end - 4);
-                                }
-                            @endphp
-
-                            {{-- First Page + Dots --}}
-                            @if($start > 1)
-                                <li class="page-item">
-                                    <a class="page-link" href="{{ $comments->url(1) }}">1</a>
-                                </li>
-                                @if($start > 2)
-                                    <li class="page-item disabled">
-                                        <span class="page-link">...</span>
-                                    </li>
-                                @endif
-                            @endif
-
-                            {{-- Page Numbers --}}
-                            @for($i = $start; $i <= $end; $i++)
-                                @if ($i == $comments->currentPage())
-                                    <li class="page-item active">
-                                        <span class="page-link">{{ $i }}</span>
-                                    </li>
-                                @else
-                                    <li class="page-item">
-                                        <a class="page-link" href="{{ $comments->url($i) }}">{{ $i }}</a>
-                                    </li>
-                                @endif
-                            @endfor
-
-                            {{-- Last Page + Dots --}}
-                            @if($end < $comments->lastPage())
-                                @if($end < $comments->lastPage() - 1)
-                                    <li class="page-item disabled">
-                                        <span class="page-link">...</span>
-                                    </li>
-                                @endif
-                                <li class="page-item">
-                                    <a class="page-link" href="{{ $comments->url($comments->lastPage()) }}">{{ $comments->lastPage() }}</a>
-                                </li>
-                            @endif
-
-                            {{-- Next Page Link --}}
-                            @if ($comments->hasMorePages())
-                                <li class="page-item">
-                                    <a class="page-link" href="{{ $comments->nextPageUrl() }}" rel="next">Sau</a>
-                                </li>
-                            @else
-                                <li class="page-item disabled">
-                                    <span class="page-link">Sau</span>
-                                </li>
-                            @endif
-                        </ul>
-                    </nav>
-                @endif
+                @component('client.components.custom-pagination',
+                    ['paginations' => $comments])
+                @endcomponent
             </div>
         </div>
     </div>

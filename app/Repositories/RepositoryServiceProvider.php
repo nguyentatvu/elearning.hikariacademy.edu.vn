@@ -25,7 +25,8 @@ use App\{
     KanjiWritingPractice,
     Pronunciation,
     PronunciationDetail,
-    Intonation
+    Intonation,
+    QuizResultfinish
 };
 
 use Illuminate\Support\ServiceProvider;
@@ -99,6 +100,9 @@ class RepositoryServiceProvider extends ServiceProvider
         });
         $this->app->bind(CommentRepository::class, function () {
             return new CommentRepository(new Comment);
+        });
+        $this->app->bind(QuizResultFinishRepository::class, function () {
+            return new QuizResultFinishRepository(new QuizResultfinish);
         });
     }
 }

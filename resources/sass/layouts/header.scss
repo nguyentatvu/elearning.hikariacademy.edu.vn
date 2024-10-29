@@ -124,6 +124,8 @@
     border-radius: 8px;
     box-shadow: 0 2px 15px rgba(0,0,0,0.1);
     min-width: 350px;
+    max-height: 360px;
+    overflow-y: auto;
 }
 
 .spinner-border {

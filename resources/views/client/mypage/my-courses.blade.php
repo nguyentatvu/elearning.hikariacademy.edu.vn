@@ -211,7 +211,7 @@
                     @else
                         <tr>
                             <td colspan="5">
-                                <h5 style="color: #ee2833!important">Bạn chưa có {{ $title }}</h5>
+                                <h5 style="color: #ee2833!important" class="mb-0">Bạn chưa có {{ $title }}</h5>
                             </td>
                         </tr>
                     @endif

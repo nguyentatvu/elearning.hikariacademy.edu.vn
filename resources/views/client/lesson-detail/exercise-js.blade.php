@@ -9,30 +9,6 @@
 <?php $nextUrl = null;?>
 @endif
 <script>
-    const goToNextLesson = () => {
-        let seriesSlug = "{{ request()->route('slug') }}";
-        let seriesComboSlug = "{{ request()->route('combo_slug') }}";
-        let contentId = "{{ request()->route('stt') }}";
-
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            url: "{{ route('learning-management.next-lesson') }}",
-            type: "get",
-            data: {
-                series_slug: seriesSlug,
-                series_combo_slug: seriesComboSlug,
-                content_id: contentId
-            },
-            success: function(response) {
-                if (response.success) {
-                    window.location.href = response.url;
-                }
-            }
-        });
-    }
-
     function calculatePointsForExercise(score, totalScore) {
         const percentages = @json(getRewardPointRule('learning')['exercise']['thresholds']);
         const exerciseScore = (score / totalScore) * 100;

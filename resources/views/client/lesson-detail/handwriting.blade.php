@@ -228,11 +228,17 @@
          * Handle Arrow Event
          */
         function handleArrowRightEvent() {
-            $('#arrow_right').on('click', function() {
+            $('#arrow_right').on('click', async function() {
                 if (currentIndex < total - 1) {
                     saveCurrentCanvasData(currentIndex + 1);
                     currentIndex++;
                     updateHandwriting(currentIndex);
+
+                    if (currentIndex === total - 1) {
+                        @if($isValidPayment && !$isFinishedContent)
+                            await earnPointFinishContent('{{ $detailContent->id }}', 0, '');
+                        @endif
+                    }
                 }
             });
         }
