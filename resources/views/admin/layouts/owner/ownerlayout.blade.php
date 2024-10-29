@@ -116,6 +116,12 @@
                             <li><a href="{{ route('articles.categories.index') }}"> <i class="fa fa-fw fa-sliders"></i>Quản lý chuyên mục</a></li>
                         </ul>
                     </li>
+                    <li {{ isActive($active_class, 'banners') }} >
+                        <a data-toggle="collapse" data-target="#article"><i class="fa fa-fw fa-newspaper-o" ></i> Banner</a>
+                        <ul id="lms" class="collapse sidemenu-dropdown">
+                            <li><a href="{{ route('admin.banners.index') }}"><i class="fa fa-fw fa-list"></i>Danh sách sách banner</a></li>
+                        </ul>
+                    </li>
                     <li {{ isActive($active_class, 'dotthi') }} >
                         <a data-toggle="collapse" data-target="#dotthi"><i class="fa fa-fw fa-book" ></i> Đợt thi thử</a>
                         <ul id="lms" class="collapse sidemenu-dropdown">

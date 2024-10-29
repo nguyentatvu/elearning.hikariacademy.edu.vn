@@ -27,9 +27,11 @@
                     <button class="btn btn-primary custom-submit-btn" type="button">Liên hệ</button>
                 </div>
             </div>
-            <div class="custom-contact-image col-xl-6">
-                <img src="{{ asset('images/background/Background-contact.svg') }}" alt="Contact background">
-            </div>
+            @if (isset($banners['contact_logo']) && $banners['contact_logo']->is_active == \App\Enums\BannerStatus::ACTIVE)
+                <div class="custom-contact-image col-xl-6">
+                    <img src="{{ asset($banners['contact_logo']->image) }}" alt="{{ $banners['contact_logo']->title }}">
+                </div>
+            @endif
         </div>
         <div class="row my-5">
             <div class="col-12 col-md-6 col-lg-3 text-center mb-4 mb-lg-0">

@@ -135,99 +135,89 @@
 @endsection
 
 @section('content')
-    <div id="carouselExampleCaptions" class="carousel slide">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
-                aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
-                aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
-                aria-label="Slide 3"></button>
-        </div>
-        <div class="carousel-inner slider">
-            <div class="carousel-item active">
-                <img src="{{ asset('images/asset/slider/banner-slider-n3.jpg') }}" class="d-block w-100" alt="...">
-                <div class="carousel-caption d-none d-flex flex-column h-100 align-items-center justify-content-center bottom-0 ">
-                    <h2 class="bg-dark bg-opacity-50 py-2 px-4">Second slide label</h2>
-                    <p class="bg-dark bg-opacity-50 py-2 px-4">Some representative placeholder content for the second
-                        slide.</p>
-                    <a href="#" class="btn btn-outline-light px-4 py-2 rounded-0">Learn More</a>
-                </div>
+    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+        @if (isset($banners['home_slider_banner']) &&
+                $banners['home_slider_banner']->is_active == App\Enums\BannerStatus::ACTIVE)
+            <div class="carousel-indicators">
+                @if (isset($banners['home_slider_banner']->image))
+                    @foreach ($banners['home_slider_banner']->image as $index => $banner)
+                        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{ $index }}"
+                            class="{{ $index === 0 ? 'active' : '' }}" aria-current="{{ $index === 0 ? 'true' : 'false' }}"
+                            aria-label="Slide {{ $index + 1 }}"></button>
+                    @endforeach
+                @endif
             </div>
-            <div class="carousel-item">
-                <img src="{{ asset('images/asset/slider/banner-slider-n3.jpg') }}" class="d-block w-100" alt="...">
-                <div class="carousel-caption d-none d-flex flex-column h-100 align-items-center justify-content-center bottom-0 ">
-                    <h2 class="bg-dark bg-opacity-50 py-2 px-4">Second slide label</h2>
-                    <p class="bg-dark bg-opacity-50 py-2 px-4">Some representative placeholder content for the second
-                        slide.</p>
-                    <a href="#" class="btn btn-outline-light px-4 py-2 rounded-0">Learn More</a>
-                </div>
+            <div class="carousel-inner">
+                @if (isset($banners['home_slider_banner']->image))
+                    @foreach ($banners['home_slider_banner']->image as $index => $banner)
+                        <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                            <img src="{{ asset($banner) }}"
+                                alt="{{ $banners['home_slider_banner']->title ?? 'Slide Image' }}" class="d-block w-100">
+                        </div>
+                    @endforeach
+                @else
+                    <div class="carousel-item active">
+                        <img src="default-image.jpg" alt="Default Slide" class="d-block w-100">
+                        <div class="carousel-caption d-flex flex-column h-100 align-items-center justify-content-center">
+                            <h2 class="bg-dark bg-opacity-50 py-2 px-4">Default Title</h2>
+                            <p class="bg-dark bg-opacity-50 py-2 px-4">Placeholder content for default slide.</p>
+                            <a href="#" class="btn btn-outline-light px-4 py-2 rounded-0">Learn More</a>
+                        </div>
+                    </div>
+                @endif
             </div>
-            <div class="carousel-item">
-                <img src="{{ asset('images/asset/slider/banner-slider-n4.jpg') }}" class="d-block w-100" alt="...">
-                <div class="carousel-caption d-none d-flex flex-column h-100 align-items-center justify-content-center bottom-0">
-                    <h2 class="bg-dark bg-opacity-50 py-2 px-4">Third slide label</h2>
-                    <p class="bg-dark bg-opacity-50 py-2 px-4">Some representative placeholder content for the third
-                        slide.</p>
-                    <a href="#" class="btn btn-outline-light px-4 py-2 rounded-0">Learn More</a>
-                </div>
-            </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        @endif
     </div>
 
     {{-- Banner --}}
 
     <div class="row mb-2 mt-5 d-none">
         <div class="col-md-6">
-            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                <div class="col p-4 d-flex flex-column position-static">
-                    <strong class="d-inline-block mb-2 text-primary">World</strong>
-                    <h3 class="mb-0">Featured post</h3>
-                    <div class="mb-1 text-muted">Nov 12</div>
-                    <p class="card-text mb-auto">This is a wider card with supporting text below as a natural lead-in to
-                        additional content.</p>
-                    <a href="#" class="stretched-link">Continue reading</a>
+            @if (isset($banners['home_banner_mini_1']) &&
+                    $banners['home_banner_mini_1']->is_active == App\Enums\BannerStatus::ACTIVE)
+                <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <strong class="d-inline-block mb-2 text-primary">World</strong>
+                        <h3 class="mb-0">Featured post</h3>
+                        <div class="mb-1 text-muted">Nov 12</div>
+                        <p class="card-text mb-auto">This is a wider card with supporting text below as a natural lead-in to
+                            additional content.</p>
+                        <a href="#" class="stretched-link">Continue reading</a>
+                    </div>
+                    <div class="col-auto d-none d-lg-block">
+                        <img src="{{ asset($banners['home_banner_mini_1']->image) }}" alt="Top Banner">
+                    </div>
                 </div>
-                <div class="col-auto d-none d-lg-block">
-                    <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg"
-                        role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice"
-                        focusable="false">
-                        <title>Placeholder</title>
-                        <rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef"
-                            dy=".3em">Thumbnail</text>
-                    </svg>
-                </div>
-            </div>
+            @endif
         </div>
         <div class="col-md-6">
-            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                <div class="col p-4 d-flex flex-column position-static">
-                    <strong class="d-inline-block mb-2 text-success">Design</strong>
-                    <h3 class="mb-0">Post title</h3>
-                    <div class="mb-1 text-muted">Nov 11</div>
-                    <p class="mb-auto">This is a wider card with supporting text below as a natural lead-in to additional
-                        content.</p>
-                    <a href="#" class="stretched-link">Continue reading</a>
+            @if (isset($banners['home_banner_mini_2']) &&
+                    $banners['home_banner_mini_2']->is_active == \App\Enums\BannerStatus::ACTIVE)
+                <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <strong class="d-inline-block mb-2 text-success">Design</strong>
+                        <h3 class="mb-0">Post title</h3>
+                        <div class="mb-1 text-muted">Nov 11</div>
+                        <p class="mb-auto">This is a wider card with supporting text below as a natural lead-in to
+                            additional
+                            content.</p>
+                        <a href="#" class="stretched-link">Continue reading</a>
+                    </div>
+                    <div class="col-auto d-none d-lg-block">
+                        <img src="{{ asset($banners['home_banner_mini_2']->image) }}" alt="Top Banner">
+                    </div>
                 </div>
-                <div class="col-auto d-none d-lg-block">
-                    <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg"
-                        role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice"
-                        focusable="false">
-                        <title>Placeholder</title>
-                        <rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef"
-                            dy=".3em">Thumbnail</text>
-                    </svg>
-
-                </div>
-            </div>
+            @endif
         </div>
     </div>
     {{-- List course 1 --}}
@@ -236,57 +226,59 @@
         <div class="swiper-learning-series swiper swiper-container">
             <div class="swiper-wrapper">
                 @foreach ($learning_series_list as $learning_series)
-                @if (isset($learning_series->seriesList) && count($learning_series->seriesList) > 0)
-                    <div class="swiper-slide">
-                        <div class="course-card">
-                            <img alt="course image" height="400" width="600"
-                                src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $learning_series->image) }}"/>
-                            <div class="course-card-body">
-                                <h5 class="course-card-title">{{ $learning_series->title }}</h5>
-                                <p class="course-card-price">{{ formatCurrencyVND($learning_series->cost) }}</p>
-                                <div class="course-card-description line-clamp-3">{!! $learning_series->short_description !!}</div>
-                                <div class="course-card-teacher text-muted w-100 mb-1">{!! $learning_series->description['teacher_description'] ?? '' !!}</div>
-                                <div class="d-flex align-items-center text-primary-color mt-3">
-                                    <i class="bi bi-play-circle-fill"></i>
-                                    <span class="ms-2">{{ $learning_series->content_count }}</span>
-                                    <i class="bi bi-book ms-3"></i>
-                                    <span class="ms-2">{{ empty($learning_series->chapter_count) ? 1 : $learning_series->chapter_count }} chương</span>
-                                    @if ($learning_series->checkMultipleCombo)
-                                        <button class="btn btn-outline-primary ms-auto"
-                                            onclick="location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $learning_series->slug]) }}'">
-                                            Xem thêm
+                    @if (isset($learning_series->seriesList) && count($learning_series->seriesList) > 0)
+                        <div class="swiper-slide">
+                            <div class="course-card">
+                                <img alt="course image" height="400" width="600"
+                                    src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $learning_series->image) }}" />
+                                <div class="course-card-body">
+                                    <h5 class="course-card-title">{{ $learning_series->title }}</h5>
+                                    <p class="course-card-price">{{ formatCurrencyVND($learning_series->cost) }}</p>
+                                    <div class="course-card-description line-clamp-3">{!! $learning_series->short_description !!}</div>
+                                    <div class="course-card-teacher text-muted w-100 mb-1">{!! $learning_series->description['teacher_description'] ?? '' !!}</div>
+                                    <div class="d-flex align-items-center text-primary-color mt-3">
+                                        <i class="bi bi-play-circle-fill"></i>
+                                        <span class="ms-2">{{ $learning_series->content_count }}</span>
+                                        <i class="bi bi-book ms-3"></i>
+                                        <span
+                                            class="ms-2">{{ empty($learning_series->chapter_count) ? 1 : $learning_series->chapter_count }}
+                                            chương</span>
+                                        @if ($learning_series->checkMultipleCombo)
+                                            <button class="btn btn-outline-primary ms-auto"
+                                                onclick="location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $learning_series->slug]) }}'">
+                                                Xem thêm
+                                            </button>
+                                        @else
+                                            <button class="btn btn-outline-primary ms-auto"
+                                                onclick="location.href='{{ route('series.introduction-detail', ['combo_slug' => $learning_series->slug, 'slug' => $learning_series->seriesList[0]->slug]) }}'">
+                                                Xem thêm
+                                            </button>
+                                        @endif
+                                    </div>
+                                    @if (Auth::check() && $learning_series->valid_payment && count($learning_series->seriesList) > 1)
+                                        <button class="btn btn-primary w-100 mt-3"
+                                            onclick="location.href='{{ route('mypage.courses') }}'">
+                                            Học ngay
+                                        </button>
+                                    @elseif (Auth::check() && $learning_series->valid_payment && count($learning_series->seriesList) == 1)
+                                        <button class="btn btn-primary w-100 mt-3"
+                                            onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $learning_series->slug, 'slug' => $learning_series->seriesList[0]->slug]) }}'">
+                                            Học ngay
+                                        </button>
+                                    @elseif (Auth::check())
+                                        <button class="btn btn-primary w-100 mt-3"
+                                            onclick="location.href='{{ route('payments.lms', $learning_series->slug) }}'">
+                                            Mua ngay
                                         </button>
                                     @else
-                                        <button class="btn btn-outline-primary ms-auto"
-                                            onclick="location.href='{{ route('series.introduction-detail', ['combo_slug' => $learning_series->slug, 'slug' => $learning_series->seriesList[0]->slug]) }}'">
-                                            Xem thêm
+                                        <button class="btn btn-primary w-100 mt-3" onclick="showAuthModal()">
+                                            Mua ngay
                                         </button>
                                     @endif
                                 </div>
-                                @if (Auth::check() && $learning_series->valid_payment && count($learning_series->seriesList) > 1)
-                                    <button class="btn btn-primary w-100 mt-3"
-                                        onclick="location.href='{{ route('mypage.courses') }}'">
-                                        Học ngay
-                                    </button>
-                                @elseif (Auth::check() && $learning_series->valid_payment && count($learning_series->seriesList) == 1)
-                                    <button class="btn btn-primary w-100 mt-3"
-                                        onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $learning_series->slug, 'slug' => $learning_series->seriesList[0]->slug]) }}'">
-                                        Học ngay
-                                    </button>
-                                @elseif (Auth::check())
-                                    <button class="btn btn-primary w-100 mt-3"
-                                        onclick="location.href='{{ route('payments.lms', $learning_series->slug) }}'">
-                                        Mua ngay
-                                    </button>
-                                @else
-                                    <button class="btn btn-primary w-100 mt-3" onclick="showAuthModal()">
-                                        Mua ngay
-                                    </button>
-                                @endif
                             </div>
                         </div>
-                    </div>
-                @endif
+                    @endif
                 @endforeach
             </div>
         </div>
@@ -300,57 +292,59 @@
         <div class="swiper-exam-series swiper-container swiper">
             <div class="swiper-wrapper">
                 @foreach ($exam_series_list as $exam_series)
-                @if (isset($exam_series->seriesList) && count($exam_series->seriesList) > 0)
-                    <div class="swiper-slide">
-                        <div class="course-card">
-                            <img alt="course image" height="400" width="600"
-                                src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $exam_series->image) }}"/>
-                            <div class="course-card-body">
-                                <h5 class="course-card-title">{{ $exam_series->title }}</h5>
-                                <p class="course-card-price">{{ formatCurrencyVND($exam_series->cost) }}</p>
-                                <div class="course-card-description line-clamp-3">{!! $exam_series->short_description !!}</div>
-                                <div class="course-card-teacher text-muted w-100 mb-1">{!! $exam_series->description['teacher_description'] ?? '' !!}</div>
-                                <div class="d-flex align-items-center text-primary-color mt-3">
-                                    <i class="bi bi-play-circle-fill"></i>
-                                    <span class="ms-2">{{ $exam_series->content_count }}</span>
-                                    <i class="bi bi-book ms-3"></i>
-                                    <span class="ms-2">{{ empty($exam_series->chapter_count) ? 1 : $exam_series->chapter_count }} chương</span>
-                                    @if ($exam_series->checkMultipleCombo)
-                                        <button class="btn btn-outline-primary ms-auto"
-                                            onclick="location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $exam_series->slug]) }}'">
-                                            Xem thêm
+                    @if (isset($exam_series->seriesList) && count($exam_series->seriesList) > 0)
+                        <div class="swiper-slide">
+                            <div class="course-card">
+                                <img alt="course image" height="400" width="600"
+                                    src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $exam_series->image) }}" />
+                                <div class="course-card-body">
+                                    <h5 class="course-card-title">{{ $exam_series->title }}</h5>
+                                    <p class="course-card-price">{{ formatCurrencyVND($exam_series->cost) }}</p>
+                                    <div class="course-card-description line-clamp-3">{!! $exam_series->short_description !!}</div>
+                                    <div class="course-card-teacher text-muted w-100 mb-1">{!! $exam_series->description['teacher_description'] ?? '' !!}</div>
+                                    <div class="d-flex align-items-center text-primary-color mt-3">
+                                        <i class="bi bi-play-circle-fill"></i>
+                                        <span class="ms-2">{{ $exam_series->content_count }}</span>
+                                        <i class="bi bi-book ms-3"></i>
+                                        <span
+                                            class="ms-2">{{ empty($exam_series->chapter_count) ? 1 : $exam_series->chapter_count }}
+                                            chương</span>
+                                        @if ($exam_series->checkMultipleCombo)
+                                            <button class="btn btn-outline-primary ms-auto"
+                                                onclick="location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $exam_series->slug]) }}'">
+                                                Xem thêm
+                                            </button>
+                                        @else
+                                            <button class="btn btn-outline-primary ms-auto"
+                                                onclick="location.href='{{ route('series.introduction-detail', ['combo_slug' => $exam_series->slug, 'slug' => $exam_series->seriesList[0]->slug]) }}'">
+                                                Xem thêm
+                                            </button>
+                                        @endif
+                                    </div>
+                                    @if (Auth::check() && $exam_series->valid_payment && count($exam_series->seriesList) > 1)
+                                        <button class="btn btn-primary w-100 mt-3"
+                                            onclick="location.href='{{ route('mypage.courses') }}'">
+                                            Học ngay
+                                        </button>
+                                    @elseif (Auth::check() && $exam_series->valid_payment && count($exam_series->seriesList) == 1)
+                                        <button class="btn btn-primary w-100 mt-3"
+                                            onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $exam_series->slug, 'slug' => $exam_series->seriesList[0]->slug]) }}'">
+                                            Học ngay
+                                        </button>
+                                    @elseif (Auth::check())
+                                        <button class="btn btn-primary w-100 mt-3"
+                                            onclick="location.href='{{ route('payments.lms', $exam_series->slug) }}'">
+                                            Mua ngay
                                         </button>
                                     @else
-                                        <button class="btn btn-outline-primary ms-auto"
-                                            onclick="location.href='{{ route('series.introduction-detail', ['combo_slug' => $exam_series->slug, 'slug' => $exam_series->seriesList[0]->slug]) }}'">
-                                            Xem thêm
+                                        <button class="btn btn-primary w-100 mt-3" onclick="showAuthModal()">
+                                            Mua ngay
                                         </button>
                                     @endif
                                 </div>
-                                @if (Auth::check() && $exam_series->valid_payment && count($exam_series->seriesList) > 1)
-                                    <button class="btn btn-primary w-100 mt-3"
-                                        onclick="location.href='{{ route('mypage.courses') }}'">
-                                        Học ngay
-                                    </button>
-                                @elseif (Auth::check() && $exam_series->valid_payment && count($exam_series->seriesList) == 1)
-                                    <button class="btn btn-primary w-100 mt-3"
-                                        onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $exam_series->slug, 'slug' => $exam_series->seriesList[0]->slug]) }}'">
-                                        Học ngay
-                                    </button>
-                                @elseif (Auth::check())
-                                    <button class="btn btn-primary w-100 mt-3"
-                                        onclick="location.href='{{ route('payments.lms', $exam_series->slug) }}'">
-                                        Mua ngay
-                                    </button>
-                                @else
-                                    <button class="btn btn-primary w-100 mt-3" onclick="showAuthModal()">
-                                        Mua ngay
-                                    </button>
-                                @endif
                             </div>
                         </div>
-                    </div>
-                @endif
+                    @endif
                 @endforeach
             </div>
         </div>
@@ -358,28 +352,32 @@
         <div class="swiper-button-prev-2 swiper-button-prev"></div>
     </div>
 
-    <div class="cover-image about-widget sptb bg-background-color my-5 p-5"
-        style="background: url('{{ asset('images/banner/background-logan-2.jpg') }}') no-repeat;
-           background-size: cover;">
-        <div class="container-fluid py-5">
-            <div class="container">
-            <div class="row text-center justify-content-center">
-                <div class="col-12">
-                <h1 class="display-5 gradient-title mb-4">HỌC TIẾNG NHẬT CÙNG HIKARI ACADEMY</h1>
-                <p class="lead mb-4">
-                    Hikari Academy không ngừng chú trọng phát triển nội dung nhằm đạt chất lượng cao, luôn lắng nghe phản hồi của khách hàng và hành động, ngày càng góp phần nâng cao lòng tin của khách hàng.
-                </p>
-                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                    <button type="button" class="btn btn-primary btn-lg px-4 gap-3" onclick="showAuthModal(false)">
-                    Đăng ký ngay
-                    </button>
+    @if (isset($banners['home_banner_1']) && $banners['home_banner_1']->is_active === App\Enums\BannerStatus::ACTIVE)
+        <div class="cover-image about-widget sptb bg-background-color my-5 p-5"
+            style="background: url('{{ asset($banners['home_banner_1']->image) }}') no-repeat;
+        background-size: cover;">
+            <div class="content-text mb-0">
+                <div class="container">
+                    <div class="row text-center justify-content-center">
+                        <div class="col-12">
+                            <h1 class="display-5 gradient-title mb-4">HỌC TIẾNG NHẬT CÙNG HIKARI ACADEMY</h1>
+                            <p class="lead mb-4">
+                                Hikari Academy không ngừng chú trọng phát triển nội dung nhằm đạt chất lượng cao, luôn lắng
+                                nghe
+                                phản hồi của khách hàng và hành động, ngày càng góp phần nâng cao lòng tin của khách hàng.
+                            </p>
+                            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                                <button type="button" class="btn btn-primary btn-lg px-4 gap-3"
+                                    onclick="showAuthModal(false)">
+                                    Đăng ký ngay
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                </div>
-            </div>
             </div>
         </div>
-    </div>
-
+    @endif
     {{-- Student review --}}
     <div class="row mt-5">
         <div class="col-md-12" data-wow-delay="0.2s">
@@ -387,17 +385,13 @@
                 <!-- Bottom Carousel Indicators -->
                 <ol class="carousel-indicators d-flex justtify-content-center align-items-center">
                     <li data-bs-target="#quote-carousel" data-bs-slide-to="0" class="active">
-                        <img class="img-responsive"
-                            src="{{ asset('images/hoc-vien-1.png') }}"
-                            alt="">
+                        <img class="img-responsive" src="{{ asset('images/hoc-vien-1.png') }}" alt="">
                     </li>
                     <li data-bs-target="#quote-carousel" data-bs-slide-to="1">
-                        <img class="img-responsive"
-                            src="{{ asset('images/hoc-vien-2.png') }}" alt="image" />
+                        <img class="img-responsive" src="{{ asset('images/hoc-vien-2.png') }}" alt="image" />
                     </li>
                     <li data-bs-target="#quote-carousel" data-bs-slide-to="2">
-                        <img class="img-responsive"
-                            src="{{ asset('images/hoc-vien-3.png') }}" alt="image" />
+                        <img class="img-responsive" src="{{ asset('images/hoc-vien-3.png') }}" alt="image" />
                     </li>
                 </ol>
 
@@ -409,7 +403,10 @@
                             <div class="row">
                                 <div class="col-sm-8 offset-sm-2">
                                     <h2>Mr. Long</h2>
-                                    <small>Học tại Hikari Academy là trải nghiệm tuyệt vời. Giáo viên nhiệt tình, phương pháp giảng dạy hiệu quả, môi trường thân thiện. Em tiến bộ nhanh chóng và hiểu sâu hơn về văn hóa Nhật Bản. Rất hài lòng với sự lựa chọn của mình.</small>
+                                    <small>Học tại Hikari Academy là trải nghiệm tuyệt vời. Giáo viên nhiệt tình, phương
+                                        pháp giảng dạy hiệu quả, môi trường thân thiện. Em tiến bộ nhanh chóng và hiểu
+                                        sâu
+                                        hơn về văn hóa Nhật Bản. Rất hài lòng với sự lựa chọn của mình.</small>
                                     <div>
                                         <i class="bi bi-star-fill text-warning pe-1"></i>
                                         <i class="bi bi-star-fill text-warning pe-1"></i>
@@ -428,7 +425,12 @@
                                 <div class="col-sm-8 offset-sm-2">
                                     <h2>Ms. My</h2>
                                     <small>
-                                        Em rất hài lòng khi học tại Hikari Academy. Giáo viên giàu kinh nghiệm, nhiệt tình hỗ trợ học viên. Phương pháp giảng dạy sáng tạo, dễ hiểu, giúp em tiếp thu nhanh chóng. Trung tâm còn tổ chức nhiều hoạt động bổ ích, Tự tin hơn trong kỳ thi sắp tới ạ.
+                                        Em rất hài lòng khi học tại Hikari Academy. Giáo viên giàu kinh nghiệm, nhiệt
+                                        tình
+                                        hỗ trợ học viên. Phương pháp giảng dạy sáng tạo, dễ hiểu, giúp em tiếp thu nhanh
+                                        chóng. Trung tâm còn tổ chức nhiều hoạt động bổ ích, Tự tin hơn trong kỳ thi sắp
+                                        tới
+                                        ạ.
                                     </small>
                                     <div>
                                         <i class="bi bi-star-fill text-warning pe-1"></i>
@@ -448,7 +450,11 @@
                                 <div class="col-sm-8 offset-sm-2">
                                     <h2>Ms. Linh</h2>
                                     <small>
-                                        Học tại Hikari Academy, em thấy hài lòng và hứng thú. Giáo viên tận tâm, phương pháp giảng dạy hiện đại. Môi trường thân thiện, trang thiết bị đầy đủ giúp tôi tiến bộ nhanh chóng. Em tự tin hơn trong việc sử dụng tiếng Nhật hàng ngày.
+                                        Học tại Hikari Academy, em thấy hài lòng và hứng thú. Giáo viên tận tâm, phương
+                                        pháp
+                                        giảng dạy hiện đại. Môi trường thân thiện, trang thiết bị đầy đủ giúp tôi tiến
+                                        bộ
+                                        nhanh chóng. Em tự tin hơn trong việc sử dụng tiếng Nhật hàng ngày.
                                     </small>
                                     <div>
                                         <i class="bi bi-star-fill text-warning pe-1"></i>
@@ -502,8 +508,7 @@
                         </div>
                         <div class="col">
                             <img alt="Logo of NEC with text 'Orchestrating a brighter world'" class="d-block mx-auto"
-                                height="100"
-                                src="{{ asset('images/clients/client-1.png') }}" />
+                                height="100" src="{{ asset('images/clients/client-1.png') }}" />
                         </div>
                     </div>
                 </div>
@@ -516,8 +521,7 @@
                         </div>
                         <div class="col">
                             <img alt="Logo of NEC with text 'Orchestrating a brighter world'" class="d-block mx-auto"
-                                height="100"
-                                src="{{ asset('images/clients/client-1.png') }}" />
+                                height="100" src="{{ asset('images/clients/client-1.png') }}" />
                         </div>
                         <div class="col">
                             <img alt="Logo of KatchUp.vn with text 'Thẻ học tiếng Nhật - Học nhanh - Nhớ lâu'"
@@ -543,84 +547,85 @@
             </button>
         </div>
     </div>
-    <div class="cover-image sptb bg-background-color text-white p-5 w-100 mb-5"
-        data-image-src="{{ asset('images/banner/background-logan-4.jpg') }}"
-        style="background: url('{{ asset('images/banner/background-logan-4.jpg') }}')  no-repeat; background-size: cover;">
-        <div class="content-text mb-0">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="widgets-cards mb-5 d-flex">
-                                    <div class="widgets-cards-icons me-5">
-                                        <i class="fe fe-wifi"></i>
-                                    </div>
-                                    <div class="widgets-cards-data">
-                                        <h4>
-                                            <a class="text-white fs-25" href="#">
-                                                Đào tạo khoa học
-                                            </a>
-                                        </h4>
-                                        <p class="text-white mt-2 mb-0">
-                                            Cùng lộ trình giảng dạy bài bản, chuyên sâu xây dựng bởi đội ngũ
-                                            giảng viên tiếng Nhật giàu kinh nghiệm
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="widgets-cards mb-5 d-flex">
-                                    <div class="widgets-cards-icons me-5">
-                                        <i class="fe fe-wifi-off"></i>
-                                    </div>
-                                    <div class="widgets-cards-data">
-                                        <h4>
-                                            <a class="text-white fs-25" href="#">
-                                                Mô phỏng thực tế
-                                            </a>
-                                        </h4>
-                                        <p class="text-white mt-2 mb-0">
-                                            Thời gian thực làm quen cùng kỳ thi JLPT cùng kho tàng đề thi đa
-                                            dạng - đầy đủ nhất Việt Nam
-                                        </p>
+    @if (isset($banners['home_banner_2']) && $banners['home_banner_2']->is_active == App\Enums\BannerStatus::ACTIVE)
+        <div class="cover-image sptb bg-background-color text-white p-5 w-100 mb-5"
+            style="background: url('{{ asset($banners['home_banner_2']->image) }}') no-repeat; background-size: cover;">
+            <div class="content-text mb-0">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="widgets-cards mb-5 d-flex">
+                                        <div class="widgets-cards-icons me-5">
+                                            <i class="fe fe-wifi"></i>
+                                        </div>
+                                        <div class="widgets-cards-data">
+                                            <h4>
+                                                <a class="text-white fs-25" href="#">
+                                                    Đào tạo khoa học
+                                                </a>
+                                            </h4>
+                                            <p class="text-white mt-2 mb-0">
+                                                Cùng lộ trình giảng dạy bài bản, chuyên sâu xây dựng bởi đội ngũ
+                                                giảng viên tiếng Nhật giàu kinh nghiệm
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="widgets-cards d-flex">
-                                    <div class="widgets-cards-icons me-5">
-                                        <i class="fe fe-book-open"></i>
+                                <div class="col-md-12">
+                                    <div class="widgets-cards mb-5 d-flex">
+                                        <div class="widgets-cards-icons me-5">
+                                            <i class="fe fe-wifi-off"></i>
+                                        </div>
+                                        <div class="widgets-cards-data">
+                                            <h4>
+                                                <a class="text-white fs-25" href="#">
+                                                    Mô phỏng thực tế
+                                                </a>
+                                            </h4>
+                                            <p class="text-white mt-2 mb-0">
+                                                Thời gian thực làm quen cùng kỳ thi JLPT cùng kho tàng đề thi đa
+                                                dạng - đầy đủ nhất Việt Nam
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div class="widgets-cards-data">
-                                        <h4>
-                                            <a class="text-white fs-25" href="#">
-                                                Cơ hội việc làm
-                                            </a>
-                                        </h4>
-                                        <p class="text-white mt-2 mb-0">
-                                            Cung cấp cơ hội việc làm và du học tại Nhật Bản với tính năng tìm
-                                            việc cùng thông tin du học đa dạng.
-                                        </p>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="widgets-cards d-flex">
+                                        <div class="widgets-cards-icons me-5">
+                                            <i class="fe fe-book-open"></i>
+                                        </div>
+                                        <div class="widgets-cards-data">
+                                            <h4>
+                                                <a class="text-white fs-25" href="#">
+                                                    Cơ hội việc làm
+                                                </a>
+                                            </h4>
+                                            <p class="text-white mt-2 mb-0">
+                                                Cung cấp cơ hội việc làm và du học tại Nhật Bản với tính năng tìm
+                                                việc cùng thông tin du học đa dạng.
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="clients-img">
-                            <img alt="img" class="bg-white br-3 p-1 img-fluid"
-                                src="{{ asset('images/banner/about-hikari01.jpg') }}">
-                            <img alt="img" class="bg-white br-3 p-1 img-fluid"
-                                src="{{ asset('images/banner/cong-ty-quang-viet.png') }}">
-                            <img alt="img" class="bg-white br-3 p-1 img-fluid"
-                                src="{{ asset('images/banner/khoa-hoc-offline.jpg') }}">
+                        <div class="col-lg-6">
+                            <div class="clients-img">
+                                <img alt="img" class="bg-white br-3 p-1 img-fluid"
+                                    src="{{ asset('images/banner/about-hikari01.jpg') }}">
+                                <img alt="img" class="bg-white br-3 p-1 img-fluid"
+                                    src="{{ asset('images/banner/cong-ty-quang-viet.png') }}">
+                                <img alt="img" class="bg-white br-3 p-1 img-fluid"
+                                    src="{{ asset('images/banner/khoa-hoc-offline.jpg') }}">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    @endif
     <section class="sptb my-5">
         <div class="container">
             <div class="section-title text-center">
@@ -716,7 +721,7 @@
 @section('scripts')
     <script src="{{ asset('js/plugins/swiperjs/swiper-bundle.min.js') }}"></script>
     <script type="module">
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             setupLearningSeriesSwiper();
             setEqualSeriesCardHeight('.swiper-learning-series');
             setCourseBoxRightDisplay('.swiper-learning-series');
@@ -797,7 +802,8 @@
             });
 
             $(swiperContainerClass).find('.course-card-teacher').css('min-height', maxTeacherDescripitonHeight + 'px');
-            $(swiperContainerClass).find('.course-card-description').css('min-height', maxShortDescriptionHeight + 'px');
+            $(swiperContainerClass).find('.course-card-description').css('min-height', maxShortDescriptionHeight +
+                'px');
         }
 
         const setCourseBoxRightDisplay = (swiperContainerClass) => {
@@ -805,7 +811,7 @@
             const titleWidth = $(swiperContainerClass).find('.course-box .course-header .course-title').width();
 
             if (titleWidth / contentWidth > 0.5) {
-                const courseHeader =  $(swiperContainerClass).find('.course-box .course-header');
+                const courseHeader = $(swiperContainerClass).find('.course-box .course-header');
                 courseHeader.css('flex-direction', 'column');
                 courseHeader.css('gap', '8px');
             }
