@@ -87,7 +87,7 @@
                                 <td class="score">{{ $ranking->reward_point }}</td>
                             </tr>
                         @endforeach
-                        @for ($i = $leaderboard->count() + 3; $i < 10; $i++)
+                        @for ($i = $leaderboard->count(); $i < 10; $i++)
                             <tr>
                                 <td class="rank">{{ $i + 1 }}</td>
                                 <td>
