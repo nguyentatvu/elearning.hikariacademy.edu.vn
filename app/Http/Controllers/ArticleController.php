@@ -16,6 +16,13 @@ class ArticleController extends Controller
 {
     public function __construct() {
         $this->middleware('auth');
+        $this->middleware(function ($request, $next) {
+            if (!checkRole(getUserGrade(2))) {
+                prepareBlockUserMessage();
+                return redirect('/');
+            }
+            return $next($request);
+        });
     }
 
     /**

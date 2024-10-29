@@ -89,4 +89,14 @@ class PaymentMethodService extends BaseService
     public function getAllOverdueCoinPayment() {
         return $this->repository->getAllOverdueCoinPayment();
     }
+
+        /**
+     * Get my all payments
+     *
+     * @param string $userId
+     * @return mixed
+     */
+    public function getAllMyPayments(string $userId) {
+        return $this->repository->getAllMyPayments($userId);
+    }
 }

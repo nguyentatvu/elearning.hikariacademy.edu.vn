@@ -152,6 +152,10 @@ class PaymentsController extends Controller
 
         $record = LmsSeriesCombo::getRecordWithSlug($slug);
 
+        if ($record === null) {
+            return redirect('/home');
+        }
+
         // Kiểm tra nếu không cho phép thanh toán bằng điểm quy đổi
         if ($record->redeem_point == 0 && $is_redeemed) {
             flash('Thông báo', 'Khoá học không hỗ trợ giảm giá quy đổi bằng Hi Coin', 'error');
@@ -2113,7 +2117,7 @@ try_again:
             DB::beginTransaction();
             try {
                 $record = PaymentMethod::where('id', '=', $request->slug)->get()->first();
-                $record->status = 0;
+                $record->status = PaymentMethod::PAYMENT_FAILED;
                 $record->updated_at  =date("Y-m-d H:i:s");
                 $record->save();
                 DB::commit();

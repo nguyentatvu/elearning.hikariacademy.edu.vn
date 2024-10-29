@@ -115,9 +115,8 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
     Route::get('/my-exam-result', 'MyPageController@showMyExamResult')
         ->name('my-exam-result');
 
-    Route::get('/payment-management', function () {
-        return view('client.mypage.payment-management');
-    })->name('payment-management');
+    Route::get('/payment-management', 'MyPageController@showPaymentManagement')
+        ->name('payment-management');
 });
 // Payment
 

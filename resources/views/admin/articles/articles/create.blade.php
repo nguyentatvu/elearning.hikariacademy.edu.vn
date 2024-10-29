@@ -261,9 +261,27 @@
             $('.file-upload').on('change', showPreviewThumbnail);
             $('.article-image-upload').on('change', showPreviewArticleImage);
 
-            setupTinymce();
+            trySetupTinyMCE();
             setupRemovingErrorValidation();
         });
+
+        const trySetupTinyMCE = (retryCount = 0, maxRetries = 5) => {
+            try {
+                if (tinymce.get('article_editor')) {
+                    tinymce.get('article_editor').remove();
+                }
+
+                setupTinymce();
+            }
+            catch(error) {
+                console.error('TinyMCE setup failed:', error);
+                if (retryCount < maxRetries) {
+                    setTimeout(() => {
+                        trySetupTinyMCE(retryCount + 1);
+                    }, 200);
+                }
+            }
+        }
 
         // Show preview thumbnail following file upload data
         const showPreviewThumbnail = (e) => {
@@ -461,10 +479,11 @@
 
                     input.click();
                 },
+                extended_valid_elements: 'figure[class|id],figcaption[class|id]',
                 plugins:[
                     'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
                     'searchreplace', 'wordcount', 'visualblocks', 'code', 'insertdatetime', 'media',
-                    'table', 'emoticons', 'codesample', 'quickbars',
+                    'table', 'emoticons', 'codesample', 'quickbars'
                 ],
                 toolbar: 'undo redo | styles fontsizeinput | bold italic underline | forecolor backcolor emoticons | align bullist numlist |' +
                 'outdent indent | link image table | preview',
@@ -472,16 +491,151 @@
                 quickbars_selection_toolbar: 'bold italic | forecolor backcolor | quicklink h2 h3 blockquote | table',
                 quickbars_insert_toolbar: '',
                 contextmenu: 'link image editimage table configurepermanentpen',
-                content_style: 'a { text-decoration: none; } body { font-size: 14px; font-family: \'Nunito\', sans-serif;}',
+                content_style: `
+                    a {
+                        text-decoration: none;
+                    }
+                    body {
+                        font-size: 14px;
+                        font-family: 'Nunito', sans-serif;
+                    }
+                    figure {
+                        margin: 0;
+                        display: inline-block;
+                        text-align: center;
+                    }
+                    figure img {
+                        max-width: 665px;
+                    }
+                    figcaption {
+                        font-size: 13px;
+                        color: #666;
+                        margin-top: 5px;
+                    }
+                `,
                 file_picker_types: 'image',
                 setup: function(editor) {
+                    editor.on('OpenWindow', function(e) {
+                        const saveButton = document.querySelector('button[data-mce-name="Save"]');
+                        if (saveButton) {
+                            saveButton.addEventListener('click', function(e) {
+                                setTimeout(() => {
+                                    let img = window.currentEditedImg
+                                    const title = img.getAttribute('title');
+
+                                    if (title) {
+                                        const parentFigure = img.closest('figure');
+
+                                        if (!parentFigure) {
+                                            const figure = editor.dom.create('figure');
+                                            const figcaption = editor.dom.create('figcaption', {
+                                                contenteditable: 'true' // Cho phép chỉnh sửa figcaption
+                                            }, title);
+
+                                            img.parentNode.replaceChild(figure, img);
+                                            figure.appendChild(img);
+                                            figure.appendChild(figcaption);
+                                        } else {
+                                            let figcaption = parentFigure.querySelector('figcaption');
+                                            if (!figcaption) {
+                                                figcaption = editor.dom.create('figcaption', {
+                                                    contenteditable: 'true'
+                                                }, title);
+                                                parentFigure.appendChild(figcaption);
+                                            } else {
+                                                figcaption.textContent = title;
+                                            }
+                                        }
+                                    }
+                                }, 100);
+
+                                setTimeout(function() {
+                                    editor.getBody().querySelectorAll('img').forEach(function(img) {
+                                        img.style.maxWidth = '640px';
+                                        img.style.height = 'auto';
+                                    });
+                                }, 100);
+                            });
+                        }
+                    });
+
                     editor.on('NodeChange', function(e) {
                         checkExistedImagesInEditor(editor.dom.doc);
+                    });
+
+                    editor.on('ObjectSelected', function(e) {
+                        if (e.target.nodeName === 'IMG') {
+                            const img = e.target;
+                            window.currentEditedImg = img;
+                            const figure = img.closest('figure');
+
+                            if (!img.getAttribute('title') && figure) {
+                                const figcaption = figure.querySelector('figcaption');
+                                if (figcaption) {
+                                    figcaption.remove();
+                                }
+                                if (!figure.querySelector('figcaption')) {
+                                    figure.parentNode.replaceChild(img, figure);
+                                }
+                            }
+                        }
+                    });
+
+                    editor.on('paste', function(e) {
+                        setTimeout(function() {
+                            editor.getBody().querySelectorAll('img[title]').forEach(function(img) {
+                                const title = img.getAttribute('title');
+                                if (title && !img.closest('figure')) {
+                                    const figure = editor.dom.create('figure');
+                                    const figcaption = editor.dom.create('figcaption', {}, title);
+
+                                    img.parentNode.replaceChild(figure, img);
+                                    figure.appendChild(img);
+                                    figure.appendChild(figcaption);
+                                }
+                            });
+                        }, 120);
+
+                        setTimeout(function() {
+                            editor.getBody().querySelectorAll('img').forEach(function(img) {
+                                img.style.maxWidth = '640px';
+                                img.style.height = 'auto';
+                            });
+                        }, 100);
                     });
 
                     editor.on('focus', function (e) {
                         $('.tox-tinymce').removeClass('is-invalid');
                         $('.tox-tinymce').siblings('span.invalid-feedback').remove();
+                    });
+
+                    editor.on('keydown', function(e) {
+                        const element = editor.selection.getNode();
+                        if (element.nodeName === 'FIGCAPTION') {
+                            e.preventDefault();
+                            return false;
+                        }
+                    });
+
+                    // Ngăn chặn paste vào figcaption
+                    editor.on('paste', function(e) {
+                        const element = editor.selection.getNode();
+                        if (element.nodeName === 'FIGCAPTION') {
+                            e.preventDefault();
+                            return false;
+                        }
+                    });
+
+                    // Xử lý khi click vào figcaption
+                    editor.on('click', function(e) {
+                        if (e.target.nodeName === 'FIGCAPTION') {
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            editor.getBody().blur();
+
+                            return false;
+                        }
                     });
                 },
             });

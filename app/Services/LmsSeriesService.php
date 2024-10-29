@@ -80,8 +80,8 @@ class LmsSeriesService extends BaseService
      * @return Collection
      */
     public function getHistoryViews(array $viewHistory, $user) {
-        $seriesId = array_column($viewHistory, 'series_id');
-        $series = $this->repository->getByColumnIn('id', $seriesId);
+        $seriesIdList = array_column($viewHistory, 'series_id');
+        $series = $this->repository->getByColumnIn('id', $seriesIdList);
 
         $seriesCombo = $this->getLmsSeriesComboService()->getMySeries($user->id, LmsSeries::COURSE_AND_EXAM);
         $seriesCombo = collect($seriesCombo->items());

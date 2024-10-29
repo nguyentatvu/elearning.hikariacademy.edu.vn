@@ -31,6 +31,18 @@ class LmsStudentViewService extends BaseService
         return $this->repository->getLastViewedContentOfStudent($seriesId);
     }
 
+
+    /**
+     * Get the last finished content of the student
+     *
+     * @param string $seriesId
+     * @return mixed(LmsContent|null)
+     */
+    public function getLastFinishedContentOfStudent(string $seriesId)
+    {
+        return $this->repository->getLastFinishedContentOfStudent($seriesId);
+    }
+
     /**
      * Get the view count of a series
      *

@@ -181,7 +181,7 @@ class LmsSeriesComboService extends BaseService
     }
 
     /**
-     * Get all series by type
+     * Get all paid series by type
      *
      * @param $type
      * @return mixed
@@ -189,6 +189,56 @@ class LmsSeriesComboService extends BaseService
     public function getAllPaidSeriesByType($type)
     {
         $allPaidComboSeries =  $this->repository->getAllPaidSeriesByType($type);
+        $allPaidComboSeries->map(function ($item) {
+            $seriesIdList = [];
+
+            for($i = 1; $i <= 5; $i++) {
+                if (!is_null($item->{'n'.$i})) {
+                    $seriesIdList[] = $item->{'n'.$i};
+                }
+            }
+
+            if (count($seriesIdList) == 1) {
+                $item->content_count = $this->getLmsContentService()->getContentCountBySeries($seriesIdList[0]);
+                $item->chapter_count = $this->getLmsContentService()->getChapterCountBySeries($seriesIdList[0]);
+                $item->seriesList = [$this->getLmsSeriesService()->findById($seriesIdList[0])];
+            } elseif (count($seriesIdList) > 1) {
+                $chapterCount = 0;
+                $contentCount = 0;
+                $seriesList = [];
+
+                foreach ($seriesIdList as $seriesId) {
+                    $chapterCount += $this->getLmsContentService()->getChapterCountBySeries($seriesId);
+                    $contentCount += $this->getLmsContentService()->getContentCountBySeries($seriesId);
+                    $seriesList[] = $this->getLmsSeriesService()->findById($seriesId);
+                }
+
+                $item->content_count = $contentCount;
+                $item->chapter_count = $chapterCount;
+                $item->seriesList = $seriesList;
+            }
+
+            if (Auth::check()) {
+                $item->valid_payment = $this->paymentMethodService->checkSerieValidity(Auth::user()->id, $item->id);
+            } else {
+                $item->valid_payment = false;
+            }
+
+            return $item;
+        });
+
+        return $allPaidComboSeries;
+    }
+
+    /**
+     * Get all series by type
+     *
+     * @param $type
+     * @return mixed
+     */
+    public function getAllSeriesByType($type)
+    {
+        $allPaidComboSeries =  $this->repository->getAllSeriesByType($type);
         $allPaidComboSeries->map(function ($item) {
             $seriesIdList = [];
 
