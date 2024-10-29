@@ -210,7 +210,6 @@
             </div>
         </div>
     </div>
-    @include('client.components.streak');
 @endsection
 
 @section('scripts')
@@ -420,4 +419,5 @@
 
     @yield('scripts-content')
     @yield('lesson-detail-scripts')
+    @include('client.components.streak');
 @endsection
