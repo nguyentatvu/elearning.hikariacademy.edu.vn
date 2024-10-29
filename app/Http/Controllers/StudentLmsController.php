@@ -949,6 +949,7 @@ class StudentLmsController extends Controller
             return redirect()->route('home.index');
         } else {
             $serie = DB::table('lmsseries')->where('slug', $slug)->first();
+            $serieCombo = DB::table('lmsseries_combo')->where('slug', $comboSlug)->first();
             $serieId = $serie->id;
 
             $lastViewedContent = $this->lmsStudentViewService->getLastViewedContentOfStudent($serieId);
@@ -958,6 +959,7 @@ class StudentLmsController extends Controller
             $data['road_map'] = $roadMap;
             $data['last_view'] = $lastViewedContent;
             $data['serie'] = $serie;
+            $data['serie_combo'] = $serieCombo;
         }
 
         return view('client.pages.roadmap', $data);
