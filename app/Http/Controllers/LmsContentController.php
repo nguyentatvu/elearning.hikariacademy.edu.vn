@@ -1056,7 +1056,6 @@ class LmsContentController extends Controller
      */
     public function store(Request $request)
     {
-        dd(1);
         if (!checkRole(getUserGrade(2))) {
             prepareBlockUserMessage();
             return back();
