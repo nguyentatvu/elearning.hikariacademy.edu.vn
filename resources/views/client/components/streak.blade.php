@@ -422,13 +422,6 @@
             font-weight: bold;
         }
 
-        h5 {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            font-weight: normal;
-            color: #495057;
-        }
-
         .day-boxes {
             display: flex;
             justify-content: space-between;

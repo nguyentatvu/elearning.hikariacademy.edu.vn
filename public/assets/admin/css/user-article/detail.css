@@ -70,6 +70,20 @@ table[border]:not([border="0"]):not([style*="border-color"]) th {
     gap: 20px;
 }
 
+figure {
+    margin: 0;
+    display: inline-block;
+    text-align: center;
+}
+figure img {
+    max-width: 665px;
+}
+figcaption {
+    font-size: 13px;
+    color: #666;
+    margin-top: 5px;
+}
+
 @media screen and (max-width: 991px) {
     .category-container {
         display: none;

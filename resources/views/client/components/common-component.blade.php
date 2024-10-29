@@ -5,7 +5,7 @@
     }
 </style>
 
-<div class="loading-overlay">
+<div class="loading-overlay {{ Request::is('home') ? 'is-active hiding' : '' }}">
     <div class="loading-spinner"></div>
 </div>
 @if (Session::has('logout_successful'))

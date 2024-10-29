@@ -205,7 +205,7 @@ class LmsContentController extends Controller
      * @return void
      */
     public function createAfter($series, $slug)
-    { 
+    {
         if (!checkRole(getUserGrade(2))) {
             prepareBlockUserMessage();
             return back();
@@ -310,7 +310,7 @@ class LmsContentController extends Controller
                 } else {
                   $lms_content_after_after = LmsContent::find($lms_content_after->parent_id)->parent_id;
                   $parent_id = $lms_content_after_after;
-                } 
+                }
                 break;
               case 9:
                 $parent_id = null;
@@ -684,7 +684,6 @@ class LmsContentController extends Controller
             $record->record_updated_by = Auth::user()->id;
             $record->save();
             $file_name = 'image';
-
             if ($request->hasFile($file_name)) {
                 $rules = array($file_name => 'mimes:jpeg,jpg,png,gif|max:10000');
                 $this->validate($request, $rules);
@@ -698,75 +697,125 @@ class LmsContentController extends Controller
 
 			# import video clip
             $file_name = 'lms_file';
+			// save_point
             if ($request->hasFile('lms_file')) {
-                
-                // dd($file_name);
-                // $slug_inser = folder name ( id + random string )
-                $slug_insert = $record->id . '-' . time();
-                $this->setSettings();
-                $examSettings = $this->getSettings();
-                //dd($examSettings);
-                $path         = $examSettings->contentImagepath;
-				if (isset($record->file_path)) {
-					$old_directory_path = explode("/", $record->file_path)[5]; 
-					//dd($old_directory_path);
-				}
-				$file_video_name = $this->processUpload($request, $record, $file_name, false);
-                // dd($file_video_name);
+              $slug_insert = $record->id . '-' . time();
+              $this->setSettings();
+              $examSettings = $this->getSettings();
+              $path = $examSettings->contentImagepath;
 
-                $realpath_save   = public_path() . '/uploads/lms/content/' . $file_video_name;
-                if (!file_exists(public_path() . '/uploads/lms/content/' . $slug_insert)) {
-                    mkdir(public_path() . '/uploads/lms/content/' . $slug_insert);
-                }
-                // send video clip to encrypt server
-                $data = array(
-                    'upload'        => 1,
-                    'file_contents' => new \CURLFile($realpath_save),
-                    'path'          => $slug_insert,
-                );
-                try {
-                    $curl = curl_init();
-                    curl_setopt_array($curl, array(
-                        // curlopt url of dev.hikariacademy.edu.vn api end point
-                        CURLOPT_URL            => env('VIDEO_ENCRYPT_URL', 'http://dev.hikariacademy.edu.vn').'/stream-video/api.php/hls',
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_CUSTOMREQUEST  => "POST",
-                        CURLOPT_HTTPHEADER     => array('Content-Type: multipart/form-data'),
-                        CURLOPT_POSTFIELDS     => $data,
-                        CURLOPT_SSL_VERIFYHOST => false,
-                        CURLOPT_SSL_VERIFYPEER => false,
-                    ));
-                    $response = curl_exec($curl);
-                    curl_close($curl);
-                    if ($response === false) {
-                        throw new Exception(curl_error($curl), curl_errno($curl));
-                    } else {
-                        // url of zip file in dev.hikariacademy.edu.vn
-                        $url     = env('VIDEO_ENCRYPT_URL', 'http://dev.hikariacademy.edu.vn').'/stream-video/zip/' . $slug_insert . '/' . $slug_insert . '.zip';
-                        $zipFile = public_path() . '/uploads/lms/content/' . $slug_insert . '/video.zip';
-                        file_put_contents($zipFile, fopen($url, 'r'));
-                        $zip         = new \ZipArchive;
-                        $extractPath = public_path() . '/uploads/lms/content/' . $slug_insert;
-                        if ($zip->open($zipFile) != "true") {
-                            flash('error', 'record_added_successfully', 'error');
-                        }
-                        $zip->extractTo($extractPath);
-                        $zip->close();
+              // Xử lý file upload
+              $file_video_name = $this->processUpload($request, $record, $file_name, false);
+
+              // Kiểm tra file path
+              $realpath_save = public_path() . '/uploads/lms/content/' . $file_video_name;
+              if (!file_exists($realpath_save)) {
+                  throw new Exception("File not found at path: " . $realpath_save);
+              }
+
+              // Lấy mime type của file
+              $finfo = finfo_open(FILEINFO_MIME_TYPE);
+              $mime_type = finfo_file($finfo, $realpath_save);
+              finfo_close($finfo);
+
+              // Tạo thư mục nếu chưa tồn tại
+              $upload_dir = public_path() . '/uploads/lms/content/' . $slug_insert;
+              if (!file_exists($upload_dir)) {
+                  mkdir($upload_dir, 0755, true);
+              }
+
+              // Chuẩn bị CURLFile
+              $curl_file = new \CURLFile(
+                  $realpath_save,  // File path
+                  $mime_type,      // Mime type
+                  basename($realpath_save) // Post name
+              );
+
+              // Chuẩn bị data
+              $data = array(
+                  'upload' => 1,
+                  'file_contents' => $curl_file,
+                  'path' => $slug_insert,
+              );
+
+              try {
+                  $curl = curl_init();
+
+                  // Enable verbose debug output
+                  curl_setopt($curl, CURLOPT_VERBOSE, true);
+                  $verbose = fopen('php://temp', 'w+');
+                  curl_setopt($curl, CURLOPT_STDERR, $verbose);
+
+                  curl_setopt_array($curl, array(
+                      CURLOPT_URL => env('VIDEO_ENCRYPT_URL', 'http://dev.hikariacademy.edu.vn').'/stream-video/api.php/hls',
+                      CURLOPT_RETURNTRANSFER => true,
+                      CURLOPT_POST => true,
+                      CURLOPT_CUSTOMREQUEST => "POST",
+                      CURLOPT_HTTPHEADER => array('Content-Type: multipart/form-data'),
+                      CURLOPT_POSTFIELDS => $data,
+                      CURLOPT_CONNECTTIMEOUT => 30,
+                      CURLOPT_TIMEOUT => 300,
+                      CURLOPT_SSL_VERIFYHOST => false,
+                      CURLOPT_SSL_VERIFYPEER => false,
+                  ));
+
+                  // Log request data trước khi gửi
+                  \Log::info("Sending CURL request with data: ", [
+                      'file_path' => $realpath_save,
+                      'file_exists' => file_exists($realpath_save),
+                      'file_size' => filesize($realpath_save),
+                      'mime_type' => $mime_type,
+                      'slug' => $slug_insert
+                  ]);
+
+                  $response = curl_exec($curl);
+
+                  if ($response === false) {
+                      rewind($verbose);
+                      $verboseLog = stream_get_contents($verbose);
+
+                      \Log::error("CURL Error: " . curl_error($curl));
+                      \Log::error("CURL Error No: " . curl_errno($curl));
+                      \Log::error("CURL Verbose Log: " . $verboseLog);
+
+                      throw new Exception(curl_error($curl), curl_errno($curl));
+                  }
+                  else {
+                    // url of zip file in dev.hikariacademy.edu.vn
+                    $url     = env('VIDEO_ENCRYPT_URL', 'http://dev.hikariacademy.edu.vn').'/stream-video/zip/' . $slug_insert . '/' . $slug_insert . '.zip';
+                    $zipFile = public_path() . '/uploads/lms/content/' . $slug_insert . '/video.zip';
+                    file_put_contents($zipFile, fopen($url, 'r'));
+                    $zip         = new \ZipArchive;
+                    $extractPath = public_path() . '/uploads/lms/content/' . $slug_insert;
+                    if ($zip->open($zipFile) != "true") {
+                        flash('error', 'record_added_successfully', 'error');
                     }
-                } catch (Exception $e) {
-                    dd($e);
+                    $zip->extractTo($extractPath);
+                    $zip->close();
                 }
-                $record->file_path = '/public/uploads/lms/content/' . $slug_insert . '/video.m3u8';
-                $record->import    = '1';
-                $record->save();
-				//Delete whole old content directory. Added by NTV@20212110
-				if (isset($old_directory_path)){
-					$path = public_path() . '/uploads/lms/content/'.$old_directory_path;            
-					if (\File::exists($path)) \File::deleteDirectory($path);
-				}
-                @unlink($zipFile); //delete zip file
-                @unlink($realpath_save); //delete video file
+
+                  curl_close($curl);
+                  fclose($verbose);
+
+                  // Process response...
+
+              } catch (Exception $e) {
+                  \Log::error("Upload failed: " . $e->getMessage());
+                  throw $e;
+              }
+
+              $record->file_path = '/public/uploads/lms/content/' . $slug_insert . '/video.m3u8';
+              $record->import    = '1';
+              $record->save();
+              //Delete whole old content directory. Added by NTV@20212110
+              if (isset($old_directory_path)){
+                  $path = public_path() . '/uploads/lms/content/'.$old_directory_path;
+                  if (\File::exists($path)) \File::deleteDirectory($path);
+              }
+              @unlink($zipFile); //delete zip file
+              @unlink($realpath_save); //delete video file
             }
+
             # end import video
             # import bai tap mau cau
             if ($request->hasFile('lms_excel')) {
@@ -849,12 +898,12 @@ class LmsContentController extends Controller
                 // get the file extension
                 $extension = pathinfo($filenames, PATHINFO_EXTENSION);
                 $size = $_FILES['lms_pdf']['size'] / 1024 / 1024;
-            
+
                 if (!in_array($extension, ['pdf'])) {
                     DB::rollBack();
                     flash('Your file extension must be .pdf', '', 'error');
                     return redirect(PREFIX . "lms/" . $request->series . '/content');
-                } elseif ($size > 10) { 
+                } elseif ($size > 10) {
                     DB::rollBack();
                     flash('File size exceeds 10 MB', '', 'error');
                     return redirect(PREFIX . "lms/" . $request->series . '/content');
@@ -1007,6 +1056,7 @@ class LmsContentController extends Controller
      */
     public function store(Request $request)
     {
+        dd(1);
         if (!checkRole(getUserGrade(2))) {
             prepareBlockUserMessage();
             return back();
@@ -1306,7 +1356,7 @@ class LmsContentController extends Controller
             $response['status']  = 1;
             $response['message'] = 'Xóa thành công';
             DB::commit();
-           
+
         } catch (Exception $e) {
             DB::rollBack();
             $response['status']  = 0;
@@ -1347,7 +1397,7 @@ class LmsContentController extends Controller
     public function processUpload(Request $request, $record, $file_name, $is_image = true)
     {
 
-        if ($request->hasFile($file_name)) {
+        if ($request->has($file_name)) {
             $settings        = $this->getSettings();
             $destinationPath = $settings->contentImagepath;
             $path            = $_FILES[$file_name]['name'];
@@ -1680,7 +1730,7 @@ class LmsContentController extends Controller
                                 ->where('id',$request->saubaihoc)
                                 ->value('stt');
 
-            
+
 
 
             if( (int)$stt_saubaihoc < (int)$stt_baihoc_hientai) {
@@ -1716,7 +1766,7 @@ class LmsContentController extends Controller
             return json_encode($data);
 
 
-        
+
     }
 
     /**
@@ -1741,5 +1791,5 @@ class LmsContentController extends Controller
         }
         return json_encode($data);
     }
-    
+
 }

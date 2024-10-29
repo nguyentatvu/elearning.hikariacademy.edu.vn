@@ -180,7 +180,7 @@
 }
 
 .loading-overlay {
-    display: none;
+    display: flex;
     background: rgba(255, 255, 255, 0.7);
     position: fixed;
     bottom: 0;
@@ -190,10 +190,20 @@
     z-index: 99999999;
     align-items: center;
     justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
 }
 
 .loading-overlay.is-active {
-    display: flex;
+    opacity: 1;
+    visibility: visible;
+}
+
+.loading-overlay.is-active.hiding {
+    opacity: 1;
+    visibility: visible;
+    background: rgba(255, 255, 255);
 }
 
 .bi-spin::before {

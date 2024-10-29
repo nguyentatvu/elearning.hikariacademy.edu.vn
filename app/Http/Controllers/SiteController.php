@@ -1310,8 +1310,8 @@ public function getSeriesContents(Request $request)
      */
     public function homePage() {
         $data = [];
-        $data['learning_series_list'] = $this->lmsSeriesComboService->getAllPaidSeriesByType(LmsSeriesCombo::LEARNING_TYPE);
-        $data['exam_series_list'] = $this->lmsSeriesComboService->getAllPaidSeriesByType(LmsSeriesCombo::EXAM_TYPE);
+        $data['learning_series_list'] = $this->lmsSeriesComboService->getAllSeriesByType(LmsSeriesCombo::LEARNING_TYPE);
+        $data['exam_series_list'] = $this->lmsSeriesComboService->getAllSeriesByType(LmsSeriesCombo::EXAM_TYPE);
 
         return view('client.pages.home', $data);
     }

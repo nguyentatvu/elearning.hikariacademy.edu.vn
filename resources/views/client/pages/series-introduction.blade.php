@@ -26,7 +26,7 @@
                             </div>
                         </div>
                         <div class="button-container">
-                            @if (!$seriesCombo->getCheckMultipleComboAttribute())
+                            @if (!$seriesCombo->getCheckMultipleComboAttribute() && $seriesCombo->cost != 0)
                                 <button class="roadmap-btn"
                                     onclick="location.href='{{ route('home.roadmap', ['comboSlug' => $seriesCombo->slug, 'slug' => request()->route('slug')]) }}'">
                                     <div>
@@ -35,7 +35,7 @@
                                     </div>
                                 </button>
                             @endif
-                            @if (Auth::check() && $isValidPayment)
+                            @if ($seriesCombo->cost == 0 || (Auth::check() && $isValidPayment))
                                 <button class="purchase-btn"
                                     onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $seriesCombo->slug, 'slug' => request()->route('slug')]) }}'">
                                     <div><i class="bi bi-book me-1"></i>Học ngay</div>
@@ -102,7 +102,7 @@
                     <div class="overview-series">
                         <img src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $seriesCombo->image) }}"
                             alt="series image">
-                        @if (Auth::check() && $isValidPayment)
+                        @if ($seriesCombo->cost == 0 || (Auth::check() && $isValidPayment))
                             <button class="btn btn-primary"
                                 onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $seriesCombo->slug, 'slug' => request()->route('slug')]) }}'">
                                 Học ngay

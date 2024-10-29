@@ -127,8 +127,9 @@ class StudentLmsController extends Controller
 
         if (($params['stt']) === '') {
             if ($this->prepContent['is_valid_payment']) {
-                $lastViewedContent = $this->lmsStudentViewService->getLastViewedContentOfStudent($seriesId);
-                $params['stt'] = $lastViewedContent->lmscontent_id ?? $this->getFirstContentId($seriesId);
+                $lastFinishedContent = $this->lmsStudentViewService->getLastFinishedContentOfStudent($seriesId);
+                $params['stt'] = $lastFinishedContent->lmscontent_id ?? $this->getFirstContentId($seriesId);
+                $this->redirectToContent($params);
             } else {
                 $this->redirectToFirstTrialContent($seriesId, $params);
             }
@@ -164,6 +165,35 @@ class StudentLmsController extends Controller
     private function redirectToFirstTrialContent(string $seriesId, array $params)
     {
         $content = $this->lmsContentService->getFirstTrialContentOfSeries($seriesId);
+        $typeMap = config('constant.series.type_map');
+        $routeMap = config('constant.series.routes');
+
+        if (isset($content)) {
+            foreach ($typeMap as $key => $value) {
+                if (in_array($content->type, $value)) {
+                    $type = $key;
+                    break;
+                }
+            }
+
+            if (isset($routeMap[$type])) {
+                $params['stt'] = $content->id;
+                throw new RedirectException(redirect()->route($routeMap[$type], $params));
+            }
+        }
+
+        throw new RedirectException(redirect()->to('/'));
+    }
+
+    /**
+     * Redirect to the right content
+     *
+     * @param array $params
+     * @return Illuminate\Http\RedirectResponse
+     */
+    private function redirectToContent(array &$params)
+    {
+        $content = $this->lmsContentService->findById((int) $params['stt']);
         $typeMap = config('constant.series.type_map');
         $routeMap = config('constant.series.routes');
 
@@ -528,7 +558,8 @@ class StudentLmsController extends Controller
 
             $studentView->update([
                 'finish' => LmsStudentView::FINISH,
-                'reward_point' => $earnedPoints
+                'reward_point' => $earnedPoints,
+                'updated_at' => date('Y-m-d H:i:s')
             ], [
                 'lmscontent_id' => $contentId,
                 'users_id' => Auth::id(),

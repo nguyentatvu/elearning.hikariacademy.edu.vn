@@ -61,12 +61,15 @@ class LmsSeriesComboRepository extends BaseRepository
             ->join('lmsseries', 'lmsseries.id', '=', 'payments.item_id')
             ->select(
                 'lmsseries_combo.id as series_combo_id',
+                'lmsseries_combo.image',
+                'lmsseries_combo.cost',
                 'lmsseries.id as series_id',
                 'lmsseries.title',
                 'payments.time',
                 'payment_method.created_at',
                 'payment_method.status',
                 'payment_method.month_extend',
+                'payment_method.orderType',
                 'lmsseries_combo.slug as combo_slug',
                 DB::raw("(SELECT COUNT(lmscontents.id) FROM lmscontents
                             WHERE lmscontents.delete_status = 0
@@ -133,7 +136,7 @@ class LmsSeriesComboRepository extends BaseRepository
     }
 
     /**
-     * Get all series by type
+     * Get all paid series by type
      *
      * @param $type
      * @return mixed
@@ -143,6 +146,19 @@ class LmsSeriesComboRepository extends BaseRepository
         return $this->model::where('type', $type)
             ->where('delete_status', 0)
             ->where('cost', '>', 0)
+            ->get();
+    }
+
+    /**
+     * Get all series by type
+     *
+     * @param $type
+     * @return mixed
+     */
+    public function getAllSeriesByType($type)
+    {
+        return $this->model::where('type', $type)
+            ->where('delete_status', 0)
             ->get();
     }
 

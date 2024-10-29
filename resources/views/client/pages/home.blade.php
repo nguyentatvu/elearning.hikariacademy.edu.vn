@@ -233,7 +233,7 @@
                                     src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $learning_series->image) }}" />
                                 <div class="course-card-body">
                                     <h5 class="course-card-title">{{ $learning_series->title }}</h5>
-                                    <p class="course-card-price">{{ formatCurrencyVND($learning_series->cost) }}</p>
+                                    <p class="course-card-price">{{ $learning_series->cost == 0 ? 'Miễn phí' : formatCurrencyVND($learning_series->cost) }}</p>
                                     <div class="course-card-description line-clamp-3">{!! $learning_series->short_description !!}</div>
                                     <div class="course-card-teacher text-muted w-100 mb-1">{!! $learning_series->description['teacher_description'] ?? '' !!}</div>
                                     <div class="d-flex align-items-center text-primary-color mt-3">
@@ -260,7 +260,7 @@
                                             onclick="location.href='{{ route('mypage.courses') }}'">
                                             Học ngay
                                         </button>
-                                    @elseif (Auth::check() && $learning_series->valid_payment && count($learning_series->seriesList) == 1)
+                                    @elseif ($learning_series->cost == 0 || (Auth::check() && $learning_series->valid_payment && count($learning_series->seriesList) == 1))
                                         <button class="btn btn-primary w-100 mt-3"
                                             onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $learning_series->slug, 'slug' => $learning_series->seriesList[0]->slug]) }}'">
                                             Học ngay
@@ -729,6 +729,10 @@
             setupExamSeriesSwiper();
             setEqualSeriesCardHeight('.swiper-exam-series');
             setCourseBoxRightDisplay('.swiper-exam-series');
+
+            setTimeout(() => {
+                toggleLoadingOverlay(false);
+            }, 200);
         });
 
         const setupExamSeriesSwiper = () => {

@@ -26,6 +26,18 @@ const showErrorAlert = (message = 'Thất bại', title = "Thông báo", callbac
     });
 }
 
+const showWarningAlert = (message = 'Thông báo', title = "Thông báo", callback = null, timer = 1700) => {
+    return Swal.fire({
+        title: title,
+        text: message,
+        icon: "warning",
+        timer: timer,
+        showConfirmButton: false,
+    }).then(() => {
+        if (callback) callback();
+    });
+}
+
 // Reload page
 const reloadPage = () => {
     location.reload();

@@ -291,6 +291,17 @@ class MyPageController extends Controller
     }
 
     /**
+     * Show payment management
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function showPaymentManagement() {
+        $data['payment_list'] = $this->paymentMethodService->getAllMyPayments(Auth::user()->id);
+
+        return view('client.mypage.payment-management', $data);
+    }
+
+    /**
      * Update user info
      *
      * @param  \Illuminate\Http\Request  $request

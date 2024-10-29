@@ -21,7 +21,6 @@ class LmsStudentViewRepository extends BaseRepository
             ->where('users_id', Auth::id())->get();
     }
 
-
     /**
      * Get the last viewed content of the student
      *
@@ -35,6 +34,23 @@ class LmsStudentViewRepository extends BaseRepository
             ->where('lmscontents.lmsseries_id', $seriesId)
             ->where('lms_student_view.users_id', Auth::id())
             ->latest('lms_student_view.created_date')
+            ->first();
+    }
+
+    /**
+     * Get the last finished content of the student
+     *
+     * @param string $seriesId
+     * @return mixed(LmsContent|null)
+     */
+    public function getLastFinishedContentOfStudent(string $seriesId)
+    {
+        return $this->model
+            ->join('lmscontents', 'lmscontents.id' , '=', 'lms_student_view.lmscontent_id')
+            ->where('lmscontents.lmsseries_id', $seriesId)
+            ->where('lms_student_view.users_id', Auth::id())
+            ->where('lms_student_view.finish', LmsStudentView::FINISH)
+            ->latest('lms_student_view.updated_at')
             ->first();
     }
 

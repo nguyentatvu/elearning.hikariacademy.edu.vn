@@ -144,4 +144,32 @@ class PaymentMethodRepository extends BaseRepository
             ->where('created_at', '<', Carbon::now()->subMinutes($minValidMinutes))
             ->get();
     }
+
+    /**
+     * Get my all payments
+     *
+     * @param string $userId
+     * @return mixed
+     */
+    public function getAllMyPayments(string $userId) {
+        return $this->model
+            ->join('lmsseries_combo', 'payment_method.item_id', '=', 'lmsseries_combo.id')
+            ->select(
+                'payment_method.id as payment_method_id',
+                'lmsseries_combo.*',
+                'payment_method.created_at',
+                'payment_method.status',
+                'payment_method.orderType',
+                'payment_method.status',
+                'payment_method.created_at',
+                'lmsseries_combo.cost',
+                'lmsseries_combo.title'
+            )
+            ->where([
+                ['payment_method.user_id', $userId],
+                ['lmsseries_combo.delete_status', 0],
+            ])
+            ->orderBy('payment_method.created_at', 'desc')
+            ->get();
+    }
 }
