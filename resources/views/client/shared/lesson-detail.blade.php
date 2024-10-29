@@ -218,10 +218,10 @@
         const showBuyCourseModal = () => $('#buy_course_modal').modal('show');
 
         $(document).ready(function() {
-            let isHidden = false;
+            let isHidden = true;
 
             @if (isset($flashcardDetail) && !empty($flashcardDetail))
-                isHidden = true;
+                isHidden = false;
                 $('#btn_hide_tab_content').find('i').toggleClass('bi-chevron-double-up bi-chevron-double-down');
             @endif
 
