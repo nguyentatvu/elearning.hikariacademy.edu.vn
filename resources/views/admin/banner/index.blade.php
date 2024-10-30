@@ -910,7 +910,9 @@
                             },
                             success: function() {
                                 Swal.fire('Đã xóa!', 'Banner đã được xóa.', 'success');
-                                loadBanners();
+                                setTimeout(function (){
+                                    window.location.reload();
+                                }, 1000)
                             },
                             error: function() {
                                 Swal.fire('Lỗi', 'Có lỗi xảy ra khi xóa banner.', '');
