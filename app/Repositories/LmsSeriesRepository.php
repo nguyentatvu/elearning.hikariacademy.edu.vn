@@ -59,4 +59,28 @@ class LmsSeriesRepository extends BaseRepository
             ->where('delete_status', 0)
             ->get();
     }
+
+    /**
+     * Get series list of series combo
+     *
+     * @param $seriesCombo
+     * @return void
+     */
+    public function getSeriesListOfSeriesComboSlug($seriesCombo) {
+        $seriesIdList = [
+            $seriesCombo->n1,
+            $seriesCombo->n2,
+            $seriesCombo->n3,
+            $seriesCombo->n4,
+            $seriesCombo->n5
+        ];
+
+        $seriesIdList = array_filter($seriesIdList);
+        $seriesList = $this->model
+            ->whereIn('id', $seriesIdList)
+            ->where('delete_status', 0)
+            ->get();
+
+        return $seriesList;
+    }
 }

@@ -6,7 +6,6 @@
 
 @section('mypage-content')
     <div class="manged-ad table-responsive border-top userprof-tab payment-management">
-
         <table class="table table-bordered table-hover mb-0 text-nowrap">
             <thead>
                 <tr>
@@ -69,6 +68,11 @@
                 @endforeach
             </tbody>
         </table>
+        <div class="my-4">
+            @component('client.components.custom-pagination',
+                    ['paginations' => $payment_list])
+                @endcomponent
+        </div>
     </div>
 @endsection
 

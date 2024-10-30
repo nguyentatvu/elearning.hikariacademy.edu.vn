@@ -33,7 +33,7 @@
                 </div>
             </div>
 
-            <div class="tab-content" id="nav-tabContent">
+            <div class="tab-content" id="nav-tabContent" style="height: 0px !important;">
                 <!-- Mô tả bài học -->
                 <div class="tab-pane fade show active nav_description_content" id="nav-home" role="tabpanel"
                     aria-labelledby="nav-home-tab" tabindex="0">
@@ -218,6 +218,10 @@
         const showBuyCourseModal = () => $('#buy_course_modal').modal('show');
 
         $(document).ready(function() {
+            setTimeout(() => {
+                toggleLoadingOverlay(false);
+            }, 50);
+
             let isHidden = true;
 
             @if (isset($flashcardDetail) && !empty($flashcardDetail))

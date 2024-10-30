@@ -170,6 +170,6 @@ class PaymentMethodRepository extends BaseRepository
                 ['lmsseries_combo.delete_status', 0],
             ])
             ->orderBy('payment_method.created_at', 'desc')
-            ->get();
+            ->paginate(15);
     }
 }

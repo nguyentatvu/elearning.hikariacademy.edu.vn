@@ -5,8 +5,8 @@
 @endsection
 
 @section('mypage-content')
-    <div class="container">
-        <table class="table table-bordered table-hover">
+    <div class="w-100 mx-auto overflow-x-auto">
+        <table class="table table-bordered table-hover exam-result-table">
             <thead>
                 <tr>
                     <th class="text-center">STT</th>
