@@ -21,6 +21,7 @@ use Yajra\DataTables\DataTables;
 use \App;
 use App\Logger;
 use App\Services\CoinRechargePackageService;
+use App\Services\LmsSeriesService;
 use App\Services\PaymentMethodService;
 use App\Services\PaymentService;
 use App\Services\UserService;
@@ -34,12 +35,14 @@ class PaymentsController extends Controller
     private $paymentService;
     private $paymentMethodService;
     private $userService;
+    private $lmsSeriesService;
 
     public function __construct(
         CoinRechargePackageService $coinRechargeService,
         PaymentService $paymentService,
         PaymentMethodService $paymentMethodService,
-        UserService $userService
+        UserService $userService,
+        LmsSeriesService $lmsSeriesService
     )
     {
         $this->middleware('auth');
@@ -47,6 +50,7 @@ class PaymentsController extends Controller
         $this->paymentMethodService = $paymentMethodService;
         $this->paymentService = $paymentService;
         $this->userService = $userService;
+        $this->lmsSeriesService = $lmsSeriesService;
     }
     public function testPayments(Request $request, $slug)
     {
@@ -2816,6 +2820,7 @@ try_again:
             if ($secureHash == $vnp_SecureHash) {
 				if ($_GET['vnp_ResponseCode'] == '00') {
 					$record         = LmsSeriesCombo::getRecordWithSlug($slug);
+                    $purchasedSeriesList = $this->lmsSeriesService->getSeriesListOfSeriesComboSlug($slug);
                     $payment_method->update(
                         ['status' => PaymentMethod::PAYMENT_SUCCESS]
                     );
@@ -2827,6 +2832,12 @@ try_again:
                         'series_order_created_at' => null
                     ]);
                     $this->userService->updatePointHistory(['used' => $payment_method->redeem_point ?? 0]);
+                    foreach ($purchasedSeriesList as $series) {
+                        $this->userService->updateSeriesViewsHistory(
+                            Auth::user()->series_views_history ?? [],
+                            $series->id
+                        );
+                    }
 
 					$message_success = "Bạn đã mua {$record->title} thành công";
 					flash('Mua khoá học thành công!', $message_success, 'success');

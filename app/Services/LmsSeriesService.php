@@ -116,4 +116,16 @@ class LmsSeriesService extends BaseService
     {
         return $this->repository->getAllWithRoadmapsAndLessons();
     }
+
+    /**
+     * Get series list of series combo
+     *
+     * @param $seriesComboSlug
+     * @return void
+     */
+    public function getSeriesListOfSeriesComboSlug(string $seriesComboSlug) {
+        $seriesCombo = $this->getLmsSeriesComboService()->getByCondition('slug', $seriesComboSlug); 
+
+        return $this->repository->getSeriesListOfSeriesComboSlug($seriesCombo);
+    }
 }

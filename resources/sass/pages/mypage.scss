@@ -26,16 +26,42 @@
             overflow-x: auto;
             background-color: #ffffff;
 
+            @include mq (max-sp) {
+                flex-direction: column;
+                gap: 8px;
+            }
+
             li {
+                @include mq (max-sp) {
+                    border: 1px solid var(--primary);
+                    border-radius: 4px;
+                    text-align: center;
+                }
+
+                &:has(a.active) {
+                    @include mq (max-sp) {
+                        border: 1px solid #438afe !important;
+                        background-color: var(--primary);
+                    }
+                }
+
                 a {
                     text-decoration: none;
                     color: #007bff;
                     padding: 6px 10px;
                     display: inline-block;
 
+                    @include mq (max-sp) {
+                        width: 100%;
+                    }
+
                     &.active {
                         border-bottom: 2px solid #007bff;
-                        color: #007bff;
+
+                        @include mq (max-sp) {
+                            border: none;
+                            color: white;
+                        }
                     }
                 }
             }
@@ -766,6 +792,10 @@
             border-right: none !important;
         }
     }
+}
+
+.exam-result-table {
+    min-width: 700px;
 }
 
 .gray-filter {
