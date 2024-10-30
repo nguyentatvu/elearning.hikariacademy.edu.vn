@@ -275,6 +275,10 @@
             & > p {
                 margin-bottom: 8px;
             }
+
+            ul {
+                list-style: revert !important;
+            }
         }
 
         .series-info {
