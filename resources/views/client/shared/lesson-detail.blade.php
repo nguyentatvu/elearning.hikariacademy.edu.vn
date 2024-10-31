@@ -393,9 +393,10 @@
             let newCommentHtml = "";
 
             const urlParts = window.location.pathname.split('/');
-            const lmscombo_slug = urlParts[4];
-            const lmsseries_slug = urlParts[5];
-            const lmscontent_id = urlParts[6];
+            const lastThreeParts = urlParts.slice(-3);
+            const lmscombo_slug = lastThreeParts[0];
+            const lmsseries_slug = lastThreeParts[1];
+            const lmscontent_id = lastThreeParts[2];
 
             data.body = commentText;
             data.lmscombo_slug = lmscombo_slug;
@@ -414,32 +415,36 @@
                     data: data,
                     dataType: 'json',
                     success: function(response) {
-                        if (commentId === "") {
-                            commentId = response.id
-                        }
-                        newCommentHtml = `
-                            <div class="comment-user">
-                                <img alt="User avatar" height="40" src="${userImage}" width="40" />
-                                <div class="comment-body">
-                                    <div class="name">${response.user_name}</div>
-                                    <div class="time">${moment(response.created_at).fromNow()}</div>
-                                    <div class="text">${response.body}</div>
-                                    <div class="actions reply-btn" data-comment-id="${commentId}"><span>Phản hồi</span></div>
-                                    <div class="reply-input" data-comment-id="${commentId}">
-                                        <input type="text"
-                                            class="reply-area"
-                                            data-comment-id="${commentId}"
-                                            placeholder="Nhập tin nhắn của bạn..." />
+                        if (response.error != 2) {
+                            if (commentId === "") {
+                                commentId = response.id
+                            }
+                            newCommentHtml = `
+                                <div class="comment-user">
+                                    <img alt="User avatar" height="40" src="${userImage}" width="40" />
+                                    <div class="comment-body">
+                                        <div class="name">${response.user_name}</div>
+                                        <div class="time">${moment(response.created_at).fromNow()}</div>
+                                        <div class="text">${response.body}</div>
+                                        <div class="actions reply-btn" data-comment-id="${commentId}"><span>Phản hồi</span></div>
+                                        <div class="reply-input" data-comment-id="${commentId}">
+                                            <input type="text"
+                                                class="reply-area"
+                                                data-comment-id="${commentId}"
+                                                placeholder="Nhập tin nhắn của bạn..." />
+                                        </div>
+                                        ${
+                                            parentId === 0
+                                            ? `<div class="comment-reply mt-3" data-comment-id="${commentId}"></div>` 
+                                            : ''
+                                        }
                                     </div>
-                                    ${
-                                        parentId === 0
-                                        ? `<div class="comment-reply mt-3" data-comment-id="${commentId}"></div>` 
-                                        : ''
-                                    }
                                 </div>
-                            </div>
-                        `;
-                        resolve(newCommentHtml);
+                            `;
+                            resolve(newCommentHtml);
+                        } else {
+                            reject("Gửi tin nhắn thất bại. Vui lòng thử lại.");
+                        }
                     },
                     error: function() {
                         reject("Gửi tin nhắn thất bại. Vui lòng thử lại.");
