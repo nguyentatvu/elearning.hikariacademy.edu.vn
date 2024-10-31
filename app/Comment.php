@@ -21,6 +21,22 @@ class Comment extends Model
     }
 
     /**
+     * Relationship with user
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    /**
+     * Relationship with user
+     */
+    public function admin()
+    {
+        return $this->belongsTo(User::class, 'admin_id', 'id');
+    }
+
+    /**
      * Relationship with LmsSeries
      */
     public function series() {

@@ -13,6 +13,7 @@ use App\LmsContent;
 use App\LmsSeries;
 use App\LmsStudentView;
 use App\Role;
+use App\Services\CommentService;
 use App\Services\LmsContentService;
 use App\Services\LmsSeriesComboService;
 use App\Services\LmsSeriesService;
@@ -43,6 +44,7 @@ class StudentLmsController extends Controller
     private $lmsSeriesComboService;
     private $paymentMethodService;
     private $userService;
+    private $commentService;
 
     public function __construct(
         LmsContentService $lmsContentService,
@@ -50,7 +52,8 @@ class StudentLmsController extends Controller
         LmsStudentViewService $lmsStudentViewService,
         LmsSeriesComboService $lmsSeriesComboService,
         PaymentMethodService $paymentMethodService,
-        UserService $userService
+        UserService $userService,
+        CommentService $commentService
     ) {
         $this->lmsContentService = $lmsContentService;
         $this->lmsSeriesService = $lmsSeriesService;
@@ -58,6 +61,7 @@ class StudentLmsController extends Controller
         $this->lmsSeriesComboService = $lmsSeriesComboService;
         $this->paymentMethodService = $paymentMethodService;
         $this->userService = $userService;
+        $this->commentService = $commentService;
     }
 
     /**
@@ -357,6 +361,7 @@ class StudentLmsController extends Controller
         $this->saveStudentView($stt);
         $this->getStudentView();
         $this->prepareContentList($params);
+        $this->getCommentInCourseOfUser($combo_slug, $slug, $stt);
     }
 
     /**
@@ -377,6 +382,7 @@ class StudentLmsController extends Controller
             'series' => $this->prepContent['series'],
             'contentViewCount' => $this->prepContent['content_view_count'],
             'seriesContentCount' => $this->prepContent['series_content_count'],
+            'comments' => $this->prepContent['comments'],
         ];
     }
 
@@ -1113,5 +1119,19 @@ class StudentLmsController extends Controller
             'last_view' => $lastViewedContent,
             'day_last_view' => $dayViewedContent
         ]);
+    }
+
+    /**
+     * Get comments in course of user
+     *
+     * @param string $combo_slug
+     * @param string $slug
+     * @param string $stt
+     * @return mixed
+     */
+    protected function getCommentInCourseOfUser(string $combo_slug, string $slug, string $stt)
+    {
+        $userId = Auth::user()->id;
+        $this->prepContent['comments'] = $this->commentService->getCommentsInCourse($combo_slug, $slug, $stt, $userId);
     }
 }

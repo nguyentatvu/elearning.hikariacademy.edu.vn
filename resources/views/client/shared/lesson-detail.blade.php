@@ -64,105 +64,68 @@
                     </div>
                 </div>
 
-                <!-- Câu hỏi của bạn -->
                 <div class="tab-pane fade nav_comment_content" id="nav-questions" role="tabpanel"
                     aria-labelledby="nav-questions-tab" tabindex="0">
                     <div class="comment-section">
-                        <div class="comment-input">
-                            <img alt="User avatar" height="40" src="{{ asset('images/no-avatar.png') }}" width="40" />
-                            <input placeholder="Nhập bình luận mới của bạn" type="text" />
+                        <div id="comment_input" class="comment-input">
+                            <img alt="User avatar" height="40" src="{{ getFullUserImage(Auth::user()->image) }}"
+                                width="40" />
+                            <input id="comment_input_area" placeholder="Nhập bình luận mới của bạn" type="text" />
                         </div>
-
-                        <div class="comment-count">
-                            <strong>132 bình luận</strong>
-                            <span class="text-muted float-end">Nếu thấy bình luận spam, các bạn bấm report giúp admin
-                                nhé</span>
-                        </div>
-
-                        <!-- Bình luận 1 -->
-                        <div class="comment">
-                            <img alt="User avatar" height="40" src="{{ asset('images/no-avatar.png') }}" width="40" />
-                            <div class="comment-body">
-                                <div class="name">Học viên A</div>
-                                <div class="time">2 tháng trước</div>
-                                <div class="text">Theo em thấy thì học xong một ngôn ngữ hướng đối tượng rồi qua học
-                                    javascript sẽ dễ hiểu hơn ở phần này</div>
-                                <div class="actions"><span>Phản hồi</span></div>
-                            </div>
-                        </div>
-
-                        <!-- Bình luận 1 -->
-                        <div class="comment">
-                            <img alt="User avatar" height="40" src="{{ asset('images/no-avatar.png') }}" width="40" />
-                            <div class="comment-body">
-                                <div class="name">Học viên A</div>
-                                <div class="time">2 tháng trước</div>
-                                <div class="text">Theo em thấy thì học xong một ngôn ngữ hướng đối tượng rồi qua học
-                                    javascript sẽ dễ hiểu hơn ở phần này</div>
-                                <div class="actions"><span>Phản hồi</span></div>
-                            </div>
-                        </div>
-
-                        <!-- Bình luận 1 -->
-                        <div class="comment">
-                            <img alt="User avatar" height="40" src="{{ asset('images/no-avatar.png') }}" width="40" />
-                            <div class="comment-body">
-                                <div class="name">Học viên A</div>
-                                <div class="time">2 tháng trước</div>
-                                <div class="text">Theo em thấy thì học xong một ngôn ngữ hướng đối tượng rồi qua học
-                                    javascript sẽ dễ hiểu hơn ở phần này</div>
-                                <div class="actions"><span>Phản hồi</span></div>
-                            </div>
-                        </div>
-
-                        <!-- Bình luận 1 -->
-                        <div class="comment">
-                            <img alt="User avatar" height="40" src="{{ asset('images/no-avatar.png') }}" width="40" />
-                            <div class="comment-body">
-                                <div class="name">Học viên A</div>
-                                <div class="time">2 tháng trước</div>
-                                <div class="text">Theo em thấy thì học xong một ngôn ngữ hướng đối tượng rồi qua học
-                                    javascript sẽ dễ hiểu hơn ở phần này</div>
-                                <div class="actions"><span>Phản hồi</span></div>
-                            </div>
-                        </div>
-
-                        <!-- Bình luận 1 -->
-                        <div class="comment">
-                            <img alt="User avatar" height="40" src="{{ asset('images/no-avatar.png') }}" width="40" />
-                            <div class="comment-body">
-                                <div class="name">Học viên A</div>
-                                <div class="time">2 tháng trước</div>
-                                <div class="text">Theo em thấy thì học xong một ngôn ngữ hướng đối tượng rồi qua học
-                                    javascript sẽ dễ hiểu hơn ở phần này</div>
-                                <div class="actions"><span>Phản hồi</span></div>
-                            </div>
-                        </div>
-
-                        <!-- Bình luận 1 -->
-                        <div class="comment">
-                            <img alt="User avatar" height="40" src="{{ asset('images/no-avatar.png') }}" width="40" />
-                            <div class="comment-body">
-                                <div class="name">Học viên A</div>
-                                <div class="time">2 tháng trước</div>
-                                <div class="text">Theo em thấy thì học xong một ngôn ngữ hướng đối tượng rồi qua học
-                                    javascript sẽ dễ hiểu hơn ở phần này</div>
-                                <div class="actions"><span>Phản hồi</span></div>
-                            </div>
-                        </div>
-
-                        <!-- Bình luận 2 -->
-                        <div class="comment">
-                            <img alt="User avatar" height="40" src="{{ asset('images/no-avatar.png') }}" width="40" />
-                            <div class="comment-body">
-                                <div class="name">Học viên B</div>
-                                <div class="time">3 tháng trước</div>
-                                <div class="text">Nếu không có từ khóa new thì có ảnh hưởng gì không nhỉ?</div>
-                                <div class="actions">
-                                    <span>Phản hồi</span>
-                                    <span>Xem 1 câu trả lời</span>
+                        <div id="comment" class="comment">
+                            <!-- Comment -->
+                            @foreach ($comments as $index => $comment)
+                                <div class="comment-user">
+                                    <img alt="User avatar" height="40"
+                                        src="{{ $comment->user->image ? getFullUserImage($comment->user->image) : asset('images/no-avatar.png') }}"
+                                        width="40" />
+                                    <div class="comment-body">
+                                        <div class="name">{{ $comment->user_name }}</div>
+                                        <div class="time">{{ $comment->created_at->diffForHumans() }}</div>
+                                        <div class="text">{{ $comment->body }}</div>
+                                        <div class="actions reply-btn" data-comment-id="{{ $comment->id }}">
+                                            <span>Phản hồi</span>
+                                        </div>
+                                        <div class="reply-input" data-comment-id="${commentId}">
+                                            <input type="text" class="reply-area" data-comment-id="{{ $comment->id }}"
+                                                placeholder="Nhập tin nhắn của bạn..." />
+                                        </div>
+                                        <div class="comment-reply mt-3" data-comment-id="{{ $comment->id }}">
+                                            @foreach ($comment->childComments as $indexComment => $childComment)
+                                                <div class="comment-user">
+                                                    @if ($childComment->admin_id)
+                                                        <img alt="User avatar" height="40"
+                                                            src="{{ $childComment->admin->image ? getFullUserImage($childComment->admin->image) : asset('images/no-avatar.png') }}"
+                                                            width="40" />
+                                                    @else
+                                                        <img alt="User avatar" height="40"
+                                                            src="{{ $childComment->user->image ? getFullUserImage($childComment->user->image) : asset('images/no-avatar.png') }}"
+                                                            width="40" />
+                                                    @endif
+                                                    <div class="comment-body">
+                                                        <div class="name">
+                                                            {{ $childComment->admin_id ? $childComment->admin->name : $childComment->user_name }}
+                                                        </div>
+                                                        <div class="time">
+                                                            {{ $childComment->created_at->diffForHumans() }}
+                                                        </div>
+                                                        <div class="text">{{ $childComment->body }}</div>
+                                                        <div class="actions reply-btn"
+                                                            data-comment-id="{{ $comment->id }}">
+                                                            <span>Phản hồi</span>
+                                                        </div>
+                                                        <div class="reply-input">
+                                                            <input type="text" data-comment-id="{{ $comment->id }}"
+                                                                class="reply-area"
+                                                                placeholder="Nhập tin nhắn của bạn..." />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -213,9 +176,15 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ admin_asset('js/moment-with-locales.min.js') }}"></script>
     <script>
+        moment.locale('vi');
         // Function to display the Buy Course modal
         const showBuyCourseModal = () => $('#buy_course_modal').modal('show');
+        const username = '{{ Auth::user()->name }}' ?? '';
+        const userId = '{{ Auth::user()->id }}' ?? '';
+        const userImage =
+            "{{ Auth::user()->image ? getFullUserImage(Auth::user()->image) : asset('images/no-avatar.png') }}"
 
         $(document).ready(function() {
             setTimeout(() => {
@@ -394,9 +363,8 @@
         function showDailyStreak(contentId) {
             $.ajax({
                 url: '{{ route('learning-management.lesson.daily-streak') }}', // Gọi route với tên đầy đủ
-                type: 'POST', // Sử dụng phương thức POST
-                data: {
-                },
+                type: 'POST',
+                data: {},
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Bảo mật với CSRF token
                 },
@@ -418,6 +386,150 @@
             imageSource = checkImage.attr('src').replace('empty-box.svg', 'checked-box.png');
             checkImage.attr('src', imageSource).addClass('animate__bounceIn animate__animated');
         }
+
+        // Send comment
+        function sendComment(commentText, commentId, parentId = 0) {
+            let data = {};
+            let newCommentHtml = "";
+
+            const urlParts = window.location.pathname.split('/');
+            const lmscombo_slug = urlParts[4];
+            const lmsseries_slug = urlParts[5];
+            const lmscontent_id = urlParts[6];
+
+            data.body = commentText;
+            data.lmscombo_slug = lmscombo_slug;
+            data.lmsseries_slug = lmsseries_slug;
+            data.lmscontent_id = lmscontent_id;
+            data.user_id = userId;
+            data.parent_id = parentId;
+
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    url: "{{ route('comment.add') }}",
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    data: data,
+                    dataType: 'json',
+                    success: function(response) {
+                        if (commentId === "") {
+                            commentId = response.id
+                        }
+                        newCommentHtml = `
+                            <div class="comment-user">
+                                <img alt="User avatar" height="40" src="${userImage}" width="40" />
+                                <div class="comment-body">
+                                    <div class="name">${response.user_name}</div>
+                                    <div class="time">${moment(response.created_at).fromNow()}</div>
+                                    <div class="text">${response.body}</div>
+                                    <div class="actions reply-btn" data-comment-id="${commentId}"><span>Phản hồi</span></div>
+                                    <div class="reply-input" data-comment-id="${commentId}">
+                                        <input type="text"
+                                            class="reply-area"
+                                            data-comment-id="${commentId}"
+                                            placeholder="Nhập tin nhắn của bạn..." />
+                                    </div>
+                                    ${
+                                        parentId === 0
+                                        ? `<div class="comment-reply mt-3" data-comment-id="${commentId}"></div>` 
+                                        : ''
+                                    }
+                                </div>
+                            </div>
+                        `;
+                        resolve(newCommentHtml);
+                    },
+                    error: function() {
+                        reject("Gửi tin nhắn thất bại. Vui lòng thử lại.");
+                    },
+                });
+            });
+        }
+
+        $('#comment_input_area').on('keypress', function(event) {
+            if (event.which === 13) {
+                event.preventDefault();
+
+                const commentText = $(this).val().trim();
+
+                if (commentText === '') {
+                    return;
+                }
+
+                const inputField = $('#comment_input_area');
+                const commentInput = $('#comment_input');
+                inputField.prop('disabled', true);
+                commentInput.after(
+                    '<span class="comment-loading" style="font-size: 16px; color: #166bc9">Đang gửi...</span>');
+
+                sendComment(commentText, "", 0)
+                    .then(newCommentHtml => {
+                        inputField.val('');
+                        $('#comment').prepend(newCommentHtml);
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            title: 'Lỗi',
+                            text: error,
+                            icon: 'error'
+                        });
+                    })
+                    .finally(() => {
+                        inputField.prop('disabled', false);
+                        $('.comment-loading').remove();
+                    });
+            }
+        })
+
+        $('#comment').on('click', '.reply-btn', function() {
+            $('.reply-input').not($(this).siblings('.reply-input')).hide().find('input').val(
+                '');
+
+            const replyInput = $(this).siblings('.reply-input');
+            replyInput.toggle();
+
+            if (!replyInput.is(':visible')) {
+                replyInput.find('input').val('');
+            }
+        });
+
+        $('#comment').on('keypress', '.reply-area', function(event) {
+            if (event.which === 13) {
+                event.preventDefault();
+
+                const commentId = $(this).data('comment-id');
+                const inputField = $(this);
+                const replyText = inputField.val().trim();
+
+                if (replyText) {
+                    const commentInput = $(this).parent();
+                    inputField.prop('disabled', true);
+                    commentInput.after(
+                        '<span class="comment-loading" style="font-size: 16px; color: #166bc9">Đang gửi...</span>'
+                    );
+
+                    sendComment(replyText, commentId, commentId)
+                        .then(newCommentHtml => {
+                            inputField.val('');
+                            $(`.comment-reply[data-comment-id="${commentId}"]`).append(newCommentHtml);
+                        })
+                        .catch(error => {
+                            Swal.fire({
+                                title: 'Lỗi',
+                                text: error,
+                                icon: 'error'
+                            });
+                        })
+                        .finally(() => {
+                            inputField.prop('disabled', false);
+                            $('.comment-loading').remove();
+                        });
+
+                }
+            }
+        });
     </script>
 
 

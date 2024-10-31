@@ -39,4 +39,18 @@ class CommentService extends BaseService
 
         return $comments;
     }
+
+    /**
+     * Get comments in course
+     *
+     * @param string $combo_slug
+     * @param string $series_slug
+     * @param string $lesson
+     * @param int $userId
+     * @return Comment
+     */
+    public function getCommentsInCourse(string $combo_slug, string $series_slug, string $lesson, int $userId)
+    {
+        return $this->repository->getCommentsInCourse($combo_slug, $series_slug, $lesson, $userId);
+    }
 }
