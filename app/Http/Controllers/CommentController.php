@@ -21,6 +21,7 @@ use Razorpay\Api\Api;
 use Softon\Indipay\Facades\Indipay;
 use Yajra\DataTables\DataTables;
 use \App;
+use Illuminate\Support\Facades\Log;
 
 class CommentController extends Controller
 {
@@ -69,6 +70,7 @@ class CommentController extends Controller
         }catch(Exception $e){
             DB::rollBack();
             // dd($e);
+            Log::error("message: " . $e);
             $data = array('error'=>2, 'message'=>'Đặt câu hỏi thất bại');
             //$data = array('error'=>2, 'message'=>$e);
             return json_encode($data);
