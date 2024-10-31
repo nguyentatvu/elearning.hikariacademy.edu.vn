@@ -49,4 +49,33 @@ class CommentRepository extends BaseRepository
             ->orderBy('comments.updated_at', 'desc')
             ->paginate(15);
     }
+
+    /**
+     * Get Comments in course
+     *
+     * @param string $combo_slug
+     * @param string $series_slug
+     * @param string $lesson
+     * @param int $userId
+     * @return Comment
+     */
+    public function getCommentsInCourse(string $combo_slug, string $series_slug, string $lesson, int $userId)
+    {
+        $comments = $this->model::whereHas('series', function ($query) use ($series_slug) {
+            $query->where('slug', $series_slug);
+        })
+            ->whereHas('comboSeries', function ($query) use ($combo_slug) {
+                $query->where('slug', $combo_slug);
+            })
+            ->whereHas('lesson', function ($query) use ($lesson) {
+                $query->where('id', $lesson);
+            })
+            ->where('user_id', $userId)
+            ->where('parent_id', 0)
+            ->with(['childComments', 'user', 'series', 'comboSeries', 'lesson'])
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        return $comments;
+    }
 }

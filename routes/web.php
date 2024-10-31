@@ -1310,7 +1310,7 @@ Route::post('learning-management/ajaxcheckout', 'StudentLmsController@ajaxchecko
 Route::post('learning-management/razorpaySuccess', 'StudentLmsController@razorpaySuccess');
 
 // comments
-Route::post('comments/add', 'CommentController@store');
+Route::post('comments/add', 'CommentController@store')->name('comment.add');
 
 Route::post('comments/update', 'CommentController@update');
 

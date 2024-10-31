@@ -32,6 +32,7 @@ class CommentController extends Controller
         $rules = ['body'  =>  'required',];
         $this->validate($request, $rules);
         $record = new Comment();
+
         try {
             DB::beginTransaction();
             $lmsseries_id = DB::table('lmsseries')
@@ -63,8 +64,8 @@ class CommentController extends Controller
             DB::commit();
             $data = array('error'=>1,'message' =>'Đặt câu hỏi thành công');
             //$data = array('error'=>1,'message' =>$record);
-            $email = sendEmail('thongbaocomment', array('name'=>'', 'to_email' => 'info@hikariacademy.edu.vn'));
-            return json_encode($data);
+            $email = sendEmail('thongbaocomment', array('name'=>'', 'to_email' => env('TO_NOTIFY_EMAIL')));
+            return json_encode($record);
         }catch(Exception $e){
             DB::rollBack();
             // dd($e);
