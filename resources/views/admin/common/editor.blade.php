@@ -12,4 +12,4 @@
 		});
 </script> -->
 
-<script src="{{JS}}plugins/ckeditorv411/ckeditor.js"></script>
+<script src="/public/assets/admin/js/plugins/ckeditor/ckeditor.js"></script>
