@@ -995,7 +995,7 @@ Route::group(['prefix' => 'messages'], function () {
 
 /////////////////////
 
-Route::get('site/{slug?}', 'SiteController@sitePages');
+Route::get('site/{slug?}', 'SiteController@sitePages')->name('site_pages');
 
 // privacy-policy
 
