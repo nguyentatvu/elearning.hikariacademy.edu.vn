@@ -165,13 +165,14 @@ class LmsSeriesComboRepository extends BaseRepository
      */
     public function getAllSeriesByType($type)
     {
-        return $this->model::where('type', $type)
+        return $this->model::query()
+            ->where('type', $type)
             ->where('delete_status', 0)
             ->get();
     }
 
     /**
-     * Get all series by type exclude combo series id
+     * Get all paid series by type exclude combo series id
      *
      * @param $type
      * @param $comboSeriesId
@@ -187,31 +188,40 @@ class LmsSeriesComboRepository extends BaseRepository
     }
 
     /**
+     * Get all series by type exclude combo series id
+     *
+     * @param $type
+     * @param $comboSeriesId
+     * @return mixed
+     */
+    public function getAllSeriesByTypeExcludeComboId($type, $comboSeriesId)
+    {
+        return $this->model::where('type', $type)
+            ->where('id', '<>', $comboSeriesId)
+            ->where('delete_status', 0)
+            ->get();
+    }
+
+    /**
      * Get single series combo by series id
      *
      * @param string $seriesId
-     * @param string $userId
      * @return mixed
      */
-    public function getSingleSeriesComboBySeriesId(string $seriesId, string $userId) {
-        return $this->model::query()
-            ->join('payment_method', 'payment_method.item_id', '=', 'lmsseries_combo.id')
-            ->select('lmsseries_combo.*')
-            ->where('lmsseries_combo.delete_status', 0)
-            ->where('payment_method.user_id', $userId)
-            ->where('payment_method.status', PaymentMethod::PAYMENT_SUCCESS)
-            ->where(function ($query) use ($seriesId) {
-                $query->where('n1', $seriesId)
-                    ->orWhere('n2', $seriesId)
-                    ->orWhere('n3', $seriesId)
-                    ->orWhere('n4', $seriesId)
-                    ->orWhere('n5', $seriesId);
-            })->whereRaw('(
-                (n1 is not null) +
-                (n2 is not null) +
-                (n3 is not null) +
-                (n4 is not null) +
-                (n5 is not null)) = 1')
+    public function getSingleSeriesComboBySeriesId(string $seriesId)
+    {
+        return $this->model::where(function ($query) use ($seriesId) {
+            $query->where('n1', $seriesId)
+                ->orWhere('n2', $seriesId)
+                ->orWhere('n3', $seriesId)
+                ->orWhere('n4', $seriesId)
+                ->orWhere('n5', $seriesId);
+        })->whereRaw('(
+            (n1 is not null) +
+            (n2 is not null) +
+            (n3 is not null) +
+            (n4 is not null) +
+            (n5 is not null)) = 1')
             ->first();
     }
 }

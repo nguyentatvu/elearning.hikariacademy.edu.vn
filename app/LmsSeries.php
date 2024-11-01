@@ -101,4 +101,10 @@ class LmsSeries extends Model
     {
         return $this->belongsToMany(User::class, 'lmsseries_teacher', 'lmsseries_id', 'teacher_id');
     }
+
+    public function getHasTrialContentAttribute() {
+        return $this->lmscontents
+            ->where('el_try', 1)
+            ->count();
+    }
 }

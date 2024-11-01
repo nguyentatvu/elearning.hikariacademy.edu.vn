@@ -295,30 +295,34 @@ class UserService extends BaseService
      * Update series views history
      *
      * @param array $historyArray
-     * @param string $seriesId
+     * @param mixed $seriesId
      * @param string $userId
      * @return void
      */
-    public function updateSeriesViewsHistory(array $historyArray, string $seriesId, ?string $userId = '')
-    {
+    public function updateSeriesViewsHistory(array $historyArray, $seriesId, ?string $userId = '') {
         $currentTime = date('Y-m-d H:i:s');
-        $newItem = [
-            'order' => 1,
-            'series_id' => $seriesId,
-            'viewed_time' => $currentTime
-        ];
 
-        $existingIndex = array_search($seriesId, array_column($historyArray, 'series_id'));
+        $seriesIds = is_array($seriesId) ? $seriesId : [$seriesId];
 
-        if ($existingIndex !== false) {
-            unset($historyArray[$existingIndex]);
+        foreach ($seriesIds as $id) {
+            $newItem = [
+                'order' => 1,
+                'series_id' => $id,
+                'viewed_time' => $currentTime
+            ];
+
+            $existingIndex = array_search($id, array_column($historyArray, 'series_id'));
+
+            if ($existingIndex !== false) {
+                unset($historyArray[$existingIndex]);
+            }
+
+            foreach ($historyArray as &$item) {
+                $item['order']++;
+            }
+
+            array_unshift($historyArray, $newItem);
         }
-
-        foreach ($historyArray as &$item) {
-            $item['order']++;
-        }
-
-        array_unshift($historyArray, $newItem);
 
         foreach ($historyArray as $index => &$item) {
             $item['order'] = $index + 1;

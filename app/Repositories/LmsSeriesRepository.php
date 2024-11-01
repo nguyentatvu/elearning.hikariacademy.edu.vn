@@ -66,7 +66,7 @@ class LmsSeriesRepository extends BaseRepository
      * @param $seriesCombo
      * @return void
      */
-    public function getSeriesListOfSeriesComboSlug($seriesCombo) {
+    public function getSeriesListOfSeriesCombo($seriesCombo) {
         $seriesIdList = [
             $seriesCombo->n1,
             $seriesCombo->n2,

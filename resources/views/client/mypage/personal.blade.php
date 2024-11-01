@@ -193,7 +193,15 @@
                                         src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $recommended_series->image) }}" />
                                     <div class="course-card-body">
                                         <h5 class="course-card-title">{{ $recommended_series->title }}</h5>
-                                        <p class="course-card-price">{{ formatCurrencyVND($recommended_series->cost) }}
+                                        <div class="d-flex justify-content-between align-items-center card-price-container">
+                                            <p class="course-card-price mb-0">{{ $recommended_series->cost == 0 ? 'Miễn phí' : formatCurrencyVND($recommended_series->cost) }}</p>
+                                            @if ($recommended_series->seriesList[0]->hasTrialContent && !$recommended_series->checkMultipleCombo && !$recommended_series->valid_payment)
+                                                <button class="trial-btn btn py-1"
+                                                    onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'">
+                                                    Học thử
+                                                </button>
+                                            @endif
+                                        </div>
                                         </p>
                                         <div class="course-card-description line-clamp-3">{!! $recommended_series->short_description !!}</div>
                                         <div class="course-card-teacher text-muted w-100 mb-1">{!! $recommended_series->description['teacher_description'] ?? '' !!}
@@ -219,14 +227,21 @@
                                         </div>
                                         @if (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) > 1)
                                             <button class="btn btn-primary w-100 mt-3"
-                                                onclick="location.href='{{ route('mypage.courses') }}'">
+                                                onclick="location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $recommended_series->slug]) . '?series_action=scrollToList' }}'">
                                                 Học ngay
                                             </button>
-                                        @elseif (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) == 1)
-                                            <button class="btn btn-primary w-100 mt-3"
-                                                onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'">
-                                                Học ngay
-                                            </button>
+                                        @elseif ($recommended_series->cost == 0 || (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) == 1))
+                                            @if (!$recommended_series->checkAllSeriesRoadmapOfSeriesComboChosen($roadmap_chosen_list) && $recommended_series->cost !== 0)
+                                                <button class="btn btn-primary w-100 mt-3"
+                                                    onclick="location.href='{{ route('series.introduction-detail', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) . '?series_action=openRoadmapModal' }}'">
+                                                    Học ngay
+                                                </button>
+                                            @else
+                                                <button class="btn btn-primary w-100 mt-3"
+                                                    onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'">
+                                                    Học ngay
+                                                </button>
+                                            @endif
                                         @elseif (Auth::check())
                                             <button class="btn btn-primary w-100 mt-3"
                                                 onclick="location.href='{{ route('payments.lms', $recommended_series->slug) }}'">
@@ -292,6 +307,7 @@
                 slidesPerView: 1,
                 spaceBetween: 5,
                 loop: true,
+                allowTouchMove: false,
                 autoplay: {
                     delay: 5000,
                     disableOnInteraction: false,

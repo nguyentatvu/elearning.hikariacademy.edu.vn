@@ -233,9 +233,14 @@
                                     src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $learning_series->image) }}" />
                                 <div class="course-card-body">
                                     <h5 class="course-card-title">{{ $learning_series->title }}</h5>
-                                    <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-flex justify-content-between align-items-center card-price-container">
                                         <p class="course-card-price mb-0">{{ $learning_series->cost == 0 ? 'Miễn phí' : formatCurrencyVND($learning_series->cost) }}</p>
-                                        <button class="trial-btn btn">Học thử</button>
+                                        @if ($learning_series->seriesList[0]->hasTrialContent && !$learning_series->checkMultipleCombo && !$learning_series->valid_payment)
+                                            <button class="trial-btn btn py-1"
+                                                onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $learning_series->slug, 'slug' => $learning_series->seriesList[0]->slug]) }}'">
+                                                Học thử
+                                            </button>
+                                        @endif
                                     </div>
                                     <div class="course-card-description line-clamp-3">{!! $learning_series->short_description !!}</div>
                                     <div class="course-card-teacher text-muted w-100 mb-1">{!! $learning_series->description['teacher_description'] ?? '' !!}</div>
@@ -264,7 +269,7 @@
                                             Học ngay
                                         </button>
                                     @elseif ($learning_series->cost == 0 || (Auth::check() && $learning_series->valid_payment && count($learning_series->seriesList) == 1))
-                                        @if (!$learning_series->checkAllSeriesRoadmapOfSeriesComboChosen($roadmap_chosen_list))
+                                        @if (!$learning_series->checkAllSeriesRoadmapOfSeriesComboChosen($roadmap_chosen_list) && $learning_series->cost !== 0)
                                             <button class="btn btn-primary w-100 mt-3"
                                                 onclick="location.href='{{ route('series.introduction-detail', ['combo_slug' => $learning_series->slug, 'slug' => $learning_series->seriesList[0]->slug]) . '?series_action=openRoadmapModal' }}'">
                                                 Học ngay
@@ -309,7 +314,15 @@
                                     src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $exam_series->image) }}" />
                                 <div class="course-card-body">
                                     <h5 class="course-card-title">{{ $exam_series->title }}</h5>
-                                    <p class="course-card-price">{{ formatCurrencyVND($exam_series->cost) }}</p>
+                                    <div class="d-flex justify-content-between align-items-center card-price-container">
+                                        <p class="course-card-price mb-0">{{ $exam_series->cost == 0 ? 'Miễn phí' : formatCurrencyVND($exam_series->cost) }}</p>
+                                        @if ($exam_series->seriesList[0]->hasTrialContent && !$exam_series->checkMultipleCombo && !$exam_series->valid_payment)
+                                            <button class="trial-btn btn py-1"
+                                                onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $exam_series->slug, 'slug' => $exam_series->seriesList[0]->slug]) }}'">
+                                                Học thử
+                                            </button>
+                                        @endif
+                                    </div>
                                     <div class="course-card-description line-clamp-3">{!! $exam_series->short_description !!}</div>
                                     <div class="course-card-teacher text-muted w-100 mb-1">{!! $exam_series->description['teacher_description'] ?? '' !!}</div>
                                     <div class="d-flex align-items-center text-primary-color mt-3">
@@ -750,6 +763,7 @@
                 slidesPerView: 1,
                 spaceBetween: 5,
                 loop: true,
+                allowTouchMove: false,
                 autoplay: {
                     delay: 5000,
                     disableOnInteraction: false,
@@ -776,10 +790,11 @@
                 slidesPerView: 1,
                 spaceBetween: 5,
                 loop: true,
-                autoplay: {
-                    delay: 5000,
-                    disableOnInteraction: false,
-                },
+                allowTouchMove: false,
+                // autoplay: {
+                //     delay: 5000,
+                //     disableOnInteraction: false,
+                // },
                 navigation: {
                     nextEl: '.swiper-button-next-1',
                     prevEl: '.swiper-button-prev-1',
@@ -800,6 +815,7 @@
         const setEqualSeriesCardHeight = (swiperContainerClass) => {
             let maxTeacherDescripitonHeight = 0;
             let maxShortDescriptionHeight = 0;
+            let maxPriceHeight = 0;
 
             $(swiperContainerClass).find('.course-card-teacher').each(function() {
                 let currentHeight = $(this).outerHeight();
@@ -815,9 +831,16 @@
                 }
             });
 
+            $(swiperContainerClass).find('.card-price-container').each(function() {
+                let currentHeight = $(this).outerHeight();
+                if (currentHeight > maxPriceHeight) {
+                    maxPriceHeight = currentHeight;
+                }
+            });
+
             $(swiperContainerClass).find('.course-card-teacher').css('min-height', maxTeacherDescripitonHeight + 'px');
-            $(swiperContainerClass).find('.course-card-description').css('min-height', maxShortDescriptionHeight +
-                'px');
+            $(swiperContainerClass).find('.course-card-description').css('min-height', maxShortDescriptionHeight + 'px');
+            $(swiperContainerClass).find('.card-price-container').css('min-height', maxPriceHeight + 'px');
         }
 
         const setCourseBoxRightDisplay = (swiperContainerClass) => {

@@ -138,6 +138,6 @@ class LmsSeriesService extends BaseService
     public function getSeriesListOfSeriesComboSlug(string $seriesComboSlug) {
         $seriesCombo = $this->getLmsSeriesComboService()->getByCondition('slug', $seriesComboSlug);
 
-        return $this->repository->getSeriesListOfSeriesComboSlug($seriesCombo);
+        return $this->repository->getSeriesListOfSeriesCombo($seriesCombo);
     }
 }

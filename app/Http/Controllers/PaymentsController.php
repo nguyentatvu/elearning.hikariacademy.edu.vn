@@ -2416,19 +2416,19 @@ try_again:
             $seriesCombo = $this->lmsSeriesComboService->getByCondition('id', $record->item_id);
             $purchasedSeriesList = $this->lmsSeriesService->getSeriesListOfSeriesComboSlug($seriesCombo->slug);
             $userTransfering = $this->userService->findById($record->user_id);
-            foreach ($purchasedSeriesList as $series) {
-                $this->userService->updateSeriesViewsHistory(
-                    $userTransfering->series_views_history ?? [],
-                    $series->id,
-                    $userTransfering->id
-                );
 
-                $this->userRoadmapService->insert([
+            foreach ($purchasedSeriesList as $series) {
+                $this->userRoadmapService->updateOrCreate([
                     'user_id' => $record->user_id,
                     'lmsseries_id' => $series->id,
-                ]);
+                ], []);
             }
 
+            $this->userService->updateSeriesViewsHistory(
+                $userTransfering->series_views_history ?? [],
+                $purchasedSeriesList->pluck('id')->toArray(),
+                $userTransfering->id
+            );
 
             DB::commit();
             $hocvien = User::find($record->user_id);
@@ -2859,16 +2859,16 @@ try_again:
                     ]);
                     $this->userService->updatePointHistory(['used' => $payment_method->redeem_point ?? 0]);
                     foreach ($purchasedSeriesList as $series) {
-                        $this->userService->updateSeriesViewsHistory(
-                            Auth::user()->series_views_history ?? [],
-                            $series->id
-                        );
-
-                        $this->userRoadmapService->insert([
+                        $this->userRoadmapService->updateOrCreate([
                             'user_id' => Auth::id(),
                             'lmsseries_id' => $series->id,
                         ]);
                     }
+
+                    $this->userService->updateSeriesViewsHistory(
+                        Auth::user()->series_views_history ?? [],
+                        $purchasedSeriesList->pluck('id')->toArray()
+                    );
 
                     $message_success = "Bạn đã mua {$seriesCombo->title} thành công";
 					flash('Mua khoá học thành công!', $message_success, 'success');

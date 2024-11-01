@@ -1177,7 +1177,7 @@ class LmsSeriesController extends Controller
             abort(404);
         }
         $data['seriesCombo'] = $this->lmsSeriesComboService->getSeriesComboBySlugWithSeries($combo_slug);
-        $data['other_combo_series'] = $this->lmsSeriesComboService->getAllPaidSeriesByTypeExcludeComboId(
+        $data['other_combo_series'] = $this->lmsSeriesComboService->getAllSeriesByTypeExcludeComboId(
             $data['seriesCombo']->type,
             $data['seriesCombo']->id
         );

@@ -65,25 +65,26 @@ class StudentLmsController extends Controller
         $this->paymentMethodService = $paymentMethodService;
         $this->userService = $userService;
         $this->userRoadmapService = $userRoadmapService;
+        $this->commentService = $commentService;
     }
 
     /**
      * Check chosen roadmap
      *
-     * @param array $params
      * @return boolean
      */
-    private function checkRoadmapChosen(array $params) {
+    private function checkRoadmapChosen() {
         $chosenRoadmapList = $this->userRoadmapService->userChosenRoadmapList(Auth::id() ?? -1);
         $series = $this->prepContent['series'];
 
         if (
             isset($chosenRoadmapList[$series->id]) &&
             $chosenRoadmapList[$series->id] == false &&
-            $this->prepContent['is_valid_payment']
+            $this->prepContent['is_valid_payment'] &&
+            !$this->prepContent['is_free_series']
         ) {
             flash('Thông báo', 'Bạn phải chọn lộ trình trước khi học!', 'error');
-            throw new RedirectException(redirect()->back());
+            throw new RedirectException(redirect()->to('/'));
         }
     }
 
@@ -99,7 +100,6 @@ class StudentLmsController extends Controller
 
             flash($message['title'], $message['text'], $message['type']);
         }
-        $this->commentService = $commentService;
     }
 
     /**

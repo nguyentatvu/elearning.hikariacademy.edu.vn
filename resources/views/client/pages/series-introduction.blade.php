@@ -182,13 +182,13 @@
                                 </div>
                                 <span class="fw-light short-description">{!! $itemSeries->short_description !!}</span>
                                 <div class="text-center mt-auto">
-                                    @if ($roadmap_chosen_list[$itemSeries->id])
+                                    @if ($roadmap_chosen_list[$itemSeries->id] && $isValidPayment)
                                         <button class="btn bg-secondary text-white btn-lg px-2 py-1 rounded-pill shadow-sm" style="min-width: 260px;"
                                             onclick="window.location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $seriesCombo->slug, 'slug' => $itemSeries->slug]) }}'">
                                             <i class="bi bi-play-circle-fill me-2"></i>
                                             Học ngay
                                         </button>
-                                    @else
+                                    @elseif ($isValidPayment)
                                         <button class="btn bg-secondary text-white btn-lg px-2 py-1 rounded-pill shadow-sm"
                                             onclick="openRoadmapSelectionModal('{{ $itemSeries->id }}')">
                                             <i class="bi bi-play-circle-fill me-2"></i>
@@ -241,7 +241,15 @@
                                         src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $recommended_series->image) }}" />
                                     <div class="course-card-body">
                                         <h5 class="course-card-title">{{ $recommended_series->title }}</h5>
-                                        <p class="course-card-price">{{ formatCurrencyVND($recommended_series->cost) }}
+                                        <div class="d-flex justify-content-between align-items-center card-price-container">
+                                            <p class="course-card-price mb-0">{{ $recommended_series->cost == 0 ? 'Miễn phí' : formatCurrencyVND($recommended_series->cost) }}</p>
+                                            @if ($recommended_series->seriesList[0]->hasTrialContent && !$recommended_series->checkMultipleCombo && !$recommended_series->valid_payment)
+                                                <button class="trial-btn btn py-1"
+                                                    onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'">
+                                                    Học thử
+                                                </button>
+                                            @endif
+                                        </div>
                                         </p>
                                         <div class="course-card-description line-clamp-3">{!! $recommended_series->short_description !!}</div>
                                         <div class="course-card-teacher text-muted w-100 mb-1">{!! $recommended_series->description['teacher_description'] ?? '' !!}
@@ -271,7 +279,7 @@
                                                 Học ngay
                                             </button>
                                         @elseif ($recommended_series->cost == 0 || (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) == 1))
-                                            @if (!$recommended_series->checkAllSeriesRoadmapOfSeriesComboChosen($roadmap_chosen_list))
+                                            @if (!$recommended_series->checkAllSeriesRoadmapOfSeriesComboChosen($roadmap_chosen_list) && $recommended_series->cost !== 0)
                                                 <button class="btn btn-primary w-100 mt-3"
                                                     onclick="location.href='{{ route('series.introduction-detail', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) . '?series_action=openRoadmapModal' }}'">
                                                     Học ngay
@@ -372,6 +380,7 @@
                 slidesPerView: 1,
                 spaceBetween: 20,
                 loop: true,
+                allowTouchMove: false,
                 autoplay: {
                     delay: 5000,
                     disableOnInteraction: false,
@@ -396,6 +405,7 @@
         const setEqualSeriesCardHeight = () => {
             let maxTeacherDescripitonHeight = 0;
             let maxShortDescriptionHeight = 0;
+            let maxPriceHeight = 0;
 
             $('.course-card-teacher').each(function() {
                 let currentHeight = $(this).outerHeight();
@@ -411,8 +421,16 @@
                 }
             });
 
+            $('.card-price-container').each(function() {
+                let currentHeight = $(this).outerHeight();
+                if (currentHeight > maxPriceHeight) {
+                    maxPriceHeight = currentHeight;
+                }
+            });
+
             $('.course-card-teacher').css('min-height', maxTeacherDescripitonHeight + 'px');
             $('.course-card-description').css('min-height', maxShortDescriptionHeight + 'px');
+            $('.card-price-container').css('min-height', maxPriceHeight + 'px');
         }
 
         const setCourseBoxRightDisplay = () => {
