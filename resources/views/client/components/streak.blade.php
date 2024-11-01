@@ -556,7 +556,7 @@
                         <div class="calendar-header">
                             <!-- Buttons to navigate between months -->
                             <button id="prevMonth"><i class="bi bi-chevron-left"></i></button>
-                            <span id="currentMonth">Tháng 10/2024</span>
+                            <span id="currentMonth"></span>
                             <button id="nextMonth"><i class="bi bi-chevron-right"></i></button>
                         </div>
                         <table class="table-calendar">
@@ -620,7 +620,7 @@
                 $('.streak-number').addClass('animate__animated animate__fadeInUp');
             }, 2000); // Adjust timing if necessary
 
-            let currentMonth = new Date(2024, 9); // Start from October 2024
+            let currentMonth = new Date();
             const today = new Date(); // Current date
 
             function renderCalendar() {
