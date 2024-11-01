@@ -19,6 +19,7 @@ use App\Services\LmsSeriesComboService;
 use App\Services\LmsSeriesService;
 use App\Services\LmsStudentViewService;
 use App\Services\PaymentMethodService;
+use App\Services\UserRoadmapService;
 use App\Services\UserService;
 use Carbon\Carbon;
 use Exception;
@@ -44,6 +45,7 @@ class StudentLmsController extends Controller
     private $lmsSeriesComboService;
     private $paymentMethodService;
     private $userService;
+    private $userRoadmapService;
     private $commentService;
 
     public function __construct(
@@ -53,6 +55,7 @@ class StudentLmsController extends Controller
         LmsSeriesComboService $lmsSeriesComboService,
         PaymentMethodService $paymentMethodService,
         UserService $userService,
+        UserRoadmapService $userRoadmapService,
         CommentService $commentService
     ) {
         $this->lmsContentService = $lmsContentService;
@@ -61,7 +64,42 @@ class StudentLmsController extends Controller
         $this->lmsSeriesComboService = $lmsSeriesComboService;
         $this->paymentMethodService = $paymentMethodService;
         $this->userService = $userService;
+        $this->userRoadmapService = $userRoadmapService;
         $this->commentService = $commentService;
+    }
+
+    /**
+     * Check chosen roadmap
+     *
+     * @return boolean
+     */
+    private function checkRoadmapChosen() {
+        $chosenRoadmapList = $this->userRoadmapService->userChosenRoadmapList(Auth::id() ?? -1);
+        $series = $this->prepContent['series'];
+
+        if (
+            isset($chosenRoadmapList[$series->id]) &&
+            $chosenRoadmapList[$series->id] == false &&
+            $this->prepContent['is_valid_payment'] &&
+            !$this->prepContent['is_free_series']
+        ) {
+            flash('Thông báo', 'Bạn phải chọn lộ trình trước khi học!', 'error');
+            throw new RedirectException(redirect()->to('/'));
+        }
+    }
+
+    /**
+     * Tranfer flash message
+     *
+     * @param array $params
+     * @return void
+     */
+    private function transferFlashMessage($params) {
+        if (session()->has('flash_message') && $params['stt'] === '') {
+            $message = session()->get('flash_message');
+
+            flash($message['title'], $message['text'], $message['type']);
+        }
     }
 
     /**
@@ -356,8 +394,10 @@ class StudentLmsController extends Controller
     {
         $params = compact('combo_slug', 'slug', 'stt');
 
+        $this->transferFlashMessage($params);
         $this->checkValidURL($params);
         $this->checkValidPayment($params);
+        $this->checkRoadmapChosen($params);
         $this->saveStudentView($stt);
         $this->getStudentView();
         $this->prepareContentList($params);

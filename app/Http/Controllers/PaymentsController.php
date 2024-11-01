@@ -21,9 +21,11 @@ use Yajra\DataTables\DataTables;
 use \App;
 use App\Logger;
 use App\Services\CoinRechargePackageService;
+use App\Services\LmsSeriesComboService;
 use App\Services\LmsSeriesService;
 use App\Services\PaymentMethodService;
 use App\Services\PaymentService;
+use App\Services\UserRoadmapService;
 use App\Services\UserService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -36,21 +38,28 @@ class PaymentsController extends Controller
     private $paymentMethodService;
     private $userService;
     private $lmsSeriesService;
+    private $lmsSeriesComboService;
+    private $userRoadmapService;
 
     public function __construct(
         CoinRechargePackageService $coinRechargeService,
         PaymentService $paymentService,
         PaymentMethodService $paymentMethodService,
         UserService $userService,
-        LmsSeriesService $lmsSeriesService
+        LmsSeriesService $lmsSeriesService,
+        LmsSeriesComboService $lmsSeriesComboService,
+        UserRoadmapService $userRoadmapService
     )
     {
         $this->middleware('auth');
+
         $this->coinRechargeService = $coinRechargeService;
         $this->paymentMethodService = $paymentMethodService;
         $this->paymentService = $paymentService;
         $this->userService = $userService;
         $this->lmsSeriesService = $lmsSeriesService;
+        $this->lmsSeriesComboService = $lmsSeriesComboService;
+        $this->userRoadmapService = $userRoadmapService;
     }
     public function testPayments(Request $request, $slug)
     {
@@ -2404,6 +2413,23 @@ try_again:
                 $this->userService->updatePointHistory(['used' => $record->redeem_point], $record->user_id);
             }
 
+            $seriesCombo = $this->lmsSeriesComboService->getByCondition('id', $record->item_id);
+            $purchasedSeriesList = $this->lmsSeriesService->getSeriesListOfSeriesComboSlug($seriesCombo->slug);
+            $userTransfering = $this->userService->findById($record->user_id);
+
+            foreach ($purchasedSeriesList as $series) {
+                $this->userRoadmapService->updateOrCreate([
+                    'user_id' => $record->user_id,
+                    'lmsseries_id' => $series->id,
+                ], []);
+            }
+
+            $this->userService->updateSeriesViewsHistory(
+                $userTransfering->series_views_history ?? [],
+                $purchasedSeriesList->pluck('id')->toArray(),
+                $userTransfering->id
+            );
+
             DB::commit();
             $hocvien = User::find($record->user_id);
 			$log = new Logger(env('MAIL_LOG_PATH'));
@@ -2819,7 +2845,7 @@ try_again:
             $payment_method = $this->paymentMethodService->getByCondition('orderId', $orderId);
             if ($secureHash == $vnp_SecureHash) {
 				if ($_GET['vnp_ResponseCode'] == '00') {
-					$record         = LmsSeriesCombo::getRecordWithSlug($slug);
+                    $seriesCombo = $this->lmsSeriesComboService->getSeriesComboBySlugWithSeries($slug);
                     $purchasedSeriesList = $this->lmsSeriesService->getSeriesListOfSeriesComboSlug($slug);
                     $payment_method->update(
                         ['status' => PaymentMethod::PAYMENT_SUCCESS]
@@ -2833,19 +2859,30 @@ try_again:
                     ]);
                     $this->userService->updatePointHistory(['used' => $payment_method->redeem_point ?? 0]);
                     foreach ($purchasedSeriesList as $series) {
-                        $this->userService->updateSeriesViewsHistory(
-                            Auth::user()->series_views_history ?? [],
-                            $series->id
-                        );
+                        $this->userRoadmapService->updateOrCreate([
+                            'user_id' => Auth::id(),
+                            'lmsseries_id' => $series->id,
+                        ]);
                     }
 
-					$message_success = "Bạn đã mua {$record->title} thành công";
+                    $this->userService->updateSeriesViewsHistory(
+                        Auth::user()->series_views_history ?? [],
+                        $purchasedSeriesList->pluck('id')->toArray()
+                    );
+
+                    $message_success = "Bạn đã mua {$seriesCombo->title} thành công";
 					flash('Mua khoá học thành công!', $message_success, 'success');
 
-					if ($record->type == 1) {
-						return redirect('/home');
-					}
-					return redirect('/home');
+                    if (count($seriesCombo->seriesList) > 1) {
+                        $redirect_url = route('series.introduction-detail-combo', ['combo_slug' => $slug]);
+                    } else {
+                        $redirect_url = route('series.introduction-detail', [
+                            'combo_slug' => $slug,
+                            'slug' => $seriesCombo->seriesList[0]->slug,
+                        ]);
+                    }
+
+					return redirect($redirect_url ?? '/home');
 				} else {
                     // Returning the redeemed points to reward points if transaction is failed
                     $payment_method->update(

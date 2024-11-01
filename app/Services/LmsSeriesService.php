@@ -10,13 +10,16 @@ class LmsSeriesService extends BaseService
 {
     private $paymentMethodService;
     private $lmsSeriesComboService;
+    private $userRoadmapService;
 
     public function __construct(
         LmsSeriesRepository $repository,
-        PaymentMethodService $paymentMethodService
+        PaymentMethodService $paymentMethodService,
+        UserRoadmapService $userRoadmapService
     ) {
         parent::__construct($repository);
         $this->paymentMethodService = $paymentMethodService;
+        $this->userRoadmapService = $userRoadmapService;
     }
 
     /**
@@ -87,13 +90,15 @@ class LmsSeriesService extends BaseService
         $seriesCombo = $this->getLmsSeriesComboService()->getMySeries($user->id, LmsSeries::COURSE_AND_EXAM);
         $seriesCombo = collect($seriesCombo->items());
 
+        $userRoadmaps = $this->userRoadmapService->getAllByConditions(['user_id' => $user->id]);
         // Create a map from 'series_id' to view info
         $viewMap = collect($viewHistory)->keyBy('series_id');
 
-        return $series->map(function ($seriesItem) use ($viewMap, $seriesCombo) {
+        return $series->map(function ($seriesItem) use ($viewMap, $seriesCombo, $userRoadmaps, $user) {
             $viewInfo = $viewMap->get($seriesItem->id);
             $seriesItem->viewed_time = $viewInfo['viewed_time'] ?? null;
 
+            $userRoadmapItem = $userRoadmaps->where('lmsseries_id', $seriesItem->id)->first();
             $seriesComboItem = $seriesCombo->where('series_id', $seriesItem->id)->first();
             if (!$seriesComboItem) {
                 return null;
@@ -106,6 +111,8 @@ class LmsSeriesService extends BaseService
                 $seriesItem->progressPercent = (int) (($seriesComboItem->completed_lessons / $seriesComboItem->total_lessons) * 100);
             }
             $seriesItem->combo_slug = $seriesComboItem->combo_slug ?? '';
+            $seriesItem->roadmapChosen = ($userRoadmapItem && $userRoadmapItem->duration_months != null) ? true : false;
+            $seriesItem->seriesCombo = $seriesComboItem;
 
             return $seriesItem;
         })->sortBy('order')->values()->filter();
@@ -131,6 +138,6 @@ class LmsSeriesService extends BaseService
     public function getSeriesListOfSeriesComboSlug(string $seriesComboSlug) {
         $seriesCombo = $this->getLmsSeriesComboService()->getByCondition('slug', $seriesComboSlug);
 
-        return $this->repository->getSeriesListOfSeriesComboSlug($seriesCombo);
+        return $this->repository->getSeriesListOfSeriesCombo($seriesCombo);
     }
 }

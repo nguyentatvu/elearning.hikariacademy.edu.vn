@@ -131,7 +131,7 @@ class LmsSeriesComboService extends BaseService
     }
 
     /**
-     * Get all series by type exclude combo series id
+     * Get all paid series by type exclude combo series id
      *
      * @param $type
      * @param $comboSeriesId
@@ -140,43 +140,22 @@ class LmsSeriesComboService extends BaseService
     public function getAllPaidSeriesByTypeExcludeComboId($type, $comboSeriesId)
     {
         $allPaidComboSeries = $this->repository->getAllPaidSeriesByTypeExcludeComboId($type, $comboSeriesId);
-        $allPaidComboSeries->map(function ($item) {
-            $seriesIdList = [];
+        $this->addInfoToSeriesComboList($allPaidComboSeries);
 
-            for ($i = 1; $i <= 5; $i++) {
-                if (!is_null($item->{'n' . $i})) {
-                    $seriesIdList[] = $item->{'n' . $i};
-                }
-            }
+        return $allPaidComboSeries;
+    }
 
-            if (count($seriesIdList) == 1) {
-                $item->content_count = $this->getLmsContentService()->getContentCountBySeries($seriesIdList[0]);
-                $item->chapter_count = $this->getLmsContentService()->getChapterCountBySeries($seriesIdList[0]);
-                $item->seriesList = [$this->getLmsSeriesService()->findById($seriesIdList[0])];
-            } elseif (count($seriesIdList) > 1) {
-                $chapterCount = 0;
-                $contentCount = 0;
-                $seriesList = [];
-
-                foreach ($seriesIdList as $seriesId) {
-                    $chapterCount += $this->getLmsContentService()->getChapterCountBySeries($seriesId);
-                    $contentCount += $this->getLmsContentService()->getContentCountBySeries($seriesId);
-                    $seriesList[] = $this->getLmsSeriesService()->findById($seriesId);
-                }
-
-                $item->content_count = $contentCount;
-                $item->chapter_count = $chapterCount;
-                $item->seriesList = $seriesList;
-            }
-
-            if (Auth::check()) {
-                $item->valid_payment = $this->paymentMethodService->checkSerieValidity(Auth::user()->id, $item->id);
-            } else {
-                $item->valid_payment = false;
-            }
-
-            return $item;
-        });
+    /**
+     * Get all series by type exclude combo series id
+     *
+     * @param $type
+     * @param $comboSeriesId
+     * @return mixed
+     */
+    public function getAllSeriesByTypeExcludeComboId($type, $comboSeriesId)
+    {
+        $allPaidComboSeries = $this->repository->getAllSeriesByTypeExcludeComboId($type, $comboSeriesId);
+        $this->addInfoToSeriesComboList($allPaidComboSeries);
 
         return $allPaidComboSeries;
     }
@@ -190,43 +169,7 @@ class LmsSeriesComboService extends BaseService
     public function getAllPaidSeriesByType($type)
     {
         $allPaidComboSeries = $this->repository->getAllPaidSeriesByType($type);
-        $allPaidComboSeries->map(function ($item) {
-            $seriesIdList = [];
-
-            for ($i = 1; $i <= 5; $i++) {
-                if (!is_null($item->{'n' . $i})) {
-                    $seriesIdList[] = $item->{'n' . $i};
-                }
-            }
-
-            if (count($seriesIdList) == 1) {
-                $item->content_count = $this->getLmsContentService()->getContentCountBySeries($seriesIdList[0]);
-                $item->chapter_count = $this->getLmsContentService()->getChapterCountBySeries($seriesIdList[0]);
-                $item->seriesList = [$this->getLmsSeriesService()->findById($seriesIdList[0])];
-            } elseif (count($seriesIdList) > 1) {
-                $chapterCount = 0;
-                $contentCount = 0;
-                $seriesList = [];
-
-                foreach ($seriesIdList as $seriesId) {
-                    $chapterCount += $this->getLmsContentService()->getChapterCountBySeries($seriesId);
-                    $contentCount += $this->getLmsContentService()->getContentCountBySeries($seriesId);
-                    $seriesList[] = $this->getLmsSeriesService()->findById($seriesId);
-                }
-
-                $item->content_count = $contentCount;
-                $item->chapter_count = $chapterCount;
-                $item->seriesList = $seriesList;
-            }
-
-            if (Auth::check()) {
-                $item->valid_payment = $this->paymentMethodService->checkSerieValidity(Auth::user()->id, $item->id);
-            } else {
-                $item->valid_payment = false;
-            }
-
-            return $item;
-        });
+        $this->addInfoToSeriesComboList($allPaidComboSeries);
 
         return $allPaidComboSeries;
     }
@@ -239,8 +182,21 @@ class LmsSeriesComboService extends BaseService
      */
     public function getAllSeriesByType($type)
     {
-        $allPaidComboSeries = $this->repository->getAllSeriesByType($type);
-        $allPaidComboSeries->map(function ($item) {
+        $allComboSeries = $this->repository->getAllSeriesByType($type);
+        $this->addInfoToSeriesComboList($allComboSeries);
+
+        return $allComboSeries;
+    }
+
+    /**
+     * Add info to series combo list
+     *
+     * @param $seriesComboList
+     * @return void
+     */
+    private function addInfoToSeriesComboList(&$seriesComboList)
+    {
+        $seriesComboList->map(function ($item) {
             $seriesIdList = [];
 
             for ($i = 1; $i <= 5; $i++) {
@@ -252,7 +208,7 @@ class LmsSeriesComboService extends BaseService
             if (count($seriesIdList) == 1) {
                 $item->content_count = $this->getLmsContentService()->getContentCountBySeries($seriesIdList[0]);
                 $item->chapter_count = $this->getLmsContentService()->getChapterCountBySeries($seriesIdList[0]);
-                $item->seriesList = [$this->getLmsSeriesService()->findById($seriesIdList[0])];
+                $item->seriesList = [ $this->getLmsSeriesService()->findByIdWithRelations($seriesIdList[0], ['lmscontents']) ];
             } elseif (count($seriesIdList) > 1) {
                 $chapterCount = 0;
                 $contentCount = 0;
@@ -261,7 +217,7 @@ class LmsSeriesComboService extends BaseService
                 foreach ($seriesIdList as $seriesId) {
                     $chapterCount += $this->getLmsContentService()->getChapterCountBySeries($seriesId);
                     $contentCount += $this->getLmsContentService()->getContentCountBySeries($seriesId);
-                    $seriesList[] = $this->getLmsSeriesService()->findById($seriesId);
+                    $seriesList[] = $this->getLmsSeriesService()->findByIdWithRelations($seriesId, ['lmscontents']);
                 }
 
                 $item->content_count = $contentCount;
@@ -277,8 +233,6 @@ class LmsSeriesComboService extends BaseService
 
             return $item;
         });
-
-        return $allPaidComboSeries;
     }
 
     /**
@@ -313,8 +267,7 @@ class LmsSeriesComboService extends BaseService
      * @param string $seriesId
      * @return mixed
      */
-    public function getSingleSeriesComboBySeriesId(string $seriesId)
-    {
+    public function getSingleSeriesComboBySeriesId(string $seriesId) {
         return $this->repository->getSingleSeriesComboBySeriesId($seriesId);
     }
 }

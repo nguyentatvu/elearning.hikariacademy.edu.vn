@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ExamSeries;
+use App\LmsSeriesCombo;
 use App\PaymentMethod;
 use App\Services\CoinRechargePackageService;
 use App\Services\CommentService;
@@ -10,11 +11,13 @@ use App\Services\LmsSeriesComboService;
 use App\Services\LmsSeriesService;
 use App\Services\PaymentMethodService;
 use App\Services\QuizResultFinishService;
+use App\Services\UserRoadmapService;
 use App\Services\UserService;
 use App\Services\WeeklyLeaderboardService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -31,6 +34,7 @@ class MyPageController extends Controller
     private $lmsSeriesService;
     private $commentService;
     private $quizResultFinishService;
+    private $userRoadmapService;
 
 
     public function __construct(
@@ -41,7 +45,8 @@ class MyPageController extends Controller
         UserService $userService,
         LmsSeriesService $lmsSeriesService,
         CommentService $commentService,
-        QuizResultFinishService $quizResultFinishService
+        QuizResultFinishService $quizResultFinishService,
+        UserRoadmapService $userRoadmapService
     )
     {
         $this->weeklyLearboardService = $weeklyLearboardService;
@@ -53,6 +58,7 @@ class MyPageController extends Controller
         $this->commentService = $commentService;
         $this->quizResultFinishService = $quizResultFinishService;
         $this->lmsSeriesComboService = $lmsSeriesComboService;
+        $this->userRoadmapService = $userRoadmapService;
 
         $this->middleware('auth');
     }
@@ -232,9 +238,11 @@ class MyPageController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     function showPersonal() {
-        $data['other_combo_series'] = $this->lmsSeriesComboService->getAllPaidSeriesByType(0);
+        $randomSeriesType = Arr::random([LmsSeriesCombo::LEARNING_TYPE, LmsSeriesCombo::EXAM_TYPE]);
+        $data['other_combo_series'] = $this->lmsSeriesComboService->getAllSeriesByType($randomSeriesType);
         $data['view_series_history'] = $this->lmsSeriesService
             ->getHistoryViews(Auth::user()->series_views_history ?? [], Auth::user());
+        $data['roadmap_chosen_list'] = $this->userRoadmapService->userChosenRoadmapList(Auth::id() ?? -1);
         return view('client.mypage.personal', $data);
     }
 

@@ -32,15 +32,6 @@
         </div>
         <div class="row mt-5">
             <div class="col-lg-6">
-                <section class="section section-introduction">
-                    <h5 class="section-title">
-                        Giới thiệu
-                    </h5>
-                    <p class="section-subtitle">
-                        Thành viên của HIKARI từ {{ compareDates(Auth::user()->created_at) }}
-                    </p>
-                </section>
-
                 <section class="section">
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="section-title">
@@ -69,10 +60,22 @@
                                             {{ $series->progressPercent }}%
                                         </span>
                                     </div>
-                                    <a href="{{ route('learning-management.lesson.show', ['combo_slug' => $series->combo_slug, 'slug' => $series->slug]) }}"
-                                        class="text-primary mt-1 fs-5 d-block">
-                                        Tiếp tục học
-                                    </a>
+                                    @if ($series->roadmapChosen)
+                                        <a href="{{ route('learning-management.lesson.show', ['combo_slug' => $series->combo_slug, 'slug' => $series->slug]) }}"
+                                            class="text-primary mt-1 fs-6 d-block">
+                                            Tiếp tục học
+                                        </a>
+                                    @elseif (optional($series->seriesCombo)->checkMultipleCombo)
+                                        <a href="{{ route('series.introduction-detail-combo', ['combo_slug' => $series->combo_slug]) . '?series_action=scrollToList' }}"
+                                            class="text-primary mt-1 fs-6 d-block">
+                                            Chọn lộ trình và học ngay
+                                        </a>
+                                    @else
+                                        <a href="{{ route('series.introduction-detail', ['combo_slug' => $series->combo_slug, 'slug' => $series->slug]) . '?series_action=openRoadmapModal' }}"
+                                            class="text-primary mt-1 fs-6 d-block">
+                                            Chọn lộ trình và học ngay
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
                         @endforeach
@@ -194,12 +197,20 @@
                     @foreach ($other_combo_series as $recommended_series)
                         @if (isset($recommended_series->seriesList) && count($recommended_series->seriesList) > 0)
                             <div class="swiper-slide">
-                                <div class="course-card">
+                                <div class="course-card recommended">
                                     <img alt="course image" height="400" width="600"
                                         src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $recommended_series->image) }}" />
                                     <div class="course-card-body">
                                         <h5 class="course-card-title">{{ $recommended_series->title }}</h5>
-                                        <p class="course-card-price">{{ formatCurrencyVND($recommended_series->cost) }}
+                                        <div class="d-flex justify-content-between align-items-center card-price-container">
+                                            <p class="course-card-price mb-0">{{ $recommended_series->cost == 0 ? 'Miễn phí' : formatCurrencyVND($recommended_series->cost) }}</p>
+                                            @if ($recommended_series->seriesList[0]->hasTrialContent && !$recommended_series->checkMultipleCombo && !$recommended_series->valid_payment)
+                                                <button class="trial-btn btn py-1"
+                                                    onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'">
+                                                    Học thử
+                                                </button>
+                                            @endif
+                                        </div>
                                         </p>
                                         <div class="course-card-description line-clamp-3">{!! $recommended_series->short_description !!}</div>
                                         <div class="course-card-teacher text-muted w-100 mb-1">{!! $recommended_series->description['teacher_description'] ?? '' !!}
@@ -225,14 +236,21 @@
                                         </div>
                                         @if (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) > 1)
                                             <button class="btn btn-primary w-100 mt-3"
-                                                onclick="location.href='{{ route('mypage.courses') }}'">
+                                                onclick="location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $recommended_series->slug]) . '?series_action=scrollToList' }}'">
                                                 Học ngay
                                             </button>
-                                        @elseif (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) == 1)
-                                            <button class="btn btn-primary w-100 mt-3"
-                                                onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'">
-                                                Học ngay
-                                            </button>
+                                        @elseif ($recommended_series->cost == 0 || (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) == 1))
+                                            @if (!$recommended_series->checkAllSeriesRoadmapOfSeriesComboChosen($roadmap_chosen_list) && $recommended_series->cost !== 0)
+                                                <button class="btn btn-primary w-100 mt-3"
+                                                    onclick="location.href='{{ route('series.introduction-detail', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) . '?series_action=openRoadmapModal' }}'">
+                                                    Học ngay
+                                                </button>
+                                            @else
+                                                <button class="btn btn-primary w-100 mt-3"
+                                                    onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'">
+                                                    Học ngay
+                                                </button>
+                                            @endif
                                         @elseif (Auth::check())
                                             <button class="btn btn-primary w-100 mt-3"
                                                 onclick="location.href='{{ route('payments.lms', $recommended_series->slug) }}'">
@@ -298,6 +316,7 @@
                 slidesPerView: 1,
                 spaceBetween: 5,
                 loop: true,
+                allowTouchMove: false,
                 autoplay: {
                     delay: 5000,
                     disableOnInteraction: false,

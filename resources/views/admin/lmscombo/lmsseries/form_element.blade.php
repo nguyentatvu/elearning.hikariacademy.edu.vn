@@ -395,7 +395,7 @@
     <fieldset class="form-group col-md-12">
         <legend>Mô tả về combo khoá học</legend>
         {{ Form::label('content_description', 'Mô tả nội dung chính') }}
-        {{ Form::textarea('content_description', $value = optional($description)->content_description , $attributes = array('class'=>'form-control ckeditor', 'rows'=>'7', 'placeholder' => '')) }}
+        {{ Form::textarea('content_description', $value = optional($description)->content_description , $attributes = array('id' => 'main_description', 'class'=>'form-control ckeditor', 'rows'=>'7', 'placeholder' => '')) }}
     </fieldset>
     <fieldset class="form-group col-md-6">
         {{ Form::label('time_description', 'Mô tả thời gian học') }}

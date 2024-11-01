@@ -64,6 +64,11 @@ class LmsSeriesComboRepository extends BaseRepository
                 'lmsseries_combo.id as series_combo_id',
                 'lmsseries_combo.image',
                 'lmsseries_combo.cost',
+                'lmsseries_combo.n1',
+                'lmsseries_combo.n2',
+                'lmsseries_combo.n3',
+                'lmsseries_combo.n4',
+                'lmsseries_combo.n5',
                 'lmsseries.id as series_id',
                 'lmsseries.title',
                 'payments.time',
@@ -160,13 +165,14 @@ class LmsSeriesComboRepository extends BaseRepository
      */
     public function getAllSeriesByType($type)
     {
-        return $this->model::where('type', $type)
+        return $this->model::query()
+            ->where('type', $type)
             ->where('delete_status', 0)
             ->get();
     }
 
     /**
-     * Get all series by type exclude combo series id
+     * Get all paid series by type exclude combo series id
      *
      * @param $type
      * @param $comboSeriesId
@@ -178,6 +184,21 @@ class LmsSeriesComboRepository extends BaseRepository
             ->where('id', '<>', $comboSeriesId)
             ->where('delete_status', 0)
             ->where('cost', '>', 0)
+            ->get();
+    }
+
+    /**
+     * Get all series by type exclude combo series id
+     *
+     * @param $type
+     * @param $comboSeriesId
+     * @return mixed
+     */
+    public function getAllSeriesByTypeExcludeComboId($type, $comboSeriesId)
+    {
+        return $this->model::where('type', $type)
+            ->where('id', '<>', $comboSeriesId)
+            ->where('delete_status', 0)
             ->get();
     }
 
