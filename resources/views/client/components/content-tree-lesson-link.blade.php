@@ -10,6 +10,12 @@
                 class="position-relative">
             @endif
             <span>{{ $content->bai }}</span>
+            @if (!empty($content->download_doc))
+                <a href="{{ asset($content->download_doc) }}" class="btn p-0 download-link" target="_blank"
+                    download>
+                    <i class="bi bi-file-earmark-arrow-down download-icon"></i>
+                </a>
+            @endif
         </a>
     </li>
     @endforeach
@@ -27,6 +33,12 @@
                             style="bottom: 1px;" class="position-relative">
                     @endif
                     <span>{{ $content->bai }}</span>
+                    @if (!empty($content->download_doc))
+                        <a href="{{ asset($content->download_doc) }}" class="btn p-0 download-link" target="_blank"
+                            download>
+                            <i class="bi bi-file-earmark-arrow-down download-icon"></i>
+                        </a>
+                    @endif
                 </a>
             </li>
         @else

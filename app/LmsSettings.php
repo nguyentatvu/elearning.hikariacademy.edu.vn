@@ -9,7 +9,7 @@ class LmsSettings extends Model
      protected  $settings = array(
      'categoryImagepath'        => "public/uploads/lms/categories/",
      'contentImagepath'     	=> "uploads/lms/content/",
-     'contentPDFpath'     	    => "public/uploads/lms/pdf/",
+     'contentPDFpath'     	    => "uploads/lms/pdf/",
      'seriesImagepath'          => "uploads/lms/series/",
      'seriesThumbImagepath'     => "public/uploads/lms/series/thumb/",
      'defaultCategoryImage'     => "default.png",
