@@ -423,6 +423,7 @@ class StudentLmsController extends Controller
             'contentViewCount' => $this->prepContent['content_view_count'],
             'seriesContentCount' => $this->prepContent['series_content_count'],
             'comments' => $this->prepContent['comments'],
+            'description' => $this->prepContent['detail_content']->description
         ];
     }
 
@@ -435,11 +436,9 @@ class StudentLmsController extends Controller
     {
         $this->processLessonContent($combo_slug, $slug, $stt);
 
-        $description = $this->prepContent['detail_content']->description;
-
         return view('client.lesson-detail.video', array_merge(
             $this->getPreparedContentVariables(),
-            ['type' => 'lesson', 'video_url' => $this->prepContent['detail_content']->file_path, 'description' => $description]
+            ['type' => 'lesson', 'video_url' => $this->prepContent['detail_content']->file_path]
         ));
     }
 
@@ -452,7 +451,6 @@ class StudentLmsController extends Controller
     {
         $this->processLessonContent($combo_slug, $slug, $stt);
         $exercises = $this->lmsContentService->getFormattedExerciseContent($stt);
-        $description = $this->prepContent['detail_content']->description;
 
         return view('client.lesson-detail.exercise', array_merge(
             $this->getPreparedContentVariables(),
@@ -462,7 +460,6 @@ class StudentLmsController extends Controller
                 'records' => $exercises,
                 'slug' => $stt,
                 'combo_slug' => $combo_slug,
-                'description' => $description
             ]
         ));
     }
@@ -634,7 +631,6 @@ class StudentLmsController extends Controller
     public function studentAudittest(Request $request, $combo_slug = '', $slug = '', $stt = '')
     {
         $this->processLessonContent($combo_slug, $slug, $stt);
-        $description = $this->prepContent['detail_content']->description;
 
         if (Auth::check()) {
 
@@ -717,7 +713,7 @@ class StudentLmsController extends Controller
             $data['records'] = $records;
             $data['layout'] = getLayout();
             $data['back_url'] = $back_url;
-            $data['description'] = $description;
+
             $view_name = 'client.lesson-detail.audit';
 
             return view($view_name, array_merge(

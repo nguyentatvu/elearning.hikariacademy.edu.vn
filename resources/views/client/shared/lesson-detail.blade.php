@@ -39,9 +39,7 @@
                             @include('client.lesson-detail.flashcard-detail')
                         @else
                             @if (isset($description) && $description)
-                                <div>
-                                    {{ $description }}
-                                </div>
+                                <div>{!! $description !!}</div>
                             @else
                                 <div>
                                     Phần mô tả sẽ sớm được bổ sung. Bạn hãy tiếp tục khám phá bài học nhé!
@@ -103,8 +101,7 @@
                                                         </div>
                                                         <div class="reply-input">
                                                             <input type="text" data-comment-id="{{ $comment->id }}"
-                                                                class="reply-area"
-                                                                placeholder="Nhập tin nhắn của bạn..." />
+                                                                class="reply-area" placeholder="Nhập tin nhắn của bạn..." />
                                                         </div>
                                                     </div>
                                                 </div>
