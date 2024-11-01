@@ -32,6 +32,7 @@ class MyPageController extends Controller
     private $commentService;
     private $quizResultFinishService;
 
+
     public function __construct(
         WeeklyLeaderboardService $weeklyLearboardService,
         PaymentMethodService $paymentMethodService,
@@ -51,6 +52,7 @@ class MyPageController extends Controller
         $this->lmsSeriesService = $lmsSeriesService;
         $this->commentService = $commentService;
         $this->quizResultFinishService = $quizResultFinishService;
+        $this->lmsSeriesComboService = $lmsSeriesComboService;
 
         $this->middleware('auth');
     }
@@ -230,6 +232,7 @@ class MyPageController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     function showPersonal() {
+        $data['other_combo_series'] = $this->lmsSeriesComboService->getAllPaidSeriesByType(0);
         $data['view_series_history'] = $this->lmsSeriesService
             ->getHistoryViews(Auth::user()->series_views_history ?? [], Auth::user());
         return view('client.mypage.personal', $data);

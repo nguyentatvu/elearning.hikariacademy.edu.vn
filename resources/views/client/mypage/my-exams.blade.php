@@ -36,7 +36,7 @@
                         <td class="text-center align-middle">
                             <div>Hoàn thành: 60/296 bài học</div>
                             <div class="progress">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary-custom"
                                     role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
                                     style="width: 35%">35%</div>
                             </div>

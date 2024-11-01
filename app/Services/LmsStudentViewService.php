@@ -53,4 +53,24 @@ class LmsStudentViewService extends BaseService
     public function getViewCountOfSeries(string $seriesId, string $userId) {
         return $this->repository->getViewCountOfSeries($seriesId, $userId);
     }
+
+    /**
+     * Get the view count of a series for user
+     *
+     * @param string $userId
+     * @return int
+     */
+    public function getCountOfSeriesForUser(string $userId) {
+        return $this->repository->getCountOfSeriesForUser($userId);
+    }
+
+    /**
+     * Get the view count of a series exam for user
+     *
+     * @param string $userId
+     * @return int
+     */
+    public function getCountOfExamForUser(string $userId) {
+        return $this->repository->getCountOfExamForUser($userId);
+    }
 }

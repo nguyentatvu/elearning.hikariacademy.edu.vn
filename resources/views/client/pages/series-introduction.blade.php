@@ -27,28 +27,50 @@
                         </div>
                         <div class="button-container">
                             @if (!$seriesCombo->getCheckMultipleComboAttribute() && $seriesCombo->cost != 0)
-                                <button class="roadmap-btn"
-                                    onclick="location.href='{{ route('home.roadmap', ['comboSlug' => $seriesCombo->slug, 'slug' => request()->route('slug')]) }}'">
-                                    <div>
-                                        <i class="bi bi-rocket-takeoff-fill"></i>
-                                        Lộ trình
-                                    </div>
-                                </button>
-                            @endif
-                            @if ($seriesCombo->cost == 0 || (Auth::check() && $isValidPayment))
-                                <button class="purchase-btn"
-                                    onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $seriesCombo->slug, 'slug' => request()->route('slug')]) }}'">
-                                    <div><i class="bi bi-book me-1"></i>Học ngay</div>
-                                </button>
-                            @elseif (Auth::check() && !$isValidPayment)
-                                <button class="purchase-btn"
-                                    onclick="location.href='{{ route('payments.lms', $seriesCombo->slug) }}'">
-                                    <div><i class="bi bi-cart-fill"></i>Mua ngay</div>
-                                </button>
-                            @else
-                                <button class="purchase-btn" onclick="showAuthModal()">
-                                    <div><i class="bi bi-cart-fill"></i>Mua ngay</div>
-                                </button>
+                                @if ($seriesCombo->cost == 0 || (Auth::check() && $isValidPayment))
+                                    <button class="roadmap-btn"
+                                        onclick="location.href='{{ route('home.roadmap', ['comboSlug' => $seriesCombo->slug, 'slug' => request()->route('slug')]) }}'">
+                                        <div>
+                                            <i class="bi bi-rocket-takeoff-fill"></i>
+                                            Lộ trình
+                                        </div>
+                                    </button>
+                                    <button class="purchase-btn"
+                                        onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $seriesCombo->slug, 'slug' => request()->route('slug')]) }}'">
+                                        <div>
+                                            <i class="bi bi-book me-1"></i>
+                                            Học ngay
+                                        </div>
+                                    </button>
+                                @elseif (Auth::check() && !$isValidPayment)
+                                    <button class="roadmap-btn"
+                                        onclick="location.href='{{ route('home.roadmap', ['comboSlug' => $seriesCombo->slug, 'slug' => request()->route('slug')]) }}'">
+                                        <div>
+                                            <i class="bi bi-rocket-takeoff-fill"></i>
+                                            Lộ trình
+                                        </div>
+                                    </button>
+                                    <button class="purchase-btn"
+                                        onclick="location.href='{{ route('payments.lms', $seriesCombo->slug) }}'">
+                                        <div>
+                                            <i class="bi bi-cart-fill"></i>
+                                            Mua ngay
+                                        </div>
+                                    </button>
+                                @else
+                                    <button class="roadmap-btn" onclick="showAuthModal()">
+                                        <div>
+                                            <i class="bi bi-rocket-takeoff-fill"></i>
+                                            Lộ trình
+                                        </div>
+                                    </button>
+                                    <button class="purchase-btn" onclick="showAuthModal()">
+                                        <div>
+                                            <i class="bi bi-cart-fill"></i>
+                                            Mua ngay
+                                        </div>
+                                    </button>
+                                @endif
                             @endif
                         </div>
                     </div>

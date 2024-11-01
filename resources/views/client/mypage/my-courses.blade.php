@@ -16,7 +16,7 @@
         <style>
             .card-aside-img img {
                 height: 100%;
-                width: 100px;
+                width: 100%;
             }
 
             .modal-dialog {
@@ -118,11 +118,11 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th class="text-center" scope="col">STT</th>
-                        <th class="text-center" scope="col">KHÓA HỌC</th>
-                        <th class="text-center" scope="col">LỘ TRÌNH</th>
-                        <th class="text-center" scope="col">TRÌNH ĐỘ</th>
-                        <th class="text-center" scope="col"></th>
+                        <th class="text-center" style="max-width: 200px;" scope="col">STT</th>
+                        <th class="text-center" style="max-width: 200px;" scope="col">KHÓA HỌC</th>
+                        <th class="text-center" style="max-width: 200px;" scope="col">LỘ TRÌNH</th>
+                        <th class="text-center" style="max-width: 200px;" scope="col">TRÌNH ĐỘ</th>
+                        <th class="text-center" style="max-width: 200px;" scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -130,57 +130,63 @@
                         @foreach ($series as $index => $item)
                             <tr>
                                 <td class="text-center align-middle">{{ $index + 1 }}</td>
-                                <td>
+                                <td class="mw-300px">
                                     <div class="media mt-0 mb-0">
-                                        <div class="card-aside-img">
-                                            <img alt="{{ $item->title }}"
-                                                src="{{ asset('uploads/lms/combo/' . $item->combo_image) }}"
-                                                style="height: auto;">
-                                            <br>
-                                            <button type="button" class="btn btn-primary mt-3"
-                                                onclick="loadSeriesModal('{{ $item->slug }}', '{{ $item->combo_slug }}')"
-                                                data-toggle="modal" data-target="#series_detail_modal_{{ $item->slug }}">
-                                                <i class="bi bi-info-circle"></i> Tổng quan
-                                            </button>
-                                        </div>
-                                        <div class="media-body">
-                                            <div class="card-item-desc ml-4 p-0 mt-2">
-                                                <?php $dr_time = ['3 tháng', '6 tháng', '12 tháng']; ?>
-                                                <a class="text-dark" href="#">
-                                                    <h4 class="font-weight-semibold">{{ $item->title }}
-                                                        ({{ $dr_time[$item->time] }})</h4>
-                                                </a>
-                                                <span>Ngày mua:
-                                                    {{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</span>
-                                                <?php
-                                                $dr_time = [90, 180, 365];
-                                                $dr_day = [0, 30, 90, 180, 365];
-                                                ?>
+                                        <div class="card-aside-img row">
+                                            <div class="col-12 col-sm-5 col-lg-4 col-xl-3">
+                                                <img alt="{{ $item->title }}"
+                                                    src="{{ asset('uploads/lms/combo/' . $item->combo_image) }}"
+                                                    style="height: auto;">
                                                 <br>
-                                                <span>Ngày hết hạn:
-                                                    {{ \Carbon\Carbon::parse($item->created_at)->addDays($dr_time[$item->time] + $dr_day[$item->month_extend])->format('d-m-Y') }}</span>
-                                                <br>
+                                                <button type="button" class="btn btn-primary mt-3 w-100"
+                                                    onclick="loadSeriesModal('{{ $item->slug }}', '{{ $item->combo_slug }}')"
+                                                    data-toggle="modal"
+                                                    data-target="#series_detail_modal_{{ $item->slug }}">
+                                                    <i class="bi bi-info-circle"></i> Tổng quan
+                                                </button>
+                                            </div>
+                                            <div class="media-bod col-12 col-sm-7 col-lg-8 col-xl-9 d-flex align-items-center">
+                                                <div class="card-item-desc ml-4 p-0 mt-2">
+                                                    <?php $dr_time = ['3 tháng', '6 tháng', '12 tháng']; ?>
+                                                    <a class="text-dark" href="#">
+                                                        <h4 class="font-weight-semibold">{{ $item->title }}
+                                                            ({{ $dr_time[$item->time] }})
+                                                        </h4>
+                                                    </a>
+                                                    <span>Ngày mua:
+                                                        {{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</span>
+                                                    <?php
+                                                    $dr_time = [90, 180, 365];
+                                                    $dr_day = [0, 30, 90, 180, 365];
+                                                    ?>
+                                                    <br>
+                                                    <span>Ngày hết hạn:
+                                                        {{ \Carbon\Carbon::parse($item->created_at)->addDays($dr_time[$item->time] + $dr_day[$item->month_extend])->format('d-m-Y') }}</span>
+                                                    <br>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="text-center align-middle">Text</td>
-                                <td class="text-center align-middle">
+                                <td class="text-center align-middle mw-300px">Text</td>
+                                <td class="text-center align-middle mw-300px">
                                     <div class="media mt-0 mb-0">
                                         <div class="media-body">
                                             <div class="card-item-desc">
                                                 <p class="mb-2">
                                                     <span class="fs-14 ml-2">
                                                         <i class="fa fa-star text-yellow mr-2"></i>
-                                                        Hoàn thành: {{ $item->current_course }}/{{ $item->total_course }}
+                                                        Hoàn thành:
+                                                        {{ $count_series[$item->id] }}/{{ $item->total_course }}
                                                         bài học
                                                     </span>
                                                 </p>
                                                 <?php
-                                                $percent = $item->current_course > 0 ? (int) ceil(($item->current_course / $item->total_course) * 100) : 0;
+                                                $percent = $count_series[$item->id] > 0 ? (int) (($count_series[$item->id] / $item->total_course) * 100) : 0;
+                                                $percent = ($count_series[$item->id] / $item->total_course) * 100 > 0 && ($count_series[$item->id] / $item->total_course) * 100 < 1 ? 1 : $percent;
                                                 ?>
                                                 <div class="progress position-relative">
-                                                    <div class="progress-bar bg-success progress-bar-striped progress-bar-animated"
+                                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary-custom"
                                                         role="progressbar" style="width: {{ $percent }}%"
                                                         aria-valuenow="{{ $percent }}" aria-valuemin="0"
                                                         aria-valuemax="100"></div>

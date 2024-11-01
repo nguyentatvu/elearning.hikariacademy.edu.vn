@@ -100,7 +100,11 @@ class LmsSeriesService extends BaseService
             }
 
             $seriesItem->order = $viewInfo['order'] ?? null;
-            $seriesItem->progressPercent = (int) (($seriesComboItem->completed_lessons / $seriesComboItem->total_lessons) * 100);
+            if (!$seriesComboItem->completed_lessons || !$seriesComboItem->total_lessons) {
+                $seriesItem->progressPercent = 0;
+            } else {
+                $seriesItem->progressPercent = (int) (($seriesComboItem->completed_lessons / $seriesComboItem->total_lessons) * 100);
+            }
             $seriesItem->combo_slug = $seriesComboItem->combo_slug ?? '';
 
             return $seriesItem;
@@ -125,7 +129,7 @@ class LmsSeriesService extends BaseService
      * @return void
      */
     public function getSeriesListOfSeriesComboSlug(string $seriesComboSlug) {
-        $seriesCombo = $this->getLmsSeriesComboService()->getByCondition('slug', $seriesComboSlug); 
+        $seriesCombo = $this->getLmsSeriesComboService()->getByCondition('slug', $seriesComboSlug);
 
         return $this->repository->getSeriesListOfSeriesComboSlug($seriesCombo);
     }

@@ -7,6 +7,7 @@ use App\LmsSeries;
 use App\Repositories\LmsSeriesComboRepository;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class LmsSeriesComboService extends BaseService
 {
@@ -138,13 +139,13 @@ class LmsSeriesComboService extends BaseService
      */
     public function getAllPaidSeriesByTypeExcludeComboId($type, $comboSeriesId)
     {
-        $allPaidComboSeries =  $this->repository->getAllPaidSeriesByTypeExcludeComboId($type, $comboSeriesId);
+        $allPaidComboSeries = $this->repository->getAllPaidSeriesByTypeExcludeComboId($type, $comboSeriesId);
         $allPaidComboSeries->map(function ($item) {
             $seriesIdList = [];
 
-            for($i = 1; $i <= 5; $i++) {
-                if (!is_null($item->{'n'.$i})) {
-                    $seriesIdList[] = $item->{'n'.$i};
+            for ($i = 1; $i <= 5; $i++) {
+                if (!is_null($item->{'n' . $i})) {
+                    $seriesIdList[] = $item->{'n' . $i};
                 }
             }
 
@@ -188,13 +189,13 @@ class LmsSeriesComboService extends BaseService
      */
     public function getAllPaidSeriesByType($type)
     {
-        $allPaidComboSeries =  $this->repository->getAllPaidSeriesByType($type);
+        $allPaidComboSeries = $this->repository->getAllPaidSeriesByType($type);
         $allPaidComboSeries->map(function ($item) {
             $seriesIdList = [];
 
-            for($i = 1; $i <= 5; $i++) {
-                if (!is_null($item->{'n'.$i})) {
-                    $seriesIdList[] = $item->{'n'.$i};
+            for ($i = 1; $i <= 5; $i++) {
+                if (!is_null($item->{'n' . $i})) {
+                    $seriesIdList[] = $item->{'n' . $i};
                 }
             }
 
@@ -238,13 +239,13 @@ class LmsSeriesComboService extends BaseService
      */
     public function getAllSeriesByType($type)
     {
-        $allPaidComboSeries =  $this->repository->getAllSeriesByType($type);
+        $allPaidComboSeries = $this->repository->getAllSeriesByType($type);
         $allPaidComboSeries->map(function ($item) {
             $seriesIdList = [];
 
-            for($i = 1; $i <= 5; $i++) {
-                if (!is_null($item->{'n'.$i})) {
-                    $seriesIdList[] = $item->{'n'.$i};
+            for ($i = 1; $i <= 5; $i++) {
+                if (!is_null($item->{'n' . $i})) {
+                    $seriesIdList[] = $item->{'n' . $i};
                 }
             }
 
@@ -286,11 +287,12 @@ class LmsSeriesComboService extends BaseService
      * @param string $combo_slug
      * @return mixed
      */
-    public function getSeriesComboBySlugWithSeries(string $combo_slug) {
+    public function getSeriesComboBySlugWithSeries(string $combo_slug)
+    {
         $seriesCombo = $this->getByCondition('slug', $combo_slug);
 
         $seriesList = [];
-        for($index = 1; $index <= 5; $index++) {
+        for ($index = 1; $index <= 5; $index++) {
             if ($seriesCombo->{"n{$index}"}) {
                 $series = $this->getLmsSeriesService()->findById($seriesCombo->{"n{$index}"});
                 $series->content_count = $this->getLmsContentService()->getContentCountBySeries($series->id);
@@ -311,7 +313,8 @@ class LmsSeriesComboService extends BaseService
      * @param string $seriesId
      * @return mixed
      */
-    public function getSingleSeriesComboBySeriesId(string $seriesId) {
+    public function getSingleSeriesComboBySeriesId(string $seriesId)
+    {
         return $this->repository->getSingleSeriesComboBySeriesId($seriesId);
     }
 }

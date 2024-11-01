@@ -395,9 +395,11 @@ class StudentLmsController extends Controller
     {
         $this->processLessonContent($combo_slug, $slug, $stt);
 
+        $description = $this->prepContent['detail_content']->description;
+
         return view('client.lesson-detail.video', array_merge(
             $this->getPreparedContentVariables(),
-            ['type' => 'lesson', 'video_url' => $this->prepContent['detail_content']->file_path]
+            ['type' => 'lesson', 'video_url' => $this->prepContent['detail_content']->file_path, 'description' => $description]
         ));
     }
 
@@ -410,6 +412,7 @@ class StudentLmsController extends Controller
     {
         $this->processLessonContent($combo_slug, $slug, $stt);
         $exercises = $this->lmsContentService->getFormattedExerciseContent($stt);
+        $description = $this->prepContent['detail_content']->description;
 
         return view('client.lesson-detail.exercise', array_merge(
             $this->getPreparedContentVariables(),
@@ -418,7 +421,8 @@ class StudentLmsController extends Controller
                 'count_records' => count($exercises),
                 'records' => $exercises,
                 'slug' => $stt,
-                'combo_slug' => $combo_slug
+                'combo_slug' => $combo_slug,
+                'description' => $description
             ]
         ));
     }
@@ -432,9 +436,13 @@ class StudentLmsController extends Controller
     {
         $this->processLessonContent($combo_slug, $slug, $stt);
 
+        $detail = $this->getPreparedContentVariables();
+
         return view('client.lesson-detail.audit', array_merge(
             $this->getPreparedContentVariables(),
-            ['type' => 'audit']
+            [
+                'type' => 'audit',
+            ]
         ));
     }
 
@@ -586,6 +594,7 @@ class StudentLmsController extends Controller
     public function studentAudittest(Request $request, $combo_slug = '', $slug = '', $stt = '')
     {
         $this->processLessonContent($combo_slug, $slug, $stt);
+        $description = $this->prepContent['detail_content']->description;
 
         if (Auth::check()) {
 
@@ -668,6 +677,7 @@ class StudentLmsController extends Controller
             $data['records'] = $records;
             $data['layout'] = getLayout();
             $data['back_url'] = $back_url;
+            $data['description'] = $description;
             $view_name = 'client.lesson-detail.audit';
 
             return view($view_name, array_merge(
@@ -983,7 +993,7 @@ class StudentLmsController extends Controller
         $data['class'] = 'roadmap';
         if (!auth()->check()) {
             flash('Thông báo', 'Bạn chưa đăng nhập', 'error');
-            return redirect()->route('home.index');
+            return redirect()->route('home');
         } else {
             $serie = DB::table('lmsseries')->where('slug', $slug)->first();
             $serieCombo = DB::table('lmsseries_combo')->where('slug', $comboSlug)->first();
@@ -1022,7 +1032,7 @@ class StudentLmsController extends Controller
             if (!isset($weeks[$weekNumber])) {
                 $weeks[$weekNumber] = [
                     'week' => "Tuần $weekNumber",
-                    'message' => "Điểm nổi bật của tuần $weekNumber",
+                    'message' => "Bài học của tuần $weekNumber",
                     'days' => []
                 ];
             }
@@ -1038,7 +1048,7 @@ class StudentLmsController extends Controller
             if (!isset($weeks[$weekNum])) {
                 $weeks[$weekNum] = [
                     'week' => "Tuần $weekNum",
-                    'message' => "Điểm nổi bật của tuần $weekNum",
+                    'message' => "Bài học của tuần $weekNum",
                     'days' => []
                 ];
             }
@@ -1097,6 +1107,7 @@ class StudentLmsController extends Controller
 
         $roadMapContent = json_decode($roadMap->contents);
         $dayViewedContent = null;
+        $dayCount = count($roadMapContent);
 
         if ($lastViewedContent) {
             foreach ($roadMapContent as $day) {
@@ -1117,7 +1128,9 @@ class StudentLmsController extends Controller
         return response()->json([
             'road_map' => $weeks,
             'last_view' => $lastViewedContent,
-            'day_last_view' => $dayViewedContent
+            'day_last_view' => $dayViewedContent,
+            'detail' => $roadMap,
+            'day_count' => $dayCount,
         ]);
     }
 

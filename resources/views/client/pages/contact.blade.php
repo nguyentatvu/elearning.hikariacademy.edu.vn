@@ -20,7 +20,7 @@
                 </div>
                 <div class="mb-3 position-relative">
                     <label for="message" class="custom-text-info">Tin nhắn</label>
-                    <textarea class="form-control" placeholder="Tin nhắn" rows="5">Lorem ipsum dolor sit amet, consectetur adipiscing elit...</textarea>
+                    <textarea class="form-control" placeholder="Tin nhắn" rows="5"></textarea>
                     <i class="fas fa-file-alt"></i>
                 </div>
                 <div class="d-flex justify-content-center align-items-center">

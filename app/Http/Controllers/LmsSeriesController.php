@@ -14,6 +14,7 @@ use App\QuizResultReview;
 use App\Services\LmsContentService;
 use App\Services\LmsSeriesComboService;
 use App\Services\LmsSeriesService;
+use App\Services\LmsStudentViewService;
 use App\Services\PaymentMethodService;
 use App\Services\QuizResultFinishService;
 use Yajra\DataTables\DataTables;
@@ -36,12 +37,15 @@ class LmsSeriesController extends Controller
     private $lmsContentService;
     private $quizResultFinishService;
 
+	private $lmsStudentViewService;
+
 	public function __construct(
         LmsSeriesService $lmsSeriesService,
         LmsSeriesComboService $lmsSeriesComboService,
         LmsContentService $lmsContentService,
         PaymentMethodService $paymentMethodService,
-        QuizResultFinishService $quizResultFinishService
+        QuizResultFinishService $quizResultFinishService,
+		LmsStudentViewService $lmsStudentViewService
     ) {
         $this->middleware('auth')->except(['introductionDetail', 'introductionDetailForCombo']);
         $this->lmsSeriesService = $lmsSeriesService;
@@ -49,6 +53,7 @@ class LmsSeriesController extends Controller
         $this->lmsContentService = $lmsContentService;
         $this->paymentMethodService = $paymentMethodService;
         $this->quizResultFinishService = $quizResultFinishService;
+		$this->lmsStudentViewService = $lmsStudentViewService;
 	}
 	/**
 	 * Course listing method
@@ -552,6 +557,10 @@ class LmsSeriesController extends Controller
 			//->orderBy('order_by')
 			->get();
 		// dd($data);
+
+		$countSeries = $this->lmsStudentViewService->getCountOfSeriesForUser(Auth::user()->id);
+		$data['count_series'] = $countSeries;
+
 		$view_name = 'client.mypage.my-courses';
 		return view($view_name, $data);
 	}
@@ -600,6 +609,9 @@ class LmsSeriesController extends Controller
 			])
 			//->orderBy('order_by')
 			->get();
+		$countSeries = $this->lmsStudentViewService->getCountOfExamForUser(Auth::user()->id);
+		$data['count_series'] = $countSeries;
+
 		$view_name = 'client.mypage.my-courses';
 
 		return view($view_name, $data);

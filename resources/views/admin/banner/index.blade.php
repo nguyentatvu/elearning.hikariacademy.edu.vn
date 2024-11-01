@@ -912,7 +912,7 @@
                                 Swal.fire('Đã xóa!', 'Banner đã được xóa.', 'success');
                                 setTimeout(function (){
                                     window.location.reload();
-                                }, 1000)
+                                }, 500)
                             },
                             error: function() {
                                 Swal.fire('Lỗi', 'Có lỗi xảy ra khi xóa banner.', '');
