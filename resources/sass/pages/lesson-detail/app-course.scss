@@ -134,22 +134,6 @@ html {
 }
 
 .accordion-button {
-  .download-link {
-    width: 20px;
-    height: 20px;
-    margin-left: 4px;
-
-    .download-icon {
-      font-weight: bold;
-      color: #166bc9  ;
-
-      &:hover {
-        color: #0e5a8a;
-        text-shadow: 0px 0px 3px rgba(255, 255, 255, 0.8);
-      }
-    }
-  }
-
   &.active-content {
     background-color: var(--primary);
     color: white;
@@ -184,22 +168,24 @@ html {
 }
 
 .list-group-item {
-  .download-link{
-    color: #166bc9;
-    font-weight: bold;
-
-    &:hover {
-      color: #0e5a8a;
-      text-shadow: 0px 0px 3px rgba(255, 255, 255, 0.8);
-    }
-  }
-
   &.active-content {
     background-color: var(--primary);
 
     a {
       color: white !important;
     }
+  }
+}
+
+.download-link{
+  width: 20px;
+  height: 20px;
+  color: #166bc9;
+  font-weight: bold;
+
+  &:hover {
+    color: #0e5a8a;
+    text-shadow: 0px 0px 3px rgba(255, 255, 255, 0.8);
   }
 }
 

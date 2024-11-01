@@ -6,11 +6,11 @@
                     data-bs-toggle="collapse" data-bs-target="#collapse{{ $content_index }}"
                     aria-expanded="{{ $content_index === 1 ? 'true' : 'false' }}"
                     aria-controls="collapse{{ $content_index }}" type="button">
-                    <div class="fw-bold">
-                        <img src="{{ asset('images/icons/lesson.png') }}" alt="image" class="chapter-image">
+                    <div class="fw-bold d-flex align-items-center">
+                        <img src="{{ asset('images/icons/lesson.png') }}" alt="image" class="chapter-image me-1">
                         <span>{{ $content->bai }}</span>
                         @if (!empty($content->download_doc))
-                            <a href="{{ asset($content->download_doc) }}" class="btn p-0 download-link" target="_blank"
+                            <a href="{{ asset($content->download_doc) }}" class="btn p-0 ms-1 download-link" target="_blank"
                                 download>
                                 <i class="bi bi-file-earmark-arrow-down download-icon"></i>
                             </a>
@@ -38,7 +38,7 @@
             </div>
         </div>
     @else
-        <div class="accordion-item {{ $content->css_class }}">
+        <div class="accordion-item d-flex align-items-center {{ $content->css_class }}">
             @if (
                 $content->type == App\LmsContent::SUMMARY_AND_INTRODUCTION &&
                     $content->el_try != App\LmsContent::TRIAL_TYPE &&
@@ -54,13 +54,13 @@
                     <img src="{{ asset('images/icons/' . config('constant.series.chapter_icons')[$content->type]) }}"
                         alt="image" class="chapter-image">
                     <span>{{ $content->bai }}</span>
-                    @if (!empty($content->download_doc))
-                        <a href="{{ asset($content->download_doc) }}" class="btn p-0 download-link" target="_blank"
-                            download>
-                            <i class="bi bi-file-earmark-arrow-down download-icon"></i>
-                        </a>
-                    @endif
                 </a>
+                @if (!empty($content->download_doc))
+                    <a href="{{ asset($content->download_doc) }}" class="btn p-0 ms-1 download-link" target="_blank"
+                        download>
+                        <i class="bi bi-file-earmark-arrow-down download-icon"></i>
+                    </a>
+                @endif
             @endif
         </div>
     @endif
