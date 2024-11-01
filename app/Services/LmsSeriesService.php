@@ -109,6 +109,7 @@ class LmsSeriesService extends BaseService
                 $seriesItem->progressPercent = 0;
             } else {
                 $seriesItem->progressPercent = (int) (($seriesComboItem->completed_lessons / $seriesComboItem->total_lessons) * 100);
+                $seriesItem->progressPercent = empty($seriesItem->progressPercent) ? 1 : $seriesItem->progressPercent;
             }
             $seriesItem->combo_slug = $seriesComboItem->combo_slug ?? '';
             $seriesItem->roadmapChosen = ($userRoadmapItem && $userRoadmapItem->duration_months != null) ? true : false;

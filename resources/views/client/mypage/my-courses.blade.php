@@ -178,12 +178,12 @@
                                                     <span class="fs-14 ml-2">
                                                         <i class="fa fa-star text-yellow mr-2"></i>
                                                         Hoàn thành:
-                                                        {{ $count_series ?? 0 }}/{{ $item->total_course }} bài
+                                                        {{ (int) isset($count_series) ?? 0 }}/{{ $item->total_course }} bài
                                                         học
                                                     </span>
                                                 </p>
                                                 <?php
-                                                    $count = $count_series ?? 0;
+                                                    $count = (int) isset($count_series) ?? 0;
                                                     $percent = $count > 0 ? (int) (($count / $item->total_course) * 100) : 0;
                                                     $percent = ($count / $item->total_course) * 100 > 0 && ($count / $item->total_course) * 100 < 1 ? 1 : $percent;
                                                 ?>
