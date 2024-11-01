@@ -147,7 +147,7 @@
                     @endforeach
                 @endif
             </div>
-            <div class="carousel-inner">
+            <div class="carousel-inner slider">
                 @if (isset($banners['home_slider_banner']->image))
                     @foreach ($banners['home_slider_banner']->image as $index => $banner)
                         <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">

@@ -209,7 +209,7 @@
             padding: 5px 10px;
             font-size: 14px;
             margin-left: 10px;
-            width: auto;
+            width: 225px;
             display: inline-block;
         }
 
@@ -791,7 +791,6 @@
             $('.roadmap-select').on('change', function() {
                 const selectedValue = $(this).val();
                 const selectedMonth = parseInt(selectedValue);
-                console.log(selectedValue);
                 loadRoadMap(selectedMonth, '{{ $serie_combo->slug }}', '{{ $serie->slug }}');
             });
 
@@ -825,7 +824,6 @@
                             </div>
                             `
                         );
-                        console.log(response);
                         loadDataRoadMap(response.road_map)
                         locationIcon();
                         setCarPosition(response.day_last_view, response.last_view);

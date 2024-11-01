@@ -233,6 +233,14 @@
   height: auto;
 }
 
+.carousel-inner.slider {
+  height: 400px;
+}
+.carousel-inner.slider img {
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
 #test3 .carousel-control-prev,
 #test3 .carousel-control-next {
   background-color: #fff;

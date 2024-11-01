@@ -22,9 +22,11 @@
                         Mô tả bài học
                     @endif
                 </button>
-                <button class="nav-link" id="nav-questions-tab" data-bs-toggle="tab" data-bs-target="#nav-questions"
-                    type="button" role="tab" aria-controls="nav-questions" aria-selected="false">Câu hỏi của
-                    bạn</button>
+                @if (isset($isValidPayment) && $isValidPayment)
+                    <button class="nav-link" id="nav-questions-tab" data-bs-toggle="tab" data-bs-target="#nav-questions"
+                        type="button" role="tab" aria-controls="nav-questions" aria-selected="false">Câu hỏi của
+                        bạn</button>
+                @endif
                 <button class="nav-link nav_course_button" id="nav-example-tab" data-bs-toggle="tab"
                     data-bs-target="#nav-course-content" type="button" role="tab" aria-controls="nav-example"
                     aria-selected="false">Nội dung khoá học</button>
@@ -49,70 +51,72 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade nav_comment_content" id="nav-questions" role="tabpanel"
-                    aria-labelledby="nav-questions-tab" tabindex="0">
-                    <div class="comment-section">
-                        <div id="comment_input" class="comment-input">
-                            <img alt="User avatar" height="40" src="{{ getFullUserImage(Auth::user()->image) }}"
-                                width="40" />
-                            <input id="comment_input_area" placeholder="Nhập bình luận mới của bạn" type="text" />
-                        </div>
-                        <div id="comment" class="comment">
-                            <!-- Comment -->
-                            @foreach ($comments as $index => $comment)
-                                <div class="comment-user">
-                                    <img alt="User avatar" height="40"
-                                        src="{{ $comment->user->image ? getFullUserImage($comment->user->image) : asset('images/no-avatar.png') }}"
-                                        width="40" />
-                                    <div class="comment-body">
-                                        <div class="name">{{ $comment->user_name }}</div>
-                                        <div class="time">{{ $comment->created_at->diffForHumans() }}</div>
-                                        <div class="text">{{ $comment->body }}</div>
-                                        <div class="actions reply-btn" data-comment-id="{{ $comment->id }}">
-                                            <span>Phản hồi</span>
-                                        </div>
-                                        <div class="reply-input" data-comment-id="${commentId}">
-                                            <input type="text" class="reply-area" data-comment-id="{{ $comment->id }}"
-                                                placeholder="Nhập tin nhắn của bạn..." />
-                                        </div>
-                                        <div class="comment-reply mt-3" data-comment-id="{{ $comment->id }}">
-                                            @foreach ($comment->childComments as $indexComment => $childComment)
-                                                <div class="comment-user">
-                                                    @if ($childComment->admin_id)
-                                                        <img alt="User avatar" height="40"
-                                                            src="{{ $childComment->admin->image ? getFullUserImage($childComment->admin->image) : asset('images/no-avatar.png') }}"
-                                                            width="40" />
-                                                    @else
-                                                        <img alt="User avatar" height="40"
-                                                            src="{{ $childComment->user->image ? getFullUserImage($childComment->user->image) : asset('images/no-avatar.png') }}"
-                                                            width="40" />
-                                                    @endif
-                                                    <div class="comment-body">
-                                                        <div class="name">
-                                                            {{ $childComment->admin_id ? $childComment->admin->name : $childComment->user_name }}
-                                                        </div>
-                                                        <div class="time">
-                                                            {{ $childComment->created_at->diffForHumans() }}
-                                                        </div>
-                                                        <div class="text">{{ $childComment->body }}</div>
-                                                        <div class="actions reply-btn"
-                                                            data-comment-id="{{ $comment->id }}">
-                                                            <span>Phản hồi</span>
-                                                        </div>
-                                                        <div class="reply-input">
-                                                            <input type="text" data-comment-id="{{ $comment->id }}"
-                                                                class="reply-area" placeholder="Nhập tin nhắn của bạn..." />
+                @if (isset($isValidPayment) && $isValidPayment)
+                    <div class="tab-pane fade nav_comment_content" id="nav-questions" role="tabpanel"
+                        aria-labelledby="nav-questions-tab" tabindex="0">
+                        <div class="comment-section">
+                            <div id="comment_input" class="comment-input">
+                                <img alt="User avatar" height="40" src="{{ getFullUserImage(Auth::user()->image) }}"
+                                    width="40" />
+                                <input id="comment_input_area" placeholder="Nhập bình luận mới của bạn" type="text" />
+                            </div>
+                            <div id="comment" class="comment">
+                                <!-- Comment -->
+                                @foreach ($comments as $index => $comment)
+                                    <div class="comment-user">
+                                        <img alt="User avatar" height="40"
+                                            src="{{ $comment->user->image ? getFullUserImage($comment->user->image) : asset('images/no-avatar.png') }}"
+                                            width="40" />
+                                        <div class="comment-body">
+                                            <div class="name">{{ $comment->user_name }}</div>
+                                            <div class="time">{{ $comment->created_at->diffForHumans() }}</div>
+                                            <div class="text">{{ $comment->body }}</div>
+                                            <div class="actions reply-btn" data-comment-id="{{ $comment->id }}">
+                                                <span>Phản hồi</span>
+                                            </div>
+                                            <div class="reply-input" data-comment-id="${commentId}">
+                                                <input type="text" class="reply-area" data-comment-id="{{ $comment->id }}"
+                                                    placeholder="Nhập tin nhắn của bạn..." />
+                                            </div>
+                                            <div class="comment-reply mt-3" data-comment-id="{{ $comment->id }}">
+                                                @foreach ($comment->childComments as $indexComment => $childComment)
+                                                    <div class="comment-user">
+                                                        @if ($childComment->admin_id)
+                                                            <img alt="User avatar" height="40"
+                                                                src="{{ $childComment->admin->image ? getFullUserImage($childComment->admin->image) : asset('images/no-avatar.png') }}"
+                                                                width="40" />
+                                                        @else
+                                                            <img alt="User avatar" height="40"
+                                                                src="{{ $childComment->user->image ? getFullUserImage($childComment->user->image) : asset('images/no-avatar.png') }}"
+                                                                width="40" />
+                                                        @endif
+                                                        <div class="comment-body">
+                                                            <div class="name">
+                                                                {{ $childComment->admin_id ? $childComment->admin->name : $childComment->user_name }}
+                                                            </div>
+                                                            <div class="time">
+                                                                {{ $childComment->created_at->diffForHumans() }}
+                                                            </div>
+                                                            <div class="text">{{ $childComment->body }}</div>
+                                                            <div class="actions reply-btn"
+                                                                data-comment-id="{{ $comment->id }}">
+                                                                <span>Phản hồi</span>
+                                                            </div>
+                                                            <div class="reply-input">
+                                                                <input type="text" data-comment-id="{{ $comment->id }}"
+                                                                    class="reply-area" placeholder="Nhập tin nhắn của bạn..." />
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            @endforeach
+                                                @endforeach
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            @endforeach
+                                @endforeach
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
 
                 <!-- Nội dung khóa học -->
                 <div class="tab-pane fade nav_course_content" id="nav-course-content" role="tabpanel"

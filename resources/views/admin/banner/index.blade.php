@@ -316,7 +316,7 @@
             // Centralize common configurations
             const CONFIG = {
                 maxFileSize: 2 * 1024 * 1024, // 3MB in bytes
-                maxSliderImages: 6,
+                maxSliderImages: 4,
                 supportedTypes: ['image/jpeg', 'image/png', 'image/gif'],
                 routes: {
                     update: '{{ route('admin.banners.update', ':id') }}',
@@ -329,6 +329,13 @@
             const MODAL_ACTIONS = {
                 CREATE: 'create',
                 EDIT: 'edit'
+            };
+
+
+            const STATE = {
+                currentImages: [], // Store current images when editing
+                deletedImages: [], // Track deleted images
+                changedImages: {} // Track changed images with their positions
             };
 
             // Centralize DOM elements
@@ -504,12 +511,6 @@
                 toggleBannerFields();
             }
 
-            const STATE = {
-                currentImages: [], // Store current images when editing
-                deletedImages: [], // Track deleted images
-                changedImages: {} // Track changed images with their positions
-            };
-
             /**
              * Populate the banner form based on the action type (create/edit).
              */
@@ -540,10 +541,10 @@
                             populateSliderPreview(images);
                         }
                     } else {
+                        $('#regularPreview').empty();
                         $('#regularFields').show();
                         $('#sliderFields').hide();
                         $('#regularImage').hide();
-
                         if (banner.image) {
                             STATE.currentImages = [banner.image];
                             $('#regularPreview').empty().append(`
@@ -555,6 +556,8 @@
                                     <button type="button" class="btn btn-primary" onclick="editRegular(this)">Chỉnh sửa hình ảnh</button>
                                 </div>
                             `);
+                        } else {
+                            $('#regularImage').show();
                         }
                     }
                 } else if (action === MODAL_ACTIONS.CREATE) {
@@ -703,6 +706,7 @@
                         reader.readAsDataURL(this.files[0]);
                     }
                 });
+
                 fileInput.click();
             }
 
