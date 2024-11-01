@@ -184,14 +184,6 @@ return [
             'size' => '1920x500',
             'image_url' => 'https://example.com/path/to/home_banner_2.jpg',
         ],
-        8 => [
-            'position' => 'profile_banner',
-            'category' => 'single_image',
-            'title' => 'Banner Hồ Sơ',
-            'description' => 'Banner này xuất hiện trên các trang hồ sơ người dùng để tăng tính cá nhân hóa.',
-            'size' => '1920x400',
-            'image_url' => 'https://example.com/path/to/profile_banner.jpg',
-        ],
         9 => [
             'position' => 'contact_logo',
             'category' => 'single_image',

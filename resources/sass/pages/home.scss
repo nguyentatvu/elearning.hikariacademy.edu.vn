@@ -162,6 +162,7 @@ $border-color_1: #166ac9;
     quotes: "'" "'";
     top: auto;
     bottom: 0px;
+    // height: 400px;
     li {
       width: 80px;
       height: 80px;
@@ -225,6 +226,13 @@ $border-color_1: #166ac9;
       max-width: 100%;
       height: auto;
     }
+  }
+}
+
+.carousel-inner.slider {
+  height: 400px;
+  img {
+    object-fit: contain;
   }
 }
 

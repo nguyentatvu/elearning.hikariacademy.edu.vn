@@ -145,7 +145,8 @@
                                                     <i class="bi bi-info-circle"></i> Tổng quan
                                                 </button>
                                             </div>
-                                            <div class="media-bod col-12 col-sm-7 col-lg-8 col-xl-9 d-flex align-items-center">
+                                            <div
+                                                class="media-bod col-12 col-sm-7 col-lg-8 col-xl-9 d-flex align-items-center">
                                                 <div class="card-item-desc ml-4 p-0 mt-2">
                                                     <?php $dr_time = ['3 tháng', '6 tháng', '12 tháng']; ?>
                                                     <a class="text-dark" href="#">
@@ -177,13 +178,14 @@
                                                     <span class="fs-14 ml-2">
                                                         <i class="fa fa-star text-yellow mr-2"></i>
                                                         Hoàn thành:
-                                                        {{ $count_series[$item->id] }}/{{ $item->total_course }}
-                                                        bài học
+                                                        {{ $count_series ?? 0 }}/{{ $item->total_course }} bài
+                                                        học
                                                     </span>
                                                 </p>
                                                 <?php
-                                                $percent = $count_series[$item->id] > 0 ? (int) (($count_series[$item->id] / $item->total_course) * 100) : 0;
-                                                $percent = ($count_series[$item->id] / $item->total_course) * 100 > 0 && ($count_series[$item->id] / $item->total_course) * 100 < 1 ? 1 : $percent;
+                                                    $count = $count_series ?? 0;
+                                                    $percent = $count > 0 ? (int) (($count / $item->total_course) * 100) : 0;
+                                                    $percent = ($count / $item->total_course) * 100 > 0 && ($count / $item->total_course) * 100 < 1 ? 1 : $percent;
                                                 ?>
                                                 <div class="progress position-relative">
                                                     <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary-custom"

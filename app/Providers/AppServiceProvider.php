@@ -6,6 +6,7 @@ use App\Banner;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Http\Resources\Json\Resource;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Cache;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,22 +20,36 @@ class AppServiceProvider extends ServiceProvider
         Resource::withoutWrapping();
 
         View::composer('*', function ($view) {
-            $banners = Banner::whereNotNull('image')->get()->keyBy('position');
-
-            $banners->each(function ($banner) {
-                if ($banner->image) {
-                    if ($banner->display_type == 'multi_image') {
-                        $banner->image = collect(json_decode($banner->image))->map(function ($image) {
-                            return asset($image); // Image path is already relative to public directory
-                        });
-                    } else {
-                        $banner->image = asset($banner->image); // Image path is already relative to public directory
-                    }
-                }
+            $banners = Cache::remember('site_banners', 60, function () {
+                return $this->getBanners();
             });
 
             $view->with('banners', $banners);
         });
+    }
+
+    /**
+     * Get processed banners
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    private function getBanners()
+    {
+        $banners = Banner::whereNotNull('image')->get()->keyBy('position');
+
+        $banners->each(function ($banner) {
+            if ($banner->image) {
+                if ($banner->display_type == 'multi_image') {
+                    $banner->image = collect(json_decode($banner->image))->map(function ($image) {
+                        return asset($image);
+                    });
+                } else {
+                    $banner->image = asset($banner->image);
+                }
+            }
+        });
+
+        return $banners;
     }
 
     /**

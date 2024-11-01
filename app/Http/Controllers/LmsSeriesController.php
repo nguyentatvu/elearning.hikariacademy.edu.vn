@@ -566,8 +566,11 @@ class LmsSeriesController extends Controller
 			->get();
 		// dd($data);
 
+
 		$countSeries = $this->lmsStudentViewService->getCountOfSeriesForUser(Auth::user()->id);
-		$data['count_series'] = $countSeries;
+		if ($countSeries) {
+			$data['count_series'] = $countSeries;
+		}
 
 		$view_name = 'client.mypage.my-courses';
 		return view($view_name, $data);
@@ -617,8 +620,12 @@ class LmsSeriesController extends Controller
 			])
 			//->orderBy('order_by')
 			->get();
+
 		$countSeries = $this->lmsStudentViewService->getCountOfExamForUser(Auth::user()->id);
-		$data['count_series'] = $countSeries;
+
+		if ($countSeries) {
+			$data['count_series'] = $countSeries;
+		}
 
 		$view_name = 'client.mypage.my-courses';
 

@@ -261,6 +261,18 @@ class BannerController extends Controller
                 }
             }
 
+            // Extract the relevant part of each image URL
+            $existingImages = array_map(function ($image) {
+                // Check if the image contains 'uploads/banners/'
+                if (strpos($image, 'uploads/banners/') !== false) {
+                    // Return the part of the string from 'uploads/banners/' onward
+                    return substr($image, strpos($image, 'uploads/banners/'));
+                }
+                return $image; // Return the original if not found
+            }, $existingImages);
+
+            // Now proceed to check and delete files
+
             foreach ($existingImages as $existingImage) {
                 if (!in_array($existingImage, $finalImages)) {
                     if (File::exists(public_path($existingImage))) {
