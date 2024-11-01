@@ -3,6 +3,15 @@
 @section('mypage-styles')
     <link href="{{ asset('css/pages/mypage.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/plugins/swiperjs/swiper-bundle.min.css') }}">
+    <style>
+        .swiper-button-next {
+            right: -50px;
+        }
+
+        .swiper-button-prev {
+            left: -50px;
+        }
+    </style>
 @endsection
 
 @section('mypage-content')
