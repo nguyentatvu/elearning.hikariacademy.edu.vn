@@ -55,7 +55,7 @@ class LmsSeriesService extends BaseService
      */
     public function getSeriesDetail(int $userId, int $seriesComboId, int $seriesId)
     {
-        $seriesCombo = $this->lmsSeriesComboService->getBySeriesId($seriesComboId, $seriesId, ['cost', 'time']);
+        $seriesCombo = $this->getLmsSeriesComboService()->getBySeriesId($seriesComboId, $seriesId, ['cost', 'time', 'image']);
 
         if (!$seriesCombo) {
             return null;
@@ -68,6 +68,7 @@ class LmsSeriesService extends BaseService
         $seriesDetail->total_lessons = LmsContent::totalLessons($seriesId)->count();
         $seriesDetail->cost = $seriesCombo->cost;
         $seriesDetail->time = $seriesCombo->time;
+        $seriesDetail->image = $seriesCombo->image;
 
         return $seriesDetail;
     }

@@ -28,17 +28,14 @@ class BannerController extends Controller
      *     tags={"Banner"},
      *     path="/banner",
      *     summary="Get Banners by group",
-     *     description="This API returns Banners by group.
-     *           Enum
-     *           BannerGroup: LOGIN - 1, HOME - 2, CONTACT - 3, COURSE_DETAIL - 4
-     *           BannerDisplayType: SINGLE - 1, SLIDER - 2",
+     *     description="This API returns Banners.",
      *     @SWG\Parameter(
-     *         name="group",
+     *         name="position",
      *         in="query",
-     *         description="Banner Group: 1 - Login, 2 - Home, 3 - Contact, 4 - Course Detail",
+     *         description="Position: home",
      *         required=true,
-     *         type="integer",
-     *         enum={1, 2, 3, 4}
+     *         type="string",
+     *         enum={"home"}
      *     ),
      *     @SWG\Response(
      *         response=200,
@@ -48,13 +45,12 @@ class BannerController extends Controller
      *             @SWG\Items(
      *                 type="object",
      *                 @SWG\Property(property="id", type="integer", example="1"),
-     *                 @SWG\Property(property="order", type="integer", example="1"),
      *                 @SWG\Property(property="title", type="string", example="Title"),
      *                 @SWG\Property(property="description", type="string", example="Description"),
      *                 @SWG\Property(property="display_type", type="integer", example="1"),
-     *                 @SWG\Property(property="group", type="integer", example="1"),
-     *                 @SWG\Property(property="image", type="string", example="Link image"),
-     *                 @SWG\Property(property="to_url", type="string", example="Url"),
+     *                 @SWG\Property(property="to_url", type="string", example="https://google.com.vn"),
+     *                 @SWG\Property(property="image", type="string", example="['uploads/banners/67219d4ff3176.png','uploads/banners/67219d4ff3abd.png','uploads/banners/67219d5000502.png']"),
+     *                 @SWG\Property(property="position", type="string", example="home_slider_banner"),
      *             )
      *         )
      *     ),
@@ -79,13 +75,9 @@ class BannerController extends Controller
      */
     public function getBannerByConditions(Request $request)
     {
-        $data = $request->only(['group']);
-        $banners = $this->bannerService->getByConditionsWithOrderBy(
-            ['group' => $data['group']],
-            ['*'],
-            'order',
-            'asc'
-        );
+        $data = $request->only(['position']);
+
+        $banners = $this->bannerService->getBannersByPosition($data['position']);
 
         return BannerResource::collection($banners);
     }
