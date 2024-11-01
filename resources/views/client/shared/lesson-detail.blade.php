@@ -28,12 +28,9 @@
                 <button class="nav-link nav_course_button" id="nav-example-tab" data-bs-toggle="tab"
                     data-bs-target="#nav-course-content" type="button" role="tab" aria-controls="nav-example"
                     aria-selected="false">Nội dung khoá học</button>
-                <div id="btn_hide_tab_content" class="btn btn-primary">
-                    <i class="bi bi-chevron-double-up"></i>
-                </div>
             </div>
 
-            <div class="tab-content" id="nav-tabContent" style="height: 0px !important;">
+            <div class="tab-content" id="nav-tabContent">
                 <!-- Mô tả bài học -->
                 <div class="tab-pane fade show active nav_description_content" id="nav-home" role="tabpanel"
                     aria-labelledby="nav-home-tab" tabindex="0">
@@ -41,25 +38,15 @@
                         @if (isset($flashcardDetail))
                             @include('client.lesson-detail.flashcard-detail')
                         @else
-                            <h4 class="lesson-title">Bài học tiếng Nhật N5 - Giới thiệu về Kanji</h4>
-                            <div class="lesson-content">
-                                <div class="my-5">
-                                    <div class="row">
-                                        <h4 class="text-primary">Khóa Học Tiếng Nhật Cơ Bản</h4>
-                                        <p class="lead">Khám phá ngôn ngữ và văn hóa Nhật Bản qua khóa học cơ bản này, phù
-                                            hợp
-                                            cho người mới bắt đầu!</p>
-                                        <ul class="list-group list-group-flush mb-4">
-                                            <li class="list-group-item">Thời lượng: 40 giờ</li>
-                                            <li class="list-group-item">Số buổi: 20 buổi</li>
-                                            <li class="list-group-item">Cấp độ: Cơ bản</li>
-                                        </ul>
-                                        <a href="#" class="btn btn-primary btn-lg">Đăng ký ngay</a>
-                                        <a href="#" class="btn btn-outline-secondary btn-lg">Xem chi tiết</a>
-                                    </div>
+                            @if (isset($description) && $description)
+                                <div>
+                                    {{ $description }}
                                 </div>
-
-                            </div>
+                            @else
+                                <div>
+                                    Phần mô tả sẽ sớm được bổ sung. Bạn hãy tiếp tục khám phá bài học nhé!
+                                </div>
+                            @endif
                         @endif
                     </div>
                 </div>
@@ -191,17 +178,20 @@
                 toggleLoadingOverlay(false);
             }, 50);
 
-            let isHidden = true;
-
-            @if (isset($flashcardDetail) && !empty($flashcardDetail))
-                isHidden = false;
-                $('#btn_hide_tab_content').find('i').toggleClass('bi-chevron-double-up bi-chevron-double-down');
-            @endif
+            $('#nav-tab').on('click', function() {
+                this.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
 
             // Helper function to get the outer height of an element or return 0 if not found
             const getOuterHeight = selector => $(selector).outerHeight() || 0;
 
-            const adjustLayout = () => {
+            adjustLayout();
+            // $(window).resize(adjustLayout);
+
+            function adjustLayout() {
                 const windowHeight = window.innerHeight;
                 const headerHeight = getOuterHeight('.header-study');
 
@@ -210,105 +200,60 @@
                     '.mobile-footer-study';
                 const footerHeight = getOuterHeight(footerSelector);
                 const navTabHeight = getOuterHeight('.navtab-select-menu');
-                let additionalHeight = 0;
 
                 // Calculate the available height for the study content
-                const studyContentHeight = windowHeight - headerHeight - footerHeight - navTabHeight;
-
-                if ($('.wp-btn-progress-les').length) {
-                    additionalHeight = getOuterHeight('.wp-btn-progress-les');
-                    $('.audit-show').css('margin-top', additionalHeight);
-                }
+                const studyContentHeight = windowHeight - headerHeight - footerHeight;
 
                 // Adjust margins for main content and lesson list based on header and footer heights
                 $('.study-main-content, .list-lesson').css({
                     'margin-top': `${headerHeight}px`,
-                    'margin-bottom': `${footerHeight}px`
+                    'height': `${studyContentHeight}px`
                 });
 
-                if (isHidden) {
-                    // When tab content is hidden, set its height to 0 and adjust study content height
-                    $('.tab-content').css('height', 0);
-                    $('.study-content').css('height', studyContentHeight);
+                $('.study-content').css({
+                    'height': `${studyContentHeight - navTabHeight}px`
+                })
 
-                    if ($('.wp-btn-progress-les').length) {
-                        // Set max-height and enable scrolling for audit-show when hidden
-                        $('.audit-show').css({
-                            'max-height': studyContentHeight - additionalHeight,
-                            'height': studyContentHeight - additionalHeight,
-                            'overflow-y': 'auto',
-                            'box-sizing': 'border-box'
-                        });
-                    } else if ($('.vjs-theme-fantasy').length) {
-                        // Set max-height and enable scrolling for video player when hidden
-                        $('.vjs-theme-fantasy').css({
-                            'min-height': studyContentHeight - additionalHeight,
-                            'height': studyContentHeight - additionalHeight,
-                            'overflow-y': 'auto',
-                            'box-sizing': 'border-box'
-                        });
-                    } else if ($('.exercise-content').length) {
-                        // Set max-height and enable scrolling for exercise content when hidden
-                        $('.exercise-content').css({
-                            'height': studyContentHeight - additionalHeight,
-                            'overflow-y': 'auto',
-                            'box-sizing': 'border-box'
-                        });
-                    } else if ($('.flashcard-body').length) {
-                        // Set max-height and enable scrolling for exercise content when hidden
-                        $('.flashcard-body').css({
-                            'height': studyContentHeight - additionalHeight,
-                            'overflow-y': 'auto',
-                            'box-sizing': 'border-box'
-                        });
-                    } else if ($('.pronunciation-body').length) {
-                        // Set max-height and enable scrolling for exercise content when hidden
-                        $('.pronunciation-body').css({
-                            'height': studyContentHeight - additionalHeight,
-                            'overflow-y': 'auto',
-                            'box-sizing': 'border-box'
-                        });
-                    }
+                if ($('.wp-btn-progress-les').length) {
+                    // Set max-height and enable scrolling for audit-show when hidden
 
-                } else {
-                    // Calculate the percentage height for tab content based on total fixed elements
-                    var studyContentVh = (studyContentHeight / windowHeight) * 100;
-                    const totalVH = (headerHeight + footerHeight + navTabHeight + studyContentVh) /
-                        windowHeight * 100;
-                    const tabContentHeightVH = 100 - totalVH;
+                    const progressBarHeight = $('.wp-btn-progress-les').outerHeight();
+                    let contentHeight = windowHeight - headerHeight - progressBarHeight - footerHeight;
 
-                    $('.tab-content').css('height', `${tabContentHeightVH}vh`);
-                    $('.study-content').css('height', 'auto');
+                    $('.audit-show').css({
+                        'max-height': contentHeight + 'px',
+                        'margin-top': (progressBarHeight) + 'px',
+                    });
 
-                    if ($('.sptb').length) {
-                        // Set a fixed maximum height for audit-show when tab content is visible
-                        $('.audit-show').css('max-height', '40vh');
-                    } else if ($('.vjs-theme-fantasy').length) {
-                        $('.vjs-theme-fantasy').css('min-height', '40vh');
-                    } else if ($('.exercise-content').length) {
-                        $('.exercise-content').css('height', '40vh');
-                    } else if ($('.handwriting-container').length) {
-                        $('.handwriting-container').css('height', '40vh');
-                    } else if ($('.flashcard-body').length) {
-                        $('.flashcard-body').css('height', '40vh');
-                        $('.flashcard-detail-container').css('height', '80vh');
-                    } else if ($('.pronunciation-body').length) {
-                        $('.pronunciation-body').css('height', '40vh');
-                    }
+
+                    $('.study-content').css({
+                        'height': `${studyContentHeight}`
+                    })
+
+                } else if ($('.vjs-theme-fantasy').length) {
+                    // Set max-height and enable scrolling for video player when hidden
+                    $('.vjs-theme-fantasy').css({
+                        'min-height': (studyContentHeight - navTabHeight) + 'px',
+                        'height': (studyContentHeight - navTabHeight) + 'px',
+                    });
+                } else if ($('.exercise-content').length) {
+                    // Set max-height and enable scrolling for exercise content when hidden
+                    $('.exercise-content').css({
+                        'height': (studyContentHeight - navTabHeight) + 'px',
+                    });
+
+                } else if ($('.flashcard-body').length) {
+                    // Set max-height and enable scrolling for exercise content when hidden
+                    $('.flashcard-body').css({
+                        'height': (studyContentHeight - navTabHeight) + 'px',
+                    });
+                } else if ($('.pronunciation-body').length) {
+                    // Set max-height and enable scrolling for exercise content when hidden
+                    $('.pronunciation-body').css({
+                        'height': (studyContentHeight - navTabHeight) + 'px',
+                    });
                 }
             };
-
-            // Toggle the visibility of the tab content and adjust layout accordingly
-            $('#btn_hide_tab_content').on('click', function() {
-                isHidden = !isHidden;
-                // Toggle the icon direction to indicate the current state
-                $(this).find('i').toggleClass('bi-chevron-double-up bi-chevron-double-down');
-                adjustLayout();
-            });
-
-            // Initial layout adjustment and bind the adjustLayout function to window resize
-            adjustLayout();
-            $(window).resize(adjustLayout);
         });
 
         function animateHicoin(increasedPoints = 0) {
@@ -379,7 +324,6 @@
             });
         }
 
-
         function checkFinishContent() {
             const contentId = '{{ $detailContent->id }}';
             const checkImage = $('img[data-content-id="' + contentId + '"]');
@@ -435,7 +379,7 @@
                                         </div>
                                         ${
                                             parentId === 0
-                                            ? `<div class="comment-reply mt-3" data-comment-id="${commentId}"></div>` 
+                                            ? `<div class="comment-reply mt-3" data-comment-id="${commentId}"></div>`
                                             : ''
                                         }
                                     </div>

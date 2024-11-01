@@ -15,6 +15,7 @@ use App\Roadmap;
 use App\Services\LmsContentService;
 use App\Services\LmsSeriesComboService;
 use App\Services\LmsSeriesService;
+use App\Services\LmsStudentViewService;
 use App\Services\PaymentMethodService;
 use App\Services\QuizResultFinishService;
 use App\Services\RoadmapService;
@@ -40,6 +41,7 @@ class LmsSeriesController extends Controller
     private $quizResultFinishService;
     private $userRoadmapService;
     private $roadmapService;
+	private $lmsStudentViewService;
 
 	public function __construct(
         LmsSeriesService $lmsSeriesService,
@@ -47,6 +49,7 @@ class LmsSeriesController extends Controller
         LmsContentService $lmsContentService,
         PaymentMethodService $paymentMethodService,
         QuizResultFinishService $quizResultFinishService,
+		LmsStudentViewService $lmsStudentViewService,
         UserRoadmapService $userRoadmapService,
         RoadmapService $roadmapService
     ) {
@@ -56,6 +59,7 @@ class LmsSeriesController extends Controller
         $this->lmsContentService = $lmsContentService;
         $this->paymentMethodService = $paymentMethodService;
         $this->quizResultFinishService = $quizResultFinishService;
+		$this->lmsStudentViewService = $lmsStudentViewService;
         $this->userRoadmapService = $userRoadmapService;
         $this->roadmapService = $roadmapService;
 	}
@@ -561,6 +565,10 @@ class LmsSeriesController extends Controller
 			//->orderBy('order_by')
 			->get();
 		// dd($data);
+
+		$countSeries = $this->lmsStudentViewService->getCountOfSeriesForUser(Auth::user()->id);
+		$data['count_series'] = $countSeries;
+
 		$view_name = 'client.mypage.my-courses';
 		return view($view_name, $data);
 	}
@@ -609,6 +617,9 @@ class LmsSeriesController extends Controller
 			])
 			//->orderBy('order_by')
 			->get();
+		$countSeries = $this->lmsStudentViewService->getCountOfExamForUser(Auth::user()->id);
+		$data['count_series'] = $countSeries;
+
 		$view_name = 'client.mypage.my-courses';
 
 		return view($view_name, $data);

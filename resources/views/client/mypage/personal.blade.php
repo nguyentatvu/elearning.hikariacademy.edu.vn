@@ -2,6 +2,7 @@
 
 @section('styles')
     <link href="{{ asset('css/pages/mypage.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/plugins/swiperjs/swiper-bundle.min.css') }}">
 @endsection
 
 @section('mypage-content')
@@ -10,9 +11,11 @@
             <div class="banner">
                 <div class="profile-pic">
                     @if (Auth::user()->image)
-                        <img src="{{ asset('uploads/users/thumbnail/' . Auth::user()->image) }}" class="rounded-circle object-fit-cover size-full" alt="Avatar" />
+                        <img src="{{ asset('uploads/users/thumbnail/' . Auth::user()->image) }}"
+                            class="rounded-circle object-fit-cover size-full" alt="Avatar" />
                     @else
-                        <img src="{{ asset('images/no-avatar.png') }}" class="rounded-circle object-fit-cover size-full" alt="Avatar" />
+                        <img src="{{ asset('images/no-avatar.png') }}" class="rounded-circle object-fit-cover size-full"
+                            alt="Avatar" />
                     @endif
                 </div>
                 <h3 class="profile-name">{{ Auth::user()->name }}</h3>
@@ -20,15 +23,6 @@
         </div>
         <div class="row mt-5">
             <div class="col-lg-6">
-                <section class="section section-introduction">
-                    <h5 class="section-title">
-                        Giới thiệu
-                    </h5>
-                    <p class="section-subtitle">
-                        Thành viên của HIKARI từ {{ compareDates(Auth::user()->created_at) }}
-                    </p>
-                </section>
-
                 <section class="section">
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="section-title">
@@ -37,41 +31,44 @@
                     </div>
                     @if ($view_series_history->count() > 0)
                         @foreach ($view_series_history as $index => $series)
-                        <div class="course-item d-flex align-items-center pb-3">
-                            <img class="series-image" alt="series image" src="{{ '/public/uploads/lms/series/'.$series->image }}" />
-                            <div class="course-info flex-grow-1">
-                                <div class="course-title">{{ $series->title }}</div>
-                                <div class="course-time mb-1">Học cách đây {{ compareTime($series->viewed_time) }}</div>
-                                <div class="progress">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
-                                        aria-valuenow="{{ $series->progressPercent }}" aria-valuemin="0" aria-valuemax="100"
-                                        style="width: {{ $series->progressPercent }}%">
-                                        <span class="{{ $series->progressPercent <= 10 ? 'd-none' : '' }}">
+                            <div class="course-item d-flex align-items-center pb-3">
+                                <img class="series-image" alt="series image"
+                                    src="{{ '/public/uploads/lms/series/' . $series->image }}" />
+                                <div class="course-info flex-grow-1">
+                                    <div class="course-title">{{ $series->title }}</div>
+                                    <div class="course-time mb-1">Học cách đây {{ compareTime($series->viewed_time) }}</div>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary-custom"
+                                            role="progressbar" aria-valuenow="{{ $series->progressPercent }}"
+                                            aria-valuemin="0" aria-valuemax="100"
+                                            style="width: {{ $series->progressPercent }}%">
+                                            <span class="{{ $series->progressPercent <= 10 ? 'd-none' : '' }}">
+                                                {{ $series->progressPercent }}%
+                                            </span>
+                                        </div>
+                                        <span
+                                            class="ms-1 text-primary {{ $series->progressPercent <= 10 ? '' : 'd-none' }}">
                                             {{ $series->progressPercent }}%
                                         </span>
                                     </div>
-                                    <span class="ms-1 text-primary {{ $series->progressPercent <= 10 ? '' : 'd-none' }}">
-                                        {{ $series->progressPercent }}%
-                                    </span>
+                                    @if ($series->roadmapChosen)
+                                        <a href="{{ route('learning-management.lesson.show', ['combo_slug' => $series->combo_slug, 'slug' => $series->slug]) }}"
+                                            class="text-primary mt-1 fs-6 d-block">
+                                            Tiếp tục học
+                                        </a>
+                                    @elseif (optional($series->seriesCombo)->checkMultipleCombo)
+                                        <a href="{{ route('series.introduction-detail-combo', ['combo_slug' => $series->combo_slug]) . '?series_action=scrollToList' }}"
+                                            class="text-primary mt-1 fs-6 d-block">
+                                            Chọn lộ trình và học ngay
+                                        </a>
+                                    @else
+                                        <a href="{{ route('series.introduction-detail', ['combo_slug' => $series->combo_slug, 'slug' => $series->slug]) . '?series_action=openRoadmapModal' }}"
+                                            class="text-primary mt-1 fs-6 d-block">
+                                            Chọn lộ trình và học ngay
+                                        </a>
+                                    @endif
                                 </div>
-                                @if ($series->roadmapChosen)
-                                    <a href="{{ route('learning-management.lesson.show', ['combo_slug' => $series->combo_slug, 'slug' => $series->slug]) }}"
-                                        class="text-primary mt-1 fs-6 d-block">
-                                        Tiếp tục học
-                                    </a>
-                                @elseif (optional($series->seriesCombo)->checkMultipleCombo)
-                                    <a href="{{ route('series.introduction-detail-combo', ['combo_slug' => $series->combo_slug]) . '?series_action=scrollToList' }}"
-                                        class="text-primary mt-1 fs-6 d-block">
-                                        Chọn lộ trình và học ngay
-                                    </a>
-                                @else
-                                    <a href="{{ route('series.introduction-detail', ['combo_slug' => $series->combo_slug, 'slug' => $series->slug]) . '?series_action=openRoadmapModal' }}"
-                                        class="text-primary mt-1 fs-6 d-block">
-                                        Chọn lộ trình và học ngay
-                                    </a>
-                                @endif
                             </div>
-                        </div>
                         @endforeach
                     @else
                         <div>
@@ -85,7 +82,8 @@
             <div class="col-lg-6">
                 <div class="personal-information">
                     <h4 class="mb-4">Thông tin tài khoản</h4>
-                    <form id="update_info_form" action="{{ route('mypage.update-info') }}" method="post" enctype="multipart/form-data">
+                    <form id="update_info_form" action="{{ route('mypage.update-info') }}" method="post"
+                        enctype="multipart/form-data">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <div class="row mb-3">
                             <div class="col-md-6">
@@ -105,7 +103,7 @@
                                 <input type="text" name="name"
                                     class="form-control input-personal-infomation {{ $errors->has('name') ? 'is-invalid' : '' }}"
                                     value="{{ old('name', Auth::user()->name) }}" placeholder="Họ và tên">
-                                    <span class="text-danger invalid-feedback">{{ $errors->first('name') }}</span>
+                                <span class="text-danger invalid-feedback">{{ $errors->first('name') }}</span>
                             </div>
                             <div class="col-md-6">
                                 <label for="phone" class="text-personal-infomation">Số điện thoại</label>
@@ -117,32 +115,40 @@
                         </div>
                         <div class="mb-3">
                             <label for="old_password" class="text-personal-infomation">Mật khẩu cũ</label>
-                            <input type="password" class="form-control input-personal-infomation {{ $errors->has('old_password') ? 'is-invalid' : '' }}"
+                            <input type="password"
+                                class="form-control input-personal-infomation {{ $errors->has('old_password') ? 'is-invalid' : '' }}"
                                 name="old_password" placeholder="">
                             <span class="text-danger invalid-feedback">{{ $errors->first('old_password') }}</span>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="password" class="text-personal-infomation">Mật khẩu mới</label>
-                                <input type="password" class="form-control input-personal-infomation {{ $errors->has('password') ? 'is-invalid' : '' }}"
+                                <input type="password"
+                                    class="form-control input-personal-infomation {{ $errors->has('password') ? 'is-invalid' : '' }}"
                                     name="password" placeholder="">
                                 <span class="text-danger invalid-feedback">{{ $errors->first('password') }}</span>
                             </div>
                             <div class="col-md-6">
-                                <label for="password_confirmation" class="text-personal-infomation">Xác nhận mật khẩu mới</label>
-                                <input type="password" class="form-control input-personal-infomation" name="password_confirmation" placeholder="">
+                                <label for="password_confirmation" class="text-personal-infomation">Xác nhận mật khẩu
+                                    mới</label>
+                                <input type="password" class="form-control input-personal-infomation"
+                                    name="password_confirmation" placeholder="">
                             </div>
                         </div>
                         <div class="row mb-3 dropzone-file-section">
                             <label for="dropzone_file" class="text-personal-infomation">Cập nhật ảnh đại diện</label>
                             <div class="col-xl-6 d-flex justify-content-center">
                                 <div id="file-list" class="mt-3">
-                                    <div class="file-list-information position-relative {{ $errors->has('avatar') ? 'is-invalid' : '' }}">
+                                    <div
+                                        class="file-list-information position-relative {{ $errors->has('avatar') ? 'is-invalid' : '' }}">
                                         @if (Auth::user()->image)
                                             <img src="{{ asset('uploads/users/thumbnail/' . Auth::user()->image) }}"
-                                                class="rounded-circle object-fit-cover size-full file-image-list" alt="Avatar" />
+                                                class="rounded-circle object-fit-cover size-full file-image-list"
+                                                alt="Avatar" />
                                         @else
-                                            <img src="{{ asset('images/no-avatar.png') }}" class="rounded-circle object-fit-cover size-full file-image-list" alt="Avatar" />
+                                            <img src="{{ asset('images/no-avatar.png') }}"
+                                                class="rounded-circle object-fit-cover size-full file-image-list"
+                                                alt="Avatar" />
                                         @endif
                                         <div class="change-file" data-index="${index}">Chỉnh sửa</div>
                                     </div>
@@ -175,10 +181,77 @@
                 </div>
             </div>
         </div>
+        <div class="recommended-series-section position-relative">
+            <h4 class="align-self-baseline mt-3">Gợi ý các khoá học</h4>
+            <div class="swiper swiper-container">
+                <div class="swiper-wrapper">
+                    @foreach ($other_combo_series as $recommended_series)
+                        @if (isset($recommended_series->seriesList) && count($recommended_series->seriesList) > 0)
+                            <div class="swiper-slide">
+                                <div class="course-card recommended">
+                                    <img alt="course image" height="400" width="600"
+                                        src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $recommended_series->image) }}" />
+                                    <div class="course-card-body">
+                                        <h5 class="course-card-title">{{ $recommended_series->title }}</h5>
+                                        <p class="course-card-price">{{ formatCurrencyVND($recommended_series->cost) }}
+                                        </p>
+                                        <div class="course-card-description line-clamp-3">{!! $recommended_series->short_description !!}</div>
+                                        <div class="course-card-teacher text-muted w-100 mb-1">{!! $recommended_series->description['teacher_description'] ?? '' !!}
+                                        </div>
+                                        <div class="d-flex align-items-center text-primary-color mt-3">
+                                            <i class="bi bi-play-circle-fill"></i>
+                                            <span class="ms-2">{{ $recommended_series->content_count }}</span>
+                                            <i class="bi bi-book ms-3"></i>
+                                            <span
+                                                class="ms-2">{{ empty($recommended_series->chapter_count) ? 1 : $recommended_series->chapter_count }}
+                                                chương</span>
+                                            @if ($recommended_series->checkMultipleCombo)
+                                                <button class="btn btn-outline-primary ms-auto"
+                                                    onclick="location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $recommended_series->slug]) }}'">
+                                                    Xem thêm
+                                                </button>
+                                            @else
+                                                <button class="btn btn-outline-primary ms-auto"
+                                                    onclick="location.href='{{ route('series.introduction-detail', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'">
+                                                    Xem thêm
+                                                </button>
+                                            @endif
+                                        </div>
+                                        @if (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) > 1)
+                                            <button class="btn btn-primary w-100 mt-3"
+                                                onclick="location.href='{{ route('mypage.courses') }}'">
+                                                Học ngay
+                                            </button>
+                                        @elseif (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) == 1)
+                                            <button class="btn btn-primary w-100 mt-3"
+                                                onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'">
+                                                Học ngay
+                                            </button>
+                                        @elseif (Auth::check())
+                                            <button class="btn btn-primary w-100 mt-3"
+                                                onclick="location.href='{{ route('payments.lms', $recommended_series->slug) }}'">
+                                                Mua ngay
+                                            </button>
+                                        @else
+                                            <button class="btn btn-primary w-100 mt-3" onclick="showAuthModal()">
+                                                Mua ngay
+                                            </button>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
     </div>
 @endsection
 
-@section('scripts')
+@section('mypage-scripts')
+    <script src="{{ asset('js/plugins/swiperjs/swiper-bundle.min.js') }}"></script>
     <script type="module">
         $(document).ready(function() {
             $('#files').on('change', function() {
@@ -210,6 +283,34 @@
             $(document).on('click', '.change-file', function() {
                 $('#dropzone_file').show();
             });
+
+            setupRecommnededSeriesSwiper();
         });
+
+        const setupRecommnededSeriesSwiper = () => {
+            new Swiper('.swiper-container', {
+                slidesPerView: 1,
+                spaceBetween: 5,
+                loop: true,
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                slidesPerGroup: 1,
+                autoHeight: true,
+                breakpoints: {
+                    1200: {
+                        slidesPerView: 3,
+                    },
+                    768: {
+                        slidesPerView: 2,
+                    }
+                },
+            });
+        }
     </script>
 @endsection

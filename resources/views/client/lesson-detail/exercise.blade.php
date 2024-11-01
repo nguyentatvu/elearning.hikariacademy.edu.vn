@@ -2,6 +2,12 @@
 
 @section('lesson-detail-styles')
     <link rel="stylesheet" href="{{ asset('css/pages/lesson-detail/exercise-lesson.css') }}">
+    <style>
+        .paragraph-les {
+            margin-bottom: 0 !important;
+            padding: 0 !important;
+        }
+    </style>
 @endsection
 
 @section('lesson-detail-content')
@@ -13,9 +19,9 @@
         <div class="card-body">
             <div class="exercise-header item-det mb-4 d-flex justify-content-between align-items-center">
                 <a class="text-dark text-primary" href="#">
-                    <h3 class="fw-semibold">
+                    <h4 class="fw-semibold">
                         {{ $detailContent->bai }}
-                    </h3>
+                    </h4>
                 </a>
                 <div class="d-flex exercise-score-container ms-3 gap-3 fw-bold">
                     <div class="score float-right d-flex align-items-center">

@@ -177,7 +177,7 @@
 </div>
 @endsection
 
-@section('scripts')
+@section('mypage-scripts')
     <script src="{{ asset('js/client/mypage/recharge-point.js') }}"></script>
     <script>
         const TRANSFER_ORDER_URL = '{{ route('payments.coin.transfer') }}';

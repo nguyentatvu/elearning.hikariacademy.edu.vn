@@ -25,19 +25,16 @@ class AppServiceProvider extends ServiceProvider
                 if ($banner->image) {
                     if ($banner->display_type == 'multi_image') {
                         $banner->image = collect(json_decode($banner->image))->map(function ($image) {
-                            $path = strpos($image, 'banners/') === 0 ? $image : 'banners/' . $image;
-                            return 'storage/' . $path;
+                            return asset($image); // Image path is already relative to public directory
                         });
                     } else {
-                        $path = strpos($banner->image, 'banners/') === 0 ? $banner->image : 'banners/' . $banner->image;
-                        $banner->image = asset('storage/' . $path);
+                        $banner->image = asset($banner->image); // Image path is already relative to public directory
                     }
                 }
             });
 
             $view->with('banners', $banners);
         });
-
     }
 
     /**

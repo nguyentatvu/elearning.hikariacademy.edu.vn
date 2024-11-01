@@ -105,7 +105,11 @@ class LmsSeriesService extends BaseService
             }
 
             $seriesItem->order = $viewInfo['order'] ?? null;
-            $seriesItem->progressPercent = (int) (($seriesComboItem->completed_lessons / $seriesComboItem->total_lessons) * 100);
+            if (!$seriesComboItem->completed_lessons || !$seriesComboItem->total_lessons) {
+                $seriesItem->progressPercent = 0;
+            } else {
+                $seriesItem->progressPercent = (int) (($seriesComboItem->completed_lessons / $seriesComboItem->total_lessons) * 100);
+            }
             $seriesItem->combo_slug = $seriesComboItem->combo_slug ?? '';
             $seriesItem->roadmapChosen = ($userRoadmapItem && $userRoadmapItem->duration_months != null) ? true : false;
             $seriesItem->seriesCombo = $seriesComboItem;

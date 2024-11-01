@@ -45,14 +45,14 @@ class SiteController extends Controller
     ->get();
      // sendEmail('taodonhang', array('name'=>'123', 'donhang'=>'123', 'gia'=>'123', 'thongtinchuyenkhoan'=> '123','to_email' => 'phuocpham1988@gmail.com'));
 
-      
+
     $data['lms_series'] = $firstSeries;
 
     ///// KHóa luyện thi
     /*$data['series'] = DB::table('lmsseries')
-        ->select('lmsseries.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+        ->select('lmsseries.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id = lmsseries.id) as lmscontents"),
-            DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+            DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND lmscontents.lmsseries_id = lmsseries.id) as try_lmscontents"))
     ->where([
       ['lmsseries.delete_status',0],
@@ -65,10 +65,10 @@ class SiteController extends Controller
       //dd(Auth::user()->role_id);
 
       $data['series'] = DB::table('lmsseries_combo')
-          ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+          ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-              ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+              ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
               DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents")
@@ -82,15 +82,15 @@ class SiteController extends Controller
 
       if (Auth::check() && (Auth::check() && Auth::user()->role_id != 6)){
           $data['series'] = DB::table('lmsseries_combo')
-              ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+              ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                  ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                  ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                   DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents"),
-                  DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id 
-                  = lmsseries_combo.id AND payment_method.user_id = ".Auth::id()." 
+                  DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id
+                  = lmsseries_combo.id AND payment_method.user_id = ".Auth::id()."
                   AND payment_method.status = 1
                   AND DATE_ADD(responseTime, INTERVAL IF(lmsseries_combo.time = 0,90,IF(lmsseries_combo.time = 1,180,365)) DAY) > NOW()) as payment")
               )
@@ -105,9 +105,9 @@ class SiteController extends Controller
 
  // N5
       /*$data['series_5'] = DB::table('lmsseries')
-          ->select('lmsseries.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents 
+          ->select('lmsseries.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
            WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id = lmsseries.id) as lmscontents"),
-              DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+              DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND lmscontents.lmsseries_id = lmsseries.id) as try_lmscontents"))
           ->where([
               ['lmsseries.delete_status',0],
@@ -118,10 +118,10 @@ class SiteController extends Controller
           ->distinct()
           ->get();*/
       $data['series_5'] = DB::table('lmsseries_combo')
-          ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+          ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-              ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+              ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
               DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents" )
@@ -137,15 +137,15 @@ class SiteController extends Controller
 
       if (Auth::check() && (Auth::check() && Auth::user()->role_id != 6)){
           $data['series_5'] = DB::table('lmsseries_combo')
-              ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+              ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                  ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                  ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                   DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents"),
-                  DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id 
-                  = lmsseries_combo.id AND payment_method.user_id = ".Auth::id()."  
+                  DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id
+                  = lmsseries_combo.id AND payment_method.user_id = ".Auth::id()."
                    AND payment_method.status = 1
                    AND DATE_ADD(responseTime, INTERVAL IF(lmsseries_combo.time = 0,90,IF(lmsseries_combo.time = 1,180,365)) DAY) > NOW()) as payment")
               )
@@ -163,7 +163,7 @@ class SiteController extends Controller
       /*$data['series_4'] = DB::table('lmsseries')
           ->select('lmsseries.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
             WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id = lmsseries.id) as lmscontents"),
-              DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+              DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND lmscontents.lmsseries_id = lmsseries.id) as try_lmscontents"))
           ->where([
               ['lmsseries.delete_status',0],
@@ -174,10 +174,10 @@ class SiteController extends Controller
           ->distinct()
           ->get();*/
       $data['series_4'] = DB::table('lmsseries_combo')
-          ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+          ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-              ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+              ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
               DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents" )
@@ -192,14 +192,14 @@ class SiteController extends Controller
 
       if (Auth::check() && (Auth::check() && Auth::user()->role_id != 6)){
           $data['series_4'] = DB::table('lmsseries_combo')
-              ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+              ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                  ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                  ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                   DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents"),
-                  DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id 
+                  DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id
                   = lmsseries_combo.id  AND payment_method.user_id = ".Auth::id()."
                      AND payment_method.status = 1
                      AND DATE_ADD(responseTime, INTERVAL IF(lmsseries_combo.time = 0,90,IF(lmsseries_combo.time = 1,180,365)) DAY) > NOW()) as payment")
@@ -215,9 +215,9 @@ class SiteController extends Controller
       }
       // N3
       /*$data['series_3'] = DB::table('lmsseries')
-          ->select('lmsseries.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents 
+          ->select('lmsseries.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
            WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id = lmsseries.id) as lmscontents"),
-              DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+              DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND lmscontents.lmsseries_id = lmsseries.id) as try_lmscontents"))
           ->where([
               ['lmsseries.delete_status',0],
@@ -229,10 +229,10 @@ class SiteController extends Controller
           ->get();*/
 
       $data['series_3'] = DB::table('lmsseries_combo')
-          ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+          ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-              ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+              ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
               DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents" )
@@ -246,14 +246,14 @@ class SiteController extends Controller
           ->get();
       if (Auth::check() && (Auth::check() && Auth::user()->role_id != 6)){
           $data['series_3'] = DB::table('lmsseries_combo')
-              ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+              ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                  ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                  ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                   DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents"),
-                  DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id 
+                  DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id
                   = lmsseries_combo.id  AND payment_method.user_id = ".Auth::id()."  AND payment_method.status = 1
                      AND DATE_ADD(responseTime, INTERVAL IF(lmsseries_combo.time = 0,90,IF(lmsseries_combo.time = 1,180,365)) DAY) > NOW()) as payment")
               )
@@ -271,10 +271,10 @@ class SiteController extends Controller
 ////// Khóa học
 
       $data['series_el'] = DB::table('lmsseries_combo')
-          ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+          ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-              ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+              ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
               DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents" )
@@ -289,14 +289,14 @@ class SiteController extends Controller
 
       if (Auth::check() && (Auth::check() && Auth::user()->role_id != 6)){
           $data['series_el'] = DB::table('lmsseries_combo')
-              ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+              ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                  ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                  ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                   DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents"),
-                  DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id 
+                  DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id
                   = lmsseries_combo.id  AND payment_method.user_id = ".Auth::id()."  AND payment_method.status = 1
                      AND DATE_ADD(responseTime, INTERVAL IF(lmsseries_combo.time = 0,90,IF(lmsseries_combo.time = 1,180,365)) DAY) > NOW()) as payment")
               )
@@ -311,10 +311,10 @@ class SiteController extends Controller
       }
 
       $data['series_el5'] = DB::table('lmsseries_combo')
-          ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+          ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-              ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+              ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
               DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents" )
@@ -329,14 +329,14 @@ class SiteController extends Controller
 
       if (Auth::check() && (Auth::check() && Auth::user()->role_id != 6)){
           $data['series_el5'] = DB::table('lmsseries_combo')
-              ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+              ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                  ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                  ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                   DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents"),
-                  DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id 
+                  DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id
                   = lmsseries_combo.id  AND payment_method.user_id = ".Auth::id()."   AND payment_method.status = 1
                     AND DATE_ADD(responseTime, INTERVAL IF(lmsseries_combo.time = 0,90,IF(lmsseries_combo.time = 1,180,365)) DAY) > NOW()) as payment")
               )
@@ -352,10 +352,10 @@ class SiteController extends Controller
 
 
       $data['series_el4'] = DB::table('lmsseries_combo')
-          ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+          ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-              ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+              ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
               DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents" )
@@ -370,14 +370,14 @@ class SiteController extends Controller
 
       if (Auth::check() && (Auth::check() && Auth::user()->role_id != 6)){
           $data['series_el4'] = DB::table('lmsseries_combo')
-              ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+              ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                  ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                  ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                   DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents"),
-                  DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id 
+                  DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id
                   = lmsseries_combo.id  AND payment_method.user_id = ".Auth::id()."   AND payment_method.status = 1
                      AND DATE_ADD(responseTime, INTERVAL IF(lmsseries_combo.time = 0,90,IF(lmsseries_combo.time = 1,180,365)) DAY) > NOW()) as payment")
               )
@@ -392,10 +392,10 @@ class SiteController extends Controller
       }
 
       $data['series_el3'] = DB::table('lmsseries_combo')
-          ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+          ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-              ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+              ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
               DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents" )
@@ -410,14 +410,14 @@ class SiteController extends Controller
 
       if (Auth::check() && (Auth::check() && Auth::user()->role_id != 6)){
           $data['series_el5'] = DB::table('lmsseries_combo')
-              ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+              ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                  ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                  ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                   DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents"),
-                  DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id 
+                  DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id
                   = lmsseries_combo.id  AND payment_method.user_id = ".Auth::id()."  AND payment_method.status = 1
                      AND DATE_ADD(responseTime, INTERVAL IF(lmsseries_combo.time = 0,90,IF(lmsseries_combo.time = 1,180,365)) DAY) > NOW()) as payment")
               )
@@ -432,9 +432,9 @@ class SiteController extends Controller
       }
 
       /*$data['series_el'] = DB::table('lmsseries')
-          ->select('lmsseries.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+          ->select('lmsseries.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
           WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id = lmsseries.id) as lmscontents"),
-              DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+              DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND lmscontents.lmsseries_id = lmsseries.id) as try_lmscontents"))
           ->where([
               ['lmsseries.delete_status',0],
@@ -540,10 +540,10 @@ switch ($key) {
 
 ////// Khóa học
         $data['series_el'] = DB::table('lmsseries_combo')
-            ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+            ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                 DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents" )
@@ -558,14 +558,14 @@ switch ($key) {
 
         if (Auth::check() && (Auth::check() && Auth::user()->role_id != 6)){
             $data['series_el'] = DB::table('lmsseries_combo')
-                ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+                ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                    ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                    ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                     DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents"),
-                    DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id 
+                    DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id
                   = lmsseries_combo.id  AND payment_method.user_id = ".Auth::id()."  AND payment_method.status = 1
                      AND DATE_ADD(responseTime, INTERVAL IF(lmsseries_combo.time = 0,90,IF(lmsseries_combo.time = 1,180,365)) DAY) > NOW()) as payment")
                 )
@@ -580,10 +580,10 @@ switch ($key) {
         }
 
         $data['series_el5'] = DB::table('lmsseries_combo')
-            ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+            ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                 DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents" )
@@ -598,14 +598,14 @@ switch ($key) {
 
         if (Auth::check() && (Auth::check() && Auth::user()->role_id != 6)){
             $data['series_el5'] = DB::table('lmsseries_combo')
-                ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+                ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                    ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                    ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                     DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents"),
-                    DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id 
+                    DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id
                   = lmsseries_combo.id  AND payment_method.user_id = ".Auth::id()."  AND payment_method.status = 1
                      AND DATE_ADD(responseTime, INTERVAL IF(lmsseries_combo.time = 0,90,IF(lmsseries_combo.time = 1,180,365)) DAY) > NOW()) as payment")
                 )
@@ -621,10 +621,10 @@ switch ($key) {
 
 
         $data['series_el4'] = DB::table('lmsseries_combo')
-            ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+            ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                 DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents" )
@@ -639,14 +639,14 @@ switch ($key) {
 
         if (Auth::check() && (Auth::check() && Auth::user()->role_id != 6)){
             $data['series_el4'] = DB::table('lmsseries_combo')
-                ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+                ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                    ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                    ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                     DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents"),
-                    DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id 
+                    DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id
                   = lmsseries_combo.id  AND payment_method.user_id = ".Auth::id()."   AND payment_method.status = 1
                      AND DATE_ADD(responseTime, INTERVAL IF(lmsseries_combo.time = 0,90,IF(lmsseries_combo.time = 1,180,365)) DAY) > NOW()) as payment")
                 )
@@ -661,10 +661,10 @@ switch ($key) {
         }
 
         $data['series_el3'] = DB::table('lmsseries_combo')
-            ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+            ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                 DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents" )
@@ -679,14 +679,14 @@ switch ($key) {
 
         if (Auth::check() && (Auth::check() && Auth::user()->role_id != 6)){
             $data['series_el5'] = DB::table('lmsseries_combo')
-                ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+                ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                    ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                    ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                     DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents"),
-                    DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id 
+                    DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id
                   = lmsseries_combo.id  AND payment_method.user_id = ".Auth::id()."   AND payment_method.status = 1
                     AND DATE_ADD(responseTime, INTERVAL IF(lmsseries_combo.time = 0,90,IF(lmsseries_combo.time = 1,180,365)) DAY) > NOW()) as payment")
                 )
@@ -730,10 +730,10 @@ switch ($key) {
         //dd(Auth::user()->role_id);
 
         $data['series'] = DB::table('lmsseries_combo')
-            ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+            ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                 DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents")
@@ -747,14 +747,14 @@ switch ($key) {
 
         if (Auth::check() && (Auth::check() && Auth::user()->role_id != 6)){
             $data['series'] = DB::table('lmsseries_combo')
-                ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+                ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                    ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                    ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                     DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents"),
-                    DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id 
+                    DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id
                   = lmsseries_combo.id AND payment_method.user_id = ".Auth::id()."  AND payment_method.status = 1
                   AND DATE_ADD(responseTime, INTERVAL IF(lmsseries_combo.time = 0,90,IF(lmsseries_combo.time = 1,180,365)) DAY) > NOW()) as payment")
                 )
@@ -782,10 +782,10 @@ switch ($key) {
             ->distinct()
             ->get();*/
         $data['series_5'] = DB::table('lmsseries_combo')
-            ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+            ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                 DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents" )
@@ -801,14 +801,14 @@ switch ($key) {
 
         if (Auth::check() && (Auth::check() && Auth::user()->role_id != 6)){
             $data['series_5'] = DB::table('lmsseries_combo')
-                ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+                ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                    ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                    ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                     DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents"),
-                    DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id 
+                    DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id
                   = lmsseries_combo.id AND payment_method.user_id = ".Auth::id()."  AND payment_method.status = 1
                     AND DATE_ADD(responseTime, INTERVAL IF(lmsseries_combo.time = 0,90,IF(lmsseries_combo.time = 1,180,365)) DAY) > NOW()) as payment")
                 )
@@ -837,10 +837,10 @@ switch ($key) {
             ->distinct()
             ->get();*/
         $data['series_4'] = DB::table('lmsseries_combo')
-            ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+            ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                 DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents" )
@@ -855,14 +855,14 @@ switch ($key) {
 
         if (Auth::check() && (Auth::check() && Auth::user()->role_id != 6)){
             $data['series_4'] = DB::table('lmsseries_combo')
-                ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+                ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                    ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                    ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                     DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents"),
-                    DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id 
+                    DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id
                   = lmsseries_combo.id  AND payment_method.user_id = ".Auth::id()."
                      AND payment_method.status = 1
                      AND DATE_ADD(responseTime, INTERVAL IF(lmsseries_combo.time = 0,90,IF(lmsseries_combo.time = 1,180,365)) DAY) > NOW()) as payment")
@@ -892,10 +892,10 @@ switch ($key) {
             ->get();*/
 
         $data['series_3'] = DB::table('lmsseries_combo')
-            ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+            ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                 DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents" )
@@ -909,14 +909,14 @@ switch ($key) {
             ->get();
         if (Auth::check() && (Auth::check() && Auth::user()->role_id != 6)){
             $data['series_3'] = DB::table('lmsseries_combo')
-                ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents  
+                ->select('lmsseries_combo.*',DB::raw("(SELECT COUNT(id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND type NOT IN(0,8) AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as lmscontents")
-                    ,DB::raw("(SELECT COUNT(id)  FROM lmscontents  
-        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND 
+                    ,DB::raw("(SELECT COUNT(id)  FROM lmscontents
+        WHERE lmscontents.delete_status = 0 AND lmscontents.el_try = 1 AND type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)) as try_lmscontents"),
                     DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
               AND lmsseries_combo.total_items = 1 ) as slug_lmscontents"),
-                    DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id 
+                    DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id
                   = lmsseries_combo.id  AND payment_method.user_id = ".Auth::id()."  AND payment_method.status = 1
                      AND DATE_ADD(responseTime, INTERVAL IF(lmsseries_combo.time = 0,90,IF(lmsseries_combo.time = 1,180,365)) DAY) > NOW()) as payment")
                 )
@@ -1192,7 +1192,7 @@ public function getSeriesContents(Request $request)
 
 	public function vnPayIPN(Request $request)
 	{
-		
+
 		$orderId        = $request->vnp_TxnRef;
 		$log = new Logger(env('VNPAY_LOG_PATH'));
 		$log->putLog('Response call back from api VNPAY, orderId: ' .$orderId);
@@ -1215,7 +1215,7 @@ public function getSeriesContents(Request $request)
 				$i = 1;
 			}
 		}
-		$vnp_HashSecret = env('VNP_HASHSECRET');	
+		$vnp_HashSecret = env('VNP_HASHSECRET');
 		$secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
 		try
 		{
@@ -1230,7 +1230,7 @@ public function getSeriesContents(Request $request)
 				}
 				else {
 					$amount = (int) $_GET['vnp_Amount'] / 100;
-					if($amount == $paymentMethod->amount) 
+					if($amount == $paymentMethod->amount)
 					{
 						if($paymentMethod->status == 0) {
 							if ($inputData['vnp_ResponseCode'] == '00' || $inputData['vnp_TransactionStatus'] == '00') {

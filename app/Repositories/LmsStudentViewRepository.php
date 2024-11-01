@@ -12,7 +12,8 @@ class LmsStudentViewRepository extends BaseRepository
      *
      * @return \Illuminate\Support\Collection
      */
-    public function getViewsBySeries() {
+    public function getViewsBySeries()
+    {
         if (!Auth::check()) {
             return collect();
         }
@@ -30,7 +31,7 @@ class LmsStudentViewRepository extends BaseRepository
     public function getLastViewedContentOfStudent(string $seriesId)
     {
         return $this->model
-            ->join('lmscontents', 'lmscontents.id' , '=', 'lms_student_view.lmscontent_id')
+            ->join('lmscontents', 'lmscontents.id', '=', 'lms_student_view.lmscontent_id')
             ->where('lmscontents.lmsseries_id', $seriesId)
             ->where('lms_student_view.users_id', Auth::id())
             ->latest('lms_student_view.created_date')
@@ -61,13 +62,51 @@ class LmsStudentViewRepository extends BaseRepository
      * @param string $userId
      * @return int
      */
-    public function getViewCountOfSeries(string $seriesId, string $userId) {
+    public function getViewCountOfSeries(string $seriesId, string $userId)
+    {
         return $this->model
-            ->join('lmscontents', 'lmscontents.id' , '=', 'lms_student_view.lmscontent_id')
+            ->join('lmscontents', 'lmscontents.id', '=', 'lms_student_view.lmscontent_id')
             ->where([
                 'lms_student_view.users_id' => $userId,
                 'lmscontents.lmsseries_id' => $seriesId,
-                'lms_student_view.finish' => LmsStudentView::FINISH
+                'lms_student_view.finish' => LmsStudentView::FINISH,
+                'lmscontents.delete_status' => 0
             ])->count();
+    }
+
+    public function getCountOfSeriesForUser(string $userId)
+    {
+        $results = $this->model
+            ->select('lmscontents.lmsseries_id', \DB::raw('COUNT(lmscontents.id) as lesson_count'))
+            ->join('lmscontents', 'lmscontents.id', '=', 'lms_student_view.lmscontent_id')
+            ->join('lmsseries', 'lmscontents.lmsseries_id', '=', 'lmsseries.id')
+            ->where([
+                'lms_student_view.users_id' => $userId,
+                'lms_student_view.finish' => LmsStudentView::FINISH,
+                'lmscontents.delete_status' => 0,
+                'lmsseries.type_series' => 0
+            ])
+            ->groupBy('lmscontents.lmsseries_id')
+            ->get();
+
+        return $results->pluck('lesson_count', 'lmsseries_id')->toArray();
+    }
+
+    public function getCountOfExamForUser(string $userId)
+    {
+        $results = $this->model
+            ->select('lmscontents.lmsseries_id', \DB::raw('COUNT(lmscontents.id) as lesson_count'))
+            ->join('lmscontents', 'lmscontents.id', '=', 'lms_student_view.lmscontent_id')
+            ->join('lmsseries', 'lmscontents.lmsseries_id', '=', 'lmsseries.id')
+            ->where([
+                'lms_student_view.users_id' => $userId,
+                'lms_student_view.finish' => LmsStudentView::FINISH,
+                'lmscontents.delete_status' => 0,
+                'lmsseries.type_series' => 1
+            ])
+            ->groupBy('lmscontents.lmsseries_id')
+            ->get();
+
+        return $results->pluck('lesson_count', 'lmsseries_id')->toArray();
     }
 }

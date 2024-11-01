@@ -26,7 +26,7 @@
                             </div>
                         </div>
                         <div class="button-container">
-                            @if (!$seriesCombo->getCheckMultipleComboAttribute() && $seriesCombo->cost != 0)
+                            @if (!$seriesCombo->checkMultipleCombo && $seriesCombo->cost != 0)
                                 <button class="roadmap-btn"
                                     onclick="location.href='{{ route('home.roadmap', ['comboSlug' => $seriesCombo->slug, 'slug' => request()->route('slug')]) }}'">
                                     <div>

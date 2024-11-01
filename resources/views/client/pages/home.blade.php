@@ -233,7 +233,10 @@
                                     src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $learning_series->image) }}" />
                                 <div class="course-card-body">
                                     <h5 class="course-card-title">{{ $learning_series->title }}</h5>
-                                    <p class="course-card-price">{{ $learning_series->cost == 0 ? 'Miễn phí' : formatCurrencyVND($learning_series->cost) }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <p class="course-card-price mb-0">{{ $learning_series->cost == 0 ? 'Miễn phí' : formatCurrencyVND($learning_series->cost) }}</p>
+                                        <button class="trial-btn btn">Học thử</button>
+                                    </div>
                                     <div class="course-card-description line-clamp-3">{!! $learning_series->short_description !!}</div>
                                     <div class="course-card-teacher text-muted w-100 mb-1">{!! $learning_series->description['teacher_description'] ?? '' !!}</div>
                                     <div class="d-flex align-items-center text-primary-color mt-3">

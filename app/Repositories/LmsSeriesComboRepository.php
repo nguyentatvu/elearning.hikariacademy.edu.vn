@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\LmsContent;
 use App\LmsSeries;
+use App\LmsStudentView;
 use App\PaymentMethod;
 use Illuminate\Support\Facades\DB;
 
@@ -81,13 +82,15 @@ class LmsSeriesComboRepository extends BaseRepository
                                 AND lmscontents.type NOT IN(0,8)
                                 AND lmscontents.lmsseries_id = lmsseries.id)
                             as total_lessons"),
-                DB::raw("(SELECT COUNT(lms_student_view.id) FROM lms_student_view
-                            join lmscontents on lms_student_view.lmscontent_id = lmscontents.id
-                            WHERE lmscontents.delete_status = 0
-                                AND lmscontents.type NOT IN(0,8)
-                                AND lms_student_view.users_id = " . $userId . "
-                                AND lmscontents.lmsseries_id = lmsseries.id)
-                            as completed_lessons")
+                DB::raw("(
+                                SELECT COUNT(lc.id)
+                                FROM lms_student_view lsv
+                                JOIN lmscontents lc ON lc.id = lsv.lmscontent_id
+                                WHERE lsv.users_id = $userId
+                                    AND lsv.finish = " . LmsStudentView::FINISH . "
+                                    AND lc.delete_status = 0
+                                    AND lc.lmsseries_id = lmsseries.id
+                            ) as completed_lessons")
             )
             ->where([
                 ['payment_method.user_id', $userId],
@@ -198,11 +201,11 @@ class LmsSeriesComboRepository extends BaseRepository
             ->where('payment_method.user_id', $userId)
             ->where('payment_method.status', PaymentMethod::PAYMENT_SUCCESS)
             ->where(function ($query) use ($seriesId) {
-            $query->where('n1', $seriesId)
-                ->orWhere('n2', $seriesId)
-                ->orWhere('n3', $seriesId)
-                ->orWhere('n4', $seriesId)
-                ->orWhere('n5', $seriesId);
+                $query->where('n1', $seriesId)
+                    ->orWhere('n2', $seriesId)
+                    ->orWhere('n3', $seriesId)
+                    ->orWhere('n4', $seriesId)
+                    ->orWhere('n5', $seriesId);
             })->whereRaw('(
                 (n1 is not null) +
                 (n2 is not null) +
