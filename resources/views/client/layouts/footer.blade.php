@@ -19,10 +19,10 @@
                                         <a class="text-light text-decoration-none" href="https://hikariacademy.edu.vn">HIKARI ACADEMY</a>
                                     </li>
                                     <li class="mb-2">
-                                        <a class="text-light text-decoration-none" href="#!">Bảo mật thông tin</a>
+                                        <a class="text-light text-decoration-none" href="{{ route('site_pages', 'privacy-policy') }}">Bảo mật thông tin</a>
                                     </li>
                                     <li class="mb-2">
-                                        <a class="text-light text-decoration-none" href="#!">Chính sách hoàn tiền</a>
+                                        <a class="text-light text-decoration-none" href="{{ route('site_pages', 'terms-conditions') }}">Chính sách hoàn tiền</a>
                                     </li>
                                 </ul>
                             </div>
