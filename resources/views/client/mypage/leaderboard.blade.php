@@ -1,6 +1,6 @@
 @extends('client.shared.mypage')
 
-@section('styles')
+@section('mypage-styles')
     <link href="{{ asset('css/pages/mypage.css') }}" rel="stylesheet">
 @endsection
 

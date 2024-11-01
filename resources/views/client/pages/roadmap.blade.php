@@ -136,9 +136,10 @@
         }
 
         .serie-image {
-            height: 100%;
+            height: 200px;
             background-size: fit;
             border-radius: 8px;
+            margin: 30px;
         }
 
         .serie-content {
@@ -177,32 +178,181 @@
             width: 50%;
             margin-left: 5px;
         }
+
+        .serie-content {
+            position: relative;
+            border-radius: 10px;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            min-height: 160px;
+            margin: 0 auto;
+            background-size: contain;
+        }
+
+        .serie-info {
+            position: relative;
+            z-index: 2;
+        }
+
+        .card-title {
+            font-family: 'Nunito', sans-serif;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .roadmap-select {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 14px;
+            margin-left: 10px;
+            width: auto;
+            display: inline-block;
+        }
+
+        .serie-info a {
+            color: #0d6efd;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .serie-info a:hover {
+            text-decoration: underline;
+        }
+
+        /* Sun */
+        .sun {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle at center, #FFD700 60%, #FFA500);
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+        }
+
+        /* Random bubbles */
+        .bubble {
+            position: absolute;
+            background: radial-gradient(circle at 30% 30%, #FFE87C, #FFD700);
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Horizontal river */
+        .river {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(to right,
+                    #88c1d0,
+                    #6ab0bf 25%,
+                    #88c1d0 50%,
+                    #6ab0bf 75%,
+                    #88c1d0 100%);
+            background-size: 200% 100%;
+            animation: flowRiver 8s linear infinite;
+        }
+
+        /* Keyframe Animations */
+        @keyframes moveCloud {
+            from {
+                left: -70px;
+            }
+
+            to {
+                left: calc(100% + 70px);
+            }
+        }
+
+        @keyframes flowRiver {
+            from {
+                background-position: 0 0;
+            }
+
+            to {
+                background-position: 200% 0;
+            }
+        }
+
+        .serie-info strong {
+            color: var(--primary);
+            margin: 10px 0px;
+        }
+
+        @media (max-width: 1024px) {
+            .serie-content {
+                background-size: cover;
+                height: 400px;
+            }
+            .serie-image {
+                display: none;
+            }
+
+            .serie-info {
+                display: flex;
+                justify-content: center;
+            }
+        }
+
+        .bubble {
+            z-index: 99;
+        }
     </style>
 @endsection
 
 @section('content')
     <div id="serie_card" class="serie-card row">
-        <div class="serie-image col-12 col-sm-2">
-            @if ($serie->image)
-                <img src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $serie->image) }}"
-                    alt="" srcset="">
-            @endif
-        </div>
-        <div class="serie-content col-12 col-sm-10">
+        <div class="serie-content col-12 col-sm-10"
+            style="background-image: url({{ asset('images/background/background-roadmap.png') }})">
+            <!-- Background elements -->
+            <div class="sun"></div>
+            <div class="mountains">
+                <div class="mountain mountain-1"></div>
+                <div class="mountain mountain-2"></div>
+            </div>
+
+            <!-- Course information -->
             <div class="serie-info">
-                <h4 class="card-title">{{ $serie->title }}</h4>
-                <div class="d-flex align-items-center">
-                    <label for="roadmap_select"><strong>Lộ trình:</strong></label>
-                    <select id="roadmap_select" class="form-select roadmap-select" aria-label="Default select example">
-                        <option value="" selected>Vui lòng chọn lộ trình</option>
-                        @foreach ($road_map as $item)
-                            <option value="{{ $item->duration_months }}">{{ $item->duration_months }} tháng</option>
-                        @endforeach
-                    </select>
+                <div class="d-flex align-items-center mb-3">
+                    <div class="serie-image">
+                        @if ($serie->image)
+                            <img src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $serie->image) }}"
+                                alt="" srcset="">
+                        @endif
+                    </div>
+                    <div>
+                        <div>
+                            <h4 class="card-title">✨ {{ $serie->title }}</h4>
+                            <label for="roadmap_select"><strong>🛣 Lộ trình:</strong></label>
+                            <select id="roadmap_select" class="form-select roadmap-select"
+                                aria-label="Default select example">
+                                <option value="" selected>Chọn lộ trình bạn muốn xem</option>
+                                @foreach ($road_map as $item)
+                                    <option value="{{ $item->duration_months }}">{{ $item->duration_months }} tháng</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            @if (isset($last_view))
+                                <div class="mt-1">
+                                    <strong>📍 Bài học gần đây:</strong>
+                                    <a href="#car" rel="noopener noreferrer">{{ $last_view->bai }} (Click để xem chi
+                                        tiết)</a>
+                                </div>
+                            @endif
+                            <div id="information-serie"></div>
+                        </div>
+                    </div>
                 </div>
-                @if (isset($last_view))
-                    <div><strong>Bài học gần đây:</strong> <a href="#car" rel="noopener noreferrer">{{ $last_view->bai }}</a></div>
-                @endif
             </div>
         </div>
     </div>
@@ -234,6 +384,184 @@
 
         // jQuery function
         $(document).ready(function() {
+            const styles = `
+                .bubble {
+                    position: absolute;
+                    background: radial-gradient(
+                        circle at 30% 30%,
+                        rgba(255, 223, 0, 0.4) 70%,
+                        rgba(255, 165, 0, 0.4) 30%
+                    );
+                    border-radius: 50%;
+                    pointer-events: none;
+                }
+
+                .cloud {
+                    position: absolute;
+                    width: 100px;
+                    height: 40px;
+                    background: rgba(255, 255, 255, 0.8);
+                    border-radius: 20px;
+                    animation: moveCloud linear infinite;
+                    opacity: 0.7;
+                }
+
+                .cloud::before,
+                .cloud::after {
+                    content: '';
+                    position: absolute;
+                    background: rgba(255, 255, 255, 0.8);
+                    border-radius: 50%;
+                }
+
+                .cloud::before {
+                    width: 50px;
+                    height: 50px;
+                    top: -20px;
+                    left: 15px;
+                }
+
+                .cloud::after {
+                    width: 30px;
+                    height: 30px;
+                    top: -10px;
+                    left: 50px;
+                }
+
+                @keyframes moveCloud {
+                    from {
+                        transform: translateX(-120px);
+                    }
+                    to {
+                        transform: translateX(calc(100vw + 120px));
+                    }
+                }
+
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+
+                @keyframes fadeOut {
+                    from { opacity: 0.4; }
+                    to { opacity: 0; }
+                }
+
+                @keyframes float {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(-15px); }
+                }
+            `;
+
+            // Add styles to head
+            $('<style>').text(styles).appendTo('head');
+
+            let bubbleInterval;
+            let cloudInterval;
+
+            // Function to create a cloud
+            function createCloud() {
+                const $card = $('.serie-content');
+
+                if ($card.length === 0) return;
+
+                const $cloud = $('<div class="cloud"></div>');
+
+                // Random vertical position
+                const maxY = $card.height() - 40; // 40 is cloud height
+                const y = Math.random() * (maxY * 0.7); // Keep clouds in top 70% of container
+
+                // Random size (0.5 to 1.5 times original size)
+                const scale = 0.5 + Math.random();
+
+                // Random speed (15-25 seconds to cross screen)
+                const duration = 15000 + Math.random() * 10000;
+
+                $cloud.css({
+                    top: `${y}px`,
+                    transform: `scale(${scale})`,
+                    animation: `moveCloud ${duration}ms linear`
+                });
+
+                $card.append($cloud);
+
+                // Remove cloud after animation completes
+                setTimeout(() => {
+                    $cloud.remove();
+                }, duration);
+            }
+
+            // Function to create a bubble
+            function createBubble() {
+                const $card = $('.serie-content');
+
+                if ($card.length === 0) return;
+
+                const $bubble = $('<div class="bubble"></div>');
+
+                const size = Math.random() * 12 + 8;
+                const maxX = $card.width() - size;
+                const maxY = $card.height() - size;
+                const x = Math.random() * maxX;
+                const y = Math.random() * (maxY - 40);
+
+                const floatDuration = Math.random() * 3 + 2;
+
+                $bubble.css({
+                    width: `${size}px`,
+                    height: `${size}px`,
+                    left: `${x}px`,
+                    top: `${y}px`,
+                    animation: `
+                        fadeIn 0.5s ease-in forwards,
+                        float ${floatDuration}s ease-in-out infinite,
+                        fadeOut 0.5s ease-out ${floatDuration}s forwards
+                    `
+                });
+
+                $card.append($bubble);
+
+                setTimeout(() => {
+                    $bubble.remove();
+                }, (floatDuration + 0.5) * 1000);
+            }
+
+            // Function to start animations
+            function startAnimations() {
+                stopAnimations();
+                bubbleInterval = setInterval(createBubble, 1500);
+                cloudInterval = setInterval(createCloud, 8000); // Create new cloud every 8 seconds
+                createBubble();
+                createCloud();
+            }
+
+            // Function to stop animations
+            function stopAnimations() {
+                if (bubbleInterval) {
+                    clearInterval(bubbleInterval);
+                    bubbleInterval = null;
+                }
+                if (cloudInterval) {
+                    clearInterval(cloudInterval);
+                    cloudInterval = null;
+                }
+            }
+
+            // Handle visibility changes
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    stopAnimations();
+                } else {
+                    startAnimations();
+                }
+            });
+
+            // Start animations when page loads
+            startAnimations();
+
+            // Rest of your existing code...
+            // [Keep all the existing roadmap-related functions here]
+
             // Function to create a random pastel gradient
             function getRandomPastelGradient() {
                 const colors = [];
@@ -463,6 +791,7 @@
             $('.roadmap-select').on('change', function() {
                 const selectedValue = $(this).val();
                 const selectedMonth = parseInt(selectedValue);
+                console.log(selectedValue);
                 loadRoadMap(selectedMonth, '{{ $serie_combo->slug }}', '{{ $serie->slug }}');
             });
 
@@ -488,6 +817,15 @@
                         sections = response.road_map;
                         dayPositions = [];
                         $('.left-side').show();
+                        $('#information-serie').html(
+                            `
+                            <div>
+                                <strong>🏁 Lộ trình ${response.detail.duration_months} tháng:</strong>
+                                Hoàn thành mục tiêu trong ${response.detail.duration_months * 30} ngày chỉ với ${response.day_count} buổi học!
+                            </div>
+                            `
+                        );
+                        console.log(response);
                         loadDataRoadMap(response.road_map)
                         locationIcon();
                         setCarPosition(response.day_last_view, response.last_view);
@@ -497,7 +835,6 @@
                     }
                 });
             }
-
         });
     </script>
 @endsection

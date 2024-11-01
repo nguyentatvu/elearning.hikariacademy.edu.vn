@@ -7,7 +7,7 @@
                 <div class="course-title">{{ $series->title }}</div>
                 <div class="course-time mb-1">Học cách đây {{ compareTime($series->viewed_time) }}</div>
                 <div class="progress">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary-custom" role="progressbar"
                         aria-valuenow="{{ $series->progressPercent }}" aria-valuemin="0" aria-valuemax="100"
                         style="width: {{ $series->progressPercent }}%">
                         <span class="{{ $series->progressPercent <= 10 ? 'd-none' : '' }}">

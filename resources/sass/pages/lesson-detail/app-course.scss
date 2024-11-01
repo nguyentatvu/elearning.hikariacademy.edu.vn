@@ -236,10 +236,6 @@ html {
   }
 }
 
-.study-main-content {
-  height: 100%;
-}
-
 .nav-tabs .nav-link {
   border: 0;
   border-top-left-radius: 0.5rem;
@@ -324,6 +320,22 @@ span.hikari_question_border {
 
 .title-block-type a {
   background: var(--primary) !important;
+}
+
+// .study-main-section {
+//     overflow-y: hidden;
+//     overflow: scroll;
+// }
+
+.study-main-section ::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 10px;
+}
+
+.study-main-section ::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, .5);
+  box-shadow: 0 0 1px rgba(255, 255, 255, .5);
 }
 
 /* Responsive Styles */

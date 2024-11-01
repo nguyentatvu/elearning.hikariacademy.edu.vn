@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'SiteController@redirectHomePage');
 
-Route::get('/home', 'SiteController@homePage');
+Route::get('/home', 'SiteController@homePage')->name('home');
 
 Route::prefix('learning-management')->name('learning-management.')->group(function () {
     Route::get('lesson/next', 'StudentLmsController@getNextLesson')
@@ -52,12 +52,6 @@ Route::prefix('learning-management')->name('learning-management.')->group(functi
     Route::post('daily-streak', 'UsersController@dailyStreak')
         ->name('lesson.daily-streak');
 });
-
-// Page (Client)
-Route::get('/index', function () {
-    return view('client.pages.home');
-})->name('home.index');
-
 
 Route::get('/roadmap/{comboSlug}/{slug}', 'StudentLmsController@roadmap')->name('home.roadmap');
 Route::post('/roadmap/{comboSlug}/{slug}', 'StudentLmsController@loadRoadMapDetail')->name('home.load-roadmap');

@@ -1,308 +1,428 @@
+@import "../../mixins";
+.course-card {
+  display: flex;
+  flex-direction: column;
+  height: 530px;
+  position: relative;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background: white;
+}
+
+.course-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.course-card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1.5rem;
+  min-height: 300px;
+}
+
+.course-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.course-card-price {
+  color: #2563eb;
+  font-weight: 600;
+  font-size: 1.125rem;
+  margin-bottom: 0.75rem;
+}
+
+.course-card-description {
+  flex: 1;
+  margin-bottom: 1rem;
+}
+
+.course-card-teacher {
+  margin-bottom: 1rem;
+}
+
+.course-info-footer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.button-container {
+  margin-top: auto;
+}
+
 .mypage-content {
+  .banner {
+    width: 100%;
+    height: 100px;
+    border-radius: 10px;
+    position: relative;
+    margin-bottom: 90px;
+  }
+
+  .profile-pic {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    position: absolute;
+    bottom: -75px;
+    left: 50px;
+    border: 5px solid white;
+  }
+
+  .profile-name {
+    position: absolute;
+    bottom: -62px;
+    left: 200px;
+    font-weight: bold;
+  }
+
+  .section {
+    border: 1px solid #0463ca;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .personal-information {
+    border: 1px solid #0463ca;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
+    color: #6c757d;
+  }
+
+  .course-item img {
+    width: 100px;
+    height: 100px;
+    margin-right: 15px;
+  }
+
+  .course-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .course-time {
+    font-size: 0.9rem;
+    color: #6c757d;
+  }
+
+  .view-all {
+    color: #0463ca;
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+
+  .form-control::placeholder {
+    color: #6c757d;
+  }
+
+  @media screen and (max-width: 1199px) {
+    .dropzone {
+      margin-top: 20px;
+    }
+  }
+
+  /* Responsive styles */
+  @media (max-width: 768px) {
     .banner {
-        border: 1px solid var(--primary);
-        width: 100%;
-        height: 300px;
-        border-radius: 10px;
-        position: relative;
-        margin-bottom: 90px;
+      width: 100%;
+      border-radius: 10px;
+      position: relative;
+      margin-bottom: 90px;
     }
 
     .profile-pic {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-        position: absolute;
-        bottom: -75px;
-        left: 50px;
-        border: 5px solid white;
+      background-color: #d9d9d9;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      position: absolute;
+      bottom: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid white;
     }
 
     .profile-name {
-        position: absolute;
-        bottom: -62px;
-        left: 200px;
-        font-weight: bold;
+      /* position: absolute; */
+      bottom: -90px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-weight: bold;
+    }
+  }
+
+  .input-personal-infomation {
+    background: #f7fbff;
+    border: 1px solid #d4d7e3;
+  }
+
+  .text-personal-infomation {
+    color: #0463ca;
+    margin-bottom: 5px;
+  }
+
+  .dropzone {
+    display: none;
+    border: dashed 2px #d4d7e3;
+    background-color: #f2f6fc;
+    border-radius: 15px;
+    width: 100%;
+  }
+
+  .dropzone .dropzone-container {
+    padding: 2rem 0;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #8c96a8;
+    z-index: 20;
+  }
+
+  .dropzone .file-input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    visibility: hidden;
+    cursor: pointer;
+  }
+
+  .file-icon {
+    font-size: 60px;
+    color: #0463ca;
+  }
+
+  .hr-sect {
+    display: flex;
+    flex-basis: 100%;
+    align-items: center;
+    margin: 8px 0px;
+  }
+
+  .hr-sect:before,
+  .hr-sect:after {
+    content: "";
+    flex-grow: 1;
+    background: #ddd;
+    height: 1px;
+    font-size: 0px;
+    line-height: 0px;
+    margin: 0px 8px;
+  }
+
+  .file-list-information {
+    height: 200px;
+    width: 200px;
+  }
+
+  .file-list {
+    height: 200px;
+    width: 200px;
+  }
+
+  .file-image-list {
+    height: 200px;
+    width: 200px;
+    border-radius: 100%;
+    position: relative;
+  }
+
+  .change-file {
+    display: none;
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    cursor: pointer;
+    color: #0463ca;
+    border: 3px solid #0463ca;
+    background: #f7fbff;
+    border-radius: 15px;
+    padding: 5px 10px;
+  }
+
+  .file-list-information:hover .file-image-list {
+    border: 4px solid #0463ca;
+    filter: brightness(0.7);
+  }
+
+  /* Hiển thị .change-file khi hover .file-list-information */
+  .file-list-information:hover .change-file {
+    display: block;
+  }
+
+  img.series-image {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+  }
+
+  .size-full {
+    width: 100%;
+    height: 100%;
+    border: 1px solid var(--primary);
+  }
+
+  .app-navbar {
+    box-shadow: rgba(0, 0, 0, 0.09) 0px 0px 12px;
+  }
+
+  .progress-bar {
+    position: relative;
+  }
+
+  .personal-wrapper .section {
+    max-height: 496px;
+    overflow-y: auto;
+  }
+
+  @media (max-width: 576px) {
+    .banner {
+      margin-bottom: 80px;
     }
 
-    .section {
-        border: 1px solid #0463CA;
-        border-radius: 15px;
-        padding: 20px;
-        margin-bottom: 20px;
+    .profile-name {
+      bottom: -80px;
+      font-size: 1rem;
     }
 
-    .personal-information {
-        border: 1px solid #0463CA;
-        border-radius: 15px;
-        padding: 20px;
-        margin-bottom: 20px;
+    .personal-wrapper {
+      padding-left: 2px !important;
+      padding-right: 2px !important;
     }
 
-    .section-title {
-        font-size: 1.5rem;
-        font-weight: bold;
+    .course-item {
+      flex-direction: column;
+      margin-top: 8px;
     }
 
-    .section-subtitle {
-        font-size: 1rem;
-        color: #6c757d;
+    .course-item > .series-image {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 3 / 2;
     }
 
-    .course-item img {
-        width: 100px;
-        height: 100px;
-        margin-right: 15px;
+    .course-item > .course-info {
+      width: 100%;
+      margin-top: 12px;
     }
 
-    .course-title {
-        font-size: 1.2rem;
-        font-weight: bold;
+    .section-introduction {
+      margin-top: 18px;
     }
 
-    .course-time {
-        font-size: 0.9rem;
-        color: #6c757d;
+    button.btn.btn-primary.w-200px {
+      width: 100% !important;
     }
+  }
 
-    .view-all {
-        color: #0463CA;
-        font-size: 0.9rem;
-        text-decoration: none;
-    }
-
-    .form-control::placeholder {
-        color: #6c757d;
-    }
-
-    @media screen and (max-width: 1199px) {
-        .dropzone {
-            margin-top: 20px;
-        }
-    }
-
-    /* Responsive styles */
-    @media (max-width: 768px) {
-        .banner {
-            width: 100%;
-            height: 200px;
-            border-radius: 10px;
-            position: relative;
-            margin-bottom: 90px;
-        }
-
-        .profile-pic {
-            background-color: #d9d9d9;
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            position: absolute;
-            bottom: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 5px solid white;
-        }
-
-        .profile-name {
-            /* position: absolute; */
-            bottom: -90px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-weight: bold;
-        }
-    }
-
-    .input-personal-infomation {
-        background: #F7FBFF;
-        border: 1px solid #D4D7E3;
-    }
-
-    .text-personal-infomation {
-        color: #0463CA;
-        margin-bottom: 5px;
-    }
-
-    .dropzone {
-        display: none;
-        border: dashed 2px #D4D7E3;
-        background-color: #f2f6fc;
-        border-radius: 15px;
-        width: 100%;
-    }
-
-    .dropzone .dropzone-container {
-        padding: 2rem 0;
-        width: 100%;
-        height: 100%;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        color: #8c96a8;
-        z-index: 20;
-    }
-
-    .dropzone .file-input {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        opacity: 0;
-        visibility: hidden;
-        cursor: pointer;
-    }
-
-    .file-icon {
-        font-size: 60px;
-        color: #0463CA;
-    }
-
-    .hr-sect {
-        display: flex;
-        flex-basis: 100%;
-        align-items: center;
-        margin: 8px 0px;
-    }
-
-    .hr-sect:before,
-    .hr-sect:after {
-        content: "";
-        flex-grow: 1;
-        background: #ddd;
-        height: 1px;
-        font-size: 0px;
-        line-height: 0px;
-        margin: 0px 8px;
+  @media (max-width: 387px) {
+    .profile-name {
+      bottom: -80px;
+      font-size: 0.8rem;
     }
 
     .file-list-information {
-        height: 200px;
-        width: 200px;
-    }
-
-    .file-list {
-        height: 200px;
-        width: 200px;
+      height: 150px;
+      width: 150px;
+      margin-bottom: 20px;
     }
 
     .file-image-list {
-        height: 200px;
-        width: 200px;
-        border-radius: 100%;
-        position: relative;
+      height: 150px;
+      width: 150px;
+      border-radius: 100%;
+      position: relative;
     }
 
-    .change-file {
-        display: none;
-        position: absolute;
-        top: 50%;
-        right: 50%;
-        transform: translate(50%, -50%);
-        cursor: pointer;
-        color: #0463CA;
-        border: 3px solid #0463CA;
-        background: #F7FBFF;
-        border-radius: 15px;
-        padding: 5px 10px;
+    .dropzone-text {
+      font-size: 0.8rem;
+    }
+  }
+
+  .swiper-exam-series,
+  .swiper-learning-series {
+    width: 1100px;
+    padding-bottom: 20px;
+
+    @include mq(max-pc-lg) {
+      width: 1100px;
     }
 
-    .file-list-information:hover .file-image-list {
-        border: 4px solid #0463CA;
-        filter: brightness(0.7);
+    @include mq(max-pc) {
+      width: 800px;
     }
 
-    /* Hiển thị .change-file khi hover .file-list-information */
-    .file-list-information:hover .change-file {
-        display: block;
+    @include mq(max-tb) {
+      width: 700px;
     }
 
-    img.series-image {
-        width: 120px;
-        height: 80px;
-        object-fit: cover;
+    @include mq(max-sp) {
+      width: 350px;
     }
 
-    .size-full {
-        width: 100%;
-        height: 100%;
+    @include mq(max-sp-sl) {
+      width: 90%;
+    }
+  }
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: #2563eb;
+    background: rgb(219 219 219 / 20%);
+    width: 60px;
+    height: 60px;
+    border-radius: 99px;
+
+    @include mq(max-sp-sl) {
+      transform: scale(0.7);
+    }
+  }
+
+  .swiper-button-next {
+    @include mq(max-sp) {
+      right: -8px;
     }
 
-    .app-navbar {
-        box-shadow: rgba(0, 0, 0, 0.09) 0px 0px 12px;
+    @include mq(max-pc-lg) {
+      right: -8px;
+    }
+  }
+
+  .swiper-button-prev {
+    @include mq(max-sp) {
+      left: -8px;
     }
 
-    .progress-bar {
-        position: relative;
+    @include mq(max-pc-lg) {
+      left: -8px;
     }
+  }
 
-    .personal-wrapper .section {
-        max-height: 496px;
-        overflow-y: auto;
-    }
-
-    @media (max-width: 576px) {
-        .banner {
-            margin-bottom: 80px;
-        }
-
-        .profile-name {
-            bottom: -80px;
-            font-size: 1rem;
-        }
-
-        .personal-wrapper {
-            padding-left: 2px !important;
-            padding-right: 2px !important;
-        }
-
-        .course-item {
-            flex-direction: column;
-            margin-top: 8px;
-        }
-
-        .course-item > .series-image {
-            width: 100%;
-            height: auto;
-            aspect-ratio: 3 / 2;
-        }
-
-        .course-item > .course-info {
-            width: 100%;
-            margin-top: 12px;
-        }
-
-        .section-introduction {
-            margin-top: 18px;
-        }
-
-        button.btn.btn-primary.w-200px {
-            width: 100% !important;
-        }
-    }
-
-    @media (max-width: 387px) {
-        .profile-name {
-            bottom: -80px;
-            font-size: 0.8rem;
-        }
-
-        .file-list-information {
-            height: 150px;
-            width: 150px;
-            margin-bottom: 20px;
-        }
-
-        .file-image-list {
-            height: 150px;
-            width: 150px;
-            border-radius: 100%;
-            position: relative;
-        }
-
-        .dropzone-text {
-            font-size: 0.8rem;
-        }
-    }
+  .swiper-slide {
+    height: auto;
+  }
 }
