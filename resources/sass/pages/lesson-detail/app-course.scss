@@ -132,12 +132,40 @@ html {
   }
 }
 
-.accordion-button.active-content {
-  background-color: var(--primary);
-  color: white;
+.accordion-button {
+  .download-link {
+    width: 20px;
+    height: 20px;
+    margin-left: 4px;
 
-  .jap-character-icon {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' color='white'%3E%3Cpath d='M11.008 3C9.59 7 7.07 14 11.5 21'/%3E%3Cpath d='M3 5.32C6.706 6.198 15.177 6.637 21 4m-4.997 6c.495 3-3.463 9.5-8.85 9.956C.935 20.484 4.624 11 12.045 11.5c6.248.421 9.987 5.326 3.747 9.5'/%3E%3C/g%3E%3C/svg%3E");
+    .download-icon {
+      font-weight: bold;
+      color: #166bc9  ;
+
+      &:hover {
+        color: #0e5a8a;
+        text-shadow: 0px 0px 3px rgba(255, 255, 255, 0.8);
+      }
+    }
+  }
+
+  &.active-content {
+    background-color: var(--primary);
+    color: white;
+
+    .jap-character-icon {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' color='white'%3E%3Cpath d='M11.008 3C9.59 7 7.07 14 11.5 21'/%3E%3Cpath d='M3 5.32C6.706 6.198 15.177 6.637 21 4m-4.997 6c.495 3-3.463 9.5-8.85 9.956C.935 20.484 4.624 11 12.045 11.5c6.248.421 9.987 5.326 3.747 9.5'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .download-icon {
+      font-weight: bold;
+      color: white  ;
+
+      &:hover {
+        color: #f0f0f0;
+        text-shadow: 0px 0px 3px rgba(255, 255, 255, 0.8);
+      }
+    }
   }
 }
 
@@ -154,11 +182,23 @@ html {
   }
 }
 
-.list-group-item.active-content {
-  background-color: var(--primary);
+.list-group-item {
+  .download-link{
+    color: #166bc9;
+    font-weight: bold;
 
-  a {
-    color: white !important;
+    &:hover {
+      color: #0e5a8a;
+      text-shadow: 0px 0px 3px rgba(255, 255, 255, 0.8);
+    }
+  }
+
+  &.active-content {
+    background-color: var(--primary);
+
+    a {
+      color: white !important;
+    }
   }
 }
 
@@ -334,8 +374,8 @@ span.hikari_question_border {
 
 .study-main-section ::-webkit-scrollbar-thumb {
   border-radius: 4px;
-  background-color: rgba(0, 0, 0, .5);
-  box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+  background-color: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
 }
 
 /* Responsive Styles */

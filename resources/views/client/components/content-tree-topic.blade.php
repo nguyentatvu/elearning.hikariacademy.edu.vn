@@ -14,6 +14,12 @@
                         class="ms-3 me-1 size-20">
                 @endif
                 <span>{{ $content->bai }}</span>
+                @if (!empty($content->download_doc))
+                    <a href="{{ asset($content->download_doc) }}" class="btn p-0 download-link" target="_blank"
+                        download>
+                        <i class="bi bi-file-earmark-arrow-down download-icon"></i>
+                    </a>
+                @endif
             </button>
         </h2>
         <div id="flush-collapse{{ $chapter_index }}_{{ $content_index }}" class="accordion-collapse collapse {{ $content->css_class == 'active-content' ? 'show' : '' }}"
