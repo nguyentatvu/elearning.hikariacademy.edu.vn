@@ -10,4 +10,15 @@ class BannerService extends BaseService
     {
         parent::__construct($repository);
     }
+
+    /**
+     * Get Banners By Position
+     *
+     * @param string $position
+     * @return mixed
+     */
+    public function getBannersByPosition(string $position)
+    {
+        return $this->repository->getBannersByPosition($position);
+    }
 }
