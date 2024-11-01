@@ -18,10 +18,22 @@
                         {{ $series->progressPercent }}%
                     </span>
                 </div>
-                <a href="{{ route('learning-management.lesson.show', ['combo_slug' => $series->combo_slug, 'slug' => $series->slug]) }}"
-                    class="text-primary mt-1 fs-5 d-block">
-                    Tiếp tục học
-                </a>
+                @if ($series->roadmapChosen)
+                    <a href="{{ route('learning-management.lesson.show', ['combo_slug' => $series->combo_slug, 'slug' => $series->slug]) }}"
+                        class="text-primary mt-1 fs-6 d-block">
+                        Tiếp tục học
+                    </a>
+                @elseif (optional($series->seriesCombo)->checkMultipleCombo)
+                    <a href="{{ route('series.introduction-detail-combo', ['combo_slug' => $series->combo_slug]) . '?series_action=scrollToList' }}"
+                        class="text-primary mt-1 fs-6 d-block">
+                        Chọn lộ trình và học ngay
+                    </a>
+                @else
+                    <a href="{{ route('series.introduction-detail', ['combo_slug' => $series->combo_slug, 'slug' => $series->slug]) . '?series_action=openRoadmapModal' }}"
+                        class="text-primary mt-1 fs-6 d-block">
+                        Chọn lộ trình và học ngay
+                    </a>
+                @endif
             </div>
         </div>
         @endforeach

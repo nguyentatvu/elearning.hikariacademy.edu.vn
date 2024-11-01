@@ -32,7 +32,20 @@ class LmsSeriesCombo extends Model
         return $seriesCount > 1;
     }
 
-    public function getCheckValidComboAttribute() {
+    /**
+     * Check if all roadmaps for each series in a combo are selected
+     *
+     * @param array $roadmapChosenList
+     * @return boolean
+     */
+    public function checkAllSeriesRoadmapOfSeriesComboChosen(array $roadmapChosenList) {
+        for ($index = 1; $index <= 5; $index++) {
+            $seriesId = $this->{'n'.$index};
+            if (!is_null($seriesId) && $roadmapChosenList[$seriesId] === false) {
+                return false;
+            }
+        }
 
+        return true;
     }
 }

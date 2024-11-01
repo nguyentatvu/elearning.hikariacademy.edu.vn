@@ -180,6 +180,8 @@ Route::prefix('series')
             ->name('introduction-detail-combo');
         Route::get('/introduction-detail/{combo_slug}/{slug}', 'LmsSeriesController@introductionDetail')
             ->name('introduction-detail');
+        Route::post('/save-user-roadmap', 'LmsSeriesController@saveUserRoadmap')
+            ->name('save-user-roadmap');
     });
 
 /**************************

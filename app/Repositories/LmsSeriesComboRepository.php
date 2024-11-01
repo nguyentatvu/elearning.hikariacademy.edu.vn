@@ -63,6 +63,11 @@ class LmsSeriesComboRepository extends BaseRepository
                 'lmsseries_combo.id as series_combo_id',
                 'lmsseries_combo.image',
                 'lmsseries_combo.cost',
+                'lmsseries_combo.n1',
+                'lmsseries_combo.n2',
+                'lmsseries_combo.n3',
+                'lmsseries_combo.n4',
+                'lmsseries_combo.n5',
                 'lmsseries.id as series_id',
                 'lmsseries.title',
                 'payments.time',
@@ -182,21 +187,28 @@ class LmsSeriesComboRepository extends BaseRepository
      * Get single series combo by series id
      *
      * @param string $seriesId
+     * @param string $userId
      * @return mixed
      */
-    public function getSingleSeriesComboBySeriesId(string $seriesId) {
-        return $this->model::where(function ($query) use ($seriesId) {
+    public function getSingleSeriesComboBySeriesId(string $seriesId, string $userId) {
+        return $this->model::query()
+            ->join('payment_method', 'payment_method.item_id', '=', 'lmsseries_combo.id')
+            ->select('lmsseries_combo.*')
+            ->where('lmsseries_combo.delete_status', 0)
+            ->where('payment_method.user_id', $userId)
+            ->where('payment_method.status', PaymentMethod::PAYMENT_SUCCESS)
+            ->where(function ($query) use ($seriesId) {
             $query->where('n1', $seriesId)
                 ->orWhere('n2', $seriesId)
                 ->orWhere('n3', $seriesId)
                 ->orWhere('n4', $seriesId)
                 ->orWhere('n5', $seriesId);
-        })->whereRaw('(
-            (n1 is not null) +
-            (n2 is not null) +
-            (n3 is not null) +
-            (n4 is not null) +
-            (n5 is not null)) = 1')
+            })->whereRaw('(
+                (n1 is not null) +
+                (n2 is not null) +
+                (n3 is not null) +
+                (n4 is not null) +
+                (n5 is not null)) = 1')
             ->first();
     }
 }

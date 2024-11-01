@@ -294,7 +294,7 @@ class LmsSeriesComboService extends BaseService
             if ($seriesCombo->{"n{$index}"}) {
                 $series = $this->getLmsSeriesService()->findById($seriesCombo->{"n{$index}"});
                 $series->content_count = $this->getLmsContentService()->getContentCountBySeries($series->id);
-                $series->comboSeries = $this->getSingleSeriesComboBySeriesId($series->id);
+                $series->comboSeries = $seriesCombo;
                 $series->month_duration = config('constant.series_combo.month_duration_map')[$series->comboSeries->time];
                 $seriesList[] = $series;
             }
@@ -309,9 +309,10 @@ class LmsSeriesComboService extends BaseService
      * Get single series combo by series id
      *
      * @param string $seriesId
+     * @param string $userId
      * @return mixed
      */
-    public function getSingleSeriesComboBySeriesId(string $seriesId) {
-        return $this->repository->getSingleSeriesComboBySeriesId($seriesId);
+    public function getSingleSeriesComboBySeriesId(string $seriesId, string $userId) {
+        return $this->repository->getSingleSeriesComboBySeriesId($seriesId, $userId);
     }
 }

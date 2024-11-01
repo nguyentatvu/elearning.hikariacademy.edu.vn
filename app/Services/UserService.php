@@ -296,9 +296,10 @@ class UserService extends BaseService
      *
      * @param array $historyArray
      * @param string $seriesId
+     * @param string $userId
      * @return void
      */
-    public function updateSeriesViewsHistory(array $historyArray, string $seriesId)
+    public function updateSeriesViewsHistory(array $historyArray, string $seriesId, ?string $userId = '')
     {
         $currentTime = date('Y-m-d H:i:s');
         $newItem = [
@@ -323,6 +324,8 @@ class UserService extends BaseService
             $item['order'] = $index + 1;
         }
 
-        $this->repository->update(Auth::user()->id, ['series_views_history' => $historyArray]);
+        $userId = $userId ? $userId : Auth::id();
+
+        $this->repository->update($userId, ['series_views_history' => $historyArray]);
     }
 }

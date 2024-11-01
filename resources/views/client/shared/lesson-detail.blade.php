@@ -540,5 +540,7 @@
 
     @yield('scripts-content')
     @yield('lesson-detail-scripts')
-    @include('client.components.streak');
+    @if (Auth::check())
+        @include('client.components.streak');
+    @endif
 @endsection

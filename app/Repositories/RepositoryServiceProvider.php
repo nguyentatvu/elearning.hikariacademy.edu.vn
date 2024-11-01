@@ -26,7 +26,9 @@ use App\{
     Pronunciation,
     PronunciationDetail,
     Intonation,
-    QuizResultfinish
+    QuizResultfinish,
+    Roadmap,
+    UserRoadmap
 };
 
 use Illuminate\Support\ServiceProvider;
@@ -103,6 +105,12 @@ class RepositoryServiceProvider extends ServiceProvider
         });
         $this->app->bind(QuizResultFinishRepository::class, function () {
             return new QuizResultFinishRepository(new QuizResultfinish);
+        });
+        $this->app->bind(UserRoadmapRepository::class, function () {
+            return new UserRoadmapRepository(new UserRoadmap);
+        });
+        $this->app->bind(RoadmapRepository::class, function () {
+            return new RoadmapRepository(new Roadmap);
         });
     }
 }
