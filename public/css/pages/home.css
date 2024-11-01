@@ -485,6 +485,34 @@
   height: auto;
 }
 
+.trial-btn {
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.trial-btn:hover {
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 25px var(--primary);
+  animation: glowingEffect 3s infinite;
+}
+
+@keyframes glowingEffect {
+  0% {
+    box-shadow: 0 0 15px var(--primary);
+  }
+  50% {
+    box-shadow: 0 0 25px var(--secondary);
+  }
+  100% {
+    box-shadow: 0 0 15px var(--primary);
+  }
+}
 @media (min-width: 576px) {
   #test3 .carousel-item {
     margin-right: 0;

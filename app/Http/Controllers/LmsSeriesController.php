@@ -11,12 +11,15 @@ use App\LmsSeries;
 use App\LmsSeriesCombo;
 use App\PaymentMethod;
 use App\QuizResultReview;
+use App\Roadmap;
 use App\Services\LmsContentService;
 use App\Services\LmsSeriesComboService;
 use App\Services\LmsSeriesService;
 use App\Services\LmsStudentViewService;
 use App\Services\PaymentMethodService;
 use App\Services\QuizResultFinishService;
+use App\Services\RoadmapService;
+use App\Services\UserRoadmapService;
 use Yajra\DataTables\DataTables;
 use Image;
 use ImageSettings;
@@ -36,7 +39,8 @@ class LmsSeriesController extends Controller
     private $paymentMethodService;
     private $lmsContentService;
     private $quizResultFinishService;
-
+    private $userRoadmapService;
+    private $roadmapService;
 	private $lmsStudentViewService;
 
 	public function __construct(
@@ -45,7 +49,9 @@ class LmsSeriesController extends Controller
         LmsContentService $lmsContentService,
         PaymentMethodService $paymentMethodService,
         QuizResultFinishService $quizResultFinishService,
-		LmsStudentViewService $lmsStudentViewService
+		LmsStudentViewService $lmsStudentViewService,
+        UserRoadmapService $userRoadmapService,
+        RoadmapService $roadmapService
     ) {
         $this->middleware('auth')->except(['introductionDetail', 'introductionDetailForCombo']);
         $this->lmsSeriesService = $lmsSeriesService;
@@ -54,6 +60,8 @@ class LmsSeriesController extends Controller
         $this->paymentMethodService = $paymentMethodService;
         $this->quizResultFinishService = $quizResultFinishService;
 		$this->lmsStudentViewService = $lmsStudentViewService;
+        $this->userRoadmapService = $userRoadmapService;
+        $this->roadmapService = $roadmapService;
 	}
 	/**
 	 * Course listing method
@@ -1132,16 +1140,23 @@ class LmsSeriesController extends Controller
         }
 
         $this->processLessonContent($combo_slug, $slug);
-        $data['series_learning_description'] = $this->prepContent['series_combo']->description;
+        $data['series_description'] = $this->prepContent['series_combo']->description;
         $data['other_combo_series'] = $this->lmsSeriesComboService->getAllPaidSeriesByTypeExcludeComboId(
             $this->prepContent['series_combo']->type,
             $this->prepContent['series_combo']->id
         );
 
+        $seriesId = $this->prepContent['series']->id;
+        $data['roadmap_chosen_list'] = $this->userRoadmapService->userChosenRoadmapList(Auth::id() ?? -1);
+        $data['series'] = $this->prepContent['series'];
+        $data['roadmap_selection_list'] = $this->roadmapService->getRoadmapSelectionOfSeriesList([$seriesId]);
+
         $this->prepContent['series_combo']->content_count =
             $this->lmsContentService->getContentCountBySeries($this->prepContent['series']->id);
         $this->prepContent['series_combo']->chapter_count =
             $this->lmsContentService->getChapterCountBySeries($this->prepContent['series']->id);
+
+        $data['roadmap_chosen_list'] = $this->userRoadmapService->userChosenRoadmapList(Auth::id() ?? -1);
 
         return view('client.pages.series-introduction', array_merge(
             $this->getPreparedContentVariables(),
@@ -1162,14 +1177,19 @@ class LmsSeriesController extends Controller
             abort(404);
         }
         $data['seriesCombo'] = $this->lmsSeriesComboService->getSeriesComboBySlugWithSeries($combo_slug);
-        $data['other_combo_series'] = $this->lmsSeriesComboService->getAllPaidSeriesByTypeExcludeComboId(
+        $data['other_combo_series'] = $this->lmsSeriesComboService->getAllSeriesByTypeExcludeComboId(
             $data['seriesCombo']->type,
             $data['seriesCombo']->id
         );
-        $data['series_learning_description'] = $data['seriesCombo']->description;
+        $data['series_description'] = $data['seriesCombo']->description;
+
+        $seriesIdList = array_column($data['seriesCombo']->seriesList, 'id');
+        $data['roadmap_chosen_list'] = $this->userRoadmapService->userChosenRoadmapList(Auth::id() ?? -1);
+        $data['roadmap_selection_list'] = $this->roadmapService->getRoadmapSelectionOfSeriesList($seriesIdList);
+
+        $data['roadmap_chosen_list'] = $this->userRoadmapService->userChosenRoadmapList(Auth::id() ?? -1);
 
         // Check valid payment
-
         $data['isValidPayment']
             = $this->paymentMethodService->checkSerieValidity(auth()->id() ?? -1, $data['seriesCombo']->id);
 
@@ -1313,5 +1333,30 @@ class LmsSeriesController extends Controller
         if ($chapter_index > 0 && !$this->prepContent['is_valid_payment']) {
             return;
         }
+    }
+
+    /**
+     * Save user roadmap
+     *
+     * @param Request $request
+     */
+    public function saveUserRoadmap(Request $request) {
+        $seriesId = $request->input('series_id');
+        $durationMonths = $request->input('duration_months');
+        $userId = Auth::id();
+        $this->userRoadmapService->saveUserRoadmap($userId, $seriesId, $durationMonths);
+
+        $seriesSlug = $this->lmsSeriesService->findById($seriesId)->slug;
+        $comboSlug = $request->input('combo_slug');
+
+        flash('Thông báo', 'Lưu lộ trình thành công!', 'success');
+
+        return response()->json([
+            'success' => true,
+            'redirect_url' => route('learning-management.lesson.show', [
+                'combo_slug' => $comboSlug,
+                'slug' => $seriesSlug
+            ])
+        ], 200);
     }
 }

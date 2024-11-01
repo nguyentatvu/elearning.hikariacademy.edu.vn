@@ -1,10 +1,12 @@
 @foreach($contents as $content_index => $content)
+    @php $checkNotRoadmapChosen = !$is_roadmap_chosen && $isValidPayment @endphp
     @if ($content->childContents->isNotEmpty())
-        <div class="accordion-item">
+        <div class="accordion-item {{ $checkNotRoadmapChosen ? 'disabled' : ''  }}">
             <h2 class="accordion-header" id="heading{{ $content_index }}">
                 <div class="accordion-button d-block {{ $content->css_class === 'active-content' ? 'active-content' : 'collapsed' }}"
                     data-bs-toggle="collapse" data-bs-target="#collapse{{ $content_index }}"
                     aria-expanded="{{ $content_index === 1 ? 'true' : 'false' }}"
+                    @if ($checkNotRoadmapChosen) onclick="openRoadmapSelectionModal({{ $series->id }})" @endif
                     aria-controls="collapse{{ $content_index }}" type="button">
                     <div class="fw-bold">
                         <img src="{{ asset("images/icons/lesson.png") }}" alt="image" class="chapter-image">
@@ -29,7 +31,8 @@
             </div>
         </div>
     @else
-        <div class="accordion-item {{ $content->css_class }}">
+        <div class="accordion-item {{ $content->css_class }} {{ !$is_roadmap_chosen ? 'disabled' : ''  }}"
+            @if ($checkNotRoadmapChosen) onclick="openRoadmapSelectionModal({{ $series->id }})" @endif>
             @if ($content->type == App\LmsContent::SUMMARY_AND_INTRODUCTION && $content->el_try != App\LmsContent::TRIAL_TYPE && !$isValidPayment)
                 <a href="javascript:void(0)" class="topic-content-link" onclick={{ Auth::check() ? 'showBuyCourseModal()' : 'showAuthModal(true)' }}>
                     <i class="bi bi-lock-fill text-primary"></i>

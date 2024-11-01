@@ -127,6 +127,15 @@ class RegisterController extends Controller
         $user->last_login_date = now();
         $user->login_streak = 1;
         $user->confirmation_code = str_random(30);
+        $user->point_history = [
+            'total' => $user->reward_point,
+            'used' => 0,
+            'exercise_test' => 0,
+            'video' => 0,
+            'streak' => 0,
+            'recharge' => 0
+        ];
+
 
         $last_uid = DB::table('users')
             ->whereYear('created_at', date('Y'))

@@ -192,12 +192,14 @@
                     animateHicoin(rewardPoints);
                     checkFinishContent();
                 @endif
-                let lastLogin = '{{ \Carbon\Carbon::parse(Auth::user()->last_login_date)->format('Y-m-d') }}';
-                let today = '{{ \Carbon\Carbon::today()->format('Y-m-d') }}';
+                @if (Auth::check())
+                    let lastLogin = '{{ \Carbon\Carbon::parse(Auth::user()->last_login_date)->format('Y-m-d') }}';
+                    let today = '{{ \Carbon\Carbon::today()->format('Y-m-d') }}';
 
-                if (lastLogin != today) {
-                    showDailyStreak('{{ $detailContent->id }}');
-                }
+                    if (lastLogin != today) {
+                        showDailyStreak('{{ $detailContent->id }}');
+                    }
+                @endif
             })
         };
 

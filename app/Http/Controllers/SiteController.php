@@ -15,14 +15,19 @@ use Response;
 use Exception;
 use App\Logger;
 use App\Services\LmsSeriesComboService;
+use App\Services\UserRoadmapService;
 use DB;
 class SiteController extends Controller
 {
     private $lmsSeriesComboService;
+    private $userRoadmapService;
 
-    public function __construct(LmsSeriesComboService $lmsSeriesComboService)
-    {
+    public function __construct(
+        LmsSeriesComboService $lmsSeriesComboService,
+        UserRoadmapService $userRoadmapService
+    ) {
         $this->lmsSeriesComboService = $lmsSeriesComboService;
+        $this->userRoadmapService = $userRoadmapService;
     }
 
   public function index()
@@ -860,9 +865,9 @@ public function getSeriesContents(Request $request)
      * @return \Illuminate\Http\Response
      */
     public function homePage() {
-        $data = [];
         $data['learning_series_list'] = $this->lmsSeriesComboService->getAllSeriesByType(LmsSeriesCombo::LEARNING_TYPE);
         $data['exam_series_list'] = $this->lmsSeriesComboService->getAllSeriesByType(LmsSeriesCombo::EXAM_TYPE);
+        $data['roadmap_chosen_list'] = $this->userRoadmapService->userChosenRoadmapList(Auth::id() ?? -1);
 
         return view('client.pages.home', $data);
     }
