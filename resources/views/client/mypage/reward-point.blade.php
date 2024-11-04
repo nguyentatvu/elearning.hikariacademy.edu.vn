@@ -91,9 +91,10 @@
                             <div class="d-flex align-items-center">
                                 <span class="font-weight-semibold fs-14">Giá:</span>
                                 <div class="d-flex align-items-center">
-                                    <span
-                                        class="redeem-reward__new-price ms-1">{{ formatCurrencyVND($series->cost - $series->redeemed_amount) }}</span>
-                                    <span class="redeem-reward__old-price">{{ formatCurrencyVND($series->cost) }}</span>
+                                    <span class="redeem-reward__new-price ms-1">
+                                        {{ formatCurrencyVND($series->actualCost - $series->redeemed_amount) }}
+                                    </span>
+                                    <span class="redeem-reward__old-price">{{ formatCurrencyVND($series->actualCost) }}</span>
                                 </div>
                             </div>
                         </div>

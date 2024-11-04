@@ -57,10 +57,10 @@
                                     {{ formatCurrencyVND($remaining_series_cost) }}
                                 </span>
                                 <span style="text-decoration: line-through" class="text-muted fs-5">
-                                    {{ formatCurrencyVND($series_combo->cost) }}
+                                    {{ formatCurrencyVND($series_combo->actualCost) }}
                                 </span>
                             @else
-                                <span>{{ formatCurrencyVND($series_combo->cost) }}</span>
+                                <span>{{ formatCurrencyVND($series_combo->actualCost) }}</span>
                             @endif
                         </span>
                     </div>
@@ -187,8 +187,13 @@
 
 @section('scripts')
     <script>
+        const isRedeemed = {{ $is_redeemed ? 'true' : 'false' }};
+
         const showTransferPayment = async (isRedeemed = false) => {
-            const isConfirmed = await showDiscountTransferWarning('tạo đơn hàng');
+            let isConfirmed = true;
+            if (isRedeemed) {
+                isConfirmed = await showDiscountTransferWarning('tạo đơn hàng');
+            }
 
             if (isConfirmed) {
                 let route = '{{url('payments/transfer')}}';
@@ -312,7 +317,10 @@
             event.preventDefault();
             const vnpayForm = $(event.target).closest('form');
 
-            const isConfirmed = await showDiscountTransferWarning();
+            let isConfirmed = true;
+            if (isRedeemed) {
+                isConfirmed = await showDiscountTransferWarning();
+            }
             if (isConfirmed) {
                 vnpayForm.submit();
             }

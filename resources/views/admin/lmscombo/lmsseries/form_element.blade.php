@@ -125,37 +125,37 @@
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n1', 'Khóa học N1') }}
 		<span class="text-red">*</span>
-		{{Form::select('n1', $n1, $value, ['class'=>'form-control'])}}
+		{{Form::select('n1', $n1, $record->n1, ['class'=>'form-control'])}}
 	</fieldset>
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n2', 'Khóa học N2') }}
 		<span class="text-red">*</span>
-		{{Form::select('n2', $n2, $value, ['class'=>'form-control'])}}
+		{{Form::select('n2', $n2, $record->n2, ['class'=>'form-control'])}}
 	</fieldset>
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n3', 'Khóa học N3') }}
 		<span class="text-red">*</span>
-		{{Form::select('n3', $n3, $value, ['class'=>'form-control'])}}
+		{{Form::select('n3', $n3, $record->n3, ['class'=>'form-control'])}}
 	</fieldset>
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n4', 'Khóa học N4') }}
 		<span class="text-red">*</span>
-		{{Form::select('n4', $n4, $value, ['class'=>'form-control'])}}
+		{{Form::select('n4', $n4, $record->n4, ['class'=>'form-control'])}}
 	</fieldset>
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n5', 'Khóa học N5') }}
 		<span class="text-red">*</span>
-		{{Form::select('n5', $n5, $value, ['class'=>'form-control'])}}
+		{{Form::select('n5', $n5, $record->n5, ['class'=>'form-control'])}}
 	</fieldset>
     <fieldset class="form-group col-md-6">
         {{ Form::label('redeem_point', 'Giảm giá quy đổi (coin * 1000đ)') }}
 		<i class="fa fa-info-circle redeem-info"
 			data-toggle="tooltip"
-			title="<strong>Lưu ý:</strong> Khi nhập số vào đây, khóa học sẽ không xuất hiện trên trang chủ mà sẽ được đăng ở mục “Quy đổi điểm”<br><br>Nhập số HICOIN x 1000 để quy định mức giảm giá khi quy đổi. <br><br><em>Ví dụ:</em> khuyến mãi này được quy đổi bằng 500 coin => cần nhập 500000"
+			title="Nhập số HICOIN x 1000 để quy định mức giảm giá khi quy đổi. <br><br><em>Ví dụ:</em> khuyến mãi này được quy đổi bằng 500 coin => cần nhập 500.000"
 			data-html="true"
 			data-placement="top">
 		</i>
-        {{ Form::number('redeem_point', $value = null , $attributes = [
+        {{ Form::number('redeem_point', $value = $record->redeemAmount , $attributes = [
             'class'=>'form-control',
             'min'=>'0',
             'ng-model'=>'redeem_point',
@@ -176,42 +176,37 @@
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n1', 'Khóa luyện thi N1') }}
 		<span class="text-red">*</span>
-		{{Form::select('n1', $en1, $value, ['class'=>'form-control'])}}
+		{{Form::select('n1', $en1, $record->n1, ['class'=>'form-control'])}}
 	</fieldset>
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n2', 'Khóa luyện thi N2') }}
 		<span class="text-red">*</span>
-		{{Form::select('n2', $en2, $value, ['class'=>'form-control'])}}
+		{{Form::select('n2', $en2, $record->n2, ['class'=>'form-control'])}}
 	</fieldset>
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n3', 'Khóa luyện thi N3') }}
 		<span class="text-red">*</span>
-		{{Form::select('n3', $en3, $value, ['class'=>'form-control'])}}
+		{{Form::select('n3', $en3, $record->n3, ['class'=>'form-control'])}}
 	</fieldset>
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n4', 'Khóa luyện thi N4') }}
 		<span class="text-red">*</span>
-		{{Form::select('n4', $en4, $value, ['class'=>'form-control'])}}
+		{{Form::select('n4', $en4, $record->n4, ['class'=>'form-control'])}}
 	</fieldset>
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n5', 'Khóa luyện thi N5') }}
 		<span class="text-red">*</span>
-		{{Form::select('n5', $en5, $value, ['class'=>'form-control'])}}
+		{{Form::select('n5', $en5, $record->n5, ['class'=>'form-control'])}}
 	</fieldset>
-	@php
-		$redeem_point = (is_null($record) || !isset($record->redeem_point))
-			? null
-			: $record->redeem_point * config('constant.redeemed_coin.vnd_convert_rate');
-	@endphp
 	<fieldset class="form-group col-md-6">
         {{ Form::label('redeem_point', 'Giảm giá quy đổi (coin * 1000đ)') }}
 		<i class="fa fa-info-circle redeem-info"
 			data-toggle="tooltip"
-			title="<strong>Lưu ý:</strong> Khi nhập số vào đây, khóa học sẽ không xuất hiện trên trang chủ mà sẽ được đăng ở mục “Quy đổi điểm”<br><br>Nhập số HICOIN x 1000 để quy định mức giảm giá khi quy đổi. <br><br><em>Ví dụ:</em> khuyến mãi này được quy đổi bằng 500 coin => cần nhập 500000"
+			title="Nhập số HICOIN x 1000 để quy định mức giảm giá khi quy đổi. <br><br><em>Ví dụ:</em> khuyến mãi này được quy đổi bằng 500 coin => cần nhập 500.000"
 			data-html="true"
 			data-placement="top">
 		</i>
-        {{ Form::number('redeem_point', $value = $redeem_point , $attributes = [
+        {{ Form::number('redeem_point', $record->redeemAmount, $attributes = [
             'class'=>'form-control',
             'min'=>'0',
             'ng-model'=>'redeem_point',
@@ -396,30 +391,24 @@
 
 	</fieldset>
 
-    @php
-        if ($record) {
-            $description = json_decode($record->description);
-        } else {
-            $description = null;
-        }
-    @endphp
+    @php $description = optional($record->description); @endphp
 
     <fieldset class="form-group col-md-12">
         <legend>Mô tả chi tiết</legend>
         {{ Form::label('content_description', 'Mô tả nội dung chính') }}
-        {{ Form::textarea('content_description', $value = optional($description)->content_description , $attributes = array('id' => 'main_description', 'class'=>'form-control ckeditor', 'rows'=>'7', 'placeholder' => '')) }}
+        {{ Form::textarea('content_description', $value = $description['content_description'] , $attributes = array('id' => 'main_description', 'class'=>'form-control ckeditor', 'rows'=>'7', 'placeholder' => '')) }}
     </fieldset>
     <fieldset class="form-group col-md-6">
         {{ Form::label('time_description', 'Mô tả thời gian học') }}
-        {{ Form::textarea('time_description', $value = optional($description)->time_description , $attributes = array('class'=>'form-control ckeditor', 'rows'=>'3', 'placeholder' => '')) }}
+        {{ Form::textarea('time_description', $value = $description['time_description'] , $attributes = array('class'=>'form-control ckeditor', 'rows'=>'3', 'placeholder' => '')) }}
     </fieldset>
     <fieldset class="form-group col-md-6">
         {{ Form::label('curriculum_description', 'Mô tả giáo trình') }}
-        {{ Form::textarea('curriculum_description', $value = optional($description)->curriculum_description , $attributes = array('class'=>'form-control ckeditor', 'rows'=>'3', 'placeholder' => '')) }}
+        {{ Form::textarea('curriculum_description', $value = $description['curriculum_description'] , $attributes = array('class'=>'form-control ckeditor', 'rows'=>'3', 'placeholder' => '')) }}
     </fieldset>
     <fieldset class="form-group col-md-6">
         {{ Form::label('teacher_description', 'Mô tả giảng viên') }}
-        {{ Form::textarea('teacher_description', $value = optional($description)->teacher_description , $attributes = array('class'=>'form-control ckeditor', 'rows'=>'3', 'placeholder' => '')) }}
+        {{ Form::textarea('teacher_description', $value = $description['teacher_description'] , $attributes = array('class'=>'form-control ckeditor', 'rows'=>'3', 'placeholder' => '')) }}
     </fieldset>
 </div>
 
