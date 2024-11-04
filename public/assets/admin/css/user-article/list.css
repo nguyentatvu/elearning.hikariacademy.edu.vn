@@ -35,6 +35,36 @@ a:hover {
     width: 100%;
 }
 
+.notification-block {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.notification-block .notification {
+    text-align: center;
+    max-width: 400px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.notification-block .notification-icon {
+    font-size: 50px;
+    color: #ff6b6b;
+}
+
+.notification-title {
+    font-size: 24px;
+    color: #333;
+    margin: 10px 0;
+}
+
+.notification-message {
+    font-size: 16px;
+    color: #666;
+}
+
 .main-container .container {
     margin: 0 auto;
     width: 100%;
