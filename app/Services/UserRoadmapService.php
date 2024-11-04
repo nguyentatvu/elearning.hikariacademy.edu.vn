@@ -48,7 +48,7 @@ class UserRoadmapService extends BaseService
      * @param string $userId
      * @param string $seriesId
      *
-     * @return boolean
+     * @return mixed
      */
     public function getUserChosenRoadmap(string $userId)
     {

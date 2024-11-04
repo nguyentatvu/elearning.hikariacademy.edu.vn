@@ -306,7 +306,7 @@ class LmsComboController extends Controller
                 $rules = array( $file_name => 'mimes:jpeg,jpg,png,gif|max:10000' );
                 $this->validate($request, $rules);
                 //$examSettings = getSettings('lms');
-                $path = 'public/uploads/lms/combo/';
+                $path = 'uploads/lms/combo/';
                 $this->deleteFile($record->image, $path);
                 $record->image      = $this->processUpload($request, $record,$file_name);
                 $record->save();
@@ -533,7 +533,7 @@ class LmsComboController extends Controller
                 $rules = array( $file_name => 'mimes:jpeg,jpg,png,gif|max:10000' );
                 $this->validate($request, $rules);
                 //$examSettings = getSettings('lms');
-                $path = 'public/uploads/lms/combo/';
+                $path = 'uploads/lms/combo/';
                 $this->deleteFile($record->image, $path);
                 $record->image      = $this->processUpload($request, $record,$file_name);
                 $record->save();
@@ -605,7 +605,7 @@ class LmsComboController extends Controller
         if ($request->hasFile($file_name)) {
             $examSettings = getSettings('lms');
             $imageObject = new ImageSettings();
-            $destinationPath            = 'public/uploads/lms/combo/';
+            $destinationPath            = 'uploads/lms/combo/';
             $destinationPathThumb       = $examSettings->seriesThumbImagepath;
             $fileName = $record->id.'-'.$file_name.'.'.$request->$file_name->guessClientExtension();
             $request->file($file_name)->move($destinationPath, $fileName);
