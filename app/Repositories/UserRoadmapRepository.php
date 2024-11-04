@@ -50,4 +50,23 @@ class UserRoadmapRepository extends BaseRepository
             })
             ->get();
     }
+
+    /**
+     * Get user chosen roadmap list and information
+     *
+     * @param string $userId
+     * @param string $seriesId
+     *
+     * @return boolean
+     */
+    public function getUserChosenRoadmap(string $userId) {
+        return $this->model
+            ->where('user_roadmaps.user_id', $userId)
+            ->leftJoin('roadmaps', function ($join) {
+                $join->on('user_roadmaps.lmsseries_id', '=', 'roadmaps.lmsseries_id')
+                     ->on('user_roadmaps.duration_months', '=', 'roadmaps.duration_months');
+            })
+            ->select('user_roadmaps.*', 'roadmaps.contents', 'roadmaps.description')
+            ->get();
+    }
 }

@@ -118,22 +118,22 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th class="text-center" style="max-width: 200px;" scope="col">STT</th>
-                        <th class="text-center" style="max-width: 200px;" scope="col">KHÓA HỌC</th>
+                        <th class="text-center" style="max-width: 100px;" scope="col">STT</th>
+                        <th class="text-center" style="max-width: 400px;" scope="col">KHÓA HỌC</th>
                         <th class="text-center" style="max-width: 200px;" scope="col">LỘ TRÌNH</th>
                         <th class="text-center" style="max-width: 200px;" scope="col">TRÌNH ĐỘ</th>
-                        <th class="text-center" style="max-width: 200px;" scope="col"></th>
+                        <th class="text-center" style="max-width: 100px;" scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
                     @if ($series->isNotEmpty())
                         @foreach ($series as $index => $item)
                             <tr>
-                                <td class="text-center align-middle">{{ $index + 1 }}</td>
-                                <td class="mw-300px">
+                                <td class="text-center align-middle w-50px">{{ $index + 1 }}</td>
+                                <td class="mw-450px w-450px">
                                     <div class="media mt-0 mb-0">
                                         <div class="card-aside-img row">
-                                            <div class="col-12 col-sm-5 col-lg-4 col-xl-3">
+                                            <div class="col-4 mw-150px">
                                                 <img alt="{{ $item->title }}"
                                                     src="{{ asset('uploads/lms/combo/' . $item->combo_image) }}"
                                                     style="height: auto;">
@@ -146,7 +146,7 @@
                                                 </button>
                                             </div>
                                             <div
-                                                class="media-bod col-12 col-sm-7 col-lg-8 col-xl-9 d-flex align-items-center">
+                                                class="media-bod col-8 d-flex align-items-center">
                                                 <div class="card-item-desc ml-4 p-0 mt-2">
                                                     <?php $dr_time = ['3 tháng', '6 tháng', '12 tháng']; ?>
                                                     <a class="text-dark" href="#">
@@ -169,8 +169,28 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="text-center align-middle mw-300px">Text</td>
-                                <td class="text-center align-middle mw-300px">
+                                <td class="text-center align-middle mw-150px w-200px">
+                                    @if (!isset($item->user_roadmap))
+                                        Chưa chọn lộ trình
+                                    @elseif ($item->user_roadmap->duration_months === 0)
+                                        Lộ trình tự do
+                                    @else
+                                        @php
+                                            $durationMonths = $item->user_roadmap->duration_months;
+
+                                            if (isset($item->user_roadmap->contents)) {
+                                                $contents = json_decode($item->user_roadmap->contents, true);
+                                            }
+                                        @endphp
+                                        <div class="d-flex flex-column align-items-center">
+                                            {{ $durationMonths }} tháng - {{ count($contents) }} buổi học
+                                            <a class="btn btn-primary mt-2 w-100px" type="button" href="/roadmap/{{ $item->combo_slug }}/{{ $item->slug }}?month={{ $durationMonths }}">
+                                                Xem chi tiết
+                                            </a>
+                                        </div>
+                                    @endif
+                                </td>
+                                <td class="text-center align-middle mw-150px w-200px">
                                     <div class="media mt-0 mb-0">
                                         <div class="media-body">
                                             <div class="card-item-desc">
@@ -199,7 +219,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="text-center align-middle mw-200px">
+                                <td class="text-center align-middle mw-100px w-100px">
                                     <?php $dayEnd = \Carbon\Carbon::parse($item->created_at)
                                         ->addDays($dr_time[$item->time] + $dr_day[$item->month_extend])
                                         ->format('d-m-Y'); ?>

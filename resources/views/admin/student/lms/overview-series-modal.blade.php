@@ -36,7 +36,7 @@
             <div class="modal-body">
                 <div class="section-title">
                     <i class="fa fa-comments"></i>
-                    <span>1. Danh sách Q&A: {{ $lms_series_title }}</span>
+                    <span>Danh sách Q&A: {{ $lms_series_title }}</span>
                     <button onclick="showAllQA()" class="btn btn-primary view-all-qa">
                         <i class="fa fa-arrows-v me-1"></i>
                         Xem tất cả
@@ -85,10 +85,6 @@
                             </div>
                         </div>
                     @endforeach
-                </div>
-                <div class="section-title">
-                    <i class="fa fa-line-chart"></i>
-                    <span>2. Chi tiết lộ trình bài học</span>
                 </div>
             </div>
         </div>

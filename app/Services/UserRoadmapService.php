@@ -47,6 +47,19 @@ class UserRoadmapService extends BaseService
      *
      * @param string $userId
      * @param string $seriesId
+     *
+     * @return boolean
+     */
+    public function getUserChosenRoadmap(string $userId)
+    {
+        return $this->repository->getUserChosenRoadmap($userId);
+    }
+
+    /**
+     * Get user chosen roadmap list
+     *
+     * @param string $userId
+     * @param string $seriesId
      * @param string $durationMonths
      *
      * @return void
