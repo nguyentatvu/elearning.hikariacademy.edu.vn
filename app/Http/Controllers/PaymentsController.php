@@ -2133,6 +2133,12 @@ try_again:
                 $record->status = PaymentMethod::PAYMENT_FAILED;
                 $record->updated_at  =date("Y-m-d H:i:s");
                 $record->save();
+
+                $user_transfering = Auth::user();
+                if ($user_transfering->series_order_created_at != null && $user_transfering->redeemed_points != null) {
+                    $this->userService->restoreRedeemedPoints($record->user_id);
+                }
+
                 DB::commit();
                 $data = array('error' => 1, 'message' => 'Hủy đơn hàng thành công');
                 return json_encode($data);

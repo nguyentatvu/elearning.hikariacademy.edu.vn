@@ -53,14 +53,12 @@ class LoginController extends Controller
             return redirect()->to('/');
         }
 
-        //Kiểm tra CAPTCHA
-        //  $columns = array(
-        // 	// 'g-recaptcha-response' => 'required|captcha',
-        //  );
-        //  $messsages = array(
-        // 	// 'g-recaptcha-response.required'=>'Hãy đánh dấu vào ô kiểm tra robot!',
-        //  );
-        //  $this->validate($request,$columns,$messsages);
+        $columns = array(
+            'email'    => 'bail|required',
+            'password'    => 'bail|required',
+            'g-recaptcha-response' => 'required|captcha',
+        );
+        $this->validate($request, $columns);
 
         $login_status = false;
         if (Auth::attempt(['username' => $request->email, 'password' => $request->password])) {

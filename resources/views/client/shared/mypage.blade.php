@@ -43,7 +43,7 @@
                         <li><a href="{{ url('mypage/my-comments') }}"
                                 class="{{ setActiveClass('mypage/my-comments') }}">Câu hỏi của bạn</a></li>
                         <li><a href="{{ url('mypage/mock-exam/list') }}"
-                                class="{{ setActiveClass('mypage/mock-exam/list') }}">Phòng thi của bạn</a></li>
+                                class="{{ setActiveClass('mypage/mock-exam/*') }}">Phòng thi của bạn</a></li>
                         <li><a href="{{ url('mypage/my-exam-result') }}"
                                 class="{{ setActiveClass('mypage/my-exam-result') }}">Kết quả thi</a></li>
                         <li><a href="{{ url('mypage/payment-management') }}"

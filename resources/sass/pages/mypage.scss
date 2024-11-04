@@ -264,9 +264,8 @@
             width: 100%;
         }
     }
-
     &__title {
-        height: 54px;
+        height: fit-content;
         font-size: 18px;
         font-weight: 500;
         overflow: hidden;

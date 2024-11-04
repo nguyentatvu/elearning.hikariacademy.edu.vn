@@ -148,7 +148,13 @@
 		{{Form::select('n5', $n5, $value, ['class'=>'form-control'])}}
 	</fieldset>
     <fieldset class="form-group col-md-6">
-        {{ Form::label('redeem_point', 'Số tiền giảm giá khoá học (coin * 1000đ)') }}
+        {{ Form::label('redeem_point', 'Giảm giá quy đổi (coin * 1000đ)') }}
+		<i class="fa fa-info-circle redeem-info"
+			data-toggle="tooltip"
+			title="<strong>Lưu ý:</strong> Khi nhập số vào đây, khóa học sẽ không xuất hiện trên trang chủ mà sẽ được đăng ở mục “Quy đổi điểm”<br><br>Nhập số HICOIN x 1000 để quy định mức giảm giá khi quy đổi. <br><br><em>Ví dụ:</em> khuyến mãi này được quy đổi bằng 500 coin => cần nhập 500000"
+			data-html="true"
+			data-placement="top">
+		</i>
         {{ Form::number('redeem_point', $value = null , $attributes = [
             'class'=>'form-control',
             'min'=>'0',
@@ -198,7 +204,13 @@
 			: $record->redeem_point * config('constant.redeemed_coin.vnd_convert_rate');
 	@endphp
 	<fieldset class="form-group col-md-6">
-        {{ Form::label('redeem_point', 'Số tiền giảm giá khoá học (coin * 1000đ)') }}
+        {{ Form::label('redeem_point', 'Giảm giá quy đổi (coin * 1000đ)') }}
+		<i class="fa fa-info-circle redeem-info"
+			data-toggle="tooltip"
+			title="<strong>Lưu ý:</strong> Khi nhập số vào đây, khóa học sẽ không xuất hiện trên trang chủ mà sẽ được đăng ở mục “Quy đổi điểm”<br><br>Nhập số HICOIN x 1000 để quy định mức giảm giá khi quy đổi. <br><br><em>Ví dụ:</em> khuyến mãi này được quy đổi bằng 500 coin => cần nhập 500000"
+			data-html="true"
+			data-placement="top">
+		</i>
         {{ Form::number('redeem_point', $value = $redeem_point , $attributes = [
             'class'=>'form-control',
             'min'=>'0',
@@ -296,10 +308,10 @@
 		'name' => 'timefrom',
 		'required'=> 'true',
 		'ng-class'=>'{"has-error": formLms.timefrom.$touched && formLms.timefrom.$invalid}',
-		
-		
+
+
 		)) }}
-		
+
 		<div class="validation-error" ng-messages="formLms.timefrom.$error" >
 
 		{!! getValidationMessage()!!}
@@ -315,10 +327,10 @@
 		'ng-model'=>'timeto',
 		'required'=> 'true',
 		'ng-class'=>'{"has-error": formLms.timeto.$touched && formLms.timeto.$invalid}',
-		
-		
+
+
 		)) }}
-		
+
 		<div class="validation-error" ng-messages="formLms.timeto.$error" >
 
 		{!! getValidationMessage()!!}
@@ -363,12 +375,12 @@
 
 	</fieldset>
 
-	
-	
+
+
 
 </div>
 <div class="row">
-	
+
 </div>
 <div class="row">
 
@@ -393,7 +405,7 @@
     @endphp
 
     <fieldset class="form-group col-md-12">
-        <legend>Mô tả về combo khoá học</legend>
+        <legend>Mô tả chi tiết</legend>
         {{ Form::label('content_description', 'Mô tả nội dung chính') }}
         {{ Form::textarea('content_description', $value = optional($description)->content_description , $attributes = array('id' => 'main_description', 'class'=>'form-control ckeditor', 'rows'=>'7', 'placeholder' => '')) }}
     </fieldset>

@@ -19,51 +19,62 @@
         @endif
 
         <!-- Navbar Toggler for Mobile -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="dropdown" id="userDropdownMobile"
-            aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        @if (Auth::check())
-            <ul class="dropdown-menu dropdown-menu-end w-200px p-2 mt-3 me-3" aria-labelledby="userDropdownMobile">
-                <li class="d-flex align-items-center">
-                    @if (Auth::user()->image)
-                        <img src="{{ asset('uploads/users/thumbnail/' . Auth::user()->image) }}"
-                            class="rounded-circle object-fit-cover me-2" width="40"
-                            height="40" alt="Avatar">
-                    @else
-                        <img src="{{ asset('images/no-avatar.png') }}"
-                            class="rounded-circle object-fit-cover me-2" width="40"
-                            height="40" alt="Avatar">
-                    @endif
-                    <div>
-                        <div>{{ Auth::user()->name }}</div>
-                        <div><span>@</span>{{ Auth::user()->username ?? '' }}</div>
-                    </div>
-                </li>
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="{{ route('mypage.personal') }}">Trang cá nhân</a>
-                </li>
-                <li><a class="dropdown-item" href="{{ route('mypage.leaderboard') }}">Bảng xếp
-                        hạng</a></li>
-                <li><a class="dropdown-item" href="{{ route('mypage.reward-point') }}">Điểm tích
-                        luỹ</a></li>
-                <li><a class="dropdown-item" href="{{ route('mypage.courses') }}">Khoá học</a></li>
-                <li><a class="dropdown-item" href="{{ route('mypage.exams') }}">Khoá luyện thi</a>
-                </li>
-                <li><a class="dropdown-item" href="{{ route('mypage.my-exam-result') }}">Kết quả
-                        thi</a></li>
-                <li><a class="dropdown-item" data-bs-toggle="modal"
-                        data-bs-target="#changePasswordModal">Đổi mật khẩu</a></li>
-                <li><a class="dropdown-item" href="{{ route('mypage.recharge-point') }}">Nạp</a></li>
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="{{ route('logout') }}">Đăng xuất</a></li>
-            </ul>
-        @endif
+        <div class="d-lg-none">
+            <!-- User Dropdown -->
+            @if (Auth::check())
+                <button class="navbar-toggler" type="button" data-bs-toggle="dropdown" id="userDropdownMobile"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end w-200px p-2 mt-3 me-3" aria-labelledby="userDropdownMobile">
+                    <li class="d-flex align-items-center">
+                        @if (Auth::user()->image)
+                            <img src="{{ asset('uploads/users/thumbnail/' . Auth::user()->image) }}"
+                                class="rounded-circle object-fit-cover me-2" width="40"
+                                height="40" alt="Avatar">
+                        @else
+                            <img src="{{ asset('images/no-avatar.png') }}"
+                                class="rounded-circle object-fit-cover me-2" width="40"
+                                height="40" alt="Avatar">
+                        @endif
+                        <div>
+                            <div>{{ Auth::user()->name }}</div>
+                            <div><span>@</span>{{ Auth::user()->username ?? '' }}</div>
+                        </div>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.personal') }}">Trang cá nhân</a>
+                    </li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.leaderboard') }}">Bảng xếp
+                            hạng</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.reward-point') }}">Điểm tích
+                            luỹ</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.courses') }}">Khoá học</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.exams') }}">Khoá luyện thi</a>
+                    </li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.my-exam-result') }}">Kết quả
+                            thi</a></li>
+                    <li><a class="dropdown-item" data-bs-toggle="modal"
+                            data-bs-target="#changePasswordModal">Đổi mật khẩu</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.recharge-point') }}">Nạp</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="{{ route('logout') }}">Đăng xuất</a></li>
+                </ul>
+            @else
+                <!-- Register and Login Buttons -->
+                <div class="d-flex gap-3">
+                    <button type="button" id="btn_register"
+                        class="btn btn-link text-decoration-none text-secondary d-none d-sm-block"
+                        onclick="showAuthModal(false)">Đăng ký</button>
+                    <button type="button" id="btn_login" class="btn btn-primary text-white"
+                        onclick="showAuthModal(true)">Đăng nhập</button>
+                </div>
+            @endif
+        </div>
 
         <!-- Main Navbar Content -->
         <div class="collapse navbar-collapse navbar-support-mobile" id="navbarSupportedContentMobile">

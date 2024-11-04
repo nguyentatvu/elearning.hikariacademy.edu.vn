@@ -42,8 +42,12 @@
             </ul>
             <div class="tab-content" id="pills-tabContent">
                 <div class="">
-                    <span class="payment-title">Thông tin thanh toán:</span>
-                    <div class="fs-4 text-primary">
+                    <div class="d-flex justify-content-sm-between align-items-center flex-sm-row flex-column">
+                        <span class="payment-title">Thông tin thanh toán:</span>
+                        <div style="color: #f16a43">
+                        </div>
+                    </div>
+                    <div class="fs-4 text-primary mt-3 text-center text-sm-start">
                         <i class="bi bi-cart-fill"></i>
                         <span>
                             <span>{{ $series_combo->title }}</span>
@@ -100,7 +104,7 @@
                     <div class="series-submit" id="vnpay_submit">
                         <form action="/payments/vnpay/{{ $series_combo->slug }}" method="get">
                             <input type="hidden" name="is_redeemed" value="{{ $is_redeemed ? '1' : '0' }}">
-                            <button class="btn btn-primary">
+                            <button class="btn btn-primary" {{ Request::query('is_redeemed') ? 'onclick=submitVnpayDiscount()' : '' }}>
                                 Click vào đây để thanh toán
                             </button>
                         </form>
@@ -183,57 +187,135 @@
 
 @section('scripts')
     <script>
-        function showTransferPayment(isRedeemed = false) {
-            Swal.fire({
-                title: "Xác nhận tạo đơn hàng",
-                text: "",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: '#8CD4F5',
-                confirmButtonText: "Đồng ý",
-                cancelButtonText: "Hủy bỏ",
-                reverseButtons: true,
-                allowOutsideClick: false
-            })
-            .then((result) => {
-                if (result.isConfirmed) {
-                    let route = '{{url('payments/transfer')}}';
-                    let token = '{{csrf_token()}}';
-                    let slug  = '{{$series_combo->slug}}';
+        const showTransferPayment = async (isRedeemed = false) => {
+            const isConfirmed = await showDiscountTransferWarning('tạo đơn hàng');
 
-                    $.ajax({
-                        url: route,
-                        type: 'post',
-                        dataType: "json",
-                        data: {
-                            _method: 'post',
-                            _token: token,
-                            slug: slug,
-                            isRedeemed: isRedeemed
-                        },
-                        beforeSend: function() {
-                            toggleLoadingOverlay();
-                        },
-                        success: function(data) {
-                            Swal.fire({
-                                title: 'Thông báo',
-                                text: data.message,
-                                icon: data.error == 1 ? 'success' : 'error',
-                                timer: 3000,
-                                showConfirmButton: false
-                            });
-                        },
-                        complete: function() {
-                            // Update display HICOIN
+            if (isConfirmed) {
+                let route = '{{url('payments/transfer')}}';
+                let token = '{{csrf_token()}}';
+                let slug  = '{{$series_combo->slug}}';
+
+                $.ajax({
+                    url: route,
+                    type: 'post',
+                    dataType: "json",
+                    data: {
+                        _method: 'post',
+                        _token: token,
+                        slug: slug,
+                        isRedeemed: isRedeemed
+                    },
+                    beforeSend: function() {
+                        toggleLoadingOverlay();
+                    },
+                    success: function(data) {
+                        Swal.fire({
+                            title: 'Thông báo',
+                            text: data.message,
+                            icon: data.error == 1 ? 'success' : 'error',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+
+                        // Update display HICOIN
+                        if (data.error == 1) {
                             const remainRewardPoint = {{ $total_reward_point - $required_redeem_point }};
                             $('.header-my-coin .owned-point').text(remainRewardPoint);
-                            toggleLoadingOverlay();
                         }
-                    });
+                    },
+                    complete: function() {
+                        toggleLoadingOverlay();
+                    }
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire("Hủy bỏ", "Đơn hàng của bạn đã bị hủy bỏ", "error");
+            }
+        }
+
+        const showDiscountTransferWarning = async (payText = 'thanh toán') => {
+            const warningContent = `
+                <div class="text-center">
+                    <div class="row g-3 mb-3">
+                        <div class="col-12">
+                            <div class="card border-primary border-2">
+                                <div class="card-body">
+                                    <h6 class="card-title fs-5">
+                                        <i class="bi bi-lock me-2"></i>
+                                        Khóa tạm thời
+                                    </h6>
+                                    <p class="card-text small mb-0">
+                                        <strong class="fs-5">{{ $series_combo->redeem_point }} coin</strong>
+                                        bạn chọn sẽ tạm thời bị khóa trong quá trình thanh toán
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <div class="card border-success h-100 border-2">
+                                <div class="card-body">
+                                    <h6 class="card-title text-success fs-5">
+                                        <i class="bi bi-check-circle me-2"></i>
+                                        Thanh toán thành công
+                                    </h6>
+                                    <p class="card-text small mb-0">
+                                        Coin sẽ được trừ tự động
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <div class="card border-danger h-100 border-2">
+                                <div class="card-body">
+                                    <h6 class="card-title text-danger fs-5">
+                                        <i class="bi bi-x-circle me-2"></i>
+                                        Thanh toán thất bại/hủy
+                                    </h6>
+                                    <p class="card-text small mb-0">
+                                        Coin sẽ được hoàn lại ngay lập tức
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="small text-muted mb-0">
+                        <i class="bi bi-shield-check me-1"></i>
+                        Quy trình này đảm bảo tính công bằng và an toàn cho giao dịch của bạn
+                    </p>
+                </div>
+            `;
+
+            let confirmed;
+            await Swal.fire({
+                title: `Xác nhận trước khi ${payText}`,
+                icon: "warning",
+                html: warningContent,
+                showCancelButton: true,
+                showCloseButton: true,
+                confirmButtonColor: '#8CD4F5',
+                confirmButtonText: "Xác nhận",
+                cancelButtonText: "Hủy bỏ",
+                reverseButtons: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    confirmed = true;
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    Swal.fire("Hủy bỏ", "Đơn hàng của bạn đã bị hủy bỏ", "error");
+                    confirmed = false;
+                } else {
+                    confirmed = false;
                 }
             });
+
+            return confirmed;
+        }
+
+        const submitVnpayDiscount = async () => {
+            event.preventDefault();
+            const vnpayForm = $(event.target).closest('form');
+
+            const isConfirmed = await showDiscountTransferWarning();
+            if (isConfirmed) {
+                vnpayForm.submit();
+            }
         }
     </script>
 @endsection

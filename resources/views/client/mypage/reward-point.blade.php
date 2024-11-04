@@ -85,6 +85,9 @@
                                     <img src="{{ asset('images/icons/coin.svg') }}" class="rounded-circle coin-size">
                                 </div>
                             </div>
+                            <div class="line-clamp-4">
+                                {!! $series->short_description !!}
+                            </div>
                             <div class="d-flex align-items-center">
                                 <span class="font-weight-semibold fs-14">Giá:</span>
                                 <div class="d-flex align-items-center">

@@ -1,7 +1,7 @@
-<div class="mypage-content modal-container">
+<div class="mypage-content modal-container d-flex flex-column" style="gap: 12px;">
     @if ($view_series_history->count() > 0)
         @foreach ($view_series_history as $series)
-        <div class="course-item d-flex align-items-center pb-3">
+        <div class="course-item d-flex align-items-center">
             <img class="series-image" alt="series image" src="{{ '/public/uploads/lms/series/'.$series->image }}" />
             <div class="course-info flex-grow-1">
                 <div class="course-title">{{ $series->title }}</div>
