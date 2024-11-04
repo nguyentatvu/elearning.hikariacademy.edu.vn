@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\GeneralSettings as Settings;
+use App\PointRule;
 use App\User;
 use DB;
 use Excel;
@@ -59,12 +60,12 @@ class UsersController extends Controller
             prepareBlockUserMessage();
             return back();
         }
-        $data['records']      = false;
-        $data['layout']       = getLayout();
+        $data['records'] = false;
+        $data['layout'] = getLayout();
         $data['active_class'] = 'users';
-        $data['heading']      = getPhrase('users');
-        $data['title']        = getPhrase('users');
-        $view_name            = 'admin.users.list-users';
+        $data['heading'] = getPhrase('users');
+        $data['title'] = getPhrase('users');
+        $view_name = 'admin.users.list-users';
         return view($view_name, $data);
     }
     public function register($role = 'student')
@@ -74,11 +75,11 @@ class UsersController extends Controller
         //   prepareBlockUserMessage();
         //   return back();
         // }
-        $data['records']      = false;
-        $data['layout']       = getLayout();
+        $data['records'] = false;
+        $data['layout'] = getLayout();
         $data['active_class'] = 'users';
-        $data['heading']      = getPhrase('users');
-        $data['title']        = getPhrase('users');
+        $data['heading'] = getPhrase('users');
+        $data['title'] = getPhrase('users');
         // return view('users.list-users', $data);
         $view_name = 'admin.users.list-users-register';
         return view($view_name, $data);
@@ -89,25 +90,36 @@ class UsersController extends Controller
             prepareBlockUserMessage();
             return back();
         }
-        $data['records']      = false;
-        $data['layout']       = getLayout();
+        $data['records'] = false;
+        $data['layout'] = getLayout();
         $data['active_class'] = 'users';
-        $data['heading']      = getPhrase('users');
-        $data['title']        = 'Học viên đăng ký tại Nhật';
-        $view_name            = 'admin.users.list-users-registerjp';
+        $data['heading'] = getPhrase('users');
+        $data['title'] = 'Học viên đăng ký tại Nhật';
+        $view_name = 'admin.users.list-users-registerjp';
         return view($view_name, $data);
     }
     public function getregisterjpDatatable($slug = '')
     {
         $records = array();
         if ($slug == '') {
-            $records = User::select(['users.name', 'email', 'country', 'state', 'city', 'users.created_at', 'login_enabled', 'role_id',
-                'slug', 'users.id', 'users.updated_at'])
+            $records = User::select([
+                'users.name',
+                'email',
+                'country',
+                'state',
+                'city',
+                'users.created_at',
+                'login_enabled',
+                'role_id',
+                'slug',
+                'users.id',
+                'users.updated_at'
+            ])
                 ->where('is_register', '=', 1)
                 ->where('country_code', '=', 'JP')
                 ->orderBy('users.state', 'desc');
         } else {
-            $role    = App\Role::getRoleId($slug);
+            $role = App\Role::getRoleId($slug);
             $records = User::join('roles', 'users.role_id', '=', 'roles.id', 'roles.id', '=', $role->id)
                 ->select(['users.name', 'email', 'country', 'state', 'city', 'users.created_at', 'login_enabled', 'role_id', 'slug', 'users.updated_at'])
                 ->orderBy('users.updated_at', 'desc');
@@ -139,7 +151,7 @@ class UsersController extends Controller
             ->removeColumn('slug')
             ->removeColumn('updated_at')
             ->rawColumns(['action'])
-        // ->addAction('action',['printable' => false])
+            // ->addAction('action',['printable' => false])
             ->make();
     }
     public function getregisterDatatable($slug = '')
@@ -147,12 +159,19 @@ class UsersController extends Controller
         $records = array();
         if ($slug == '') {
             $records = User::join('roles', 'users.role_id', '=', 'roles.id')
-                ->select(['email', 'users.name', 'login_enabled', 'role_id',
-                    'slug', 'users.id', 'users.updated_at'])
+                ->select([
+                    'email',
+                    'users.name',
+                    'login_enabled',
+                    'role_id',
+                    'slug',
+                    'users.id',
+                    'users.updated_at'
+                ])
                 ->where('is_register', '=', 1)
                 ->orderBy('users.created_at', 'desc');
         } else {
-            $role    = App\Role::getRoleId($slug);
+            $role = App\Role::getRoleId($slug);
             $records = User::join('roles', 'users.role_id', '=', 'roles.id', 'roles.id', '=', $role->id)
                 ->select(['email', 'name', 'roles.display_name', 'login_enabled', 'role_id', 'slug', 'users.updated_at'])
                 ->orderBy('users.updated_at', 'desc');
@@ -196,11 +215,21 @@ class UsersController extends Controller
         $records = array();
         if ($slug == '') {
             $records = User::join('roles', 'users.role_id', '=', 'roles.id')
-                ->select(['users.hid', 'users.name', 'email', 'image', 'roles.display_name', 'login_enabled', 'role_id',
-                    'slug', 'users.id', 'users.updated_at'])
+                ->select([
+                    'users.hid',
+                    'users.name',
+                    'email',
+                    'image',
+                    'roles.display_name',
+                    'login_enabled',
+                    'role_id',
+                    'slug',
+                    'users.id',
+                    'users.updated_at'
+                ])
                 ->orderBy('users.created_at', 'desc');
         } else {
-            $role    = App\Role::getRoleId($slug);
+            $role = App\Role::getRoleId($slug);
             $records = User::join('roles', 'users.role_id', '=', 'roles.id', 'roles.id', '=', $role->id)
                 ->select(['name', 'image', 'email', 'roles.display_name', 'login_enabled', 'role_id', 'slug', 'users.updated_at'])
                 ->orderBy('users.created_at', 'desc');
@@ -214,13 +243,13 @@ class UsersController extends Controller
                         <ul class="dropdown-menu" aria-labelledby="dLabel">
                         <li><a href="' . URL_USERS_EDIT . $records->slug . '"><i class="fa fa-pencil"></i>' . getPhrase("edit") . '</a></li>';
                 // Add link Xem kết quả thi
-                $linkResult = "user/exam-categories/result/".$records->id;
+                $linkResult = "user/exam-categories/result/" . $records->id;
                 $link_data .= ' <li><a href="' . $linkResult . '"><i class="fa fa-certificate"></i>Xem kết quả thi</a></li>';
                 if (getRoleData($records->role_id) == 'student') {
                     $link_data .= ' <li><a href="' . URL_USERS_UPDATE_PARENT_DETAILS . $records->slug . '"><i class="fa fa-user"></i>Cập nhật lớp</a></li>';
                 }
                 // Add link xem khoa hoc - khoa luyen thi
-                $link = "/user/exam-categories/resource/" .$records->id;
+                $link = "/user/exam-categories/resource/" . $records->id;
                 $link_data .= ' <li><a href="' . $link . '"><i class="fa fa-book"></i>Xem KH-KLT</a></li>';
                 $temp = '';
                 //Show delete option to only the owner user
@@ -262,19 +291,19 @@ class UsersController extends Controller
         //       ->orderBy('created_at', 'desc')
         //       ->first();
         //     dd($last_uid);
-         // $user           = new User();
-         // $slug->name     = $user->makeSlug('tim anh');
-         // $slug->email     = $user->makeSlug('tim anh');
-         // $user->save();
-         // dd($user);
+        // $user           = new User();
+        // $slug->name     = $user->makeSlug('tim anh');
+        // $slug->email     = $user->makeSlug('tim anh');
+        // $user->save();
+        // dd($user);
         if (!checkRole(getUserGrade(4))) {
             prepareBlockUserMessage();
             return back();
         }
-        $data['record']       = false;
+        $data['record'] = false;
         $data['active_class'] = 'users';
         // $data['roles']        = $this->getUserRoles();
-        $roles       = \App\Role::select('display_name', 'id', 'name')->get();
+        $roles = \App\Role::select('display_name', 'id', 'name')->get();
         $final_roles = [];
         foreach ($roles as $role) {
             if (!checkRole(getUserGrade(1))) {
@@ -318,47 +347,47 @@ class UsersController extends Controller
     {
         //dd($request);
         $columns = array(
-            'name'                  => 'bail|required|max:200|',
-            'email'                 => 'bail|required|unique:users,email',
-            'password'              => 'bail|required|min:6',
+            'name' => 'bail|required|max:200|',
+            'email' => 'bail|required|unique:users,email',
+            'password' => 'bail|required|min:6',
             'password_confirmation' => 'bail|required|min:6|same:password',
         );
-        if($request->role_id != 5) {
-             $columns['username'] = 'bail|required|unique:users,username';
+        if ($request->role_id != 5) {
+            $columns['username'] = 'bail|required|unique:users,username';
         }
         $this->validate($request, $columns);
         $role_id = getRoleData('student');
         if ($request->role_id) {
             $role_id = $request->role_id;
         }
-        $user           = new User();
-        $name           = $request->name;
-        $user->name     = $name;
-        $user->email    = $request->email;
-        $password       = $request->password;
+        $user = new User();
+        $name = $request->name;
+        $user->name = $name;
+        $user->email = $request->email;
+        $password = $request->password;
         $user->password = bcrypt($password);
-        $user->role_id       = $role_id;
+        $user->role_id = $role_id;
         $user->login_enabled = 1;
-        $user->username      = $request->username;
-        $slug                = createSlug($name);
-        $user->slug          = $slug;
-        $user->phone         = $request->phone;
+        $user->username = $request->username;
+        $slug = createSlug($name);
+        $user->slug = $slug;
+        $user->phone = $request->phone;
         $user->address = '';
-        if($role_id == 5) {
+        if ($role_id == 5) {
             $last_uid = DB::table('users')
                 ->whereYear('created_at', '=', date('Y'))
                 ->where('uid', '<>', null)
                 ->orderBy('created_at', 'desc')
                 ->first();
             if ($last_uid) {
-                $uid_code  = $last_uid->uid;
-                $uid_code  = ++$uid_code;
-                $uid_code  = str_pad($uid_code, 5, '0', STR_PAD_LEFT);
+                $uid_code = $last_uid->uid;
+                $uid_code = ++$uid_code;
+                $uid_code = str_pad($uid_code, 5, '0', STR_PAD_LEFT);
                 $user->uid = '' . $uid_code . '';
-                $uid_code  = 'HID' . date('y') . $uid_code;
+                $uid_code = 'HID' . date('y') . $uid_code;
             } else {
                 $user->uid = '00001';
-                $uid_code  = 'HID' . date('y') . '00001';
+                $uid_code = 'HID' . date('y') . '00001';
             }
             $user->hid = $uid_code;
             $user->username = $uid_code;
@@ -373,7 +402,7 @@ class UsersController extends Controller
         // DB::commit();
         $user->save();
         $user->roles()->attach($user->role_id);
-        $message   = 'Tạo thành viên thành công';
+        $message = 'Tạo thành viên thành công';
         $exception = 0;
         $flash = app('App\Http\Flash');
         $flash->create($message, '', 'success', 'flash_overlay', false);
@@ -384,10 +413,10 @@ class UsersController extends Controller
         if (getSetting('push_notifications', 'module')) {
             if (getSetting('default', 'push_notifications') == 'pusher') {
                 $options = array(
-                    'name'  => $user->name,
+                    'name' => $user->name,
                     'image' => getProfilePath($user->image),
-                    'slug'  => $user->slug,
-                    'role'  => getRoleData($user->role_id),
+                    'slug' => $user->slug,
+                    'role' => getRoleData($user->role_id),
                 );
                 pushNotification(['owner', 'admin'], 'newUser', $options);
             } else {
@@ -402,15 +431,15 @@ class UsersController extends Controller
      */
     public function sendOneSignalMessage($new_message = '')
     {
-        $gcpm    = new OneSignalApp();
+        $gcpm = new OneSignalApp();
         $message = array(
-            "en"    => $new_message,
+            "en" => $new_message,
             "title" => 'New Registration',
-            "icon"  => "myicon",
+            "icon" => "myicon",
             "sound" => "default",
         );
         $data = array(
-            "body"  => $new_message,
+            "body" => $new_message,
             "title" => "New Registration",
         );
         $gcpm->setDevices(env('ONE_SIGNAL_USER_ID'));
@@ -422,10 +451,10 @@ class UsersController extends Controller
             return 'demo';
         }
         if ($request->hasFile('image')) {
-            $imageObject          = new ImageSettings();
-            $destinationPath      = $imageObject->getProfilePicsPath();
+            $imageObject = new ImageSettings();
+            $destinationPath = $imageObject->getProfilePicsPath();
             $destinationPathThumb = $imageObject->getProfilePicsThumbnailpath();
-            $fileName             = $user->id . '.' . $request->image->guessClientExtension();
+            $fileName = $user->id . '.' . $request->image->guessClientExtension();
             $request->file('image')->move($destinationPath, $fileName);
             $user->image = $fileName;
             Image::make($destinationPath . $fileName)->fit($imageObject->getProfilePicSize())->save($destinationPath . $fileName);
@@ -455,7 +484,7 @@ class UsersController extends Controller
     {
         //
     }
-     public function profile($slug)
+    public function profile($slug)
     {
         $record = User::where('slug', $slug)->get()->first();
         if ($isValid = $this->isValidRecord($record)) {
@@ -467,17 +496,17 @@ class UsersController extends Controller
         $UserOwnAccount = false;
         $data['record'] = $record;
         $data['active_class'] = 'users_edit';
-        $data['title']        = 'Trang cá nhân';
+        $data['title'] = 'Trang cá nhân';
         // $data['layout']       = getLayout();
-        $data['layout']       = 'admin.layouts.student.studentsettinglayout';
+        $data['layout'] = 'admin.layouts.student.studentsettinglayout';
         $view_name = 'admin.users.profile';
         return view($view_name, $data);
     }
     public function updateProfile(Request $request, $slug)
     {
-        $record     = User::where('slug', $slug)->get()->first();
+        $record = User::where('slug', $slug)->get()->first();
         $validation = [
-            'name'  => 'bail|required|max:20|',
+            'name' => 'bail|required|max:20|',
             'image' => 'bail|mimes:png,jpg,jpeg|max:2048',
         ];
         if (!isEligible($slug)) {
@@ -485,10 +514,10 @@ class UsersController extends Controller
         }
 
         $this->validate($request, $validation);
-        $name             = $request->name;
-        $record->name  = $name;
-        $record->phone   = $request->phone;
-        $record->level   = 5;
+        $name = $request->name;
+        $record->name = $name;
+        $record->phone = $request->phone;
+        $record->level = 5;
         $record->address = $request->address;
         $record->save();
 
@@ -534,7 +563,7 @@ class UsersController extends Controller
         $data['record'] = $record;
         // dd('hrere');
         // $data['roles']              = $this->getUserRoles();
-        $roles       = \App\Role::select('display_name', 'id', 'name')->get();
+        $roles = \App\Role::select('display_name', 'id', 'name')->get();
         $final_roles = [];
         foreach ($roles as $role) {
             if (!checkRole(getUserGrade(1))) {
@@ -550,8 +579,8 @@ class UsersController extends Controller
             $data['roles'][getRoleData('admin')] = 'Admin';
         }
         $data['active_class'] = 'users_edit';
-        $data['title']        = 'Trang cá nhân';
-        $data['layout']       = getLayout();
+        $data['title'] = 'Trang cá nhân';
+        $data['layout'] = getLayout();
         //$data['layout']       = 'admin.layouts.student.studentsettinglayout';
         $view_name = 'admin.users.add-edit-user';
         return view($view_name, $data);
@@ -564,9 +593,9 @@ class UsersController extends Controller
      */
     public function update(Request $request, $slug)
     {
-        $record     = User::where('slug', $slug)->get()->first();
+        $record = User::where('slug', $slug)->get()->first();
         $validation = [
-            'name'  => 'bail|required|max:20|',
+            'name' => 'bail|required|max:20|',
             'email' => 'bail|required|unique:users,email,' . $record->id,
             'image' => 'bail|mimes:png,jpg,jpeg|max:2048',
         ];
@@ -577,29 +606,29 @@ class UsersController extends Controller
             $validation['role_id'] = 'bail|required|integer';
         }
         $this->validate($request, $validation);
-        $name             = $request->name;
+        $name = $request->name;
         $previous_role_id = $record->role_id;
         if ($name != $record->name) {
             $record->slug = createSlug($name);
         }
-        $record->name  = $name;
+        $record->name = $name;
         $record->email = $request->email;
         if (checkRole(getUserGrade(2))) {
             $record->role_id = $request->role_id;
         }
-        $record->phone   = $request->phone;
-        $record->level   = 5;
+        $record->phone = $request->phone;
+        $record->level = 5;
         $record->address = '';
         $record->save();
         if ($request->password) {
-            $password         = $request->password;
+            $password = $request->password;
             $record->password = bcrypt($password);
             $record->save();
         }
         DB::table('role_user')
-          ->where('user_id', '=', $record->id)
-          ->where('role_id', '=', $previous_role_id)
-          ->delete();
+            ->where('user_id', '=', $record->id)
+            ->where('role_id', '=', $previous_role_id)
+            ->delete();
         $record->roles()->attach($request->role_id);
         flash('Cập nhật thành công', '', 'success');
         if (checkRole(getUserGrade(2))) {
@@ -630,14 +659,14 @@ class UsersController extends Controller
          * If exists we cannot delete the record
          */
         if (!env('DEMO_MODE')) {
-            $imageObject          = new ImageSettings();
-            $destinationPath      = $imageObject->getProfilePicsPath();
+            $imageObject = new ImageSettings();
+            $destinationPath = $imageObject->getProfilePicsPath();
             $destinationPathThumb = $imageObject->getProfilePicsThumbnailpath();
             $this->deleteFile($record->image, $destinationPath);
             $this->deleteFile($record->image, $destinationPathThumb);
             $record->delete();
         }
-        $response['status']  = 1;
+        $response['status'] = 1;
         $response['message'] = getPhrase('record_deleted_successfully');
         return json_encode($response);
     }
@@ -646,14 +675,14 @@ class UsersController extends Controller
         if (env('DEMO_MODE')) {
             return;
         }
-        $files   = array();
+        $files = array();
         $files[] = $path . $record;
         File::delete($files);
     }
     public function listUsers($role_name)
     {
-        $role       = App\Role::getRoleId($role_name);
-        $users      = User::where('role_id', '=', $role->id)->get();
+        $role = App\Role::getRoleId($role_name);
+        $users = User::where('role_id', '=', $role->id)->get();
         $users_list = array();
         foreach ($users as $key => $value) {
             $r = array('id' => $value->id, 'text' => $value->name, 'image' => $value->image);
@@ -675,71 +704,71 @@ class UsersController extends Controller
             return back();
         }
         $data['record'] = $record;
-        $user           = $record;
+        $user = $record;
         //Overall performance Report
-        $resultObject        = new App\QuizResult();
-        $records             = $resultObject->getOverallSubjectsReport($user);
-        $color_correct       = getColor('background', rand(0, 999));
-        $color_wrong         = getColor('background', rand(0, 999));
+        $resultObject = new App\QuizResult();
+        $records = $resultObject->getOverallSubjectsReport($user);
+        $color_correct = getColor('background', rand(0, 999));
+        $color_wrong = getColor('background', rand(0, 999));
         $color_not_attempted = getColor('background', rand(0, 999));
-        $correct_answers     = 0;
-        $wrong_answers       = 0;
-        $not_answered        = 0;
+        $correct_answers = 0;
+        $wrong_answers = 0;
+        $not_answered = 0;
         foreach ($records as $record) {
             $record = (object) $record;
             $correct_answers += $record->correct_answers;
             $wrong_answers += $record->wrong_answers;
             $not_answered += $record->not_answered;
         }
-        $labels             = [getPhrase('correct'), getPhrase('wrong'), getPhrase('not_answered')];
-        $dataset            = [$correct_answers, $wrong_answers, $not_answered];
-        $dataset_label[]    = 'lbl';
-        $bgcolor            = [$color_correct, $color_wrong, $color_not_attempted];
-        $border_color       = [$color_correct, $color_wrong, $color_not_attempted];
+        $labels = [getPhrase('correct'), getPhrase('wrong'), getPhrase('not_answered')];
+        $dataset = [$correct_answers, $wrong_answers, $not_answered];
+        $dataset_label[] = 'lbl';
+        $bgcolor = [$color_correct, $color_wrong, $color_not_attempted];
+        $border_color = [$color_correct, $color_wrong, $color_not_attempted];
         $chart_data['type'] = 'pie';
         //horizontalBar, bar, polarArea, line, doughnut, pie
         $chart_data['title'] = getphrase('overall_performance');
-        $chart_data['data']  = (object) array(
-            'labels'        => $labels,
-            'dataset'       => $dataset,
+        $chart_data['data'] = (object) array(
+            'labels' => $labels,
+            'dataset' => $dataset,
             'dataset_label' => $dataset_label,
-            'bgcolor'       => $bgcolor,
-            'border_color'  => $border_color,
+            'bgcolor' => $bgcolor,
+            'border_color' => $border_color,
         );
         $data['chart_data'][] = (object) $chart_data;
         //Best scores in each quizzes
-        $records     = $resultObject->getOverallQuizPerformance($user);
-        $labels      = [];
-        $dataset     = [];
-        $bgcolor     = [];
+        $records = $resultObject->getOverallQuizPerformance($user);
+        $labels = [];
+        $dataset = [];
+        $bgcolor = [];
         $bordercolor = [];
         foreach ($records as $record) {
-            $color_number  = rand(0, 999);
-            $record        = (object) $record;
-            $labels[]      = $record->title;
-            $dataset[]     = $record->percentage;
-            $bgcolor[]     = getColor('background', $color_number);
+            $color_number = rand(0, 999);
+            $record = (object) $record;
+            $labels[] = $record->title;
+            $dataset[] = $record->percentage;
+            $bgcolor[] = getColor('background', $color_number);
             $bordercolor[] = getColor('border', $color_number);
         }
-        $labels             = $labels;
-        $dataset            = $dataset;
-        $dataset_label      = getPhrase('performance');
-        $bgcolor            = $bgcolor;
-        $border_color       = $bordercolor;
+        $labels = $labels;
+        $dataset = $dataset;
+        $dataset_label = getPhrase('performance');
+        $bgcolor = $bgcolor;
+        $border_color = $bordercolor;
         $chart_data['type'] = 'bar';
         //horizontalBar, bar, polarArea, line, doughnut, pie
         $chart_data['title'] = getPhrase('best_performance_in_all_quizzes');
-        $chart_data['data']  = (object) array(
-            'labels'        => $labels,
-            'dataset'       => $dataset,
+        $chart_data['data'] = (object) array(
+            'labels' => $labels,
+            'dataset' => $dataset,
             'dataset_label' => $dataset_label,
-            'bgcolor'       => $bgcolor,
-            'border_color'  => $border_color,
+            'bgcolor' => $bgcolor,
+            'border_color' => $border_color,
         );
         $data['chart_data'][] = (object) $chart_data;
-        $data['ids']          = array('myChart0', 'myChart1');
-        $data['title']        = getPhrase('user_details');
-        $data['layout']       = getLayout();
+        $data['ids'] = array('myChart0', 'myChart1');
+        $data['title'] = getPhrase('user_details');
+        $data['layout'] = getLayout();
         $data['active_class'] = 'users';
         if (checkRole(['parent'])) {
             $data['active_class'] = 'children';
@@ -769,10 +798,10 @@ class UsersController extends Controller
         if (!isEligible($slug)) {
             return back();
         }
-        $data['record']       = $record;
+        $data['record'] = $record;
         $data['active_class'] = 'profile';
-        $data['title']        = getPhrase('change_password');
-        $data['layout']       = getLayout();
+        $data['title'] = getPhrase('change_password');
+        $data['layout'] = getLayout();
         // return view('users.change-password.change-view', $data);
         $view_name = 'admin.users.change-password.change-view';
         return view($view_name, $data);
@@ -786,14 +815,16 @@ class UsersController extends Controller
     {
         $this->validate($request, [
             'old_password' => 'required',
-            'password'     => 'required|confirmed',
+            'password' => 'required|confirmed',
         ]);
         $credentials = $request->only(
-            'old_password', 'password', 'password_confirmation'
+            'old_password',
+            'password',
+            'password_confirmation'
         );
         $user = \Auth::user();
         if (Hash::check($credentials['old_password'], $user->password)) {
-            $password       = $credentials['password'];
+            $password = $credentials['password'];
             $user->password = bcrypt($password);
             $user->save();
             flash('success', 'Thay đổi password thành công!', 'success');
@@ -814,11 +845,11 @@ class UsersController extends Controller
             prepareBlockUserMessage();
             return back();
         }
-        $data['records']      = false;
+        $data['records'] = false;
         $data['active_class'] = 'users';
-        $data['heading']      = getPhrase('users');
-        $data['title']        = getPhrase('import_users');
-        $data['layout']       = getLayout();
+        $data['heading'] = getPhrase('users');
+        $data['title'] = getPhrase('import_users');
+        $data['layout'] = getLayout();
         // return view('users.import.import', $data);
         $view_name = 'admin.users.import.import';
         return view($view_name, $data);
@@ -834,42 +865,42 @@ class UsersController extends Controller
             return back();
         }
         $success_list = [];
-        $failed_list  = [];
+        $failed_list = [];
         try {
             if (Input::hasFile('excel')) {
                 $path = Input::file('excel')->getRealPath();
                 $data = Excel::load($path, function ($reader) {
                 })->get();
-                $user_record       = array();
-                $users             = array();
+                $user_record = array();
+                $users = array();
                 $isHavingDuplicate = 0;
                 if (!empty($data) && $data->count()) {
                     foreach ($data as $key => $value) {
                         foreach ($value as $record) {
                             unset($user_record);
                             $user_record['username'] = $record->username;
-                            $user_record['name']     = $record->name;
-                            $user_record['email']    = $record->email;
+                            $user_record['name'] = $record->name;
+                            $user_record['email'] = $record->email;
                             $user_record['password'] = $record->password;
-                            $user_record['phone']    = $record->phone;
+                            $user_record['phone'] = $record->phone;
                             // $user_record['address'] = $record->address;
                             $user_record['address'] = '';
                             $user_record['role_id'] = STUDENT_ROLE_ID;
-                            $user_record            = (object) $user_record;
-                            $failed_length          = count($failed_list);
+                            $user_record = (object) $user_record;
+                            $failed_length = count($failed_list);
                             if ($this->isRecordExists($record->username, 'username')) {
-                                $isHavingDuplicate           = 1;
-                                $temp                        = array();
-                                $temp['record']              = $user_record;
-                                $temp['type']                = 'Record already exists with this name';
+                                $isHavingDuplicate = 1;
+                                $temp = array();
+                                $temp['record'] = $user_record;
+                                $temp['type'] = 'Record already exists with this name';
                                 $failed_list[$failed_length] = (object) $temp;
                                 continue;
                             }
                             if ($this->isRecordExists($record->email, 'email')) {
-                                $isHavingDuplicate           = 1;
-                                $temp                        = array();
-                                $temp['record']              = $user_record;
-                                $temp['type']                = 'Record already exists with this email';
+                                $isHavingDuplicate = 1;
+                                $temp = array();
+                                $temp['record'] = $user_record;
+                                $temp['type'] = 'Record already exists with this email';
                                 $failed_list[$failed_length] = (object) $temp;
                                 continue;
                             }
@@ -881,7 +912,7 @@ class UsersController extends Controller
                     }
                 }
             }
-            $this->excel_data['failed']  = $failed_list;
+            $this->excel_data['failed'] = $failed_list;
             $this->excel_data['success'] = $success_list;
             flash('success', 'record_added_successfully', 'success');
             $this->downloadExcel();
@@ -894,13 +925,13 @@ class UsersController extends Controller
             return back();
         }
         // URL_USERS_IMPORT_REPORT
-        $data['failed_list']  = $failed_list;
+        $data['failed_list'] = $failed_list;
         $data['success_list'] = $success_list;
-        $data['records']      = false;
-        $data['layout']       = getLayout();
+        $data['records'] = false;
+        $data['layout'] = getLayout();
         $data['active_class'] = 'users';
-        $data['heading']      = getPhrase('users');
-        $data['title']        = getPhrase('report');
+        $data['heading'] = getPhrase('users');
+        $data['title'] = getPhrase('report');
         // return view('users.import.import-result', $data);
         $view_name = 'admin.users.import.import-result';
         return view($view_name, $data);
@@ -915,7 +946,7 @@ class UsersController extends Controller
             $excel->sheet('Failed', function ($sheet) {
                 $sheet->row(1, array('Reason', 'Name', 'Username', 'Email', 'Password', 'Phone', 'Address'));
                 $data = $this->getFailedData();
-                $cnt  = 2;
+                $cnt = 2;
                 // dd($data['failed']);
                 foreach ($data['failed'] as $data_item) {
                     $item = $data_item->record;
@@ -925,7 +956,7 @@ class UsersController extends Controller
             $excel->sheet('Success', function ($sheet) {
                 $sheet->row(1, array('Name', 'Username', 'Email', 'Password', 'Phone', 'Address'));
                 $data = $this->getFailedData();
-                $cnt  = 2;
+                $cnt = 2;
                 foreach ($data['success'] as $data_item) {
                     $item = $data_item;
                     $sheet->appendRow($cnt++, array($item->name, $item->username, $item->email, $item->password, $item->phone, $item->address));
@@ -948,16 +979,16 @@ class UsersController extends Controller
     public function addUser($users)
     {
         foreach ($users as $request) {
-            $user                = new User();
-            $name                = $request->name;
-            $user->name          = $name;
-            $user->email         = $request->email;
-            $user->username      = $request->username;
-            $user->password      = bcrypt($request->password);
-            $user->role_id       = $request->role_id;
+            $user = new User();
+            $name = $request->name;
+            $user->name = $name;
+            $user->email = $request->email;
+            $user->username = $request->username;
+            $user->password = bcrypt($request->password);
+            $user->role_id = $request->role_id;
             $user->login_enabled = 1;
-            $user->slug          = createSlug($name);
-            $user->phone         = $request->phone;
+            $user->slug = createSlug($name);
+            $user->phone = $request->phone;
             // $user->address      = $request->address;
             $user->address = '';
             $user->save();
@@ -1001,14 +1032,14 @@ class UsersController extends Controller
                 }
             }
         }
-        $data['record']          = $record;
+        $data['record'] = $record;
         $data['quiz_categories'] = App\QuizCategory::get();
-        $data['lms_category']    = App\LmsCategory::get();
+        $data['lms_category'] = App\LmsCategory::get();
         // dd($data);
-        $data['layout']       = getLayout();
+        $data['layout'] = getLayout();
         $data['active_class'] = 'users';
-        $data['heading']      = getPhrase('account_settings');
-        $data['title']        = getPhrase('account_settings');
+        $data['heading'] = getPhrase('account_settings');
+        $data['title'] = getPhrase('account_settings');
         // flash('success','record_added_successfully', 'success');
         // return view('users.account-settings', $data);
         $view_name = 'admin.users.account-settings';
@@ -1057,7 +1088,7 @@ class UsersController extends Controller
             $options = (array) json_decode($record->settings)->user_preferences;
         }
         $options['quiz_categories'] = [];
-        $options['lms_categories']  = [];
+        $options['lms_categories'] = [];
         if ($request->has('quiz_categories')) {
             foreach ($request->quiz_categories as $key => $value) {
                 $options['quiz_categories'][] = $key;
@@ -1083,11 +1114,11 @@ class UsersController extends Controller
         if ($isValid = $this->isValidRecord($record)) {
             return redirect($isValid);
         }
-        $data['layout']       = getLayout();
+        $data['layout'] = getLayout();
         $data['active_class'] = 'users';
-        $data['record']       = $record;
-        $data['heading']      = 'Giáo viên';
-        $data['title']        = 'Giáo viên';
+        $data['record'] = $record;
+        $data['heading'] = 'Giáo viên';
+        $data['title'] = 'Giáo viên';
         // return view('users.parent-details', $data);
         $view_name = 'admin.users.parent-details';
         return view($view_name, $data);
@@ -1098,20 +1129,20 @@ class UsersController extends Controller
             prepareBlockUserMessage();
             return back();
         }
-        $user     = User::where('slug', '=', $slug)->first();
-        $role_id  = getRoleData('parent');
-        $message  = '';
+        $user = User::where('slug', '=', $slug)->first();
+        $role_id = getRoleData('parent');
+        $message = '';
         $hasError = 0;
         DB::beginTransaction();
         if ($request->account == 0) {
             //User is not having an account, create it and send email
             //Update the newly created user ID to the current user parent record
-            $parent_user           = new User();
-            $parent_user->name     = $request->parent_name;
+            $parent_user = new User();
+            $parent_user->name = $request->parent_name;
             $parent_user->username = $request->parent_user_name;
-            $parent_user->role_id  = $role_id;
-            $parent_user->slug     = createSlug($request->parent_user_name);
-            $parent_user->email    = $request->parent_email;
+            $parent_user->role_id = $role_id;
+            $parent_user->slug = createSlug($request->parent_user_name);
+            $parent_user->email = $request->parent_email;
             $parent_user->password = bcrypt('password');
             try {
                 $parent_user->save();
@@ -1124,7 +1155,7 @@ class UsersController extends Controller
             } catch (Exception $ex) {
                 DB::rollBack();
                 $hasError = 1;
-                $message  = $ex->getMessage();
+                $message = $ex->getMessage();
             }
         }
         if ($request->account == 1) {
@@ -1147,7 +1178,7 @@ class UsersController extends Controller
     }
     public function getParentsOnSearch(Request $request)
     {
-        $term    = $request->search_text;
+        $term = $request->search_text;
         $role_id = getRoleData('parent');
         $records = App\User::
             where('name', 'LIKE', '%' . $term . '%')
@@ -1170,7 +1201,7 @@ class UsersController extends Controller
             return back();
         }
         $data['active_class'] = 'users';
-        $data['title']        = getPhrase('subscribed_users');
+        $data['title'] = getPhrase('subscribed_users');
         // return view('exams.quizcategories.list', $data);
         $view_name = 'admin.users.subscribeduser';
         return view($view_name, $data);
@@ -1192,284 +1223,313 @@ class UsersController extends Controller
             ->make();
     }
 
-	public function getResource(Request $request){
-		$userId = $request->id;
-		$data['active_class']       = 'resource';
-		$data['title']              = 'Xem khóa học-khóa luyện thi';
+    public function getResource(Request $request)
+    {
+        $userId = $request->id;
+        $data['active_class'] = 'resource';
+        $data['title'] = 'Xem khóa học-khóa luyện thi';
 
-		// Get data course
-		$data['series'] = DB::table('lmsseries_combo')
-			->join('payment_method', 'payment_method.item_id', '=', 'lmsseries_combo.id')
-			->join('payments','payment_method.id','=','payments.payments_method_id')
-			->join('lmsseries','lmsseries.id','=','payments.item_id')
-			->select('lmsseries.*',DB::raw("(lmsseries_combo.slug) as combo_slug"),'payments.time','payment_method.created_at','payment_method.id AS idPayment','payment_method.status','payment_method.month_extend',
-				DB::raw("(SELECT COUNT(lmscontents.id)  FROM lmscontents
+        // Get data course
+        $data['series'] = DB::table('lmsseries_combo')
+            ->join('payment_method', 'payment_method.item_id', '=', 'lmsseries_combo.id')
+            ->join('payments', 'payment_method.id', '=', 'payments.payments_method_id')
+            ->join('lmsseries', 'lmsseries.id', '=', 'payments.item_id')
+            ->select(
+                'lmsseries.*',
+                DB::raw("(lmsseries_combo.slug) as combo_slug"),
+                'payments.time',
+                'payment_method.created_at',
+                'payment_method.id AS idPayment',
+                'payment_method.status',
+                'payment_method.month_extend',
+                DB::raw("(SELECT COUNT(lmscontents.id)  FROM lmscontents
 		WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) AND
 			lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5) ) as total_course"),
-				DB::raw("(SELECT COUNT(lms_student_view.id)  FROM lms_student_view
+                DB::raw("(SELECT COUNT(lms_student_view.id)  FROM lms_student_view
 				join lmscontents on lms_student_view.lmscontent_id = lmscontents.id
-		WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) AND lms_student_view.users_id = ".$userId." AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
-			 ) as current_course"))
-			->where([
-				['payment_method.user_id',$userId],
-				['lmsseries_combo.delete_status',0],
-				['lmsseries_combo.type',0]
-			])
-			->distinct()
-			->get();
+		WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) AND lms_student_view.users_id = " . $userId . " AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
+			 ) as current_course")
+            )
+            ->where([
+                ['payment_method.user_id', $userId],
+                ['lmsseries_combo.delete_status', 0],
+                ['lmsseries_combo.type', 0]
+            ])
+            ->distinct()
+            ->get();
 
-		// Get data course test
-		$couseList = DB::table('lmsseries_combo')
-			->join('payment_method', 'payment_method.item_id', '=', 'lmsseries_combo.id')
-			->join('payments','payment_method.id','=','payments.payments_method_id')
-			->join('lmsseries','lmsseries.id','=','payments.item_id')
-			->select('lmsseries.*',DB::raw("(lmsseries_combo.slug) as combo_slug"),'payments.time','payment_method.created_at','payment_method.id AS idPayment','payment_method.status','payment_method.month_extend',
-				DB::raw("(SELECT COUNT(lmscontents.id)  FROM lmscontents
+        // Get data course test
+        $couseList = DB::table('lmsseries_combo')
+            ->join('payment_method', 'payment_method.item_id', '=', 'lmsseries_combo.id')
+            ->join('payments', 'payment_method.id', '=', 'payments.payments_method_id')
+            ->join('lmsseries', 'lmsseries.id', '=', 'payments.item_id')
+            ->select(
+                'lmsseries.*',
+                DB::raw("(lmsseries_combo.slug) as combo_slug"),
+                'payments.time',
+                'payment_method.created_at',
+                'payment_method.id AS idPayment',
+                'payment_method.status',
+                'payment_method.month_extend',
+                DB::raw("(SELECT COUNT(lmscontents.id)  FROM lmscontents
 		WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) AND
 			lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5) ) as total_course"),
-				DB::raw("(SELECT COUNT(lms_student_view.id)  FROM lms_student_view
+                DB::raw("(SELECT COUNT(lms_student_view.id)  FROM lms_student_view
 				join lmscontents on lms_student_view.lmscontent_id = lmscontents.id
-		WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) AND lms_student_view.users_id = ".$userId." AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
-			 ) as current_course"))
-			->where([
-				['payment_method.user_id',$userId],
-				['lmsseries_combo.delete_status',0],
-				['lmsseries_combo.type',1]
-			])
-			->distinct()
-			->get();
+		WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) AND lms_student_view.users_id = " . $userId . " AND lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
+			 ) as current_course")
+            )
+            ->where([
+                ['payment_method.user_id', $userId],
+                ['lmsseries_combo.delete_status', 0],
+                ['lmsseries_combo.type', 1]
+            ])
+            ->distinct()
+            ->get();
 
-		$data['series_selected'] = DB::table('lmsseries')
-			->join('lms_class','lmsseries.id','=','lms_class.lmsseries_id')
-			->join('classes','lms_class.classes_id','=','classes.id')
-			->join('classes_user','classes_user.classes_id','=','classes.id')
-			->where([
-				['classes_user.student_id',$userId],
-				['lmsseries.delete_status',0],
-				['type_series',1]
-			])
-			->orderBy('order_by')
-			->get();
-
-
-		if($couseList != null) {
-			if($data['series'] == null) {
-				$data['series'] = collect([]);
-			}
-
-			foreach ($couseList as $r) {
-				$data['series']->push($r);
-			}
-		}
-
-		$data['user'] = DB::table('users')
-			->where('users.id', '=',$userId)
-			->first();
-
-		$data['layout']       = getLayout();
-		$view_name            = 'admin.users.resource-list';
-		return view($view_name, $data);
-	}
-
-	public function postDisable(Request $request) {
-		$data['MessageCode'] = 500;
-		$data['MessageText'] = 'Lỗi không thể vô hiệu lớp học này';
-
-		$id = $request->id;
-		$record = PaymentMethod::where('id', $id)->first();
-
-		// Check record is exist
-		if($record == null) {
-			$data['MessageText'] = 'Dữ liệu không tồn tại';
-			return json_encode($data);
-		}
-
-		// Update status
-		$record->status = 3;
-		$record->save();
-
-		$data['MessageCode'] = 200;
-		$data['MessageText'] = 'Cập nhật thành công';
-		return json_encode($data);
-	}
-
-	public function postExtend(Request $request) {
-		$id = $request->id;
-		$month = $request->month;
-		$data['MessageCode'] = 500;
-
-		$record = PaymentMethod::where('id', $id)->first();
-
-		// Check record is exist
-		if($record == null) {
-			$data['MessageText'] = 'Dữ liệu không tồn tại';
-			return json_encode($data);
-		}
-
-		// Update status
-		$record->month_extend = (int)$month;
-		$record->save();
-
-		$data['MessageCode'] = 200;
-		$data['MessageText'] = 'Cập nhật thành công';
-		return json_encode($data);
-	}
-
-	public function getResultExam(Request $request) {
-
-		$userId = $request->id;
-		$data['active_class'] = 'users';
-		$data['title']              = 'Xem kết quả thi';
-		// Get data result exam
-		$data['results'] = DB::table('quizresultfinish')
-			->join('examseries','examseries.id','=','quizresultfinish.examseri_id')
-			->where('quizresultfinish.user_id', '=',$userId)
-			->orderBy('quizresultfinish.created_at','desc')
-			->select(
-			 	'examseries.title',
-			 	'examseries.category_id',
-				'quizresultfinish.id',
-				'quizresultfinish.finish',
-				'quizresultfinish.created_at',
-				'quizresultfinish.quiz_1_total',
-				'quizresultfinish.quiz_2_total',
-				'quizresultfinish.quiz_3_total',
-				'quizresultfinish.total_marks',
-				'quizresultfinish.status'
-				)
-			->get();
-
-		$data['user'] = DB::table('users')
-			->where('users.id', '=',$userId)
-			->first();
-
-		if($data['results'] != null) {
-			foreach ($data['results'] as $record) {
-				# code...
-				if ($record->category_id <= 3) {
-					$style1 = ($this->checkKijunTen($record->category_id, 1, $record->quiz_1_total))? "info" : "danger";
-					$style2 = ($this->checkKijunTen($record->category_id, 2, $record->quiz_2_total))? "info" : "danger";
-					$style3 = ($this->checkKijunTen($record->category_id, 3, $record->quiz_3_total))? "info" : "danger";
-					$detail = '言語知識（文字・語彙・文法）: <span class="label label-'.$style1.'">'.$record->quiz_1_total.'</span><br><br>読解: <span class="label label-'.$style2.'">'.$record->quiz_2_total.'</span><br><br>聴解: <span class="label label-'.$style3.'">'.$record->quiz_3_total.'</span>';
-				} else {
-					$style1 = ($this->checkKijunTen($record->category_id, 1, $record->quiz_1_total))? "info" : "danger";
-					$style3 = ($this->checkKijunTen($record->category_id, 2, $record->quiz_3_total))? "info" : "danger";
-					$detail = '言語知識（文字・語彙・文法）: <span class="label label-'.$style1.'">'.$record->quiz_1_total.'</span><br><br>聴解: <span class="label label-'.$style3.'">'.$record->quiz_3_total.'</span>';
-				}
-				$record->detail = $detail;
-
-				if ($record->finish == 3) {
-					if ($this->checkPassingscore($record->category_id, $record->total_marks) && $this->checkKijunTenAnyKubun($record->category_id, $record->quiz_1_total, $record->quiz_2_total, $record->quiz_3_total)){
-						$ketqua = '<span class="label label-success">Đạt</span>';
-					} else{
-						$ketqua = '<span class="label label-warning">Chưa đạt</span>';
-					}
-
-				} else {
-					$ketqua = '<span class="label label-danger">Chưa hoàn thành</span>';
-				}
-				$record->ketqua = $ketqua;
-			}
-		}
-
-		$data['layout']       = getLayout();
-		$view_name            = 'admin.users.result-exam-list';
-		return view($view_name, $data);
-	}
+        $data['series_selected'] = DB::table('lmsseries')
+            ->join('lms_class', 'lmsseries.id', '=', 'lms_class.lmsseries_id')
+            ->join('classes', 'lms_class.classes_id', '=', 'classes.id')
+            ->join('classes_user', 'classes_user.classes_id', '=', 'classes.id')
+            ->where([
+                ['classes_user.student_id', $userId],
+                ['lmsseries.delete_status', 0],
+                ['type_series', 1]
+            ])
+            ->orderBy('order_by')
+            ->get();
 
 
-	public function postCertificate(Request $request) {
-		$id = $request->id;
-		$data = array();
+        if ($couseList != null) {
+            if ($data['series'] == null) {
+                $data['series'] = collect([]);
+            }
+
+            foreach ($couseList as $r) {
+                $data['series']->push($r);
+            }
+        }
+
+        $data['user'] = DB::table('users')
+            ->where('users.id', '=', $userId)
+            ->first();
+
+        $data['layout'] = getLayout();
+        $view_name = 'admin.users.resource-list';
+        return view($view_name, $data);
+    }
+
+    public function postDisable(Request $request)
+    {
+        $data['MessageCode'] = 500;
+        $data['MessageText'] = 'Lỗi không thể vô hiệu lớp học này';
+
+        $id = $request->id;
+        $record = PaymentMethod::where('id', $id)->first();
+
+        // Check record is exist
+        if ($record == null) {
+            $data['MessageText'] = 'Dữ liệu không tồn tại';
+            return json_encode($data);
+        }
+
+        // Update status
+        $record->status = 3;
+        $record->save();
+
+        $data['MessageCode'] = 200;
+        $data['MessageText'] = 'Cập nhật thành công';
+        return json_encode($data);
+    }
+
+    public function postExtend(Request $request)
+    {
+        $id = $request->id;
+        $month = $request->month;
+        $data['MessageCode'] = 500;
+
+        $record = PaymentMethod::where('id', $id)->first();
+
+        // Check record is exist
+        if ($record == null) {
+            $data['MessageText'] = 'Dữ liệu không tồn tại';
+            return json_encode($data);
+        }
+
+        // Update status
+        $record->month_extend = (int) $month;
+        $record->save();
+
+        $data['MessageCode'] = 200;
+        $data['MessageText'] = 'Cập nhật thành công';
+        return json_encode($data);
+    }
+
+    public function getResultExam(Request $request)
+    {
+
+        $userId = $request->id;
+        $data['active_class'] = 'users';
+        $data['title'] = 'Xem kết quả thi';
+        // Get data result exam
+        $data['results'] = DB::table('quizresultfinish')
+            ->join('examseries', 'examseries.id', '=', 'quizresultfinish.examseri_id')
+            ->where('quizresultfinish.user_id', '=', $userId)
+            ->orderBy('quizresultfinish.created_at', 'desc')
+            ->select(
+                'examseries.title',
+                'examseries.category_id',
+                'quizresultfinish.id',
+                'quizresultfinish.finish',
+                'quizresultfinish.created_at',
+                'quizresultfinish.quiz_1_total',
+                'quizresultfinish.quiz_2_total',
+                'quizresultfinish.quiz_3_total',
+                'quizresultfinish.total_marks',
+                'quizresultfinish.status'
+            )
+            ->get();
+
+        $data['user'] = DB::table('users')
+            ->where('users.id', '=', $userId)
+            ->first();
+
+        if ($data['results'] != null) {
+            foreach ($data['results'] as $record) {
+                # code...
+                if ($record->category_id <= 3) {
+                    $style1 = ($this->checkKijunTen($record->category_id, 1, $record->quiz_1_total)) ? "info" : "danger";
+                    $style2 = ($this->checkKijunTen($record->category_id, 2, $record->quiz_2_total)) ? "info" : "danger";
+                    $style3 = ($this->checkKijunTen($record->category_id, 3, $record->quiz_3_total)) ? "info" : "danger";
+                    $detail = '言語知識（文字・語彙・文法）: <span class="label label-' . $style1 . '">' . $record->quiz_1_total . '</span><br><br>読解: <span class="label label-' . $style2 . '">' . $record->quiz_2_total . '</span><br><br>聴解: <span class="label label-' . $style3 . '">' . $record->quiz_3_total . '</span>';
+                } else {
+                    $style1 = ($this->checkKijunTen($record->category_id, 1, $record->quiz_1_total)) ? "info" : "danger";
+                    $style3 = ($this->checkKijunTen($record->category_id, 2, $record->quiz_3_total)) ? "info" : "danger";
+                    $detail = '言語知識（文字・語彙・文法）: <span class="label label-' . $style1 . '">' . $record->quiz_1_total . '</span><br><br>聴解: <span class="label label-' . $style3 . '">' . $record->quiz_3_total . '</span>';
+                }
+                $record->detail = $detail;
+
+                if ($record->finish == 3) {
+                    if ($this->checkPassingscore($record->category_id, $record->total_marks) && $this->checkKijunTenAnyKubun($record->category_id, $record->quiz_1_total, $record->quiz_2_total, $record->quiz_3_total)) {
+                        $ketqua = '<span class="label label-success">Đạt</span>';
+                    } else {
+                        $ketqua = '<span class="label label-warning">Chưa đạt</span>';
+                    }
+
+                } else {
+                    $ketqua = '<span class="label label-danger">Chưa hoàn thành</span>';
+                }
+                $record->ketqua = $ketqua;
+            }
+        }
+
+        $data['layout'] = getLayout();
+        $view_name = 'admin.users.result-exam-list';
+        return view($view_name, $data);
+    }
+
+
+    public function postCertificate(Request $request)
+    {
+        $id = $request->id;
+        $data = array();
         $view_name = 'admin.student.exams.finish-results-exam';
         return view($view_name, $data);
-	}
+    }
 
-	 /*
-  Check if the given score is beyond the jikunten
-  level: 1~5
-  kubun: 1: 言語知識（文字・語彙・文法）; 2: 読解; 3: 聴解
-  score: score to check
-  return: true if the given score is over the jikunten and else
-  */
-  private function checkKijunTen($level, $kubun, $score){
-	switch ($level)	{
-		case 1:
-		case 2:
-		case 3:
-			switch ($kubun){
-				case 1:
-				case 2:
-				case 3:
-					return ($score>19)?true:false;
-					break;
-			}
-			break;
-		case 4:
-		case 5:
-			switch ($kubun){
-				case 1:
-					return ($score>38)?true:false;
-					break;
-				case 2:
-					return ($score>19)?true:false;
-					break;
-			break;
-		}
-	}
-	return false;
-  }
+    /*
+    Check if the given score is beyond the jikunten
+    level: 1~5
+    kubun: 1: 言語知識（文字・語彙・文法）; 2: 読解; 3: 聴解
+    score: score to check
+    return: true if the given score is over the jikunten and else
+    */
+    private function checkKijunTen($level, $kubun, $score)
+    {
+        switch ($level) {
+            case 1:
+            case 2:
+            case 3:
+                switch ($kubun) {
+                    case 1:
+                    case 2:
+                    case 3:
+                        return ($score > 19) ? true : false;
+                        break;
+                }
+                break;
+            case 4:
+            case 5:
+                switch ($kubun) {
+                    case 1:
+                        return ($score > 38) ? true : false;
+                        break;
+                    case 2:
+                        return ($score > 19) ? true : false;
+                        break;
+                        break;
+                }
+        }
+        return false;
+    }
 
-  /*
-  Check if the given total score is beyond the Passing score
-  level: 1~5
-  total_score: score to check
-  return: true if the given total score is over the Passing score and else
-  */
-  private function checkPassingscore($level, $total_score){
-	switch ($level)	{
-		case 1:
-			return ($total_score>100)?true:false;
-			break;
-		case 2:
-		case 4:
-			return ($total_score>90)?true:false;
-			break;
-		case 3:
-			return ($total_score>95)?true:false;
-			break;
-		case 5:
-			return ($total_score>80)?true:false;
-			break;
-	}
-	return false;
-  }
+    /*
+    Check if the given total score is beyond the Passing score
+    level: 1~5
+    total_score: score to check
+    return: true if the given total score is over the Passing score and else
+    */
+    private function checkPassingscore($level, $total_score)
+    {
+        switch ($level) {
+            case 1:
+                return ($total_score > 100) ? true : false;
+                break;
+            case 2:
+            case 4:
+                return ($total_score > 90) ? true : false;
+                break;
+            case 3:
+                return ($total_score > 95) ? true : false;
+                break;
+            case 5:
+                return ($total_score > 80) ? true : false;
+                break;
+        }
+        return false;
+    }
 
-  /*
-  Check if the given scores is beyond the jikunten in any kubun
-  level: 1~5
-  score_kubun1~3: score to check
-  return: false if the given scores is under any jikunten and else
-  */
-  private function checkKijunTenAnyKubun($level, $score_kubun1, $score_kubun2, $score_kubun3){
-	switch ($level)	{
-		case 1:
-		case 2:
-		case 3:
-			if (!$this->checkKijunTen($level, 1, $score_kubun1)) return false;
-			if (!$this->checkKijunTen($level, 2, $score_kubun2)) return false;
-			if (!$this->checkKijunTen($level, 3, $score_kubun3)) return false;
-			return true;
-			break;
-		case 4:
-		case 5:
-			if (!$this->checkKijunTen($level, 1, $score_kubun1)) return false;
-			if (!$this->checkKijunTen($level, 2, $score_kubun3)) return false;
-			return true;
-			break;
-		}
-	return false;
-}
+    /*
+    Check if the given scores is beyond the jikunten in any kubun
+    level: 1~5
+    score_kubun1~3: score to check
+    return: false if the given scores is under any jikunten and else
+    */
+    private function checkKijunTenAnyKubun($level, $score_kubun1, $score_kubun2, $score_kubun3)
+    {
+        switch ($level) {
+            case 1:
+            case 2:
+            case 3:
+                if (!$this->checkKijunTen($level, 1, $score_kubun1))
+                    return false;
+                if (!$this->checkKijunTen($level, 2, $score_kubun2))
+                    return false;
+                if (!$this->checkKijunTen($level, 3, $score_kubun3))
+                    return false;
+                return true;
+                break;
+            case 4:
+            case 5:
+                if (!$this->checkKijunTen($level, 1, $score_kubun1))
+                    return false;
+                if (!$this->checkKijunTen($level, 2, $score_kubun3))
+                    return false;
+                return true;
+                break;
+        }
+        return false;
+    }
 
     /**
      * The detailed learning progress screen
@@ -1661,7 +1721,7 @@ class UsersController extends Controller
 
         // If no data is found, return an object with zero averages
         if ($testResults->isEmpty()) {
-            return (object)[
+            return (object) [
                 'average_all_time' => 0.0,
                 'average_per_month' => 0.0
             ];
@@ -1708,7 +1768,7 @@ class UsersController extends Controller
 
         $averagePerMonth = $monthlyAverages->avg();
 
-        return (object)[
+        return (object) [
             'average_all_time' => round($averageAllTime, 2),
             'average_per_month' => round($averagePerMonth, 2)
         ];
@@ -1738,7 +1798,7 @@ class UsersController extends Controller
         // Exercises
         $timeBeginExercises = $quiz->first()->created_at ?? config('messenger.message_learning.no_join');
 
-        return (object)[
+        return (object) [
             'study' => $timeBeginStudy,
             'exams' => $timeBeginExam,
             'exercises' => $timeBeginExercises
@@ -1805,7 +1865,7 @@ class UsersController extends Controller
             'Khoá học chưa tham gia',
         ];
 
-        $color_number = rand(0,999);
+        $color_number = rand(0, 999);
         $dataset[] = $recordsPayment->count();
         $dataset[] = $listRecordNotPayment->count();
         $bgcolor[] = getColor('', $color_number);
@@ -1814,15 +1874,15 @@ class UsersController extends Controller
         $numberOfCourses['type'] = 'bar';
         $numberOfCourses['title'] = 'Tổng số khóa học: ' . $listSeries->count();
         //horizontalBar, bar, polarArea, line, doughnut, pie
-        $numberOfCourses['data']   = (object) array(
-            'labels'            => $labelsVideo,
-            'dataset'           => $dataset,
-            'dataset_label'     => $dataset_label,
-            'bgcolor'           => $bgcolor,
-            'border_color'      => $border_color
+        $numberOfCourses['data'] = (object) array(
+            'labels' => $labelsVideo,
+            'dataset' => $dataset,
+            'dataset_label' => $dataset_label,
+            'bgcolor' => $bgcolor,
+            'border_color' => $border_color
         );
         // Init data total number of courses students are participating
-        $data['number_of_courses'][] = (object)$numberOfCourses;
+        $data['number_of_courses'][] = (object) $numberOfCourses;
 
         return $data;
     }
@@ -1843,7 +1903,7 @@ class UsersController extends Controller
                     WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8)
                     AND lmscontents.lmsseries_id = lmsseries.id) as total_course")
         ])
-        ->get();
+            ->get();
 
         $userViewedCourses = LmsStudentView::select([
             'lmscontents.lmsseries_id',
@@ -1855,9 +1915,9 @@ class UsersController extends Controller
             ->pluck('viewed_courses', 'lmscontents.lmsseries_id');
 
         $userPurchasedCourses = Payment::select([
-                'lmsseries.id as lmsseries_id',
-                DB::raw("COUNT(DISTINCT payments.item_id) as purchased_courses")
-            ])
+            'lmsseries.id as lmsseries_id',
+            DB::raw("COUNT(DISTINCT payments.item_id) as purchased_courses")
+        ])
             ->join('lmsseries', 'payments.item_id', '=', 'lmsseries.id')
             ->where('payments.user_id', $userId)
             ->groupBy('lmsseries.id')
@@ -1885,7 +1945,7 @@ class UsersController extends Controller
         $bgcolor = [];
         $borderColor = [];
         $borderColorDefault = [];
-        $color_number = rand(0,999);
+        $color_number = rand(0, 999);
 
         // Make color to column
         foreach ($result as $index => $item) {
@@ -1902,19 +1962,19 @@ class UsersController extends Controller
         $datasetLabelDefault[] = 'Bài học chưa học';
         $numberOfCourses['type'] = 'bar';
         $numberOfCourses['stack'] = true;
-        $numberOfCourses['data']   = (object) array(
-            'labels'                => $labelsVideo,
-            'data_view'             => $dataView,
-            'data_not_view'         => $dataNotView,
-            'dataset_label'         => $datasetLabel,
+        $numberOfCourses['data'] = (object) array(
+            'labels' => $labelsVideo,
+            'data_view' => $dataView,
+            'data_not_view' => $dataNotView,
+            'dataset_label' => $datasetLabel,
             'dataset_label_default' => $datasetLabelDefault,
-            'bgcolor'               => $bgcolor,
-            'border_color'          => $borderColor,
-            'border_color_default'  => $borderColorDefault,
+            'bgcolor' => $bgcolor,
+            'border_color' => $borderColor,
+            'border_color_default' => $borderColorDefault,
         );
 
         // Init data total number of courses students are participating
-        $data['percentage_of_course_by_user'][] = (object)$numberOfCourses;
+        $data['percentage_of_course_by_user'][] = (object) $numberOfCourses;
 
         return $data;
     }
@@ -1936,8 +1996,8 @@ class UsersController extends Controller
         }
         $data['record'] = $record;
         $data['active_class'] = 'reward-point';
-        $data['title']        = 'Điểm tích luỹ';
-        $data['layout']       = 'admin.layouts.student.studentsettinglayout';
+        $data['title'] = 'Điểm tích luỹ';
+        $data['layout'] = 'admin.layouts.student.studentsettinglayout';
         $data['series_upload_path'] = config('constant.series.upload_path');
         $data['redeemed_series'] = $this->lmsSeriesComboService->getRedeemedSeries();
         $data['total_point'] = Auth::user()->reward_point + Auth::user()->recharge_point;
@@ -1964,18 +2024,20 @@ class UsersController extends Controller
         $data['user'] = $user;
         $data['leaderboard'] = $leaderboard;
         $data['active_class'] = 'reward-points-leaderboard';
-        $data['title']        = 'Thành tích tuần';
-        $data['layout']       = 'admin.layouts.student.studentsettinglayout';
+        $data['title'] = 'Thành tích tuần';
+        $data['layout'] = 'admin.layouts.student.studentsettinglayout';
         $view_name = 'admin.users.reward-points-leaderboard';
         return view($view_name, $data);
     }
 
-    public function dailyStreak() {
+    public function dailyStreak()
+    {
         $loginStreak = Auth::user()->login_streak;
         $loginStreakConditions = config('constant.login.streak');
-        $this->userService->updateLoginStreak();
-        $totalPoint = $this->userService->caculateRewardPoints($loginStreak, $loginStreakConditions);
-        return $totalPoint;
+        $data = $this->userService->updateLoginStreak();
+
+        return $data;
+
     }
 
     /**
@@ -1983,12 +2045,34 @@ class UsersController extends Controller
      *
      * @return mixed
      */
-    public function getMyCoursesDropdown() {
+    public function getMyCoursesDropdown()
+    {
         $view_series_history = $this->lmsSeriesService
             ->getHistoryViews(Auth::user()->series_views_history ?? [], Auth::user());
 
         return response()->json([
             'html' => view('client.components.my-courses-dropdown', compact('view_series_history'))->render()
         ], 200);
+    }
+
+    public function getDataUser()
+    {
+        // Get the authenticated user
+        $user = Auth::user();
+
+        // Fetch latest streak data and milestone rewards
+        $streakCurrent = $user->login_streak;
+        $lastLoginDate = $user->last_login_date;
+        $streakMilestones = collect(getRewardPointRule('daily_login')['milestones'])->pluck('days')->all();
+
+        // Prepare data for response
+        $data = [
+            'streakCurrent' => $streakCurrent,
+            'lastLoginDate' => $lastLoginDate,
+            'streakMilestones' => $streakMilestones,
+        ];
+
+        // Return the data as a JSON response
+        return response()->json($data);
     }
 }

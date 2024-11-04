@@ -18,6 +18,8 @@ Route::get('/', 'SiteController@redirectHomePage');
 
 Route::get('/home', 'SiteController@homePage')->name('home');
 
+Route::get('/daily_streak', 'UsersController@getDataUser')->name('daily_streak');
+
 Route::prefix('learning-management')->name('learning-management.')->group(function () {
     Route::get('lesson/next', 'StudentLmsController@getNextLesson')
         ->name('next-lesson');
@@ -190,6 +192,9 @@ Route::prefix('point-management')
 
         Route::post('/save-rules', 'PointManagementController@savePointRules')
             ->name('save-rules');
+
+        Route::get('/test', 'PointManagementController@getPointRule');
+
     });
 
 Route::prefix('roadmap')

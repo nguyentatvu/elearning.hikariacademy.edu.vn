@@ -75,7 +75,8 @@
                                                 <span>Phản hồi</span>
                                             </div>
                                             <div class="reply-input" data-comment-id="${commentId}">
-                                                <input type="text" class="reply-area" data-comment-id="{{ $comment->id }}"
+                                                <input type="text" class="reply-area"
+                                                    data-comment-id="{{ $comment->id }}"
                                                     placeholder="Nhập tin nhắn của bạn..." />
                                             </div>
                                             <div class="comment-reply mt-3" data-comment-id="{{ $comment->id }}">
@@ -104,7 +105,8 @@
                                                             </div>
                                                             <div class="reply-input">
                                                                 <input type="text" data-comment-id="{{ $comment->id }}"
-                                                                    class="reply-area" placeholder="Nhập tin nhắn của bạn..." />
+                                                                    class="reply-area"
+                                                                    placeholder="Nhập tin nhắn của bạn..." />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -266,10 +268,9 @@
             const displayedIncreasedPoints = $('.hicoin-animation .increased-point');
             const displayedOwnedPoints = $(".header-my-coin .owned-point");
             const pointContainer = $('.header-my-coin');
-
             const ownedPoints = parseInt(displayedOwnedPoints.text().replace(/,/g, ""));
             displayedIncreasedPoints.text(increasedPoints);
-            displayedOwnedPoints.text((ownedPoints + increasedPoints).toLocaleString('en-US'));
+            displayedOwnedPoints.text((parseInt(ownedPoints) + parseInt(increasedPoints)).toLocaleString('en-US'));
 
             // Play confetti animation effect
             party.confetti(pointContainer[0], {
@@ -308,16 +309,18 @@
 
         function showDailyStreak(contentId) {
             $.ajax({
-                url: '{{ route('learning-management.lesson.daily-streak') }}', // Gọi route với tên đầy đủ
+                url: '{{ route('learning-management.lesson.daily-streak') }}',
                 type: 'POST',
                 data: {},
                 headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Bảo mật với CSRF token
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
                     earnPointFinishContent(contentId, response, 'streak');
-                    animateHicoin(response);
-                    $('#modalLoginStreak').modal('show');
+                    animateHicoin(response.point);
+                    setTimeout(function() {
+                        $('#modalLoginStreak').modal('show');
+                    }, 2000);
                 },
                 error: function(xhr, status, error) {
                     console.log(error);
