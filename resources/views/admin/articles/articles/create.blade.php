@@ -194,6 +194,7 @@
                             <div class="form-group col-6">
                                 <label for="description">
                                     Mô tả
+                                    <span class="text-danger">*<span>
                                 </label>
                                 <input type="text" class="form-control" name="description">
                             </div>

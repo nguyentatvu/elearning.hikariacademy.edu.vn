@@ -231,6 +231,11 @@ $border-color_1: #166ac9;
 
 .carousel-inner.slider {
   height: 400px;
+
+  @include mq(max-sp) {
+    height: auto;
+  }
+
   img {
     object-fit: contain;
   }
