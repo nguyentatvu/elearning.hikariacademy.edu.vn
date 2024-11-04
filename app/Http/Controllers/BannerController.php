@@ -271,6 +271,15 @@ class BannerController extends Controller
                 return $image; // Return the original if not found
             }, $existingImages);
 
+            $finalImages = array_map(function ($image) {
+                // Check if the image contains 'uploads/banners/'
+                if (strpos($image, 'uploads/banners/') !== false) {
+                    // Return the part of the string from 'uploads/banners/' onward
+                    return substr($image, strpos($image, 'uploads/banners/'));
+                }
+                return $image; // Return the original if not found
+            }, $finalImages);
+
             // Now proceed to check and delete files
 
             foreach ($existingImages as $existingImage) {

@@ -121,10 +121,30 @@
                 }
             };
 
+            function openModalStreak() {
+                $('#modalLoginStreak').modal('show');
+            }
+
+            @if (Auth::check())
+                if (!localStorage.getItem("firstLoginShown")) {
+                    openModalStreak();
+
+                    localStorage.setItem("firstLoginShown", "true");
+                }
+                $('.owned-login-streak').on('click', function() {
+                    openModalStreak();
+                })
+            @else
+                localStorage.removeItem("firstLoginShown");
+            @endif
+
             adjustLayout();
             $(window).resize(adjustLayout); // Adjust layout on window resize
         });
     </script>
+    @if (Auth::check())
+        @include('client.components.streak');
+    @endif
     @yield('scripts')
 </body>
 

@@ -6,6 +6,7 @@ use App\ImageSettings;
 use App\LmsContent;
 use App\LmsSeries;
 use App\LmsStudentView;
+use App\PointRule;
 use App\Repositories\UserRepository;
 use App\Role;
 use App\User;
@@ -77,29 +78,39 @@ class UserService extends BaseService
      * @return void
      */
     public function updateLoginStreak() {
-        Auth::user()->refresh();
         $user = Auth::user();
+        $user->refresh();
+
         $last_login_date = Carbon::parse($user->last_login_date);
+        $loginStreak = $user->login_streak;
+        $point = 0;
+        $pointRule = getRewardPointRule('daily_login')['milestones'];
+        $convertedPointRule = collect($pointRule)->pluck('points', 'days')->all();
 
-        if($last_login_date->isToday()) {
-            return;
-        }
-
-        if ($last_login_date->isYesterday()) {
-            $rawPointRule = getRewardPointRule('daily_login')['milestones'];
-            $convertedPointRule = collect($rawPointRule)->pluck('points', 'days')->all();
-            $reward_point = $this->caculateRewardPoints($user->login_streak, $convertedPointRule);
-
+        // Check if the last login was yesterday and login streak is 1 or more
+        if ($last_login_date->isYesterday() && $loginStreak >= 1) {
             $user->login_streak += 1;
+            $reward_point = $this->caculateRewardPoints($user->login_streak, $convertedPointRule);
             $user->reward_point += $reward_point;
-        }
-        else {
+            $point = $reward_point;
+        } else {
+            // Reset login streak to 1 if login is not consecutive
             $user->login_streak = 1;
+            $reward_point = $this->caculateRewardPoints($user->login_streak, $convertedPointRule);
+            $user->reward_point += $reward_point;
+            $point = $reward_point;
         }
 
-        $user->last_login_date = Carbon::now();
+        // Update last login date and save the user
+        $user->last_login_date = now();
         $user->save();
+
+        return  [
+            'point' => $point,
+            'streak' => $user->login_streak
+        ];
     }
+
 
     /**
      * Calculate reward points

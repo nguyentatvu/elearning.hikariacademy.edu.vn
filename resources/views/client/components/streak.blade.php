@@ -231,6 +231,15 @@
             animation: backgroundFill 1s forwards;
         }
 
+        .one-day-not-log-in {
+            position: relative;
+            overflow: hidden;
+            background-size: 0% 100%;
+            background-repeat: no-repeat;
+            background-position: left;
+            animation: backgroundFill 1s forwards;
+        }
+
         /* Keyframes for flicker effect */
         @keyframes flicker {
             0% {
@@ -475,7 +484,8 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="btn-close btn-close-streak" aria-label="Close"><i class="bi bi-x"></i></button>
+                    <button type="button" class="btn-close btn-close-streak" aria-label="Close"><i
+                            class="bi bi-x"></i></button>
                 </div>
                 <div class="modal-body text-center">
                     <div class="streak-header">
@@ -528,7 +538,8 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="btn-close btn-close-streak" aria-label="Close"><i class="bi bi-x"></i></button>
+                    <button type="button" class="btn-close btn-close-streak" aria-label="Close"><i
+                            class="bi bi-x"></i></button>
 
                     <button type="button" class="btn btn-link" id="btnBackToStreak">
                         <i class="bi bi-chevron-left"></i>
@@ -598,47 +609,94 @@
         </div>
     </div>
     <script>
-        const streakCurrent = '{{ Auth::user()->login_streak }}'; // Current streak value
-        const currentDate = new Date(); // Ensure this is defined
-        const currentDay = currentDate.getDay();
         $(document).ready(function() {
-            // Animation for "streak-count" on page load
-            const previousStreak = parseInt(streakCurrent - 1);
+            // State management for async data
+            let state = {
+                streakCurrent: 0,
+                lastLoginDate: '',
+                currentDate: new Date(),
+                currentDay: new Date().getDay(),
+                streakMilestone: '',
+                initialized: false
+            };
 
-            // Set initial value of "streak-count" to the previous streak
-            $('.streak-count').text(previousStreak);
+            // Initialize data function
+            async function initializeData() {
+                try {
+                    const response = await $.ajax({
+                        url: '{{ route('daily_streak') }}',
+                        method: 'GET'
+                    });
 
-            $('.btn-close-streak').on('click', function () {
-                $('#modalLoginStreak').modal('hide');
-                $('#modalLoginStreakDetail').modal('hide');
-            });
-            // After a short delay, update the value and add the animation
-            setTimeout(function() {
-                $('.streak-count').text(streakCurrent);
-                $('.streak-count').addClass('animate__animated animate__fadeInUp');
-                $('.streak-number').text(streakCurrent);
-                $('.streak-number').addClass('animate__animated animate__fadeInUp');
-            }, 2000); // Adjust timing if necessary
+                    state = {
+                        ...state,
+                        streakCurrent: response.streakCurrent,
+                        lastLoginDate: response.lastLoginDate,
+                        streakMilestone: response.streakMilestones,
+                        initialized: true
+                    };
 
+                    // Update all UI elements with new data
+                    updateAllUI();
+
+                    return state;
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                    throw error;
+                }
+            }
+
+            // Function to update all UI elements
+            function updateAllUI() {
+                const previousStreak = parseInt(state.streakCurrent - 1);
+
+                // Update streak displays
+                updateStreakDisplay(previousStreak);
+
+                // Update calendar
+                renderCalendar();
+
+                // Update streak progress
+                updateStreakProgress();
+
+                // Update active days
+                setActiveDays(state.streakCurrent, state.lastLoginDate);
+            }
+
+            function updateStreakDisplay(previousStreak) {
+                // Set initial value of "streak-count" to the previous streak
+                $('.streak-count').text(previousStreak);
+
+                // Check if last login is today
+                if (state.lastLoginDate === state.currentDate.toISOString().split('T')[0]) {
+                    setTimeout(function() {
+                        $('.streak-count').text(state.streakCurrent);
+                        $('.streak-count').addClass('animate__animated animate__fadeInUp');
+                        $('.streak-number').text(state.streakCurrent);
+                        $('.streak-number').addClass('animate__animated animate__fadeInUp');
+                    }, 500);
+                } else {
+                    $('.streak-count').text(state.streakCurrent);
+                    $('.streak-number').text(state.streakCurrent);
+                }
+            }
+
+            // Your existing calendar code
             let currentMonth = new Date();
-            const today = new Date(); // Current date
+            const today = new Date();
 
             function renderCalendar() {
-                // Get the current month and year
                 const month = currentMonth.getMonth();
                 const year = currentMonth.getFullYear();
                 $('#currentMonth').text(`Tháng ${month + 1}/${year}`);
 
-                // Get first day of the month and last date
-                const firstDay = (new Date(year, month, 1).getDay() + 6) % 7; // Adjust to start from Monday
+                const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
                 const lastDate = new Date(year, month + 1, 0).getDate();
-                const lastDatePrevMonth = new Date(year, month, 0)
-                    .getDate(); // Number of days in the previous month
-                let nextMonthDay = 1; // Starting day of the next month
+                const lastDatePrevMonth = new Date(year, month, 0).getDate();
+                let nextMonthDay = 1;
                 let calendarHTML = '';
                 let day = 1;
 
-                // Fill in days from the previous month if needed
                 if (firstDay > 0) {
                     calendarHTML += '<tr>';
                     for (let i = 0; i < firstDay; i++) {
@@ -650,7 +708,6 @@
                     }
                 }
 
-                // Fill in the days of the current month
                 let filledCells = firstDay;
                 while (day <= lastDate) {
                     if (filledCells % 7 === 0) {
@@ -660,7 +717,6 @@
                     const isToday = date.toDateString() === today.toDateString();
                     const isFuture = date > today;
 
-                    // Assign classes for today's date, future dates, or not studied dates
                     calendarHTML += `<td class="${isToday ? 'today' : (isFuture ? 'future' : 'not-studied')}" data-day="${day}" data-month="${month}" data-year="${year}">
                 <span>${day}</span>
             </td>`;
@@ -671,7 +727,6 @@
                     }
                 }
 
-                // Fill in days of the next month if needed
                 while (filledCells % 7 !== 0) {
                     const dateNextMonth = new Date(year, month + 1, nextMonthDay);
                     calendarHTML += `<td class="other-month" data-day="${nextMonthDay}" data-month="${dateNextMonth.getMonth()}" data-year="${dateNextMonth.getFullYear()}">
@@ -685,95 +740,69 @@
                 }
 
                 $('#calendarBody').html(calendarHTML);
-
-                // Call setDailystreak after the calendar is rendered
                 setDailystreak();
             }
 
-            // Function to highlight the date range
             function setDailystreak() {
-                const today = new Date(); // Define "today" to compare
-                // Set startDate to today minus the number of days equal to the streak
+                const today = new Date();
+                const previousStreak = parseInt(state.streakCurrent - 1);
                 const startDate = new Date(today);
                 startDate.setDate(today.getDate() - previousStreak);
-                console.log(startDate);
 
-                const endDate = today; // endDate is today
+                const endDate = today;
 
-
-                // Set hours for startDate and endDate to 00:00:00
                 startDate.setHours(0, 0, 0, 0);
                 endDate.setHours(0, 0, 0, 0);
                 today.setHours(0, 0, 0, 0);
 
-                // Highlight the selected date range and only before today
-                $(document).ready(function() {
-                    $('#calendarBody td').each(function() {
-                        const $td = $(this);
+                $('#calendarBody td').each(function() {
+                    const $td = $(this);
 
-                        // Skip the iteration if the td has the class 'other-month'
-                        if ($td.hasClass('other-month')) {
-                            return; // Continue to the next td
+                    if ($td.hasClass('other-month')) {
+                        return;
+                    }
+
+                    const day = parseInt($td.attr('data-day'));
+                    const month = parseInt($td.attr('data-month'));
+                    const year = parseInt($td.attr('data-year'));
+                    const date = new Date(year, month, day);
+
+                    if (state.streakCurrent > 1) {
+                        if (date >= startDate && date <= endDate && date <= today) {
+                            $td.removeClass().addClass('selected-range');
+                        } else {
+                            $td.removeClass('selected-range');
                         }
 
-                        // Get the day, month, and year from the data attributes
-                        const day = parseInt($td.attr('data-day'));
-                        const month = parseInt($td.attr('data-month'));
-                        const year = parseInt($td.attr('data-year'));
-                        const date = new Date(year, month, day);
-
-                        // Check if the date is today and add the 'today' class
-                        if (date.getTime() === today.getTime()) {
-                            $td.addClass('today');
+                        if (date.getTime() === startDate.getTime() && date.getTime() <= today.getTime()) {
+                            $td.addClass('start-range');
                         }
 
-                        // Handle streak logic for streaks greater than 1
-                        if (streakCurrent > 1) {
-                            if (date >= startDate && date <= endDate && date <= today) {
-                                $td.removeClass().addClass(
-                                    'selected-range'); // Reset classes and add 'selected-range'
-                            } else {
-                                $td.removeClass(
-                                    'selected-range'
-                                ); // Remove 'selected-range' if conditions are not met
-                            }
-
-                            // Add 'start-range' class if the date matches the start date
-                            if (date.getTime() === startDate.getTime() && date.getTime() <= today
-                                .getTime()) {
-                                $td.addClass('start-range');
-                            }
-
-                            // Add 'end-range' class if the date matches the end date
-                            if (date.getTime() === endDate.getTime() && date.getTime() <= today
-                                .getTime()) {
-                                $td.addClass('end-range');
-                            }
-                        } else { // Handle the case where streak is 1 or less
-                            if (date.getTime() === today.getTime()) {
-                                $td.addClass('one-day'); // Mark today as 'one-day' for streak of 1
-                            }
+                        if (date.getTime() === endDate.getTime() && date.getTime() <= today.getTime()) {
+                            $td.addClass('end-range');
                         }
-                    });
+                    } else {
+                        if (date.getTime() === today.getTime() && state.streakCurrent == 0) {
+                            $td.addClass('one-day-not-log-in');
+                        } else if (date.getTime() === today.getTime() && state.streakCurrent == 1) {
+                            $td.addClass('one-day');
+                        }
+                    }
+                    if (date.getTime() === today.getTime()) {
+                        $td.addClass('today');
+                    }
                 });
-
             }
 
-            // Event handlers for changing months
-            $('#prevMonth').click(function() {
-                currentMonth.setMonth(currentMonth.getMonth() - 1);
-                renderCalendar();
-            });
+            function updateStreakProgress() {
+                let totalDays = state.streakMilestone[state.streakMilestone.length - 1];
+                createMilestones(state.streakMilestone, totalDays);
 
-            $('#nextMonth').click(function() {
-                currentMonth.setMonth(currentMonth.getMonth() + 1);
-                renderCalendar();
-            });
-
-            renderCalendar(); // Initial render of the calendar
-
-            let totalDays = 100;
-            let milestones = [0, 5, 15, 30, 45, 100];
+                if (state.streakCurrent <= totalDays) {
+                    let progressWidth = (state.streakCurrent / totalDays) * 100;
+                    $(".streak-fill").css("width", progressWidth + "%");
+                }
+            }
 
             function createMilestones(milestones, totalDays) {
                 $(".streak-dates").empty();
@@ -795,18 +824,72 @@
                         '%; transform: ' + transformStyle + '; ' + displayStyle + '">' + day + '</span>'
                     );
                 });
-
             }
 
-            // Gọi hàm tạo milestones
-            createMilestones(milestones, totalDays);
+            function setActiveDays(streakCurrent, lastLoginDateStr) {
+                // Parse the timestamp string into a Date object
+                const lastLoginDate = new Date(lastLoginDateStr.date);
 
-            if (streakCurrent <= totalDays) {
-                let progressWidth = (streakCurrent / totalDays) * 100;
-                $(".streak-fill").css("width", progressWidth + "%");
+                // Get day of week (0 = Sunday, 1 = Monday, ...)
+                let dayOfWeek = lastLoginDate.getDay();
+
+                // Convert to our format where 0 = Monday, ..., 6 = Sunday
+                dayOfWeek = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+
+                const streak = parseInt(streakCurrent);
+
+                $('.day-column').each(function(index) {
+                    const $this = $(this);
+                    const $checkmark = $this.find('.checkmark');
+
+                    // Activate the last login day
+                    if (index === dayOfWeek) {
+                        $this.removeClass('inactive').addClass('active');
+                        $checkmark.removeClass('inactive').addClass('active');
+                    }
+                    // If streak > 1, activate previous days before last login
+                    else if (streak > 1 && index < dayOfWeek) {
+                        const daysToActivate = Math.min(streak - 1, dayOfWeek);
+                        // Only activate days within the streak range
+                        if (index >= (dayOfWeek - daysToActivate)) {
+                            $this.removeClass('inactive').addClass('active');
+                            $checkmark.removeClass('inactive').addClass('active');
+                        } else {
+                            $this.removeClass('active').addClass('inactive');
+                            $checkmark.removeClass('active').addClass('inactive');
+                        }
+                    }
+                    // Keep other days inactive
+                    else {
+                        $this.removeClass('active').addClass('inactive');
+                        $checkmark.removeClass('active').addClass('inactive');
+                    }
+                });
             }
 
+            // Event handlers
+            $('#modalLoginStreak').on('show.bs.modal', async function() {
+                try {
+                    await initializeData();
+                } catch (error) {
+                    console.error('Error initializing modal data:', error);
+                }
+            });
 
+            $('.btn-close-streak').on('click', function() {
+                $('#modalLoginStreak').modal('hide');
+                $('#modalLoginStreakDetail').modal('hide');
+            });
+
+            $('#prevMonth').click(function() {
+                currentMonth.setMonth(currentMonth.getMonth() - 1);
+                renderCalendar();
+            });
+
+            $('#nextMonth').click(function() {
+                currentMonth.setMonth(currentMonth.getMonth() + 1);
+                renderCalendar();
+            });
 
             $('#btnViewDetail').click(function() {
                 $('#modalLoginStreak').modal('hide');
@@ -815,33 +898,14 @@
 
             $('#btnBackToStreak').click(function() {
                 $('#modalLoginStreakDetail').modal('hide');
-
                 $('#modalLoginStreak').modal('show');
             });
 
-            function setActiveDays(streakCurrent) {
-                // Get the current day (0: Sunday, 1: Monday, ..., 6: Saturday)
-                const currentDay = new Date().getDay();
-
-                // Convert streak to an integer
-                const activeDays = parseInt(streakCurrent);
-
-                // Loop through each day column
-                $('.day-column').each(function(index) {
-                    const $this = $(this); // Cache the current element
-                    const $checkmark = $this.find('.checkmark'); // Find the associated checkmark
-
-                    // If the index is less than the number of active days and the index is less than or equal to the current day, activate it
-                    if (index < activeDays && index <= currentDay) {
-                        $this.removeClass('inactive').addClass('active'); // Activate the day
-                        $checkmark.removeClass('inactive').addClass('active'); // Activate the checkmark
-                    } else {
-                        $this.removeClass('active').addClass('inactive'); // Deactivate the day
-                        $checkmark.removeClass('active').addClass('inactive'); // Deactivate the checkmark
-                    }
-                });
-            }
-
-            setActiveDays(streakCurrent);
+            // Initial render
+            initializeData().then(() => {
+                renderCalendar();
+            }).catch(error => {
+                console.error('Error during initialization:', error);
+            });
         });
     </script>

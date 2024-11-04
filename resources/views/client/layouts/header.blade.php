@@ -30,16 +30,28 @@
                     <li class="d-flex align-items-center">
                         @if (Auth::user()->image)
                             <img src="{{ asset('uploads/users/thumbnail/' . Auth::user()->image) }}"
-                                class="rounded-circle object-fit-cover me-2" width="40"
-                                height="40" alt="Avatar">
+                                class="rounded-circle object-fit-cover me-2" width="40" height="40"
+                                alt="Avatar">
                         @else
-                            <img src="{{ asset('images/no-avatar.png') }}"
-                                class="rounded-circle object-fit-cover me-2" width="40"
-                                height="40" alt="Avatar">
+                            <img src="{{ asset('images/no-avatar.png') }}" class="rounded-circle object-fit-cover me-2"
+                                width="40" height="40" alt="Avatar">
                         @endif
                         <div>
                             <div>{{ Auth::user()->name }}</div>
                             <div><span>@</span>{{ Auth::user()->username ?? '' }}</div>
+                            <!-- Streak daily -->
+                            <div class="header-my-coin ms-3 d-lg-flex owned-login-streak"
+                                id="owned_login_streak_mobile">
+                                <a>
+                                    {{ isset(Auth::user()->login_streak) && Auth::user()->login_streak ? Auth::user()->login_streak : 0 }}
+                                </a>
+                                <img src="{{ asset('images/icons/fire.svg') }}" alt="Coin Icon" class="ms-2"
+                                    width="20">
+                                <div class="hicoin-animation">
+                                    <span class="me-1 fs-5">+<span class="increased-point"></span></span>
+                                    <img width="20" alt="hi-coin" src="{{ asset('images/icons/coin.svg') }}">
+                                </div>
+                            </div>
                         </div>
                     </li>
                     <li>
@@ -56,8 +68,8 @@
                     </li>
                     <li><a class="dropdown-item" href="{{ route('mypage.my-exam-result') }}">Kết quả
                             thi</a></li>
-                    <li><a class="dropdown-item" data-bs-toggle="modal"
-                            data-bs-target="#changePasswordModal">Đổi mật khẩu</a></li>
+                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Đổi mật
+                            khẩu</a></li>
                     <li><a class="dropdown-item" href="{{ route('mypage.recharge-point') }}">Nạp</a></li>
                     <li>
                         <hr class="dropdown-divider">
@@ -87,7 +99,20 @@
                             <a href="{{ route('mypage.reward-point') }}" class="owned-point">
                                 {{ formatNumber(Auth::user()->reward_point + Auth::user()->recharge_point) }}
                             </a>
-                            <img src="{{ asset('images/icons/coin.svg') }}" alt="Coin Icon" class="ms-2" width="20">
+                            <img src="{{ asset('images/icons/coin.svg') }}" alt="Coin Icon" class="ms-2"
+                                width="20">
+                            <div class="hicoin-animation">
+                                <span class="me-1 fs-5">+<span class="increased-point"></span></span>
+                                <img width="20" alt="hi-coin" src="{{ asset('images/icons/coin.svg') }}">
+                            </div>
+                        </div>
+                        <!-- Streak daily -->
+                        <div class="header-my-coin ms-3 d-lg-flex owned-login-streak" id="owned_login_streak_mobile">
+                            <a>
+                                {{ isset(Auth::user()->login_streak) && Auth::user()->login_streak ? Auth::user()->login_streak : 0 }}
+                            </a>
+                            <img src="{{ asset('images/icons/fire.svg') }}" alt="Coin Icon" class="ms-2"
+                                width="20">
                             <div class="hicoin-animation">
                                 <span class="me-1 fs-5">+<span class="increased-point"></span></span>
                                 <img width="20" alt="hi-coin" src="{{ asset('images/icons/coin.svg') }}">
@@ -96,13 +121,16 @@
 
                         <!-- My Courses Dropdown -->
                         <div class="btn-group mx-2">
-                            <div type="button" data-bs-toggle="dropdown" aria-expanded="false" onclick="showMyCoursesDropdown()">
-                                <h5 class="mb-0 fw-semibold gradient-title-sm" style="color: #166AC9">Khóa học của tôi</h5>
+                            <div type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                onclick="showMyCoursesDropdown()">
+                                <h5 class="mb-0 fw-semibold gradient-title-sm" style="color: #166AC9">Khóa học của tôi
+                                </h5>
                             </div>
-                            <ul class="dropdown-menu dropdown-center dropdown-menu-end p-3 dropdown-my-course mt-3 no-content">
+                            <ul
+                                class="dropdown-menu dropdown-center dropdown-menu-end p-3 dropdown-my-course mt-3 no-content">
                                 <div class="d-flex align-items-center justify-content-center p-3">
                                     <div class="spinner-border spinner-border-sm text-primary me-2" role="status">
-                                      <span class="visually-hidden">Loading...</span>
+                                        <span class="visually-hidden">Loading...</span>
                                     </div>
                                     <span class="text-muted">Đang tải khóa học...</span>
                                 </div>
@@ -127,7 +155,8 @@
                                             alt="" srcset="">
                                         <div>
                                             <div class="mb-2">
-                                                Chào [Tên học viên], chúng tôi nhận thấy bạn chưa hoàn thành bài học tuần
+                                                Chào [Tên học viên], chúng tôi nhận thấy bạn chưa hoàn thành bài học
+                                                tuần
                                                 này.
                                                 Đừng để tiến độ học của mình bị chậm lại, hãy cố gắng hoàn thành bài học
                                                 trong thời gian
@@ -173,7 +202,8 @@
                                         alt="Avatar">
                                 @endif
                             </div>
-                            <ul class="dropdown-menu dropdown-menu-end w-200px p-2 mt-3" aria-labelledby="userDropdown">
+                            <ul class="dropdown-menu dropdown-menu-end w-200px p-2 mt-3"
+                                aria-labelledby="userDropdown">
                                 <li class="d-flex align-items-center justify-content-between p-2">
                                     @if (Auth::user()->image)
                                         <img src="{{ asset('uploads/users/thumbnail/' . Auth::user()->image) }}"
@@ -185,7 +215,8 @@
                                             height="40" alt="Avatar">
                                     @endif
                                     <div>
-                                        <div class="text-end mb-1 fw-bold" style="line-height: 1.1;">{{ Auth::user()->name }}</div>
+                                        <div class="text-end mb-1 fw-bold" style="line-height: 1.1;">
+                                            {{ Auth::user()->name }}</div>
                                         <div class="float-end"><span>@</span>{{ Auth::user()->username ?? '' }}</div>
                                     </div>
                                 </li>
