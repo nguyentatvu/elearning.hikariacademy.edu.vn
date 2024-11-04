@@ -162,11 +162,11 @@ const submitLogin = () => {
             showSuccessAlert("Đăng nhập thành công", "Thông báo", redirectHomeBase);
         },
         error: function (error) {
+            grecaptcha.reset();
+
             showErrorAlert("Đăng nhập thất bại");
-            if (
-                error?.responseJSON?.errors && error?.responseJSON?.errors['g-recaptcha-response'] &&
-                $('[name="g-recaptcha-response"]').val() === ''
-            ) {
+
+            if (error?.responseJSON?.errors && error?.responseJSON?.errors['g-recaptcha-response']) {
                 $(".captcha-failed").removeClass("d-none");
             } else {
                 $(".login-failed").removeClass("d-none");
