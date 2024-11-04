@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Services\LmsSeriesComboService;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class LmsSeriesCombo extends Model
@@ -30,6 +31,24 @@ class LmsSeriesCombo extends Model
         }
 
         return $seriesCount > 1;
+    }
+
+    public function getCheckPromotionAttribute() {
+        if (!$this->timefrom || !$this->timeto) {
+            return false;
+        }
+
+        return Carbon::now()->between(Carbon::parse($this->timefrom), Carbon::parse($this->timeto));
+    }
+
+    public function getActualCostAttribute() {
+        return $this->checkPromotion ? $this->selloff : $this->cost;
+    }
+
+    public function getRedeemAmountAttribute() {
+        return optional($this)->redeem_point
+            ? $this->redeem_point * config('constant.redeemed_coin.vnd_convert_rate')
+            : null;
     }
 
     /**

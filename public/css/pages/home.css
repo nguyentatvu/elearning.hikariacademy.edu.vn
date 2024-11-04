@@ -315,8 +315,14 @@
 
 .course-card-price {
   color: #007bff;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-weight: bold;
+}
+
+.orginal-price {
+  text-decoration: line-through;
+  position: relative;
+  bottom: 1px;
 }
 
 .course-card-description {

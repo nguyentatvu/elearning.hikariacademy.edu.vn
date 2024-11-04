@@ -6,6 +6,7 @@ use \App;
 use App\Subject;
 use App\LmsSeries;
 use App\LmsCombo;
+use App\LmsSeriesCombo;
 use Yajra\DataTables\DataTables;
 use DB;
 use Auth;
@@ -337,7 +338,7 @@ class LmsComboController extends Controller
             prepareBlockUserMessage();
             return back();
         }
-        $record = LmsCombo::getRecordWithSlug($slug);
+        $record = LmsSeriesCombo::getRecordWithSlug($slug);
         if($isValid = $this->isValidRecord($record))
             return redirect($isValid);
 

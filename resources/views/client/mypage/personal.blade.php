@@ -82,7 +82,7 @@
                     @else
                         <div>
                             <span>Bạn chưa học bài học nào.</span>
-                            <a href="#" class="fs-5">Hãy chọn ngay cho mình một khoá học!</a>
+                            <a href="/home" class="fs-5">Hãy chọn ngay cho mình một khoá học!</a>
                         </div>
                     @endif
                 </section>

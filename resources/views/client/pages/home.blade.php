@@ -233,8 +233,13 @@
                                     src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $learning_series->image) }}" />
                                 <div class="course-card-body">
                                     <h5 class="course-card-title">{{ $learning_series->title }}</h5>
-                                    <div class="d-flex justify-content-between align-items-center card-price-container">
-                                        <p class="course-card-price mb-0">{{ $learning_series->cost == 0 ? 'Miễn phí' : formatCurrencyVND($learning_series->cost) }}</p>
+                                    <div class="d-flex justify-content-between gap-3 align-items-center card-price-container">
+                                        <div class="d-flex align-items-baseline">
+                                            <p class="course-card-price mb-0">{{ $learning_series->actualCost == 0 ? 'Miễn phí' : formatCurrencyVND($learning_series->actualCost) }}</p>
+                                            @if ($learning_series->checkPromotion)
+                                                <span class="orginal-price ms-2">{{ formatCurrencyVND($learning_series->cost) }}</span>
+                                            @endif
+                                        </div>
                                         @if ($learning_series->seriesList[0]->hasTrialContent && !$learning_series->checkMultipleCombo && !$learning_series->valid_payment)
                                             <button class="trial-btn btn py-1"
                                                 onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $learning_series->slug, 'slug' => $learning_series->seriesList[0]->slug]) }}'">
@@ -314,11 +319,16 @@
                                     src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $exam_series->image) }}" />
                                 <div class="course-card-body">
                                     <h5 class="course-card-title">{{ $exam_series->title }}</h5>
-                                    <div class="d-flex justify-content-between align-items-center card-price-container">
-                                        <p class="course-card-price mb-0">{{ $exam_series->cost == 0 ? 'Miễn phí' : formatCurrencyVND($exam_series->cost) }}</p>
+                                    <div class="d-flex justify-content-between gap-3 align-items-center card-price-container">
+                                        <div class="d-flex align-items-baseline">
+                                            <p class="course-card-price mb-0">{{ $exam_series->actualCost == 0 ? 'Miễn phí' : formatCurrencyVND($exam_series->actualCost) }}</p>
+                                            @if ($exam_series->checkPromotion)
+                                                <span class="orginal-price ms-2">{{ formatCurrencyVND($exam_series->cost) }}</span>
+                                            @endif
+                                        </div>
                                         @if ($exam_series->seriesList[0]->hasTrialContent && !$exam_series->checkMultipleCombo && !$exam_series->valid_payment)
                                             <button class="trial-btn btn py-1"
-                                                onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $exam_series->slug, 'slug' => $exam_series->seriesList[0]->slug]) }}'">
+                                                onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $exam_series->slug, 'slug' => $learning_series->seriesList[0]->slug]) }}'">
                                                 Học thử
                                             </button>
                                         @endif

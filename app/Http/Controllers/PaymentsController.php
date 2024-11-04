@@ -159,9 +159,11 @@ class PaymentsController extends Controller
             $this->userService->restoreRedeemedPoints();
         }
 
-        $this->paymentMethodService->getAllOverdueSeriesPayment()->each(function ($payment_method) {
-            $payment_method->update(['status' => PaymentMethod::PAYMENT_FAILED]);
-        });
+        $this->paymentMethodService
+            ->getAllOverdueSeriesPayment()
+            ->each(function ($payment_method) {
+                $payment_method->update(['status' => PaymentMethod::PAYMENT_FAILED]);
+            });
 
         $record = LmsSeriesCombo::getRecordWithSlug($slug);
 
@@ -176,7 +178,7 @@ class PaymentsController extends Controller
         }
 
         // Kiểm tra nếu khoá học miễn phí
-        if ($record !== null && $record->cost == 0) {
+        if ($record !== null && $record->actualCost == 0) {
             $lmsseries_combo_check = DB::table('payment_method')
                 ->where('item_id', $record->id)
                 ->where('user_id', $user->id)
@@ -237,7 +239,7 @@ class PaymentsController extends Controller
         $data = [
             'required_redeem_point' => $record->redeem_point,
             'total_reward_point' => Auth::user()->reward_point + Auth::user()->recharge_point,
-            'remaining_series_cost' => $record->cost - $record->redeem_point * config('constant.redeemed_coin.vnd_convert_rate'),
+            'remaining_series_cost' => $record->actualCost - $record->redeem_point * config('constant.redeemed_coin.vnd_convert_rate'),
             'is_redeemed' => $is_redeemed,
             'payments_history' => DB::table('payments')
                 ->where('user_id', $user->id)
@@ -2641,21 +2643,7 @@ try_again:
             return back();
         }
 
-        if($record->timefrom != null && $record->timeto != null && (int)$record->selloff < (int)$record->cost)
-        {
-            $currentDate = date("Y-m-d");
-            if(strtotime($currentDate) >= strtotime(date("Y-m-d", strtotime($record->timefrom)))
-                && strtotime($currentDate) <= strtotime(date("Y-m-d", strtotime($record->timeto))))
-            {
-                $amount    = strval($record->selloff);
-            }
-            else {
-                $amount    = strval($record->cost);
-            }
-
-        } else {
-            $amount    = strval($record->cost);
-        }
+        $amount = $record->actualCost;
 
         if($is_redeemed) {
             $amount -= $required_redeemed_amount;
@@ -2850,9 +2838,9 @@ try_again:
             $orderId = $request->get('vnp_TxnRef');
             $payment_method = $this->paymentMethodService->getByCondition('orderId', $orderId);
             if ($secureHash == $vnp_SecureHash) {
-				if ($_GET['vnp_ResponseCode'] == '00') {
-                    $seriesCombo = $this->lmsSeriesComboService->getSeriesComboBySlugWithSeries($slug);
-                    $purchasedSeriesList = $this->lmsSeriesService->getSeriesListOfSeriesComboSlug($slug);
+                $seriesCombo = $this->lmsSeriesComboService->getSeriesComboBySlugWithSeries($slug);
+                $purchasedSeriesList = $this->lmsSeriesService->getSeriesListOfSeriesComboSlug($slug);
+                if ($_GET['vnp_ResponseCode'] == '00') {
                     $payment_method->update(
                         ['status' => PaymentMethod::PAYMENT_SUCCESS]
                     );
@@ -2905,7 +2893,7 @@ try_again:
                     ]);
 
                     flash('Thông báo!', 'Đơn thanh toán đã bị huỷ!', 'error');
-                    return redirect('/payments/lms/' . $slug);
+                    return redirect('/payments/lms/' . $slug . ($payment_method->redeem_point ? '?is_redeemed=1' : ''));
 				}
             } else {
                 flash('error', 'Chữ ký không hợp lệ', 'error');
