@@ -1,6 +1,23 @@
 
 @extends('admin.layouts.admin.adminlayout')
 <link href="{{CSS}}bootstrap-datepicker.css" rel="stylesheet">
+<style>
+    .tooltip-inner {
+        background-color: #333 !important;
+        color: #fff !important;
+        padding: 10px !important;
+        font-size: 14px !important;
+        min-width: 300px !important;
+    }
+
+    .redeem-info {
+        margin-left: 4px !important;
+        color: #438afe !important;
+        font-size: 2rem !important;
+        position: relative !important;
+        top: 2px !important;
+    }
+</style>
 @section('content')
 <div id="page-wrapper">
 			<div class="container-fluid">
@@ -22,7 +39,7 @@
  	<div class="pull-right messages-buttons">
  		<a href="{{$URL_LMS_SERIES}}" class="btn btn-primary button">{{ getPhrase('list')}}</a>
  	</div>
- 	
+
  </div>
  <div class="panel-body">
 					<?php $button_name = getPhrase('create'); ?>
@@ -57,6 +74,11 @@
  @include('admin.common.alertify')
   <script src="{{JS}}datepicker.min.js"></script>
   <script src="{{JS}}moment.min.js"></script>
+  <script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
     <script>
  	var file = document.getElementById('image_input');
 
@@ -94,7 +116,7 @@ $(`input[name='timefrom'`).on('change', function () {
 	const timeTo = $(`input[name='timeto'`).val();
 	if(timeTo && timeTo)
 	{
-		const isValid = moment(timeFrom).isBefore(timeTo); 
+		const isValid = moment(timeFrom).isBefore(timeTo);
 		if(!isValid && timeFrom != timeTo) {
 			$(`input[name='timefrom'`).val('');
 			swal("Lỗi", "Vui lòng chọn ngày ngày bắt đầu <= ngày kết thúc", "error");
@@ -108,7 +130,7 @@ $(`input[name='timeto'`).on('change', function () {
 	const timeTo = $(`input[name='timeto'`).val();
 	if(timeFrom && timeTo)
 	{
-		const isValid = moment(timeFrom).isBefore(timeTo); 
+		const isValid = moment(timeFrom).isBefore(timeTo);
 		if(!isValid && timeFrom != timeTo) {
 			$(`input[name='timeto'`).val('');
 			swal("Lỗi", "Vui lòng chọn ngày kết thúc >= ngày bắt đầu", "error");

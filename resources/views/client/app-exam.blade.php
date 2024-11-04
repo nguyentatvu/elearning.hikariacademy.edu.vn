@@ -72,14 +72,14 @@
         window.history.forward();
         function noBack() { window.history.forward(); }
 
-        function checkKeyCode(evt) {
-            evt = evt || window.event;
-            console.log(evt.keyCode);
-            if ([123, 116, 82, 9, 18, 17, 44, 8].includes(evt.keyCode)) {
-                evt.preventDefault();
-                return false;
-            }
-        }
+        // function checkKeyCode(evt) {
+        //     evt = evt || window.event;
+        //     console.log(evt.keyCode);
+        //     if ([123, 116, 82, 9, 18, 17, 44, 8].includes(evt.keyCode)) {
+        //         evt.preventDefault();
+        //         return false;
+        //     }
+        // }
 
         document.onkeydown = checkKeyCode;
     </script>

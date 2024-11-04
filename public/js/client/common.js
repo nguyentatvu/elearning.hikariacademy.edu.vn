@@ -153,13 +153,24 @@ const submitLogin = () => {
         url: "/login",
         type: "post",
         data: formData + "&_method=POST",
+        beforeSend: function () {
+            $(".login-failed").addClass("d-none");
+            $(".captcha-failed").addClass("d-none");
+        },
         success: function (response) {
             $(".modal.auth-modal").modal("hide");
             showSuccessAlert("Đăng nhập thành công", "Thông báo", redirectHomeBase);
         },
         error: function (error) {
             showErrorAlert("Đăng nhập thất bại");
-            $(".login-failed").removeClass("d-none");
+            if (
+                error?.responseJSON?.errors && error?.responseJSON?.errors['g-recaptcha-response'] &&
+                $('[name="g-recaptcha-response"]').val() === ''
+            ) {
+                $(".captcha-failed").removeClass("d-none");
+            } else {
+                $(".login-failed").removeClass("d-none");
+            }
         },
     });
 }

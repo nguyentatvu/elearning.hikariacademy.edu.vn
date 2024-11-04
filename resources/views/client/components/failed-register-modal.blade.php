@@ -17,6 +17,12 @@
                     <input class="form-control" id="password" placeholder="Mật khẩu" type="password" required />
                     <div class="invalid-feedback"></div>
                 </div>
+                <div class="mb-3 captcha-field">
+                    {!! NoCaptcha::renderJs() !!}
+                    {!! NoCaptcha::display() !!}
+                </div>
+                <div class="login-failed text-danger d-none text-center">Tên hoặc mật khẩu không đúng</div>
+                <div class="captcha-failed text-danger d-none text-center">Hãy đánh dấu vào ô kiểm tra robot!</div>
                 <div class="forgot-password">
                     <a href="#"> Quên mật khẩu </a>
                 </div>
@@ -54,6 +60,11 @@
                     <input value="{{ $data['phone'] }}" class="form-control {{ isset($errors['phone']) ? 'is-invalid' : '' }}" name="phone" placeholder="Số điện thoại" type="text" required />
                     <div class="invalid-feedback">{{ isset($errors['phone']) ? $errors['phone'][0] : '' }}</div>
                 </div>
+                <div class="mb-3 captcha-field {{ isset($errors['g-recaptcha-response']) ? 'is-invalid' : '' }}">
+                    {!! NoCaptcha::renderJs() !!}
+                    {!! NoCaptcha::display() !!}
+                </div>
+                <div class="invalid-feedback text-center">{{ isset($errors['g-recaptcha-response']) ? $errors['g-recaptcha-response'][0] : '' }}</div>
                 <button class="btn btn-primary mt-2 submit-button" type="submit">Đăng ký</button>
                 <div class="login">
                     Bạn đã có tài khoản?

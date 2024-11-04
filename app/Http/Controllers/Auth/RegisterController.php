@@ -54,7 +54,7 @@ class RegisterController extends Controller
             'name'     => 'bail|required|max:100|',
             'email'    => 'bail|email|required|unique:users,email',
             'phone'    => 'bail|required|regex:/^0[1-9]{1}[0-9]{8,9}$/|unique:users,phone',
-            // 'g-recaptcha-response' => 'required|captcha',
+            'g-recaptcha-response' => 'required|captcha',
         ];
 
         $messages = [
@@ -65,7 +65,7 @@ class RegisterController extends Controller
             'phone.required' => 'Hãy nhập số điện thoại!',
             'phone.regex' => 'Số điện thoại không đúng định dạng!',
             'email' => 'Email chưa chính xác!',
-            // 'g-recaptcha-response.required' => 'Hãy đánh dấu vào ô kiểm tra robot!',
+            'g-recaptcha-response.required' => 'Hãy đánh dấu vào ô kiểm tra robot!',
         ];
 
         return Validator::make($data, $rules, $messages);

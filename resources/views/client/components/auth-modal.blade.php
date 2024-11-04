@@ -21,7 +21,12 @@
                                 type="password" required />
                             <div class="invalid-feedback">Vui lòng nhập vào đây</div>
                         </div>
+                        <div class="mb-3 captcha-field">
+                            {!! NoCaptcha::renderJs() !!}
+                            {!! NoCaptcha::display() !!}
+                        </div>
                         <div class="login-failed text-danger d-none">Tên hoặc mật khẩu không đúng</div>
+                        <div class="captcha-failed text-danger d-none">Hãy đánh dấu vào ô kiểm tra robot!</div>
                         <div class="forgot-password">
                             <a href="#"> Quên mật khẩu </a>
                         </div>
@@ -65,6 +70,10 @@
                             <input class="form-control" name="phone" placeholder="Số điện thoại" type="text"
                                 required />
                             <div class="invalid-feedback">Vui lòng nhập vào đây</div>
+                        </div>
+                        <div class="mb-3 captcha-field">
+                            {!! NoCaptcha::renderJs() !!}
+                            {!! NoCaptcha::display() !!}
                         </div>
                         <button class="btn btn-primary mt-2 submit-button" type="submit">Đăng ký</button>
                         <div class="login">

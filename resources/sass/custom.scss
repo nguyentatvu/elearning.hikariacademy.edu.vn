@@ -11,6 +11,10 @@
             width: 90%;
             min-width: 90%;
         }
+
+        @include mq(max-sp-sl) {
+            min-width: fit-content;
+        }
     }
 
     .modal-content {
@@ -30,6 +34,11 @@
         padding: 40px;
         align-items: center;
         transition: opacity 0.01s ease-in-out;
+
+        @include mq(max-sp-sl) {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
     }
 
     .login-form, .register-form {
@@ -147,6 +156,11 @@
         padding: 12px 0;
         font-weight: 600;
         font-size: 1rem;
+    }
+
+    .captcha-field [data-sitekey] {
+        display: flex;
+        justify-content: center;
     }
 }
 
