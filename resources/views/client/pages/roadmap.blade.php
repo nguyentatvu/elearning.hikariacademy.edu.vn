@@ -559,6 +559,9 @@
             // Start animations when page loads
             startAnimations();
 
+            // load roadmap
+            loadRoadMapByURL();
+
             // Rest of your existing code...
             // [Keep all the existing roadmap-related functions here]
 
@@ -832,6 +835,17 @@
                         console.error('Lỗi không tải dữ liệu:');
                     }
                 });
+            }
+
+            function loadRoadMapByURL() {
+                const urlParams = new URLSearchParams(window.location.search);
+
+                let month = urlParams.get('month');
+
+                if (month !== null && month !== undefined) {
+                    $('.roadmap-select').val(month);
+                    loadRoadMap(month, '{{ $serie_combo->slug }}', '{{ $serie->slug }}');
+                }
             }
         });
     </script>

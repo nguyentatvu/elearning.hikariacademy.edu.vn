@@ -67,7 +67,7 @@ class UpdateLeaderboardCommand extends Command
             WeeklyLeaderboard::truncate();
             WeeklyLeaderboard::insert($data);
 
-            $this->info('Leaderboard has been updated!');
+            $this->info('Leaderboard has been updated at ' . Carbon::now()->toDateTimeString());
             DB::commit();
         }
         catch (Exception $e) {

@@ -572,7 +572,22 @@ class LmsSeriesController extends Controller
 			$data['count_series'] = $countSeries;
 		}
 
+		// Get roadmap information
+		$roadmaps = $this->userRoadmapService->getUserChosenRoadmap(Auth::id() ?? -1);
+		$data['series'] = $data['series']->map(function ($series) use ($roadmaps) {
+			$userRoadmap = $roadmaps->firstWhere('lmsseries_id', $series->id);
+
+			if ($userRoadmap) {
+				$series->user_roadmap = $userRoadmap;
+			} else {
+				$series->user_roadmap = null;
+			}
+
+			return $series;
+		});
+
 		$view_name = 'client.mypage.my-courses';
+
 		return view($view_name, $data);
 	}
 
@@ -626,6 +641,20 @@ class LmsSeriesController extends Controller
 		if ($countSeries) {
 			$data['count_series'] = $countSeries;
 		}
+
+		// Get roadmap information
+		$roadmaps = $this->userRoadmapService->getUserChosenRoadmap(Auth::id() ?? -1);
+		$data['series'] = $data['series']->map(function ($series) use ($roadmaps) {
+			$userRoadmap = $roadmaps->firstWhere('lmsseries_id', $series->id);
+
+			if ($userRoadmap) {
+				$series->user_roadmap = $userRoadmap;
+			} else {
+				$series->user_roadmap = null;
+			}
+
+			return $series;
+		});
 
 		$view_name = 'client.mypage.my-courses';
 
@@ -1162,8 +1191,6 @@ class LmsSeriesController extends Controller
             $this->lmsContentService->getContentCountBySeries($this->prepContent['series']->id);
         $this->prepContent['series_combo']->chapter_count =
             $this->lmsContentService->getChapterCountBySeries($this->prepContent['series']->id);
-
-        $data['roadmap_chosen_list'] = $this->userRoadmapService->userChosenRoadmapList(Auth::id() ?? -1);
 
         return view('client.pages.series-introduction', array_merge(
             $this->getPreparedContentVariables(),
