@@ -572,10 +572,8 @@ class LmsComboController extends Controller
             return json_encode($response);
         }
         try{
-            if(!env('DEMO_MODE')) {
-                $record->delete_status = 1;
-                $record->save();
-            }
+            $record->delete_status = 1;
+            $record->save();
             $response['status'] = 1;
             $response['message'] = getPhrase('record_deleted_successfully');
         }
@@ -590,18 +588,12 @@ class LmsComboController extends Controller
     }
 
     public function deleteFile($record, $path, $is_array = FALSE){
-        if(env('DEMO_MODE')) {
-            return;
-        }
         $files = array();
         $files[] = $path.$record;
         File::delete($files);
     }
 
     public function processUpload(Request $request, $record, $file_name){
-        if(env('DEMO_MODE')) {
-            return 'demo';
-        }
         if ($request->hasFile($file_name)) {
             $examSettings = getSettings('lms');
             $imageObject = new ImageSettings();
