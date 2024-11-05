@@ -171,10 +171,10 @@
         moment.locale('vi');
         // Function to display the Buy Course modal
         const showBuyCourseModal = () => $('#buy_course_modal').modal('show');
-        const username = '{{ Auth::user()->name }}' ?? '';
-        const userId = '{{ Auth::user()->id }}' ?? '';
+        const username = '{{ optional(Auth::user())->name }}' ?? '';
+        const userId = '{{ optional(Auth::user())->id }}' ?? '';
         const userImage =
-            "{{ Auth::user()->image ? getFullUserImage(Auth::user()->image) : asset('images/no-avatar.png') }}"
+            "{{ optional(Auth::user())->image ? getFullUserImage(optional(Auth::user())->image) : asset('images/no-avatar.png') }}"
 
         $(document).ready(function() {
             setTimeout(() => {

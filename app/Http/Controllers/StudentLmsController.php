@@ -1175,7 +1175,11 @@ class StudentLmsController extends Controller
      */
     protected function getCommentInCourseOfUser(string $combo_slug, string $slug, string $stt)
     {
-        $userId = Auth::user()->id;
-        $this->prepContent['comments'] = $this->commentService->getCommentsInCourse($combo_slug, $slug, $stt, $userId);
+        $this->prepContent['comments'] = null;
+
+        if (Auth::check()) {
+            $userId = Auth::user()->id;
+            $this->prepContent['comments'] = $this->commentService->getCommentsInCourse($combo_slug, $slug, $stt, $userId);
+        }
     }
 }
