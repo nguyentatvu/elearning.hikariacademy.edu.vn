@@ -22,7 +22,7 @@
                         Mô tả bài học
                     @endif
                 </button>
-                @if (isset($isValidPayment) && $isValidPayment)
+                @if (isset($isValidPayment) && $isValidPayment && Auth::check())
                     <button class="nav-link" id="nav-questions-tab" data-bs-toggle="tab" data-bs-target="#nav-questions"
                         type="button" role="tab" aria-controls="nav-questions" aria-selected="false">Câu hỏi của
                         bạn</button>
@@ -51,7 +51,7 @@
                     </div>
                 </div>
 
-                @if (isset($isValidPayment) && $isValidPayment)
+                @if (isset($isValidPayment) && $isValidPayment && Auth::check())
                     <div class="tab-pane fade nav_comment_content" id="nav-questions" role="tabpanel"
                         aria-labelledby="nav-questions-tab" tabindex="0">
                         <div class="comment-section">

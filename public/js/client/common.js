@@ -48,6 +48,11 @@ const redirectHomeBase = () => {
     location.href = "/";
 }
 
+// Redirect my page
+const redirectMyPage = () => {
+    location.href = "/mypage/my-personal";
+}
+
 // Toggle loading overlay
 const toggleLoadingOverlay = (isActive = null) => {
     const loadingOverlay = $(".loading-overlay");
@@ -159,7 +164,7 @@ const submitLogin = () => {
         },
         success: function (response) {
             $(".modal.auth-modal").modal("hide");
-            showSuccessAlert("Đăng nhập thành công", "Thông báo", redirectHomeBase);
+            showSuccessAlert("Đăng nhập thành công", "Thông báo", redirectMyPage);
         },
         error: function (error) {
             grecaptcha.reset();

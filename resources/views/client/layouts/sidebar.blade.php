@@ -22,7 +22,7 @@
             </a>
         </li>
 
-        <li class="sidebar-item nav-item {{ Request::is('contact') ? 'active' : '' }}">
+        {{-- <li class="sidebar-item nav-item {{ Request::is('contact') ? 'active' : '' }}">
             <a href="{{ route('home.contact') }}"
                 class="nav-link d-flex flex-column justify-content-center align-items-center" title=""
                 data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Contact">
@@ -31,6 +31,6 @@
                 </div>
                 <span>Liên hệ</span>
             </a>
-        </li>
+        </li> --}}
     </ul>
 </div>
