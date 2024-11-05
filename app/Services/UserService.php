@@ -95,7 +95,7 @@ class UserService extends BaseService
             $point = $reward_point;
         } else {
             // Reset login streak to 1 if login is not consecutive
-            $user->login_streak = 0;
+            $user->login_streak = 1;
             $reward_point = $this->caculateRewardPoints($user->login_streak, $convertedPointRule);
             $user->reward_point += $reward_point;
             $point = $reward_point;
