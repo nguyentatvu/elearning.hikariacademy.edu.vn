@@ -264,7 +264,7 @@
                                             @endif
                                         </div>
 
-                                        <div class="course-card-description line-clamp-2">{!! $recommended_series->short_description !!}</div>
+                                        <div class="course-card-description line-clamp-3">{!! $recommended_series->short_description !!}</div>
                                         <div class="course-card-teacher text-muted w-100 mb-1">{!! $recommended_series->description['teacher_description'] ?? '' !!}
                                         </div>
                                         <div class="d-flex align-items-center text-primary-color mt-3">
