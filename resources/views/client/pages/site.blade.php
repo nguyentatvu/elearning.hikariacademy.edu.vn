@@ -11,6 +11,9 @@
                 @case('terms-conditions')
                     @include('admin.site.termsconditions')
                 @break;
+                @case('payment-instructions')
+                    @include('admin.site.payment_instructions')
+                @break;
             @endswitch
         </div>
     </div>

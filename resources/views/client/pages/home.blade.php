@@ -135,7 +135,7 @@
 @endsection
 
 @section('content')
-    {{-- <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
         @if (isset($banners['home_slider_banner']) &&
                 $banners['home_slider_banner']->is_active == App\Enums\BannerStatus::ACTIVE)
             <div class="carousel-indicators">
@@ -177,7 +177,7 @@
                 <span class="visually-hidden">Next</span>
             </button>
         @endif
-    </div> --}}
+    </div>
 
     {{-- Banner --}}
 

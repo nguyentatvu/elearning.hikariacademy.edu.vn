@@ -1,38 +1,55 @@
 <!-- Footer -->
-<footer class="bg-color-primary main-footer p-60px">
+<footer class="bg-color-primary main-footer p-10px">
     <!-- Grid container -->
-    <div class="text-light">
+    <div class="text-light container" style="max-width: 1200px;">
         <!-- Section: Links -->
         <section>
             <!--Grid row-->
-            <div class="border-bottom mb-4">
+            <div class="border-bottom">
                 <div class="row">
                     <!-- Về HIKARI section -->
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="border-bottom mb-2">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="border-bottom">
                             <h5>Về HIKARI</h5>
                         </div>
                         <div class="row">
-                            <div class="col-lg-6">
-                                <ul class="list-unstyled">
-                                    <li class="mb-2">
-                                        <a class="text-light text-decoration-none" href="https://hikariacademy.edu.vn">HIKARI ACADEMY</a>
-                                    </li>
-                                    <li class="mb-2">
-                                        <a class="text-light text-decoration-none" href="{{ route('site_pages', 'privacy-policy') }}">Bảo mật thông tin</a>
-                                    </li>
-                                    <li class="mb-2">
-                                        <a class="text-light text-decoration-none" href="{{ route('site_pages', 'terms-conditions') }}">Chính sách hoàn tiền</a>
-                                    </li>
-                                </ul>
+                            <div class="col-lg-6 py-2">
+                                <div>
+                                    <a class="text-light text-decoration-none" href="https://hikariacademy.edu.vn">HIKARI
+                                        ACADEMY</a>
+                                </div>
+                                <div>
+                                    <a class="text-light text-decoration-none"
+                                        href="{{ route('site_pages', 'privacy-policy') }}">Bảo mật thông tin</a>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Social section -->
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="border-bottom mb-2">
-                            <h5>Social</h5>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="border-bottom">
+                            <h5>Chăm sóc khách hàng</h5>
+                        </div>
+                        <div class="py-2">
+                            <div>
+                                <a class="text-light text-decoration-none"
+                                    href="{{ route('site_pages', 'payment-instructions') }}">Hướng
+                                    dẫn thanh toán
+                                </a>
+                            </div>
+                            <div>
+                                <a class="text-light text-decoration-none"
+                                    href="{{ route('site_pages', 'terms-conditions') }}">Chính sách hoàn
+                                    tiền</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social section -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="border-bottom">
+                            <h5>Kết Nối Với Chúng Tôi</h5>
                         </div>
                         <div class="footer-social d-flex align-items-center">
                             <a class="px-2" href="https://www.facebook.com/nhatngu.hikariacademy">
@@ -49,60 +66,52 @@
                             </a>
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    <!-- Website info section -->
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="border-bottom mb-2">
-                            <h5>Thông tin website</h5>
-                        </div>
+            <!--Address-->
+            <div class="border-bottom">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 py-2">
                         <div class="row">
-                            <div class="col-lg-12">
-                                <a href="http://online.gov.vn/Home/WebDetails/63991" target="_blank">
-                                    <img class="logo-bocongthuong ms-2 mt-2" src="{{ asset('images/bocongthuong.png') }}" alt="" height="70">
-                                </a>
+                            <div class="col-12 col-sm-6">
+                                <div>Giờ hoạt động:</div>
+                                <div>Thứ 2-6: 7h00 - 21h00</div>
+                                <div>Thứ 7: 8h00 - 15h00</div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div>Liên hệ:</div>
+                                <div>Email: info@hikariacademy.edu.vn</div>
+                                <div>Điện thoại: 028 3849 8071</div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!--Address-->
-            <div class="border-bottom mb-4">
-                <div class="row">
-                    <div class="col-lg-6 col-md-12 mb-2">
-                        <p>Cơ sở 1: Số 310 Lê Quang Định, Phường 11, Quận Bình Thạnh, TP. Hồ Chí Minh</p>
-                    </div>
-                    <div class="col-lg-6 col-md-12 mb-2">
-                        <p>Cơ sở 2: Tòa nhà JVPE, Lô 20, Đường số 2, Công viên phần mềm Quang Trung, Phường Tân Chánh Hiệp, Quận 12, TP. Hồ Chí Minh</p>
-                    </div>
-                </div>
-            </div>
-            <!--Address-->
-
-            <!--Information contact-->
-            <div class="border-bottom mb-4">
-                <div class="row">
-                    <div class="col-lg-3 col-md-6 mb-2">
-                        <p>Thứ 2-6: 7h00 - 21h00</p>
-                    </div>
-                    <div class="col-lg-3 col-md-6 mb-2">
-                        <p>Thứ 7: 8h00 - 15h00</p>
-                    </div>
-                    <div class="col-lg-3 col-md-6 mb-2">
-                        <p>Email: info@hikariacademy.edu.vn</p>
-                    </div>
-                    <div class="col-lg-3 col-md-6 mb-2">
-                        <p>Online: 028 3849 8071</p>
+                    <div class="col-lg-6 col-md-12 py-2">
+                        <div>Cơ sở 1: Số 310 Lê Quang Định, Phường 11, Quận Bình Thạnh, TP. Hồ Chí Minh</div>
+                        <div>Cơ sở 2: Tòa nhà JVPE, Lô 20, Đường số 2, Công viên phần mềm Quang Trung, Phường Tân Chánh
+                            Hiệp, Quận 12, TP. Hồ Chí Minh</div>
                     </div>
                 </div>
             </div>
             <!--Address-->
 
             <!--Copyright-->
-            <div class="">
-                <div>Copyright © 2024 HIKARI</div>
-                <div>Mã số thuế: 0305322160, do sở kế hoạch và Đầu tư TP.Hồ Chi Minh cấp ngày 19/11/2007</div>
-                <div>Quyết định cho phép hoạt động giáo dục Trung tâm Nhật ngữ Quang Việt, số 1789/QĐ-GDĐT-TC do Sở giáo dục và Đào tạo TP.Hồ Chí Minh cấp ngày 28/08/2020</div>
+            <div class="row">
+                <div class="col-12 col-sm-8 py-2">
+                    <div>Copyright © 2024 HIKARI</div>
+                    <div>Mã số thuế: 0305322160, do sở kế hoạch và Đầu tư TP.Hồ Chi Minh cấp ngày 19/11/2007</div>
+                    <div>Quyết định cho phép hoạt động giáo dục Trung tâm Nhật ngữ Quang Việt, số 1789/QĐ-GDĐT-TC do Sở
+                        giáo
+                        dục và Đào tạo TP.Hồ Chí Minh cấp ngày 28/08/2020</div>
+                </div>
+                <div class="col-12 col-sm-4 footer-social d-flex align-items-center">
+                    <div class="col-lg-12">
+                        <a href="http://online.gov.vn/Home/WebDetails/63991" target="_blank">
+                            <img class="logo-bocongthuong ms-2 mt-2" src="{{ asset('images/bocongthuong.png') }}"
+                                alt="" height="70">
+                        </a>
+                    </div>
+                </div>
             </div>
             <!--Address-->
         </section>
