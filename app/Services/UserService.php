@@ -86,7 +86,6 @@ class UserService extends BaseService
         $point = 0;
         $pointRule = getRewardPointRule('daily_login')['milestones'];
         $convertedPointRule = collect($pointRule)->pluck('points', 'days')->all();
-        $streak =
 
         // Check if the last login was yesterday and login streak is 1 or more
         if ($last_login_date->isYesterday() && $loginStreak >= 1) {
