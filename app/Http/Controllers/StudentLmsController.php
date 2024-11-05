@@ -596,11 +596,6 @@ class StudentLmsController extends Controller
         ]);
 
         if ($studentView) {
-            $content = $this->lmsContentService->findById($contentId);
-
-            // Remove exceeded points
-            $earnedPoints = max(0, min($earnedPoints, 3));
-
             $user = Auth::user();
             $this->userService->updatePointHistory([$contentType => $earnedPoints]);
             $user->update([
