@@ -67,8 +67,9 @@ class UserRoadmapService extends BaseService
     public function saveUserRoadmap(string $userId, string $seriesId, string $durationMonths) {
         $this->repository->updateOrCreate([
             'user_id' => $userId,
-            'lmsseries_id' => $seriesId,
+            'lmsseries_id' => $seriesId
+        ], [
             'duration_months' => $durationMonths
-        ], []);
+        ]);
     }
 }
