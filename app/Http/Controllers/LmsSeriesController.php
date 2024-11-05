@@ -583,6 +583,9 @@ class LmsSeriesController extends Controller
 				$series->user_roadmap = null;
 			}
 
+			$seriesCombo = $this->lmsSeriesComboService->getByCondition('slug', $series->combo_slug);
+			$series->seriesCombo = $seriesCombo;
+
 			return $series;
 		});
 
@@ -644,6 +647,7 @@ class LmsSeriesController extends Controller
 
 		// Get roadmap information
 		$roadmaps = $this->userRoadmapService->getUserChosenRoadmap(Auth::id() ?? -1);
+
 		$data['series'] = $data['series']->map(function ($series) use ($roadmaps) {
 			$userRoadmap = $roadmaps->firstWhere('lmsseries_id', $series->id);
 
@@ -652,6 +656,9 @@ class LmsSeriesController extends Controller
 			} else {
 				$series->user_roadmap = null;
 			}
+
+			$seriesCombo = $this->lmsSeriesComboService->getByCondition('slug', $series->combo_slug);
+			$series->seriesCombo = $seriesCombo;
 
 			return $series;
 		});

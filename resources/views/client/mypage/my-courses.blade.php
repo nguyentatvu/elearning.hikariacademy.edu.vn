@@ -172,7 +172,7 @@
                                 <td class="text-center align-middle mw-150px w-200px">
                                     @if ($item->user_roadmap === null || $item->user_roadmap->duration_months === null)
                                         Chưa chọn lộ trình
-                                    @elseif ($item->user_roadmap->duration_months == 0)
+                                    @elseif ($item->user_roadmap->duration_months === 0)
                                         Lộ trình tự do
                                     @else
                                         @php
@@ -230,10 +230,28 @@
                                     @elseif (strtotime($dayEnd) < strtotime(now()))
                                         <p>Hết hạn</p>
                                     @else
-                                        <a class="btn btn-primary mb-3 mb-xl-0"
+                                        {{-- <a class="btn btn-primary mb-3 mb-xl-0"
                                             href="{{ PREFIX . 'learning-management/lesson/show/' . $item->combo_slug . '/' . $item->slug }}">
                                             <i class="fa fa-leanpub mr-1"></i> Học ngay
-                                        </a>
+                                        </a> --}}
+                                        @if ($item->user_roadmap !== null &&
+                                            $item->user_roadmap->duration_months !== 0 &&
+                                            $item->user_roadmap->duration_months !== null)
+                                            <a href="{{ route('learning-management.lesson.show', ['combo_slug' => $item->combo_slug, 'slug' => $item->slug]) }}"
+                                                class="btn btn-primary mb-3 mb-xl-0">
+                                                Học ngay
+                                            </a>
+                                        @elseif (optional($item->seriesCombo)->checkMultipleCombo)
+                                            <a href="{{ route('series.introduction-detail-combo', ['combo_slug' => $item->combo_slug]) . '?series_action=scrollToList' }}"
+                                                class="btn btn-primary mb-3 mb-xl-0">
+                                                Học ngay
+                                            </a>
+                                        @else
+                                            <a href="{{ route('series.introduction-detail', ['combo_slug' => $item->combo_slug, 'slug' => $item->slug]) . '?series_action=openRoadmapModal' }}"
+                                                class="btn btn-primary mb-3 mb-xl-0">
+                                                Học ngay
+                                            </a>
+                                        @endif
                                     @endif
                                 </td>
                             </tr>
