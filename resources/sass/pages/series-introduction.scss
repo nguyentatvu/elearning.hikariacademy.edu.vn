@@ -427,12 +427,16 @@
         .swiper-button-prev {
             color: #2563eb;
             background: rgba(219, 219, 219, 0.2);
-            border-radius: 99px;
-            width: 60px;
-            height: 60px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
 
             @include mq (max-sp-sl) {
                 transform: scale(0.7);
+            }
+
+            &:after {
+                font-size: 24px;
             }
         }
 
@@ -451,10 +455,6 @@
         .swiper-slide {
             height: auto;
         }
-    }
-
-    .course-card-description {
-        min-height: 64px;
     }
 
     .series-combo-section {
