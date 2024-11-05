@@ -320,7 +320,7 @@
                     animateHicoin(response.point);
                     setTimeout(function() {
                         $('#modalLoginStreak').modal('show');
-                    }, 2000);
+                    }, 500);
                 },
                 error: function(xhr, status, error) {
                     console.log(error);
