@@ -170,9 +170,9 @@
                                     </div>
                                 </td>
                                 <td class="text-center align-middle mw-150px w-200px">
-                                    @if (!isset($item->user_roadmap))
+                                    @if (!isset($item->user_roadmap) || $item->user_roadmap->duration_months == null)
                                         Chưa chọn lộ trình
-                                    @elseif ($item->user_roadmap->duration_months === 0)
+                                    @elseif ($item->user_roadmap->duration_months == 0)
                                         Lộ trình tự do
                                     @else
                                         @php
