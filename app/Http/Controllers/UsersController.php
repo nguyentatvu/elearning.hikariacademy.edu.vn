@@ -2070,9 +2070,6 @@ class UsersController extends Controller
             // Reset the login streak
             $streakCurrent = 0;
             $user->login_streak = $streakCurrent;
-            $arrayHistoryPoint = $user->point_history;
-            $arrayHistoryPoint['streak'] = $streakCurrent;
-            $user->point_history = $arrayHistoryPoint;
             $user->save();
         }
 

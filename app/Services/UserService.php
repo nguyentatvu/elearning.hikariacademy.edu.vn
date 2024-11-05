@@ -101,10 +101,6 @@ class UserService extends BaseService
             $point = $reward_point;
         }
 
-        $arrayHistoryPoint = $user->point_history;
-        $arrayHistoryPoint['streak'] = $user->login_streak;
-        $user->point_history = $arrayHistoryPoint;
-
         // Update last login date and save the user
         $user->last_login_date = now();
         $user->save();
