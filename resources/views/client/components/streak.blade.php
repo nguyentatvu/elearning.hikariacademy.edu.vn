@@ -676,6 +676,12 @@
 
                 // Update active days
                 setActiveDays(state.streakCurrent, state.currentDate);
+
+                var old_streak = $('#owned_login_streak_mobile a');
+                if (old_streak.length > 0) {
+                    old_streak.text(state.streakCurrent);
+                }
+
             }
 
             function updateStreakDisplay(previousStreak) {
@@ -844,7 +850,7 @@
             function setActiveDays(streakCurrent, lastLoginDateStr) {
                 // Parse the last login date and get the current date
                 const lastLoginDate = new Date(
-                lastLoginDateStr); // Remove .date since lastLoginDateStr is already a date string
+                    lastLoginDateStr); // Remove .date since lastLoginDateStr is already a date string
                 const currentDate = new Date();
 
                 // Check if lastLoginDate is the same as currentDate
