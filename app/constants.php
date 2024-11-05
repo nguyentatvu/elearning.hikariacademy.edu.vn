@@ -274,7 +274,7 @@ define('URL_LANGUAGES_GETLIST', PREFIX.'languages/getList/');
 
 define('URL_LANGUAGES_MAKE_DEFAULT', PREFIX.'languages/make-default/');
 
- 
+
 
 //SETTINGS MODULE
 
@@ -748,6 +748,7 @@ define('URL_GOOGLE_LOGIN', PREFIX.'auth/google');
 define('SITE_PAGES_PRIVACY', PREFIX.'site/privacy-policy');
 
 define('SITE_PAGES_TERMS', PREFIX.'site/terms-conditions');
+define('SITE_PAGES_PAYMENT_INSTRUCTIONS', PREFIX.'site/payment-instruction');
 
 define('SITE_PAGES_ABOUT_US', PREFIX.'site/about-us');
 
