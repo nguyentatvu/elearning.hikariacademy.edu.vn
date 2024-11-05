@@ -99,9 +99,13 @@
                 const contentHeight = windowHeight - headerHeight;
                 // Check if the screen width is for mobile or tablet
                 if (window.matchMedia('(max-width: 1024px)').matches) {
-                    const contentHeight = windowHeight - headerHeight - sideBarHeight;
+                   const contentHeight = windowHeight - headerHeight - sideBarHeight;
                     $('.main-footer').css({
                         'padding-bottom': sideBarHeight + 10,
+                    });
+                } else {
+                    $('.main-footer').css({
+                        'padding-bottom': 0,
                     });
                 }
 

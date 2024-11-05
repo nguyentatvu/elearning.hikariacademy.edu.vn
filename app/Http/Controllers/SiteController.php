@@ -500,7 +500,7 @@ class SiteController extends Controller
     */
     public function sitePages($key = 'privacy-policy')
     {
-        $available_pages = ['privacy-policy', 'terms-conditions'];
+        $available_pages = ['privacy-policy', 'terms-conditions', 'payment-instructions'];
         if (!in_array($key, $available_pages)) {
             pageNotFound();
             return back();
@@ -514,6 +514,9 @@ class SiteController extends Controller
                 break;
             case 'terms-conditions':
                 $data['title'] = 'Chính sách hoàn phí';
+                break;
+            case 'payment-instructions':
+                $data['title'] = 'Hướng dẫn thanh toán';
                 break;
             default:
                 break;
