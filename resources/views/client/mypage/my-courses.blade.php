@@ -230,10 +230,6 @@
                                     @elseif (strtotime($dayEnd) < strtotime(now()))
                                         <p>Hết hạn</p>
                                     @else
-                                        {{-- <a class="btn btn-primary mb-3 mb-xl-0"
-                                            href="{{ PREFIX . 'learning-management/lesson/show/' . $item->combo_slug . '/' . $item->slug }}">
-                                            <i class="fa fa-leanpub mr-1"></i> Học ngay
-                                        </a> --}}
                                         @if ($item->user_roadmap !== null &&
                                             $item->user_roadmap->duration_months !== 0 &&
                                             $item->user_roadmap->duration_months !== null)
