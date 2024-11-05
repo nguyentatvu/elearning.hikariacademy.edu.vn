@@ -293,8 +293,14 @@
   border: 1px solid #d1d1d1;
   border-radius: 8px;
   overflow: hidden;
-  margin: 10px;
+  margin: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+.course-card:hover {
+  transform: scale(1.02);
+  overflow: hidden;
+  transition: transform 0.3s ease;
 }
 
 .course-card img {
@@ -303,19 +309,28 @@
   -o-object-fit: cover;
      object-fit: cover;
 }
+.course-card img:hover {
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
 
 .course-card-body {
   padding: 15px;
 }
 
 .course-card-title {
-  font-size: 1.25rem;
+  max-height: 42px;
+  height: 42px;
+}
+.course-card-title .course-card-text {
+  font-size: 1.3rem;
   font-weight: bold;
+  margin-bottom: 0;
 }
 
 .course-card-price {
   color: #007bff;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: bold;
 }
 
@@ -323,10 +338,6 @@
   text-decoration: line-through;
   position: relative;
   bottom: 1px;
-}
-
-.course-card-description {
-  margin: 10px 0;
 }
 
 .course-card-footer {
@@ -421,7 +432,7 @@
   position: relative;
 }
 .learning-series-list .course-card-description, .exam-series-list .course-card-description {
-  min-height: 64px;
+  min-height: 40px;
 }
 .learning-series-list .swiper-exam-series,
 .learning-series-list .swiper-learning-series, .exam-series-list .swiper-exam-series,
@@ -469,9 +480,9 @@
 .exam-series-list .swiper-button-prev {
   color: #2563eb;
   background: rgba(219, 219, 219, 0.2);
-  width: 60px;
-  height: 60px;
-  border-radius: 99px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
 }
 @media screen and (max-width: 575px) {
   .learning-series-list .swiper-button-next,
@@ -479,6 +490,11 @@
   .exam-series-list .swiper-button-prev {
     transform: scale(0.7);
   }
+}
+.learning-series-list .swiper-button-next:after,
+.learning-series-list .swiper-button-prev:after, .exam-series-list .swiper-button-next:after,
+.exam-series-list .swiper-button-prev:after {
+  font-size: 24px;
 }
 @media screen and (max-width: 767px) {
   .learning-series-list .swiper-button-next, .exam-series-list .swiper-button-next {
