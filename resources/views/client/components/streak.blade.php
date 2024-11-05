@@ -20,11 +20,16 @@
 
         .streak-info {
             text-align: center;
+            position: relative;
         }
 
         .streak-count {
             color: #166AC9;
             margin: 0;
+        }
+
+        .streak-info img {
+            height: 100px;
         }
 
         .streak-label {
@@ -109,6 +114,10 @@
         .future {
             background-color: white;
             color: black;
+        }
+
+        .modal-header {
+            border: none;
         }
 
         @keyframes gradientRiseAndColorChange {
@@ -472,6 +481,11 @@
             color: #868e96;
         }
 
+        .checkmark.unactive {
+            background-color: #fff1f2;
+            color: #fd5673;
+        }
+
         .milestone {
             position: absolute;
         }
@@ -494,6 +508,7 @@
                         </div>
                         <div class="streak-info">
                             <h1 class="streak-count"></h1>
+                            {{-- <img src="{{ asset('images/icons/book.svg') }}" alt="" srcset=""> --}}
                             <h3 class="streak-label">Ngày streak!</h3>
                         </div>
                     </div>
@@ -660,7 +675,7 @@
                 updateStreakProgress();
 
                 // Update active days
-                setActiveDays(state.streakCurrent, state.lastLoginDate);
+                setActiveDays(state.streakCurrent, state.currentDate);
             }
 
             function updateStreakDisplay(previousStreak) {
@@ -827,42 +842,76 @@
             }
 
             function setActiveDays(streakCurrent, lastLoginDateStr) {
-                // Parse the timestamp string into a Date object
-                const lastLoginDate = new Date(lastLoginDateStr.date);
+                // Parse the last login date and get the current date
+                const lastLoginDate = new Date(
+                lastLoginDateStr); // Remove .date since lastLoginDateStr is already a date string
+                const currentDate = new Date();
 
-                // Get day of week (0 = Sunday, 1 = Monday, ...)
-                let dayOfWeek = lastLoginDate.getDay();
+                // Check if lastLoginDate is the same as currentDate
+                const isToday = lastLoginDate.toDateString() === currentDate.toDateString();
 
-                // Convert to our format where 0 = Monday, ..., 6 = Sunday
-                dayOfWeek = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+                // Get the current day of the week (0-6, where 0 is Sunday)
+                const currentDayOfWeek = currentDate.getDay();
 
+                // Adjust to match your week format (if week starts on Monday)
+                let dayOfWeek = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1;
+
+                // Parse streakCurrent into an integer
                 const streak = parseInt(streakCurrent);
 
                 $('.day-column').each(function(index) {
                     const $this = $(this);
                     const $checkmark = $this.find('.checkmark');
+                    const $icon = $checkmark.find('i');
 
-                    // Activate the last login day
-                    if (index === dayOfWeek) {
-                        $this.removeClass('inactive').addClass('active');
-                        $checkmark.removeClass('inactive').addClass('active');
-                    }
-                    // If streak > 1, activate previous days before last login
-                    else if (streak > 1 && index < dayOfWeek) {
-                        const daysToActivate = Math.min(streak - 1, dayOfWeek);
-                        // Only activate days within the streak range
-                        if (index >= (dayOfWeek - daysToActivate)) {
-                            $this.removeClass('inactive').addClass('active');
-                            $checkmark.removeClass('inactive').addClass('active');
+                    // Reset all classes first
+                    $this.removeClass('inactive active unactive');
+                    $checkmark.removeClass('inactive active unactive');
+                    $icon.removeClass('bi-check bi-ban bi-dash-circle');
+
+                    if (streak === 0) {
+                        // Case 3: If streak is 0, all days are inactive
+                        $this.addClass('inactive');
+                        $checkmark.addClass('inactive');
+                        $icon.addClass('bi-ban');
+                    } else {
+                        if (index > dayOfWeek) {
+                            // Future days are always inactive
+                            $this.addClass('inactive');
+                            $checkmark.addClass('inactive');
+                            $icon.addClass('bi-ban');
+                        } else if (isToday) {
+                            // Case 1: If last login is today
+                            if (index <= dayOfWeek && index >= (dayOfWeek - streak + 1)) {
+                                // Active current day and days within streak range counting from current day
+                                $this.addClass('active');
+                                $checkmark.addClass('active');
+                                $icon.addClass('bi-check');
+                            } else if (index < (dayOfWeek - streak + 1)) {
+                                // Days before streak range
+                                $this.addClass('unactive');
+                                $checkmark.addClass('unactive');
+                                $icon.addClass('bi-dash-circle');
+                            }
                         } else {
-                            $this.removeClass('active').addClass('inactive');
-                            $checkmark.removeClass('active').addClass('inactive');
+                            // Case 2: If last login is not today
+                            if (index < dayOfWeek && index >= (dayOfWeek - streak)) {
+                                // Active days within streak range before current day
+                                $this.addClass('active');
+                                $checkmark.addClass('active');
+                                $icon.addClass('bi-check');
+                            } else if (index < (dayOfWeek - streak)) {
+                                // Days before streak range
+                                $this.addClass('unactive');
+                                $checkmark.addClass('unactive');
+                                $icon.addClass('bi-dash-circle');
+                            } else {
+                                // Current day is inactive when last login is not today
+                                $this.addClass('inactive');
+                                $checkmark.addClass('inactive');
+                                $icon.addClass('bi-ban');
+                            }
                         }
-                    }
-                    // Keep other days inactive
-                    else {
-                        $this.removeClass('active').addClass('inactive');
-                        $checkmark.removeClass('active').addClass('inactive');
                     }
                 });
             }

@@ -95,11 +95,15 @@ class UserService extends BaseService
             $point = $reward_point;
         } else {
             // Reset login streak to 1 if login is not consecutive
-            $user->login_streak = 1;
+            $user->login_streak = 0;
             $reward_point = $this->caculateRewardPoints($user->login_streak, $convertedPointRule);
             $user->reward_point += $reward_point;
             $point = $reward_point;
         }
+
+        $arrayHistoryPoint = $user->point_history;
+        $arrayHistoryPoint['streak'] = $point;
+        $user->point_history = $arrayHistoryPoint;
 
         // Update last login date and save the user
         $user->last_login_date = now();
