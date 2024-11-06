@@ -292,6 +292,8 @@ $border-color_1: #166ac9;
   margin: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+  height: 480px;
+  max-height: 480px;
 
   &:hover {
     transform: scale(1.02);
