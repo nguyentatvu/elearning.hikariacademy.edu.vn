@@ -303,10 +303,18 @@ $border-color_1: #166ac9;
 
   .course-card-teacher {
     min-height: 18px;
+
+    p {
+      margin-bottom: 0;
+    }
   }
 
   .course-card-description {
     min-height: 40px;
+
+    p {
+      margin-bottom: 0;
+    }
   }
 
   .card-price-container {
