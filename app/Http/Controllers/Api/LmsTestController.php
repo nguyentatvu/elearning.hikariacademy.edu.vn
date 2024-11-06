@@ -65,6 +65,7 @@ class LmsTestController extends Controller
      *         @SWG\Schema(
      *             type="object",
      *             @SWG\Property(property="total_point", type="integer", example=100),
+     *             @SWG\Property(property="max_point", type="integer", example=100),
      *             @SWG\Property(property="total_correct_answers", type="integer", example="40"),
      *             @SWG\Property(property="total_question", type="integer", example="73"),
      *             @SWG\Property(property="is_passed", type="boolean", example="true"),
