@@ -382,7 +382,7 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             setupSeriesSwiper();
-            setEqualSeriesCardHeight();
+            //setEqualSeriesCardHeight();
             setCourseBoxRightDisplay();
             preventAccordionToggleForDisabledItems();
             doSeriesAction();

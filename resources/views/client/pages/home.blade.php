@@ -255,7 +255,7 @@
                                             </button>
                                         @endif
                                     </div>
-                                    <div class="course-card-description line-clamp-3">{!! $learning_series->short_description !!}</div>
+                                    <div class="course-card-description line-clamp-2">{!! $learning_series->short_description !!}</div>
                                     <div class="course-card-teacher text-muted w-100 mb-1">{!! $learning_series->description['teacher_description'] ?? '' !!}</div>
                                     <div class="d-flex align-items-center text-primary-color mt-3">
                                         <i class="bi bi-play-circle-fill"></i>
@@ -338,8 +338,8 @@
                                             </button>
                                         @endif
                                     </div>
-                                    <div class="course-card-description line-clamp-3">{!! $exam_series->short_description !!}</div>
-                                    <div class="course-card-teacher text-muted w-100 mb-1">{!! $exam_series->description['teacher_description'] ?? '' !!}</div>
+                                    <div class="course-card-description line-clamp-2">{!! $exam_series->short_description !!}</div>
+                                    <div class="course-card-teacher text-muted w-100 mb-1 line-clamp-1">{!! $exam_series->description['teacher_description'] ?? '' !!}</div>
                                     <div class="d-flex align-items-center text-primary-color mt-3">
                                         <i class="bi bi-play-circle-fill"></i>
                                         <span class="ms-2">{{ $exam_series->content_count }}</span>
@@ -769,11 +769,11 @@
     <script type="module">
         document.addEventListener('DOMContentLoaded', function() {
             setupLearningSeriesSwiper();
-            setEqualSeriesCardHeight('.swiper-learning-series');
+            //setEqualSeriesCardHeight('.swiper-learning-series');
             setCourseBoxRightDisplay('.swiper-learning-series');
 
             setupExamSeriesSwiper();
-            setEqualSeriesCardHeight('.swiper-exam-series');
+            //setEqualSeriesCardHeight('.swiper-exam-series');
             setCourseBoxRightDisplay('.swiper-exam-series');
 
             setTimeout(() => {
@@ -867,9 +867,9 @@
                 }
             });
 
-            $(swiperContainerClass).find('.course-card-teacher').css('min-height', maxTeacherDescripitonHeight + 'px');
-            $(swiperContainerClass).find('.course-card-description').css('min-height', maxShortDescriptionHeight + 'px');
-            $(swiperContainerClass).find('.card-price-container').css('min-height', maxPriceHeight + 'px');
+            $(swiperContainerClass).find('.course-card-teacher').css('min-height', 20 + 'px');
+            $(swiperContainerClass).find('.course-card-description').css('min-height', 40 + 'px');
+            $(swiperContainerClass).find('.card-price-container').css('min-height', 50 + 'px');
         }
 
         const setCourseBoxRightDisplay = (swiperContainerClass) => {
