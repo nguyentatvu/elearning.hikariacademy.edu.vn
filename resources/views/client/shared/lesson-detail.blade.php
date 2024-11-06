@@ -252,9 +252,9 @@
                     });
                 } else if ($('.pronunciation-body').length) {
                     // Set max-height and enable scrolling for exercise content when hidden
-                    $('.pronunciation-body').css({
-                        'height': (studyContentHeight - navTabHeight) + 'px',
-                    });
+                    // $('.pronunciation-body').css({
+                    //     'height': (studyContentHeight - navTabHeight) + 'px',
+                    // });
                 }
             };
         });

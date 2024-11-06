@@ -76,7 +76,7 @@ return [
             'audit' => 'learning-management.lesson.audit',
             'flashcard' => 'learning-management.lesson.flashcard',
             'handwriting' => 'learning-management.lesson.handwriting',
-            //'pronunciation-assessment' => 'learning-management.lesson.pronunciation-assessment'
+            'pronunciation-assessment' => 'learning-management.lesson.pronunciation-assessment'
         ],
     ],
     'redeemed_coin' => [

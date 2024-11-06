@@ -51,6 +51,9 @@ Route::prefix('learning-management')->name('learning-management.')->group(functi
     Route::get('lesson/handwriting/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showHandwriting')
         ->name('lesson.handwriting');
 
+    Route::get('lesson/pronunciation-assessment/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showPronunciation')
+        ->name('lesson.pronunciation-assessment');
+
     Route::post('daily-streak', 'UsersController@dailyStreak')
         ->name('lesson.daily-streak');
 });
