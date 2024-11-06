@@ -68,6 +68,15 @@ class LmsTestController extends Controller
      *             @SWG\Property(property="total_correct_answers", type="integer", example="40"),
      *             @SWG\Property(property="total_question", type="integer", example="73"),
      *             @SWG\Property(property="is_passed", type="boolean", example="true"),
+     *             @SWG\Property(
+     *                 property="correct_answers",
+     *                 type="array",
+     *                 @SWG\Items(
+     *                     type="object",
+     *                     @SWG\Property(property="question", type="string", example="1"),
+     *                     @SWG\Property(property="answer", type="string", example="3")
+     *                 )
+     *             )
      *         )
      *     ),
      *     @SWG\Response(

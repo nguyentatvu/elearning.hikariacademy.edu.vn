@@ -42,10 +42,15 @@ class LmsTestService extends BaseService
         $totalPoint = 0;
         $totalCorrectAnswers = 0;
         $maxPoint = 0;
+        $correctAnswersSummary = [];
 
         foreach ($correctAnswers as $correctAnswer) {
             $answer = $correctAnswer->cau;
             $maxPoint += $correctAnswer->diem;
+            $correctAnswersSummary[] = [
+                'question' => $correctAnswer->cau,
+                'answer' => $correctAnswer->dapan,
+            ];
 
             if (isset($submittedAnswers[$answer]) && $submittedAnswers[$answer] == $correctAnswer->dapan) {
                 $totalPoint += $correctAnswer->diem;
@@ -60,6 +65,7 @@ class LmsTestService extends BaseService
             'total_correct_answers' => $totalCorrectAnswers,
             'total_question' => $totalQuestion,
             'is_passed' => $isPassed,
+            'correct_answers' => $correctAnswersSummary,
         ];
     }
 
