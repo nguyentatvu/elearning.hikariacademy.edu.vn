@@ -302,6 +302,15 @@
   overflow: hidden;
   transition: transform 0.3s ease;
 }
+.course-card .course-card-teacher {
+  min-height: 18px;
+}
+.course-card .course-card-description {
+  min-height: 40px;
+}
+.course-card .card-price-container {
+  min-height: 50px;
+}
 
 .course-card img {
   width: 100%;
@@ -430,9 +439,6 @@
   align-items: center;
   display: flex;
   position: relative;
-}
-.learning-series-list .course-card-description, .exam-series-list .course-card-description {
-  min-height: 40px;
 }
 .learning-series-list .swiper-exam-series,
 .learning-series-list .swiper-learning-series, .exam-series-list .swiper-exam-series,

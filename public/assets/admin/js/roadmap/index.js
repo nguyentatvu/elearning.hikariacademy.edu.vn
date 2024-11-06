@@ -29,6 +29,13 @@ function showCourseRoadmaps(courseId) {
                 $("#courseRoadmapsModal").modal("hide");
                 showRoadmapDetails(course, roadmap.id);
                 makeRoadmapDetailDraggable();
+
+                const roadmapInfo = $("#deleteRoadmapBtn");
+                if (roadmapInfo.length) {
+                    $("html, body").animate({
+                        scrollTop: roadmapInfo.offset().top - 100
+                    }, 500);
+                }
           });
         li.append(viewBtn);
         roadmapList.append(li);
