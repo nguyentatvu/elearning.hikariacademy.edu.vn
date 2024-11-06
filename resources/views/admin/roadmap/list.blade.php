@@ -271,7 +271,7 @@
             </div>
             <!-- Section 2: Roadmap Details -->
             <div class="col-md-12 d-none" id="roadmapDetailsWrapper">
-                <div class="d-flex" style="align-items: center; gap: 10px; padding: 10px 0; justify-content: space-between;">
+                <div class="d-flex" style="align-items: center; gap: 10px; padding: 10px 0; justify-content: space-between;" id="roadmap_info">
                     <div class="d-flex" style="align-items: center;">
                         <h3 style="width: fit-content; margin-right: 10px; margin: 0;">Chi tiết lộ trình:&nbsp;</h3>
                         <span id="roadmapTitle" class="roadmap-title"></span>

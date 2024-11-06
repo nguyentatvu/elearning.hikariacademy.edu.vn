@@ -29,6 +29,13 @@ function showCourseRoadmaps(courseId) {
                 $("#courseRoadmapsModal").modal("hide");
                 showRoadmapDetails(course, roadmap.id);
                 makeRoadmapDetailDraggable();
+
+                const roadmapInfo = $("#roadmap_info");
+                if (roadmapInfo.length) {
+                    $("html, body").animate({
+                        scrollTop: roadmapInfo.offset().top - 100
+                    }, 500);
+                }
           });
         li.append(viewBtn);
         roadmapList.append(li);
@@ -179,6 +186,13 @@ function showRoadmapDetails(course, roadmapId, selectedNewDurationMonths = -1) {
     `);
 
     $('#roadmap_description').text(roadMapDetail?.description ?? '');
+    const roadmapInfo = $("#roadmap_info");
+    if (roadmapInfo.length) {
+        console.log(roadmapInfo);
+        $("html, body").animate({
+            scrollTop: roadmapInfo.offset().top - 100
+        }, 500);
+    }
 }
 
 function showAddLessonModal(courseId, dayNumber) {
