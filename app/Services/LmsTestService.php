@@ -62,6 +62,7 @@ class LmsTestService extends BaseService
 
         return [
             'total_point' => $totalPoint,
+            'max_point' => $maxPoint,
             'total_correct_answers' => $totalCorrectAnswers,
             'total_question' => $totalQuestion,
             'is_passed' => $isPassed,
