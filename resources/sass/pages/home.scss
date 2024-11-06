@@ -298,6 +298,18 @@ $border-color_1: #166ac9;
     overflow: hidden;
     transition: transform 0.3s ease;
   }
+
+  .course-card-teacher {
+    min-height: 18px;
+  }
+
+  .course-card-description {
+    min-height: 40px;
+  }
+
+  .card-price-container {
+    min-height: 50px;
+  }
 }
 .course-card img {
   width: 100%;
@@ -416,10 +428,6 @@ $border-color_1: #166ac9;
   align-items: center;
   display: flex;
   position: relative;
-
-    .course-card-description {
-        min-height: 40px;
-    }
 
     .swiper-exam-series,
     .swiper-learning-series {
