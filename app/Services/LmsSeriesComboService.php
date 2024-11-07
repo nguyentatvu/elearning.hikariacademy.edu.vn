@@ -108,7 +108,7 @@ class LmsSeriesComboService extends BaseService
 
         $series = $series->map(function ($item) use ($onwedPoints) {
             $item->redeemed_amount = $item->redeem_point * config('constant.redeemed_coin.vnd_convert_rate');
-            $item->redeemed_percent = (int) ($item->redeemed_amount / $item->cost * 100);
+            $item->redeemed_percent = (int) ($item->redeemed_amount / $item->actualCost * 100);
             $item->is_payable = $onwedPoints >= $item->redeem_point;
 
             return $item;

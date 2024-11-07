@@ -448,9 +448,11 @@
             $('.main-bar').css('width','100%');
             @if($isValidPayment && !$isFinishedContent)
                 const rewardPoint = calculatePointsForExercise(parameter.gettotalPoint(), {{$count_records}});
-                await earnPointFinishContent('{{$detailContent->id}}', rewardPoint, 'exercise_test');
-                await animateHicoin(rewardPoint);
-                await checkFinishContent();
+                if (rewardPoint > 0) {
+                    await earnPointFinishContent('{{$detailContent->id}}', rewardPoint, 'exercise_test');
+                    await animateHicoin(rewardPoint);
+                    await checkFinishContent();
+                }
                 let lastLogin = '{{ \Carbon\Carbon::parse(Auth::user()->last_login_date)->format('Y-m-d') }}';
                 let today = '{{ \Carbon\Carbon::today()->format('Y-m-d') }}';
 

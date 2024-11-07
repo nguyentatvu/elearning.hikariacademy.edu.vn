@@ -119,7 +119,10 @@ class LmsSeriesComboRepository extends BaseRepository
      */
     public function getRedeemedSeries()
     {
-        $series = $this->model::where('redeem_point', '>', 0)->get();
+        $series = $this->model::query()
+            ->where('delete_status', 0)
+            ->where('redeem_point', '>', 0)
+            ->get();
         return $series;
     }
 
