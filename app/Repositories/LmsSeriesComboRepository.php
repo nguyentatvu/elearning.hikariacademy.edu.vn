@@ -44,7 +44,7 @@ class LmsSeriesComboRepository extends BaseRepository
             })
             ->distinct();
 
-        if (isset($filters['page']) || isset($filter['keyword'])) {
+        if (isset($filters['page']) || isset($filters['keyword'])) {
             $data = $query->paginate(10);
         } else {
             $data = $query->get();

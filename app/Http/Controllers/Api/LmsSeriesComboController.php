@@ -175,7 +175,7 @@ class LmsSeriesComboController extends Controller
         $userId = auth()->guard('api')->user()->id;
         $courses = $this->lmsSeriesComboService->getSeriesCombo($userId, $filters);
 
-        if (isset($filters['page']) || isset($filter['keyword'])) {
+        if (isset($filters['page']) || isset($filters['keyword'])) {
             return SeriesComboResource::collection($courses);
         }
 
