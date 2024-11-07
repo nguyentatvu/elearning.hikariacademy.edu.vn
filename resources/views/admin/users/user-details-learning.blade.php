@@ -131,7 +131,7 @@
 								<div class="media state-media box-ws">
 									<div class="media-body">
 										<p>Số clip đã xem: <span class="text-primary">{{ $video_watched }}</span></p>
-										<p>% hoàn thành: <span class="text-primary">{{ $overall_completion }}%</span></p>
+										{{-- <p>% hoàn thành: <span class="text-primary">{{ $overall_completion }}%</span></p> --}}
 									</div>
 								</div>
 							</div>
@@ -145,7 +145,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="row">
+						<!-- <div class="row">
 							<div class="col-md-6">
 								<div class="panel panel-primary dsPanel">
 									<div class="panel-heading">
@@ -186,7 +186,7 @@
 									</div>
 								</div>
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</div>
 

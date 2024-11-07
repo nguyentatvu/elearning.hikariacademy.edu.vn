@@ -18,7 +18,7 @@ class LmsSeriesComboRepository extends BaseRepository
      */
     public function getSeriesCombo(int $userId, array $filters = [])
     {
-        $data = $this->model::select(
+        $query = $this->model::select(
             'lmsseries_combo.*',
             DB::raw("(SELECT COUNT(id) FROM lmscontents
               WHERE lmscontents.delete_status = 0
@@ -42,8 +42,13 @@ class LmsSeriesComboRepository extends BaseRepository
             ->when(isset($filters['keyword']) && $filters['keyword'], function ($query) use ($filters) {
                 $query->where('lmsseries_combo.title', 'like', '%' . $filters['keyword'] . '%');
             })
-            ->distinct()
-            ->paginate(10);
+            ->distinct();
+
+        if (isset($filters['page']) || isset($filters['keyword'])) {
+            $data = $query->paginate(10);
+        } else {
+            $data = $query->get();
+        }
 
         return $data;
     }

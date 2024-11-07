@@ -296,6 +296,8 @@
   margin: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+  height: 480px;
+  max-height: 480px;
 }
 .course-card:hover {
   transform: scale(1.02);
@@ -305,8 +307,14 @@
 .course-card .course-card-teacher {
   min-height: 18px;
 }
+.course-card .course-card-teacher p {
+  margin-bottom: 0;
+}
 .course-card .course-card-description {
   min-height: 40px;
+}
+.course-card .course-card-description p {
+  margin-bottom: 0;
 }
 .course-card .card-price-container {
   min-height: 50px;

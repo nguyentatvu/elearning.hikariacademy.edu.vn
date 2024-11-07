@@ -168,12 +168,19 @@ class LmsSeriesComboController extends Controller
 
         $filters = [
             'type' => $type ?? null,
-            'keyword' => $request->query('keyword')
+            'keyword' => $request->query('keyword'),
+            'page' => $request->query('page')
         ];
 
         $userId = auth()->guard('api')->user()->id;
         $courses = $this->lmsSeriesComboService->getSeriesCombo($userId, $filters);
 
-        return SeriesComboResource::collection($courses);
+        if (isset($filters['page']) || isset($filters['keyword'])) {
+            return SeriesComboResource::collection($courses);
+        }
+
+        return response()->json([
+            "data" => $courses
+        ],  Response::HTTP_OK);
     }
 }

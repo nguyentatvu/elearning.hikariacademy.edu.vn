@@ -33,6 +33,6 @@ class Controller extends BaseController
 
     public function __construct()
     {
-        App::setLocale('en');
+        App::setLocale('vi');
     }
 }
