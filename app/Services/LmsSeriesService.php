@@ -108,7 +108,9 @@ class LmsSeriesService extends BaseService
             if (!$seriesComboItem->completed_lessons || !$seriesComboItem->total_lessons) {
                 $seriesItem->progressPercent = 0;
             } else {
-                $seriesItem->progressPercent = (int) (($seriesComboItem->completed_lessons / $seriesComboItem->total_lessons) * 100);
+                $percent = $seriesComboItem->completed_lessons > 0 ? (int) (($seriesComboItem->completed_lessons / $seriesComboItem->total_lessons) * 100) : 0;
+                $percent = ($seriesComboItem->completed_lessons / $seriesComboItem->total_lessons) * 100 > 0 && ($seriesComboItem->completed_lessons / $seriesComboItem->total_lessons) * 100 < 1 ? 1 : $percent;
+                $seriesItem->progressPercent = $percent;
                 $seriesItem->progressPercent = empty($seriesItem->progressPercent) ? 1 : $seriesItem->progressPercent;
             }
             $seriesItem->combo_slug = $seriesComboItem->combo_slug ?? '';
