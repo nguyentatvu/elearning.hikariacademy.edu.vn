@@ -230,8 +230,10 @@
                                     @elseif (strtotime($dayEnd) < strtotime(now()))
                                         <p>Hết hạn</p>
                                     @else
+                                    {{-- @php
+                                        dd($item);
+                                    @endphp --}}
                                         @if ($item->user_roadmap !== null &&
-                                            $item->user_roadmap->duration_months !== 0 &&
                                             $item->user_roadmap->duration_months !== null)
                                             <a href="{{ route('learning-management.lesson.show', ['combo_slug' => $item->combo_slug, 'slug' => $item->slug]) }}"
                                                 class="btn btn-primary mb-3 mb-xl-0">

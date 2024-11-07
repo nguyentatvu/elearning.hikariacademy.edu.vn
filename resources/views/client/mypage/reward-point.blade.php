@@ -85,7 +85,7 @@
                                     <img src="{{ asset('images/icons/coin.svg') }}" class="rounded-circle coin-size">
                                 </div>
                             </div>
-                            <div class="line-clamp-4">
+                            <div class="line-clamp-3 redeem-reward__description">
                                 {!! $series->short_description !!}
                             </div>
                             <div class="d-flex align-items-center">

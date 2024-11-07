@@ -125,27 +125,27 @@
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n1', 'Khóa học N1') }}
 		<span class="text-red">*</span>
-		{{Form::select('n1', $n1, $record->n1, ['class'=>'form-control'])}}
+		{{Form::select('n1', $n1, optional($record)->n1, ['class'=>'form-control'])}}
 	</fieldset>
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n2', 'Khóa học N2') }}
 		<span class="text-red">*</span>
-		{{Form::select('n2', $n2, $record->n2, ['class'=>'form-control'])}}
+		{{Form::select('n2', $n2, optional($record)->n2, ['class'=>'form-control'])}}
 	</fieldset>
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n3', 'Khóa học N3') }}
 		<span class="text-red">*</span>
-		{{Form::select('n3', $n3, $record->n3, ['class'=>'form-control'])}}
+		{{Form::select('n3', $n3, optional($record)->n3, ['class'=>'form-control'])}}
 	</fieldset>
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n4', 'Khóa học N4') }}
 		<span class="text-red">*</span>
-		{{Form::select('n4', $n4, $record->n4, ['class'=>'form-control'])}}
+		{{Form::select('n4', $n4, optional($record)->n4, ['class'=>'form-control'])}}
 	</fieldset>
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n5', 'Khóa học N5') }}
 		<span class="text-red">*</span>
-		{{Form::select('n5', $n5, $record->n5, ['class'=>'form-control'])}}
+		{{Form::select('n5', $n5, optional($record)->n5, ['class'=>'form-control'])}}
 	</fieldset>
     <fieldset class="form-group col-md-6">
         {{ Form::label('redeem_point', 'Giảm giá quy đổi (coin * 1000đ)') }}
@@ -155,7 +155,7 @@
 			data-html="true"
 			data-placement="top">
 		</i>
-        {{ Form::number('redeem_point', $value = $record->redeemAmount , $attributes = [
+        {{ Form::number('redeem_point', $value = optional($record)->redeemAmount , $attributes = [
             'class'=>'form-control',
             'min'=>'0',
             'ng-model'=>'redeem_point',
@@ -176,27 +176,27 @@
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n1', 'Khóa luyện thi N1') }}
 		<span class="text-red">*</span>
-		{{Form::select('n1', $en1, $record->n1, ['class'=>'form-control'])}}
+		{{Form::select('n1', $en1, optional($record)->n1, ['class'=>'form-control'])}}
 	</fieldset>
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n2', 'Khóa luyện thi N2') }}
 		<span class="text-red">*</span>
-		{{Form::select('n2', $en2, $record->n2, ['class'=>'form-control'])}}
+		{{Form::select('n2', $en2, optional($record)->n2, ['class'=>'form-control'])}}
 	</fieldset>
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n3', 'Khóa luyện thi N3') }}
 		<span class="text-red">*</span>
-		{{Form::select('n3', $en3, $record->n3, ['class'=>'form-control'])}}
+		{{Form::select('n3', $en3, optional($record)->n3, ['class'=>'form-control'])}}
 	</fieldset>
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n4', 'Khóa luyện thi N4') }}
 		<span class="text-red">*</span>
-		{{Form::select('n4', $en4, $record->n4, ['class'=>'form-control'])}}
+		{{Form::select('n4', $en4, optional($record)->n4, ['class'=>'form-control'])}}
 	</fieldset>
 	<fieldset class="form-group col-md-6">
 		{{ Form::label('n5', 'Khóa luyện thi N5') }}
 		<span class="text-red">*</span>
-		{{Form::select('n5', $en5, $record->n5, ['class'=>'form-control'])}}
+		{{Form::select('n5', $en5, optional($record)->n5, ['class'=>'form-control'])}}
 	</fieldset>
 	<fieldset class="form-group col-md-6">
         {{ Form::label('redeem_point', 'Giảm giá quy đổi (coin * 1000đ)') }}
@@ -206,7 +206,7 @@
 			data-html="true"
 			data-placement="top">
 		</i>
-        {{ Form::number('redeem_point', $record->redeemAmount, $attributes = [
+        {{ Form::number('redeem_point', optional($record)->redeemAmount, $attributes = [
             'class'=>'form-control',
             'min'=>'0',
             'ng-model'=>'redeem_point',
@@ -391,7 +391,7 @@
 
 	</fieldset>
 
-    @php $description = optional($record->description); @endphp
+    @php $description = optional($record)->description; @endphp
 
     <fieldset class="form-group col-md-12">
         <legend>Mô tả chi tiết</legend>
