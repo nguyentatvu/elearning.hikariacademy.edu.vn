@@ -2535,7 +2535,7 @@ try_again:
                     AND lmscontents.lmsseries_id = lmsseries.id ) as total_course"),
             DB::raw("(SELECT COUNT(lms_student_view.id) FROM lms_student_view  
                     join lmscontents on lms_student_view.lmscontent_id = lmscontents.id 
-                    WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) 
+                    WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) AND lms_student_view.finish = 1
                     AND lms_student_view.users_id = users.id AND lmscontents.lmsseries_id = lmsseries.id) 
                     as current_course")
         ])
@@ -2545,7 +2545,14 @@ try_again:
         $organizedRecords = $records->groupBy('user_id')->values()->map(function ($group, $index) {
             $user = $group->first();
             $courses = $group->map(function ($record) {
-                $percent = $record->total_course ? ceil(($record->current_course / $record->total_course) * 100) : 0;
+                if ($record->total_course) {
+                    $percent = $record->current_course > 0 ? (int) (($record->current_course / $record->total_course) * 100) : 0;
+                    $percent = ($record->current_course / $record->total_course) * 100 > 0 && ($record->current_course / $record->total_course) * 100 < 1 ? 1 : $percent;
+                } else {
+                    $percent = 0;
+                }
+
+                //$percent = $record->total_course ? ceil(($record->current_course / $record->total_course) * 100) : 0;
 
                 return [
                     'title' => $record->title,
