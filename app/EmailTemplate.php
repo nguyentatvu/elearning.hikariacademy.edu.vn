@@ -52,6 +52,8 @@ class EmailTemplate extends Model
                 }
             });
 
+            Log::info('[' . now() . ' - ' . $template . '] Gửi mail thành công');
+
             return true;
         } catch (Exception $e) {
             Log::error('Error in sendEmail: ' . $e->getMessage());
