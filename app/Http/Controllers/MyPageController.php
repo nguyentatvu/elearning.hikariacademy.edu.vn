@@ -243,7 +243,47 @@ class MyPageController extends Controller
         $data['view_series_history'] = $this->lmsSeriesService
             ->getHistoryViews(Auth::user()->series_views_history ?? [], Auth::user());
         $data['roadmap_chosen_list'] = $this->userRoadmapService->userChosenRoadmapList(Auth::id() ?? -1);
-        return view('client.mypage.personal', $data);
+
+        return $this->redirectHomePage($data);
+    }
+
+    function redirectHomePage($data) {
+        if (session()->has('logout_successful')) {
+            session()->flash('logout_successful', true);
+            return redirect()->to('home');
+        }
+
+        if (session()->has('logout_successful')) {
+            session()->flash('logout_successful', true);
+            return redirect()->to('home');
+        }
+        if (!Auth::check()) {
+            return redirect()->to('home');
+        }
+
+        if (checkRole(getUserGrade(9))) {
+            return redirect(PREFIX . 'exams/questionbank');
+        }
+        if (checkRole(getUserGrade(7))) {
+            return redirect(PREFIX . 'exams/questionbank');
+        }
+        if (checkRole(getUserGrade(6))) {
+            return redirect(PREFIX . 'mypage/my-personal');
+        }
+        if (checkRole(getUserGrade(5))) {
+            return view('client.mypage.personal', $data);
+        }
+        if (checkRole(getUserGrade(4))) {
+            return redirect(PREFIX . 'parent/class');
+        }
+        if (checkRole(getUserGrade(1))) {
+            return redirect(PREFIX);
+        }
+        if (checkRole(getUserGrade(11))) {
+            return redirect(PREFIX . 'payments-report/online');
+        }
+
+        return redirect()->to('home');
     }
 
     /**
