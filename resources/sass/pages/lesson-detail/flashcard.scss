@@ -83,23 +83,24 @@
 
                     .flashcard-word {
                         grid-row: 1;
-                        font-size: 36px;
+                        font-size: 48px;
                         font-weight: bold;
                         color: #00185e;
+                        text-align: center;
 
                         @include mq(max-sp) {
-                            font-size: 30px;
+                            font-size: 32px;
                         }
                     }
 
                     .flashcard-example {
                         text-align: center;
                         grid-row: 4;
-                        font-size: 16px;
+                        font-size: 20px;
                         color: #00185e;
 
                         @include mq(max-sp) {
-                            font-size: 14px;
+                            font-size: 16px;
                         }
                     }
 
@@ -120,12 +121,13 @@
 
                     .flashcard-meaning {
                         grid-row: 1;
-                        font-size: 36px;
+                        font-size: 52px;
                         font-weight: bold;
                         color: #3e2723;
+                        text-align: center;
 
                         @include mq(max-sp) {
-                            font-size: 30px;
+                            font-size: 36px;
                         }
                     }
 
@@ -152,11 +154,11 @@
                     .flashcard-example {
                         text-align: center;
                         grid-row: 4;
-                        font-size: 16px;
+                        font-size: 20px;
                         color: #bf360c;
 
                         @include mq(max-sp) {
-                            font-size: 14px;
+                            font-size: 16px;
                         }
                     }
 
