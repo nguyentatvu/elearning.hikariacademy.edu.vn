@@ -13,8 +13,8 @@
                 <img src="{{ asset('images/mypage/vnpay.png') }}" alt="vnpay logo">
             </div>
             <div class="payment-method" data-name="Chuyển khoản ngân hàng" data-instruction="instruction_bank_transfer"
-                data-submit="submit_bank_transfer">
-                <span class="bank-card-icon"></span>
+            data-submit="submit_bank_transfer">
+                <img src="{{ asset('images/icons/bank.svg') }}" alt="bank logo">
             </div>
         </div>
         <div class="payment-transactions">
