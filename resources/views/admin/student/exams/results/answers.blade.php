@@ -48,7 +48,7 @@
 
                         <ol class="breadcrumb">
 
-                            <li><a href="{{PREFIX}}"><i class="mdi mdi-home"></i></a> </li>
+                            <li><a href="{{URL_ADMIN_DASHBOARD}}"><i class="mdi mdi-home"></i></a> </li>
 
                             <li><a href="{{URL_STUDENT_ANALYSIS_BY_EXAM.$user_details->slug}}">{{getPhrase('analysis')}}</a></li>
 

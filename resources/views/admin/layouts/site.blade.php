@@ -52,7 +52,7 @@
                         @else
                             class="page-scroll" 
                         @endif
-                        href="{{PREFIX}}">Home</a> 
+                        href="{{URL_ADMIN_DASHBOARD}}">Home</a> 
                     </li>
                      <li> 
                         <a
