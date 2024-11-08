@@ -1354,7 +1354,7 @@ function calculateExpiryDate($createdAt, $time, $monthExtend)
  * @param string $css_class
  * @return string
  */
-function setActiveClass($url, ?string $css_class = 'active')
+function setActiveClass($url, ?string $css_class = 'study-button')
 {
     return request()->is($url) ? $css_class : '';
 }

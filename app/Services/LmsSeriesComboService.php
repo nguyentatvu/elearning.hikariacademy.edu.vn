@@ -189,6 +189,20 @@ class LmsSeriesComboService extends BaseService
     }
 
     /**
+     * Get random series
+     *
+     * @param $type
+     * @return mixed
+     */
+    public function getRandomSeries($limit)
+    {
+        $allComboSeries = $this->repository->getRandomSeries($limit);
+        $this->addInfoToSeriesComboList($allComboSeries);
+
+        return $allComboSeries;
+    }
+
+    /**
      * Add info to series combo list
      *
      * @param $seriesComboList

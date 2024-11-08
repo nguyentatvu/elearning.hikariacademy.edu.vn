@@ -342,7 +342,7 @@ class StudentLmsController extends Controller
                 'users_id' => Auth::id(),
             ]);
 
-        if (!$studentView) {
+        if (!$studentView && Auth::check()) {
             $this->lmsStudentViewService->insert([
                 'lmscontent_id' => $contentId,
                 'users_id' => Auth::id(),

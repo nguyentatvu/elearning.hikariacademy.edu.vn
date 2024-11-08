@@ -180,6 +180,21 @@ class LmsSeriesComboRepository extends BaseRepository
     }
 
     /**
+     * Get random series by type
+     *
+     * @param $type
+     * @return mixed
+     */
+    public function getRandomSeries($limit)
+    {
+        return $this->model::query()
+            ->where('delete_status', 0)
+            ->inRandomOrder()
+            ->take($limit)
+            ->get();
+    }
+
+    /**
      * Get all paid series by type exclude combo series id
      *
      * @param $type
