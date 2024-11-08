@@ -476,6 +476,7 @@
 
             console.log(differences);
             createTooltipForResultLevel1(userResult, assessmentResult, differences);
+            createTooltipForResultLevel2(assessmentResult);
         }
 
         function createTooltipForResultLevel1(userResult, assessmentResult, differences) {
@@ -495,7 +496,8 @@
                         .attr('data-bs-placement', 'top')
                         .attr('data-bs-custom-class', 'custom-tooltip')
                         .attr('data-bs-html', 'true')
-                        .attr('data-bs-title', `Bạn đã phát âm sai thành: <span class='text-danger'>${userText}</span>`);
+                        .attr('data-bs-title',
+                            `Bạn đã phát âm sai thành: <span class='text-danger'>${userText}</span>`);
                 } else {
                     span.addClass('correct')
                         .attr('data-bs-toggle', 'tooltip')
@@ -511,8 +513,59 @@
             $('[data-bs-toggle="tooltip"]').tooltip();
         }
 
-        function createTooltipForResultLevel2() {
+        function createTooltipForResultLevel2(assessmentResult) {
+            $('#resultl_level_2_assessment').empty();
 
+            $.each(assessmentResult, function(i, assessmentItem) {
+                let tooltipText = '';
+
+                let span = $('<span></span>')
+                    .addClass('char-assessment intonation-error')
+                    .text(assessmentItem.word);
+
+                if (assessmentItem.pearsonr_value > 0) {
+                    if (assessmentItem.speech_time_difference >= -0.2 && assessmentItem.speech_time_difference <=
+                        0.2) {
+                        span.addClass('correct');
+                        span.removeClass('intonation-error');
+                        tooltipText = "Bạn làm rất tốt! Cao độ và độ dài âm đều khớp, cứ tiếp tục phát huy nhé!";
+                    } else if (assessmentItem.speech_time_difference < -0.2) {
+                        tooltipText = "Cao độ của bạn chuẩn rồi! Thử kéo dài âm thêm chút nữa cho hoàn hảo nhé!";
+                    } else if (assessmentItem.speech_time_difference > 0.2) {
+                        tooltipText = "Bạn phát âm rất đúng cao độ! Thử nói ngắn lại một chút để độ dài âm khớp hơn nhé!";
+                    }
+                } else if (assessmentItem.pearsonr_value === 0) {
+                    if (assessmentItem.speech_time_difference >= -0.2 && assessmentItem.speech_time_difference <=
+                        0.2) {
+                        tooltipText = "Cao độ chưa khớp, nhưng độ dài chuẩn rồi! Hãy tập trung điều chỉnh cao độ nhé!";
+                    } else if (assessmentItem.speech_time_difference < -0.2) {
+                        tooltipText = "Cả cao độ và độ dài âm đều cần điều chỉnh một chút. Hãy kéo dài âm thêm chút và điều chỉnh cao độ nhé!";
+                    } else if (assessmentItem.speech_time_difference > 0.2) {
+                        tooltipText = "Bạn cần điều chỉnh lại cao độ và thử nói ngắn hơn một chút để khớp hơn nhé!";
+                    }
+                } else {
+                    if (assessmentItem.speech_time_difference >= -0.2 && assessmentItem.speech_time_difference <=
+                        0.2) {
+                        tooltipText = "Cao độ hơi lệch, nhưng độ dài âm rất ổn! Hãy tập trung luyện thêm về cao độ nhé!";
+                    } else if (assessmentItem.speech_time_difference < -0.2) {
+                        tooltipText = "Cao độ chưa khớp lắm. Bạn cũng có thể kéo dài âm thêm chút để độ dài đạt chuẩn nhé!";
+                    } else if (assessmentItem.speech_time_difference > 0.2) {
+                        tooltipText = "Bạn cần điều chỉnh lại cao độ một chút. Độ dài âm thì gần chuẩn rồi, chỉ cần luyện thêm cao độ thôi!";
+                    }
+                }
+
+                if (tooltipText) {
+                    span.attr('data-bs-toggle', 'tooltip')
+                        .attr('data-bs-placement', 'top')
+                        .attr('data-bs-custom-class', 'custom-tooltip')
+                        .attr('data-bs-title', tooltipText);
+                }
+
+                $('#resultl_level_2_assessment').append(span);
+            });
+
+            // Khởi tạo lại Bootstrap tooltip
+            $('[data-bs-toggle="tooltip"]').tooltip();
         }
 
         function openResultBlock() {
