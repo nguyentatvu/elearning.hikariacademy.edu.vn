@@ -25,7 +25,7 @@
 
 <nav class="navbar navbar-custom bg-primary header-study">
     <div class="container-fluid">
-        <a class="navbar-brand me-2 d-flex align-items-center justify-content-center" href="{{ url('/') }}">
+        <a class="navbar-brand me-2 d-flex align-items-center justify-content-center" href="{{ url()->previous() }}">
             <i class="bi bi-chevron-left"></i>
             <span class="ms-2 d-inline-block">{{ $series->title }}</span>
         </a>

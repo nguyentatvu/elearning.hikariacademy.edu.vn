@@ -42,17 +42,17 @@ class LmsSeries extends Model
 
     public static function getFreeSeries($limit = 0)
     {
-        $records  = LmsSeries::where('show_in_front', 1)
+        $records = LmsSeries::where('show_in_front', 1)
             ->groupby('lms_category_id')
             ->inRandomOrder()
             ->pluck('lms_category_id')
             ->toArray();
         if ($limit > 0) {
 
-            $lms_cats  = LmsCategory::whereIn('id', $records)->limit(6)->get();
+            $lms_cats = LmsCategory::whereIn('id', $records)->limit(6)->get();
         } else {
 
-            $lms_cats  = LmsCategory::whereIn('id', $records)->get();
+            $lms_cats = LmsCategory::whereIn('id', $records)->get();
         }
         return $lms_cats;
     }
@@ -61,7 +61,7 @@ class LmsSeries extends Model
     public function viewContents($limit = '')
     {
 
-        $contents_data   = LmsSeriesData::where('lmsseries_id', $this->id)
+        $contents_data = LmsSeriesData::where('lmsseries_id', $this->id)
             ->pluck('lmscontent_id')
             ->toArray();
 
@@ -69,9 +69,9 @@ class LmsSeries extends Model
 
             if ($limit != '') {
 
-                $contents  = LmsContent::whereIn('id', $contents_data)->paginate($limit);
+                $contents = LmsContent::whereIn('id', $contents_data)->paginate($limit);
             } else {
-                $contents  = LmsContent::whereIn('id', $contents_data)->get();
+                $contents = LmsContent::whereIn('id', $contents_data)->get();
             }
 
             if ($contents)
@@ -102,9 +102,20 @@ class LmsSeries extends Model
         return $this->belongsToMany(User::class, 'lmsseries_teacher', 'lmsseries_id', 'teacher_id');
     }
 
-    public function getHasTrialContentAttribute() {
+    public function getHasTrialContentAttribute()
+    {
         return $this->lmscontents
             ->where('el_try', 1)
             ->count();
+    }
+
+    /**
+     * Define relationship with UserRoadmap
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function userRoadmaps()
+    {
+        return $this->hasMany(UserRoadmap::class, 'lmsseries_id');
     }
 }

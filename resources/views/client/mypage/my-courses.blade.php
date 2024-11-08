@@ -11,7 +11,7 @@
     ];
     ?>
 
-    @section('styles')
+    @section('mypage-styles')
         <link href="{{ asset('css/pages/mypage.css') }}" rel="stylesheet">
         <style>
             .card-aside-img img {

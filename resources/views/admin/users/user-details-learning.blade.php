@@ -48,7 +48,7 @@
 							<div class="col-md-6 col-sm-6">
 								<div class="media state-media box-ws">
 									<div class="media-body">
-										<p>Lộ trình học học viên đang chọn: <span class="text-primary">{{ $learning_path
+										<p>Khoá học học viên đang học: <span class="text-primary">{{ $learning_path
 												}}</span></p>
 									</div>
 								</div>
@@ -65,7 +65,7 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6 col-sm-6">
-								<div class="media state-media box-ws">
+								<div class="media state-media box-ws h-100">
 									<div class="media-body">
 										<p>Bài học sau cùng học viên đã học: <span class="text-primary">{{ $last_lesson
 												}}</span></p>
@@ -140,7 +140,19 @@
 							<div class="col-sm-6">
 								<div class="media state-media box-ws">
 									<div class="media-body">
-										<p>Lộ trình học học viên đang chọn (Tính năng chưa có)</p>
+										<p>Lộ trình học học viên đang chọn</p>
+										<div>
+											@if (isset($data_roadmap_user) && !empty($data_roadmap_user))
+												@foreach ($data_roadmap_user as $roadmap)
+													<div class="text-primary">{{ $roadmap->lmsseries->title }} - {{ $roadmap->duration_months != 0 ? 'Lộ trình '.$roadmap->duration_months.' tháng' : 'Lộ trình tự do' }}</div>
+												@endforeach
+											@else
+												<div class="text-primary">
+													<div>Học viên chưa chọn lộ trình học cho các khóa học.</div>
+													<div>Vui lòng lựa chọn lộ trình phù hợp để bắt đầu hành trình học tập hiệu quả.</div>
+												</div>
+											@endif
+										</div>
 									</div>
 								</div>
 							</div>

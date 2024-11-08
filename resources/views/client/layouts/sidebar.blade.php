@@ -3,7 +3,7 @@
         class="nav nav-pills flex-row mb-auto mx-auto text-center justify-content-center align-items-center">
 
         <li class="sidebar-item nav-item {{ Request::is('home') ? 'active' : '' }}">
-            <a href="/" class="nav-link d-flex flex-column justify-content-center align-items-center"
+            <a href="/" class="nav-link d-flex flex-column justify-content-center align-items-center home-page"
                 title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
                 <div class="sidebar-img-container">
                     <img src="{{ asset('images/icons/Home.svg') }}" alt="" srcset="" class="sidebar-img">
@@ -13,7 +13,7 @@
         </li>
 
         <li class="sidebar-item nav-item {{ Request::is('bai-viet') ? 'active' : '' }}">
-            <a href="{{ route('user-articles.list') }}" class="nav-link d-flex flex-column justify-content-center align-items-center"
+            <a href="{{ route('user-articles.list') }}" class="nav-link d-flex flex-column justify-content-center align-items-center article-page"
                 title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Orders">
                 <div class="sidebar-img-container">
                     <img src="{{ asset('images/icons/News.svg') }}" alt="" srcset="" class="sidebar-img">

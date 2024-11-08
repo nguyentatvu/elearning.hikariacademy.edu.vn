@@ -21,7 +21,13 @@
                                 <div class="price-label">GIÁ ƯU ĐÃI</div>
                                 <div class="text-center mb-2 d-flex">
                                     <span class="currency">VNĐ</span>
-                                    <span class="amount">{{ formatNumber($seriesCombo->cost) }}</span>
+                                    <span class="amount">
+                                        @if (\Carbon\Carbon::parse($seriesCombo->timeto)->isPast())
+                                            {{ formatNumber($seriesCombo->cost) }}
+                                        @else
+                                            {{ formatNumber($seriesCombo->selloff) }}
+                                        @endif
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -41,7 +47,13 @@
                                     onclick="scrollToPurchasedSeriesList()">
                                     <div><i class="bi bi-book me-1"></i>Học ngay</div>
                                 </button>
-                            @elseif ($seriesCombo->cost != 0 && Auth::check() && $isValidPayment && !$is_multiple_combo && !$roadmap_chosen_list[$series->id])
+                            @elseif (
+                                $seriesCombo->cost != 0 &&
+                                    Auth::check() &&
+                                    $isValidPayment &&
+                                    !$is_multiple_combo &&
+                                    !$roadmap_chosen_list[$series->id]
+                            )
                                 {{-- Student has purchased the series combo and it's a single series and student hasn't chosen roadmap --}}
                                 <button class="purchase-btn" id="first_purchase_button"
                                     onclick="openRoadmapSelectionModal({{ $series->id }})">
@@ -111,7 +123,7 @@
                         <div class="accordion" id="accordion_container">
                             @include('client.components.series-introduction-dropdown', [
                                 'contents' => $contents,
-                                'is_roadmap_chosen' => $roadmap_chosen_list[$series->id]
+                                'is_roadmap_chosen' => $roadmap_chosen_list[$series->id],
                             ])
                         </div>
                     </div>
@@ -120,8 +132,7 @@
                             alt="series image">
                         @if ($seriesCombo->cost != 0 && Auth::check() && $isValidPayment && !$roadmap_chosen_list[$series->id])
                             {{-- Student has purchased the series combo and student hasn't chosen roadmap --}}
-                            <button class="btn btn-primary"
-                                onclick="openRoadmapSelectionModal({{ $series->id }})">
+                            <button class="btn btn-primary" onclick="openRoadmapSelectionModal({{ $series->id }})">
                                 Học ngay
                             </button>
                         @elseif ($seriesCombo->cost == 0 || (Auth::check() && $isValidPayment))
@@ -183,7 +194,8 @@
                                 <span class="fw-light short-description">{!! $itemSeries->short_description !!}</span>
                                 <div class="text-center mt-auto">
                                     @if ($roadmap_chosen_list[$itemSeries->id] && $isValidPayment)
-                                        <button class="btn bg-secondary text-white btn-lg px-2 py-1 rounded-pill shadow-sm" style="min-width: 260px;"
+                                        <button class="btn bg-secondary text-white btn-lg px-2 py-1 rounded-pill shadow-sm"
+                                            style="min-width: 260px;"
                                             onclick="window.location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $seriesCombo->slug, 'slug' => $itemSeries->slug]) }}'">
                                             <i class="bi bi-play-circle-fill me-2"></i>
                                             Học ngay
@@ -237,37 +249,48 @@
                         @if (isset($recommended_series->seriesList) && count($recommended_series->seriesList) > 0)
                             <div class="swiper-slide">
                                 <div class="course-card"
-                                    @if ($recommended_series->checkMultipleCombo)
-                                        onclick="location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $recommended_series->slug]) }}'"
+                                    @if ($recommended_series->checkMultipleCombo) onclick="location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $recommended_series->slug]) }}'"
                                     @else
-                                        onclick="location.href='{{ route('series.introduction-detail', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'"
-                                    @endif
-                                >
+                                        onclick="location.href='{{ route('series.introduction-detail', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'" @endif>
                                     <img alt="course image" height="400" width="600"
                                         src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $recommended_series->image) }}" />
                                     <div class="course-card-body">
                                         <div class="course-card-title line-clamp-2">
                                             <h5 class="course-card-text">{{ $recommended_series->title }}</h5>
                                         </div>
-                                        <div class="d-flex justify-content-between gap-2 align-items-center card-price-container mb-1">
+                                        <div
+                                            class="d-flex justify-content-between gap-2 align-items-center card-price-container mb-1">
                                             <div class="d-flex flex-column align-items-baseline">
-                                                <p class="course-card-price mb-0">{{ $recommended_series->actualCost == 0 ? 'Miễn phí' : formatCurrencyVND($recommended_series->actualCost) }}</p>
+                                                <p class="course-card-price mb-0">
+                                                    {{ $recommended_series->actualCost == 0 ? 'Miễn phí' : formatCurrencyVND($recommended_series->actualCost) }}
+                                                </p>
                                                 @if ($recommended_series->checkPromotion)
-                                                    <span class="orginal-price">{{ formatCurrencyVND($recommended_series->cost) }}</span>
+                                                    <span
+                                                        class="orginal-price">{{ formatCurrencyVND($recommended_series->cost) }}</span>
                                                 @endif
                                             </div>
-                                            @if ($recommended_series->seriesList[0]->hasTrialContent && !$recommended_series->checkMultipleCombo && !$recommended_series->valid_payment)
+                                            @if (
+                                                $recommended_series->seriesList[0]->hasTrialContent &&
+                                                    !$recommended_series->checkMultipleCombo &&
+                                                    !$recommended_series->valid_payment)
                                                 <button class="trial-btn btn py-1"
                                                     onclick="event.stopPropagation(); location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'">
                                                     Học thử
                                                 </button>
                                             @endif
                                         </div>
-
-                                        <div class="course-card-description line-clamp-2">{!! $recommended_series->short_description !!}</div>
-                                        <div class="course-card-teacher text-muted w-100 mb-1 line-clamp-1">{!! $recommended_series->description['teacher_description'] ?? '' !!}
+                                        <div>
+                                            <i class="bi bi-calendar-event-fill"></i>
+                                            <span
+                                                class="ms-2 date-duration">Thời hạn: {{ $recommended_series->time }}
+                                                tháng
+                                            </span>
                                         </div>
-                                        <div class="d-flex align-items-center text-primary-color mt-3">
+                                        {{-- <div class="course-card-description line-clamp-2">{!! $recommended_series->short_description !!}</div> --}}
+                                        {{-- <div class="course-card-teacher text-muted w-100 mb-1 line-clamp-1">
+                                            {!! $recommended_series->description['teacher_description'] ?? '' !!}
+                                        </div> --}}
+                                        <div class="d-flex align-items-center mt-2 info-course-card">
                                             <i class="bi bi-play-circle-fill"></i>
                                             <span class="ms-2">{{ $recommended_series->content_count }}</span>
                                             <i class="bi bi-book ms-3"></i>
@@ -287,29 +310,34 @@
                                             @endif --}}
                                         </div>
                                         @if (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) > 1)
-                                            <button class="btn btn-primary w-100 mt-3"
+                                            <button class="btn btn-primary w-100 mt-3 button-custom"
                                                 onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $recommended_series->slug]) . '?series_action=scrollToList' }}'">
                                                 Học ngay
                                             </button>
-                                        @elseif ($recommended_series->cost == 0 || (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) == 1))
-                                            @if (!$recommended_series->checkAllSeriesRoadmapOfSeriesComboChosen($roadmap_chosen_list) && $recommended_series->cost !== 0)
-                                                <button class="btn btn-primary w-100 mt-3"
+                                        @elseif (
+                                            $recommended_series->cost == 0 ||
+                                                (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) == 1))
+                                            @if (
+                                                !$recommended_series->checkAllSeriesRoadmapOfSeriesComboChosen($roadmap_chosen_list) &&
+                                                    $recommended_series->cost !== 0)
+                                                <button class="btn btn-primary w-100 mt-3 button-custom"
                                                     onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) . '?series_action=openRoadmapModal' }}'">
                                                     Học ngay
                                                 </button>
                                             @else
-                                                <button class="btn btn-primary w-100 mt-3"
+                                                <button class="btn btn-primary w-100 mt-3 button-custom"
                                                     onclick="event.stopPropagation(); location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'">
                                                     Học ngay
                                                 </button>
                                             @endif
                                         @elseif (Auth::check())
-                                            <button class="btn btn-primary w-100 mt-3"
+                                            <button class="btn btn-primary w-100 mt-3 button-custom"
                                                 onclick="event.stopPropagation(); location.href='{{ route('payments.lms', $recommended_series->slug) }}'">
                                                 Mua ngay
                                             </button>
                                         @else
-                                            <button class="btn btn-primary w-100 mt-3" onclick="showAuthModalWithStopPropagation(event, true)">
+                                            <button class="btn btn-primary w-100 mt-3 button-custom"
+                                                onclick="showAuthModalWithStopPropagation(event, true)">
                                                 Mua ngay
                                             </button>
                                         @endif
@@ -323,7 +351,8 @@
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
         </div>
-        <div class="modal fade select-roadmap-modal" id="selectRoadmapModal" tabindex="-1" aria-labelledby="selectRoadmapModalLabel" aria-hidden="true">
+        <div class="modal fade select-roadmap-modal" id="selectRoadmapModal" tabindex="-1"
+            aria-labelledby="selectRoadmapModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -331,16 +360,20 @@
                             <img src="{{ asset('images/Logo-hikari.png') }}" alt="Hikari logo" class="modal-logo">
                             <span class="ms-2">Chào mừng bạn đến với Hikari!</span>
                         </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="welcome-container">
-                            <p class="lead mb-4 p-3 border border-primary border-2 rounded-2 bg-light position-relative text-center">
+                            <p
+                                class="lead mb-4 p-3 border border-primary border-2 rounded-2 bg-light position-relative text-center">
                                 <i class="bi bi-stars text-warning me-2"></i>
                                 <span class="fw-bold text-primary">Cùng bắt đầu hành trình học tập nhé!</span>
-                                <img src="{{ asset('images/icons/coin.svg') }}" alt="Coin Icon" class="ms-2 mb-1" width="20">
-                                <svg class="position-absolute start-50 translate-middle next-icon" width="20" height="10">
-                                <polygon points="0,0 10,10 20,0" fill="#0d6efd"/>
+                                <img src="{{ asset('images/icons/coin.svg') }}" alt="Coin Icon" class="ms-2 mb-1"
+                                    width="20">
+                                <svg class="position-absolute start-50 translate-middle next-icon" width="20"
+                                    height="10">
+                                    <polygon points="0,0 10,10 20,0" fill="#0d6efd" />
                                 </svg>
                             </p>
 
@@ -510,34 +543,34 @@
 
             $.ajax({
                 headers: {
-                'X-CSRF-TOKEN': '{{csrf_token()}}'
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 url: '{{ route('series.save-user-roadmap') }}',
                 type: 'post',
                 data: {
-                    series_id : seriesId,
-                    duration_months : selectedRoadmapMonth,
+                    series_id: seriesId,
+                    duration_months: selectedRoadmapMonth,
                     combo_slug: '{{ $seriesCombo->slug }}'
                 },
-                success: function(response){
+                success: function(response) {
                     window.location.href = response.redirect_url;
                 }
             });
         }
 
         const preventAccordionToggleForDisabledItems = () => {
-            $('.accordion-button').on('click', function (e) {
+            $('.accordion-button').on('click', function(e) {
                 if ($(this).closest('.accordion-item').hasClass('disabled')) {
                     e.stopPropagation();
                     e.preventDefault();
                 }
             });
 
-            $('.accordion-item.disabled > a').on('click', function (e) {
+            $('.accordion-item.disabled > a').on('click', function(e) {
                 e.preventDefault();
             });
 
-            $('#accordion_container').on('show.bs.collapse', function (e) {
+            $('#accordion_container').on('show.bs.collapse', function(e) {
                 if ($(e.target).closest('.accordion-item').hasClass('disabled')) {
                     e.preventDefault();
                 }

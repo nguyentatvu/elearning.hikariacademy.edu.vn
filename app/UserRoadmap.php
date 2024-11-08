@@ -13,4 +13,14 @@ class UserRoadmap extends Model
         'lmsseries_id',
         'duration_months'
     ];
+
+    /**
+     * Define relationship with LmsSeries
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function lmsSeries()
+    {
+        return $this->belongsTo(LmsSeries::class, 'lmsseries_id');
+    }
 }
