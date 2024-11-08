@@ -761,6 +761,11 @@
 @section('scripts')
     <script src="{{ asset('js/plugins/swiperjs/swiper-bundle.min.js') }}"></script>
     <script>
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
         function showAuthModalWithStopPropagation(event, isLogin = true) {
             event.stopPropagation();
             showAuthModal(isLogin);
