@@ -20,7 +20,7 @@
 
 					<ol class="breadcrumb">
 
-						<li><a href="{{PREFIX}}"><i class="mdi mdi-home"></i></a> </li>
+						<li><a href="{{URL_ADMIN_DASHBOARD}}"><i class="mdi mdi-home"></i></a> </li>
 
 						<li><a href="{{URL_EXAM_SERIES}}">Bộ đề thi</a></li>
 

@@ -6,7 +6,7 @@
     <div class="row">
       <div class="col-lg-12">
         <ol class="breadcrumb">
-          <li><a href="{{PREFIX}}"><i class="mdi mdi-home"></i></a> </li>
+          <li><a href="{{URL_ADMIN_DASHBOARD}}"><i class="mdi mdi-home"></i></a> </li>
           <li> <a href="{{URL_STUDENT_EXAM_SERIES_LIST}}">Bộ đề thi</a> </li>
           <li class="active"><?php echo $title; ?></li>
         </ol>

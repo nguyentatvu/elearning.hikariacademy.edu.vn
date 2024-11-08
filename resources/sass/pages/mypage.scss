@@ -288,6 +288,14 @@
         color: black;
         font-size: 18px;
     }
+
+    &__description {
+        min-height: 63px;
+
+        & > * {
+            margin-bottom: 0px !important;
+    }
+    }
 }
 
 .dark-overlay {

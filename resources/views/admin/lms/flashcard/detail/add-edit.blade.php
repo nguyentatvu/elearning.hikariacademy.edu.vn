@@ -7,7 +7,7 @@
             <div class="col-lg-12">
                 <ol class="breadcrumb">
                     <li>
-                        <a href="{{PREFIX}}">
+                        <a href="{{URL_ADMIN_DASHBOARD}}">
                             <i class="mdi mdi-home">
                             </i>
                         </a>
