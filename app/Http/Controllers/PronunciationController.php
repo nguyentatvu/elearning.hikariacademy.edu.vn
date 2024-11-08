@@ -36,7 +36,7 @@ class PronunciationController extends Controller
                 return redirect('/');
             }
             return $next($request);
-        });
+        })->except('assess');
         $this->pronunciationService = $pronunciationService;
         $this->pronunciationDetailService = $pronunciationDetailService;
         $this->intonationService = $intonationService;
@@ -45,14 +45,26 @@ class PronunciationController extends Controller
 
     public function assess(Request $request)
     {
-        $data = $request->only(['audio_file', 'pronunciation_detail_id']);
-        $result = [];
-        $userIntonations = $this->pronunciationService->getIntonation($data['audio_file']);
-        $sampleIntonations = $this->intonationService->getAllByConditions([
-            'pronunciation_detail_id' => $data['pronunciation_detail_id']
+        $request->validate([
+            'user_file' => 'file|mimes:mp3,wav|max:2048',
+            'sample_file' => 'file|mimes:mp3,wav|max:2048'
         ]);
-        $result['user_intonations'] = $userIntonations['intonations'];
-        $result['sample_intonations'] = IntonationResource::collection($sampleIntonations);
+
+        $data = $request->only(['user_file', 'sample_file', 'pronunciation_detail_id']);
+        $assessmentResult = $this->pronunciationDetailService->assess($data);
+
+        if (!$assessmentResult) {
+            return response()->json([
+                'message' => 'Có lỗi xảy ra'
+            ], 500);
+        }
+
+        $userResult = $assessmentResult['user_result'];
+        $assessmentResult = $assessmentResult['assessment_results'];
+        $result = [
+            'user_result' => $userResult['words'],
+            'assessment_results' => $assessmentResult
+        ];
 
         return response()->json($result);
     }
@@ -336,9 +348,10 @@ class PronunciationController extends Controller
      */
     public function uploadAudio(Request $request, int $pronunciationId, int $detailId)
     {
+        DB::beginTransaction();
         try {
             $request->validate([
-                'audio' => 'required|file|mimes:mp3,wav|max:10240' // 10MB max
+                'audio' => 'required|file|mimes:mp3,wav|max:2048'
             ]);
 
             if (!$request->hasFile('audio')) {
@@ -368,10 +381,15 @@ class PronunciationController extends Controller
                 unlink(public_path($detail->audio));
             }
 
+            // CAll Api Speech to text
+            $this->pronunciationDetailService->uploadAudioFileToGetIntonations($file, $detailId);
+
             $relativePath = $this->storeAudio($file, $filename, $path);
 
             $detail->audio = $relativePath;
             $detail->save();
+
+            DB::commit();
 
             return response()->json([
                 'success' => true,
@@ -379,7 +397,7 @@ class PronunciationController extends Controller
             ]);
         } catch (\Exception $e) {
             Log::error('Audio upload error: ' . $e->getMessage());
-
+            DB::rollBack();
             if ($newFilePath && file_exists($newFilePath)) {
                 unlink($newFilePath);
             }

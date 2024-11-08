@@ -101,8 +101,8 @@ return [
     ],
     'pronunciation' => [
         'endpoint' => [
-            'upload' => $pronunciationUrl . '/upload',
-            'get-intonation' => $pronunciationUrl . '/get-intonation'
+            'upload' => $pronunciationUrl . '/speech-to-text/',
+            'assessment' => $pronunciationUrl . '/assessment/'
         ],
         'comment' => [
             'excellent' => [

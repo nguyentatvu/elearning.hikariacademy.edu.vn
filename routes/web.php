@@ -1374,6 +1374,7 @@ Route::prefix('lms')
                 Route::get('{id}/edit', 'PronunciationController@edit')->name('edit');
                 Route::patch('{id}/edit', 'PronunciationController@update')->name('update');
                 Route::delete('delete/{id}', 'PronunciationController@delete')->name('delete');
+                Route::post('assess', 'PronunciationController@assess')->name('assess');
 
                 Route::prefix('{id}/detail')
                     ->name('detail.')
@@ -1530,14 +1531,6 @@ Route::prefix('bai-viet')
             ->name('list_by_category');
         Route::get('/{article_slug}', 'UserArticleController@detail')
             ->name('detail');
-    });
-
-
-Route::prefix('pronunciation')
-    ->name('pronunciation.')
-    ->group(function () {
-        Route::post('', 'PronunciationController@assess')
-            ->name('assess');
     });
 
 // Banner page

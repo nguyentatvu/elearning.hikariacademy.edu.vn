@@ -128,8 +128,7 @@
                     </div>
                     <div id="pronunciation_audio" class="pronunciation-audio">
                         <div class="pronunciation-bot">
-                            <button class="btn btn-primary"
-                                onclick="playSound('{{ asset($pronunciationDetails[0]->audio) }}')">
+                            <button class="btn btn-primary" id="play_sound_btn">
                                 <i class="bi bi-volume-up"></i>
                             </button>
                         </div>
@@ -171,6 +170,7 @@
             return new bootstrap.Tooltip(tooltipTriggerEl)
         })
         const pronunciationDetail = @json($pronunciationDetails);
+        let pronunciationDetailId;
         let resultDetailText = $('#result_detail_text');
         let totalScore;
         let pronunciationComment = @json(config('constant.pronunciation.comment'));
@@ -193,12 +193,11 @@
         let recordBtn = $('#record');
         let reloadBtn = $('#reload');
         let playRecordBtn = $('#play_record');
+        let playSoundBtn = $('#play_sound_btn');
+        let sampleAudio;
         let instruction = $('#instruction');
         let sentence = "";
         let correctIndices = [];
-        const pronunciationAssessmentUrl = "{{ env('PRONUNCIATION_ASSESSMENT_URL') }}"
-
-        const testSrc = "{{ asset($pronunciationDetails[0]->audio) }}";
 
         $(document).ready(function() {
             audioWaveform.css('display', 'none');
@@ -206,6 +205,7 @@
             console.log(sentence)
             handleArrowLeftEvent();
             handleArrowRightEvent();
+            updatePageNumber(1);
 
             if (/Mobi|Android/i.test(navigator.userAgent)) {
                 instruction.text = "Nhấn vào từng ký tự để xem đánh giá";
@@ -213,6 +213,10 @@
 
             reloadBtn.on('click', function() {
                 closeResultBlock();
+            });
+
+            playSoundBtn.on('click', function() {
+                playSound(sampleAudio);
             });
         })
 
@@ -223,7 +227,7 @@
             if (mediaRecorder && mediaRecorder.state === 'recording') {
                 mediaRecorder.stop();
                 console.log("stop record: ", mediaRecorder)
-                handlePausing();
+                stopRecording();
             } else {
                 try {
                     // const stream = await navigator.mediaDevices.getUserMedia({
@@ -277,7 +281,7 @@
                     });
                     //processAudio(audioBlob)
                     //uploadAudioFromSrc(testSrc);
-                    const audioUrl = URL.createObjectURL(audioBlob);
+                    //const audioUrl = URL.createObjectURL(audioBlob);
 
                 });
 
@@ -298,8 +302,10 @@
             gumStream.getAudioTracks()[0].stop();
             isRecording = false;
             handleAssessment();
-            // rec.exportWAV(processBlob);
-            uploadAudioFromSrc(testSrc);
+            rec.exportWAV((userBlob) => {
+                uploadAudioAndSample(userBlob, sampleAudio);
+            });
+            //uploadAudioFromSrc(testSrc);
             //processAudio(audioBlob);
         }
 
@@ -356,13 +362,15 @@
             audioWaveformTitle.text('Đang xử lí, xin vui lòng chờ 1 chút !');
             $('#record i').removeClass('bi-pause-circle').addClass('bi-mic');
             recordBtn.prop('disabled', true);
-
-
-            displayResult();
         }
 
-        function displayResult() {
+        function displayResult(data) {
+            handleResult(data);
             openResultBlock();
+        }
+
+        function handleResult(data) {
+            userResult = data['user_result'];
         }
 
         function openResultBlock() {
@@ -391,8 +399,16 @@
          */
         function updatePageNumber(number) {
             $('#current_page').text(number)
+            updatePronunciationAssessmentLesson(number - 1)
             arrowLeft.toggleClass('disabled', number === 1);
             arrowRight.toggleClass('disabled', number === total);
+        }
+
+        function updatePronunciationAssessmentLesson(index) {
+            pronunciationDetailId = pronunciationDetail[index].id;
+            pronunciationTextTitle.text(pronunciationDetail[index].text);
+            audioPath = pronunciationDetail[index].audio
+            sampleAudio = `{{ asset('${audioPath}') }}`;
         }
 
         /**
@@ -402,6 +418,7 @@
             arrowLeft.on('click', function() {
                 if (currentIndex > 1) {
                     currentIndex--;
+                    closeResultBlock();
                     updatePageNumber(currentIndex);
                 }
             });
@@ -414,6 +431,7 @@
             arrowRight.on('click', function() {
                 if (currentIndex < total) {
                     currentIndex++;
+                    closeResultBlock();
                     updatePageNumber(currentIndex);
                 }
             });
@@ -443,11 +461,12 @@
             handleTooltipIncorrect();
         }
 
-        const processBlob = (blob) => {
+        const processBlob = (userBlob, sampleBlob, sampleName) => {
             let formData = new FormData();
             let filename = new Date().toISOString() + ".wav";
-            formData.append("audio_file", blob, filename);
-            formData.append("pronunciation_detail_id", 1)
+            formData.append("user_file", userBlob, filename);
+            formData.append("sample_file", sampleBlob, sampleName);
+            formData.append("pronunciation_detail_id", pronunciationDetailId)
             formData.forEach((value, key) => {
                 console.log(key + ':', value);
             });
@@ -456,7 +475,7 @@
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                url: "{{ route('pronunciation.assess') }}",
+                url: "{{ route('lms.pronunciation_assessment.assess') }}",
                 type: 'post',
                 dataType: 'json',
                 contentType: false,
@@ -464,55 +483,66 @@
                 data: formData,
                 success: function(response) {
                     console.log(response);
-                    calcResult(response);
+                    displayResult(response);
                 },
-                error: function(response) {
-                    console.log(response)
+                error: function(xhr, error) {
+                    console.error('Error occurred:');
+                    console.error('Error message:', error);
+                    audioWaveform.css('display', 'none');
+                    Swal.fire("Lỗi", "Hệ thống không thể nhận diện rõ ràng giọng nói của bạn. Vui lòng nói rõ hơn hoặc kiểm tra thiết bị ghi âm của bạn.", "error");
+                    recordBtn.prop('disabled', false);
                 },
-                complete: function() {
-                    const audioUrl = URL.createObjectURL(blob);
-                    audioBlob = blob;
-                    displayResult();
-                }
             });
         }
 
-        function uploadAudioFromSrc(audioSrc) {
-            fetch(audioSrc)
+        function uploadAudioAndSample(userBlob, sampleAudioPath) {
+            fetch(sampleAudioPath)
                 .then(response => response.blob())
-                .then(blob => {
-                    let formData = new FormData();
-                    let filename = new Date().toISOString() + ".wav";
-                    formData.append("audio_file", blob, filename);
-                    formData.append("pronunciation_detail_id", 1)
-                    console.log(22);
-                    formData.forEach((value, key) => {
-                        console.log(key + ':', value);
-                    });
-                    $.ajax({
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        },
-                        url: "{{ route('pronunciation.assess') }}",
-                        type: 'post',
-                        dataType: "json",
-                        data: formData,
-                        contentType: false,
-                        processData: false,
-                        success: function(response) {
-                            console.log(response);
-                            audioWaveform.css('display', 'none');
-                            playRecordBtn.prop('disabled', false);
-                            recordBtn.prop('disabled', false);
-                            calcResult(response);
-                        },
-                        error: function(response) {
-                            console.log("Error uploading file");
-                        }
-                    });
+                .then(sampleBlob => {
+                    let sampleName = sampleAudioPath.split('/').pop();
+                    processBlob(userBlob, sampleBlob, sampleName);
                 })
-                .catch(error => console.error('Error fetching audio:', error));
+                .catch(error => {
+                    console.error('Error checking audio files:', error);
+                });
         }
+
+        // function uploadAudioFromSrc(audioSrc) {
+        //     fetch(audioSrc)
+        //         .then(response => response.blob())
+        //         .then(blob => {
+        //             let formData = new FormData();
+        //             let filename = new Date().toISOString() + ".wav";
+        //             formData.append("audio_file", blob, filename);
+        //             formData.append("pronunciation_detail_id", 1)
+        //             console.log(22);
+        //             formData.forEach((value, key) => {
+        //                 console.log(key + ':', value);
+        //             });
+        //             $.ajax({
+        //                 headers: {
+        //                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
+        //                 },
+        //                 url: "{{ route('lms.pronunciation_assessment.assess') }}",
+        //                 type: 'post',
+        //                 dataType: "json",
+        //                 data: formData,
+        //                 contentType: false,
+        //                 processData: false,
+        //                 success: function(response) {
+        //                     console.log(response);
+        //                     audioWaveform.css('display', 'none');
+        //                     playRecordBtn.prop('disabled', false);
+        //                     recordBtn.prop('disabled', false);
+        //                     calcResult(response);
+        //                 },
+        //                 error: function(response) {
+        //                     console.log("Error uploading file");
+        //                 }
+        //             });
+        //         })
+        //         .catch(error => console.error('Error fetching audio:', error));
+        // }
 
         function handleTooltipIncorrect() {
             $('.text-result.incorrect').each(function() {
