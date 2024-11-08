@@ -67,8 +67,9 @@
                         <div id="student_speech_result" class="student-speech-result">
                             <div class="result-level d-flex flex-column justify-content-center align-tiems-center">
                                 <div id="resultl_level_1" class="pronunciation-result">
-                                    <h3 class="text-center">Kết quả đánh giá phát âm từng từ</h3>
-                                    <div class="d-flex justify-content-center gap-2 ps-2 pe-2">
+                                    <h3 class="text-center">Kết quả đánh giá phát âm</h3>
+                                    <div id="resultl_level_1_assessment"
+                                        class="d-flex justify-content-center gap-2 ps-2 pe-2">
                                         <span class="char-assessment correct" data-bs-toggle="tooltip"
                                             data-bs-placement="top" data-bs-custom-class="custom-tooltip"
                                             data-bs-title="Correct: 東">東</span>
@@ -96,7 +97,8 @@
                                 </div>
                                 <div id="result_level_2" class="pronunciation-result">
                                     <h3 class="text-center">Kết quả đánh giá ngữ điệu câu</h3>
-                                    <div class="d-flex justify-content-center gap-2 ps-2 pe-2">
+                                    <div id="resultl_level_2_assessment"
+                                        class="d-flex justify-content-center gap-2 ps-2 pe-2">
                                         <span class="char-assessment correct" data-bs-toggle="tooltip"
                                             data-bs-placement="top" data-bs-custom-class="custom-tooltip"
                                             data-bs-title="Correct: 東">東</span>
@@ -302,9 +304,10 @@
             gumStream.getAudioTracks()[0].stop();
             isRecording = false;
             handleAssessment();
-            rec.exportWAV((userBlob) => {
-                uploadAudioAndSample(userBlob, sampleAudio);
-            });
+            displayResult(1);
+            // rec.exportWAV((userBlob) => {
+            //     uploadAudioAndSample(userBlob, sampleAudio);
+            // });
             //uploadAudioFromSrc(testSrc);
             //processAudio(audioBlob);
         }
@@ -370,7 +373,146 @@
         }
 
         function handleResult(data) {
-            userResult = data['user_result'];
+            // let userResult = data['user_result'];
+            // let assessmentResult = data['assessment_results'];
+            let userResult = [{
+                    "text": "お",
+                    "start": 0,
+                    "end": 0.7199999690055847
+                },
+                {
+                    "text": "や",
+                    "start": 0.7199999690055847,
+                    "end": 0.9599999785423279
+                },
+                {
+                    "text": "す",
+                    "start": 0.9599999785423279,
+                    "end": 1.159999966621399
+                },
+                {
+                    "text": "み",
+                    "start": 1.159999966621399,
+                    "end": 1.399999976158142
+                },
+                {
+                    "text": "な",
+                    "start": 1.399999976158142,
+                    "end": 1.6399999856948853
+                },
+                {
+                    "text": "で",
+                    "start": 1.6399999856948853,
+                    "end": 1.7999999523162842
+                },
+                {
+                    "text": "い",
+                    "start": 1.7999999523162842,
+                    "end": 2.784
+                }
+            ];
+
+            let assessmentResult = [{
+                    "word": "東",
+                    "speech_time_difference": 0,
+                    "pearsonr_value": 0
+                },
+                {
+                    "word": "京",
+                    "speech_time_difference": -0.128,
+                    "pearsonr_value": 0
+                },
+                {
+                    "word": "は",
+                    "speech_time_difference": -0.224,
+                    "pearsonr_value": -0.1517995489436796
+                },
+                {
+                    "word": "晴",
+                    "speech_time_difference": 0.064,
+                    "pearsonr_value": 0
+                },
+                {
+                    "word": "れ",
+                    "speech_time_difference": 0.032,
+                    "pearsonr_value": -0.9975028291170049
+                },
+                {
+                    "word": "で",
+                    "speech_time_difference": -0.064,
+                    "pearsonr_value": 0.8868574327733133
+                },
+                {
+                    "word": "し",
+                    "speech_time_difference": 0,
+                    "pearsonr_value": 0.9709707675800048
+                }
+            ];
+            handleWrongWords(userResult, assessmentResult);
+        }
+
+        function handleWrongWords(userResult, assessmentResult) {
+            const maxLength = Math.max(userResult.length, assessmentResult.length);
+            let differences = [];
+
+            for (let i = 0; i < maxLength; i++) {
+                if (!userResult[i] || !assessmentResult[i]) {
+                    differences.push({
+                        index: i,
+                        userText: userResult[i] ? userResult[i].text : null,
+                        assessmentWord: assessmentResult[i] ? assessmentResult[i].word : null
+                    });
+                    continue;
+                }
+
+                if (userResult[i].text !== assessmentResult[i].word) {
+                    differences.push({
+                        index: i,
+                        userText: userResult[i].text,
+                        assessmentWord: assessmentResult[i].word
+                    });
+                }
+            }
+
+            console.log(differences);
+            createTooltipForResultLevel1(userResult, assessmentResult, differences);
+        }
+
+        function createTooltipForResultLevel1(userResult, assessmentResult, differences) {
+            $('#resultl_level_1_assessment').empty();
+
+            $.each(assessmentResult, function(i, assessmentItem) {
+                const difference = differences.find(diff => diff.index === i);
+                const userText = userResult[i]?.text || '';
+
+                let span = $('<span></span>')
+                    .addClass('char-assessment')
+                    .text(assessmentItem.word);
+
+                if (difference) {
+                    span.addClass('incorrect')
+                        .attr('data-bs-toggle', 'tooltip')
+                        .attr('data-bs-placement', 'top')
+                        .attr('data-bs-custom-class', 'custom-tooltip')
+                        .attr('data-bs-html', 'true')
+                        .attr('data-bs-title', `Bạn đã phát âm sai thành: <span class='text-danger'>${userText}</span>`);
+                } else {
+                    span.addClass('correct')
+                        .attr('data-bs-toggle', 'tooltip')
+                        .attr('data-bs-placement', 'top')
+                        .attr('data-bs-custom-class', 'custom-tooltip')
+                        .attr('data-bs-html', 'true')
+                        .attr('data-bs-title', `Tuyệt vời! Bạn phát âm rất chuẩn!`);
+                }
+
+                $('#resultl_level_1_assessment').append(span);
+            });
+
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        }
+
+        function createTooltipForResultLevel2() {
+
         }
 
         function openResultBlock() {
@@ -489,7 +631,9 @@
                     console.error('Error occurred:');
                     console.error('Error message:', error);
                     audioWaveform.css('display', 'none');
-                    Swal.fire("Lỗi", "Hệ thống không thể nhận diện rõ ràng giọng nói của bạn. Vui lòng nói rõ hơn hoặc kiểm tra thiết bị ghi âm của bạn.", "error");
+                    Swal.fire("Lỗi",
+                        "Hệ thống không thể nhận diện rõ ràng giọng nói của bạn. Vui lòng nói rõ hơn hoặc kiểm tra thiết bị ghi âm của bạn.",
+                        "error");
                     recordBtn.prop('disabled', false);
                 },
             });
