@@ -20,6 +20,8 @@ define('SITE_URL', $base_home);
 
 define('URL_USERS_DASHBOARD', $base_home);
 
+define('URL_ADMIN_DASHBOARD', $base . 'dashboard');
+
 
 //Design Source File Paths
 

@@ -20,7 +20,7 @@
 		{{--<div class="row">
 			<div class="col-lg-12">
 				<ol class="breadcrumb">
-					<li><a href="{{PREFIX}}"><i class="mdi mdi-home"></i></a> </li>
+					<li><a href="{{URL_ADMIN_DASHBOARD}}"><i class="mdi mdi-home"></i></a> </li>
 					<li><a href="{{URL_STUDENT_EXAM_ATTEMPTS_FINISH.$user->slug}}">Lịch sử bài thi</a></li>
 					<li>{{ $de_thi}}</li>
 				</ol>
@@ -31,7 +31,7 @@
 
 			<ol class="breadcrumb breadcrumb-custom bg-inverse-info">
 
-				<li class="breadcrumb-item"><a href="{{PREFIX}}"><i class="mdi mdi-home menu-icon"></i></a></li>
+				<li class="breadcrumb-item"><a href="{{URL_ADMIN_DASHBOARD}}"><i class="mdi mdi-home menu-icon"></i></a></li>
 
 				<li class="breadcrumb-item"><a href="{{URL_STUDENT_EXAM_ATTEMPTS_FINISH.$user->slug}}">Lịch sử bài thi</a></li>
 

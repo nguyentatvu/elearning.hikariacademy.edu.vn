@@ -14,7 +14,7 @@
 
 						<ol class="breadcrumb">
 
-							<li><a href="{{PREFIX}}"><i class="mdi mdi-home"></i></a> </li>
+							<li><a href="{{URL_ADMIN_DASHBOARD}}"><i class="mdi mdi-home"></i></a> </li>
 
 							<li><a href="{{URL_QUIZ_QUESTIONBANK}}">Ngân hàng câu hỏi</a></li>
 

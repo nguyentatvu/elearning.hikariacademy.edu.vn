@@ -11,7 +11,7 @@
                     <div class="pull-right hidden-xs">
                         <div class="bread">
                             <ol class="breadcrumb">
-                                <li><a href="{{PREFIX}}">Home</a></li>
+                                <li><a href="{{URL_ADMIN_DASHBOARD}}">Home</a></li>
                                 <li class="active">Category</li>
                             </ol>
                         </div>

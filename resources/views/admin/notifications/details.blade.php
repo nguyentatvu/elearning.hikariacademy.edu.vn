@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <ol class="breadcrumb">
-                            <li><a href="{{PREFIX}}"><i class="mdi mdi-home"></i></a> </li>
+                            <li><a href="{{URL_ADMIN_DASHBOARD}}"><i class="mdi mdi-home"></i></a> </li>
                             <li><a href="{{URL_NOTIFICATIONS}}"><!-- {{getPhrase('notifications')}} -->Thông báo</a></li>
                             <li>{{$notification->title}}</li>
                         </ol>
