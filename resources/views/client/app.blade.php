@@ -345,31 +345,32 @@
 </head>
 
 <body>
-
-    <div class="robot-guide">
-        <div class="robot-head">
-            <div class="face-screen">
-                <div class="eyes">
-                    <div class="eye left"></div>
-                    <div class="eye right"></div>
+    @if (request()->is('/'))
+        <div class="robot-guide">
+            <div class="robot-head">
+                <div class="face-screen">
+                    <div class="eyes">
+                        <div class="eye left"></div>
+                        <div class="eye right"></div>
+                    </div>
+                    <div class="cheek left"></div>
+                    <div class="cheek right"></div>
+                    <div class="mouth"></div>
                 </div>
-                <div class="cheek left"></div>
-                <div class="cheek right"></div>
-                <div class="mouth"></div>
             </div>
-        </div>
-        {{-- <div class="robot-body">
+            {{-- <div class="robot-body">
             <div class="chest-screen">
                 <div class="heart">❤️</div>
             </div>
         </div> --}}
-        <button id="toggle_assistant" class="toggle-assistant button-toogle-robot">
-            Ẩn hướng dẫn
-        </button>
-    </div>
-    <div class="speech-bubble" id="robot-speech">
+            <button id="toggle_assistant" class="toggle-assistant button-toogle-robot">
+                Ẩn hướng dẫn
+            </button>
+        </div>
+        <div class="speech-bubble" id="robot-speech">
+        </div>
+    @endif
 
-    </div>
     <div class="layout-wrapper">
         @if (!Request::is('detail*'))
             <header id="header">
@@ -413,12 +414,14 @@
     <script src="{{ asset('js/client/common.js') }}"></script>
     <script>
         $(document).ready(function() {
-            let isHidden = false;
-            let isHiddenRobot = false;
+            let isHiddenRobot = localStorage.getItem('robotHidden') === 'true'; // Retrieve state from localStorage
 
             // Toggle function to show or hide assistant
             function toggleAssistant() {
                 isHiddenRobot = !isHiddenRobot;
+
+                // Save the new state to localStorage
+                localStorage.setItem('robotHidden', isHiddenRobot);
 
                 if (isHiddenRobot) {
                     $('.robot-head').hide(); // Hide the robot
@@ -429,6 +432,17 @@
                     $('#robot-speech').show(); // Show the speech bubble
                     $('#toggle_assistant').text('Ẩn hướng dẫn');
                 }
+            }
+
+            // Set initial visibility based on localStorage
+            if (isHiddenRobot) {
+                $('.robot-head').hide(); // Hide the robot if the state is stored as hidden
+                $('#robot-speech').hide(); // Hide the speech bubble
+                $('#toggle_assistant').text('Hiện hướng dẫn');
+            } else {
+                $('.robot-head').show(); // Show the robot if the state is stored as shown
+                $('#robot-speech').show(); // Show the speech bubble
+                $('#toggle_assistant').text('Ẩn hướng dẫn');
             }
 
             // Bind the toggle function to the button click event
@@ -498,7 +512,7 @@
                 constructor() {
                     this.speechBubble = document.getElementById('robot-speech');
                     this.defaultMessage =
-                        'Chào bạn! Mình là hướng dẫn của HIKARI ELEARNING, luôn sẵn sàng giúp bạn khám phá mọi góc nhỏ của trang này. Di chuột qua các phần để mình hướng dẫn bạn nhé! 🌟';
+                        'Chào bạn! Mình là hướng dẫn viên của HIKARI ELEARNING, luôn sẵn sàng giúp bạn khám phá mọi góc nhỏ của trang này. Di chuột qua các phần để mình hướng dẫn bạn nhé! 🌟';
                     this.guides = new Map();
                     this.hoveredElement = false; // Track if we're hovering a guided element
                     this.initialize();
@@ -584,7 +598,7 @@
             const guideData = [{
                     selector: '.learning-series-list',
                     message: `
-                    Đây là danh sách các khoá học tiếng Nhật, được thiết kế trực quan để giúp học viên dễ dàng tìm hiểu và lựa chọn khoá học phù hợp với nhu cầu của mình. Khi click vào 1 khoá học có thể xem được chi tiết khoá học đó
+                    🎉 Đây là danh sách các khoá học tiếng Nhật được thiết kế siêu trực quan để bạn dễ dàng tìm kiếm và chọn khoá học phù hợp nhất với mình. Hãy click vào bất kỳ khoá học nào để xem chi tiết và khám phá thêm nhé! Chúc bạn tìm được khoá học ưng ý! 🌸
                     `
                 },
                 {
@@ -620,9 +634,27 @@
                     `
                 },
                 {
-                    selector: '.icon-chatbot',
+                    selector: '.article-page',
                     message: `
-                    Đây là Hikari – một chatbot dễ thương luôn sẵn sàng dẫn bạn khám phá mọi ngóc ngách của trang web! Chỉ cần nhấn "Bắt đầu trò chuyện," Hikari sẽ giúp bạn tìm hiểu từng phần từ A đến Z, từ thông tin sản phẩm, dịch vụ đến những mẹo thú vị. Hikari luôn sẵn lòng trả lời mọi thắc mắc để bạn có trải nghiệm tuyệt vời nhất!
+                    📚 Khi bạn nhấn vào “Bài viết”, bạn sẽ thấy các thông tin mới nhất về sự kiện, tin tức và những bài viết hữu ích. Hãy chọn bài viết bạn thích để khám phá thêm nhé! Nếu chưa thấy bài viết nào, đừng lo, chúng mình sẽ cập nhật sớm thôi! 😊
+                    `
+                },
+                {
+                    selector: '.user-avatar',
+                    message: `
+                    Nhấn vào avatar nhỏ xinh để mở ra kho quản lý học tập của bạn nha! Ở đó có đầy đủ các mục như Trang cá nhân, Điểm tích lũy, Khóa học và nhiều điều thú vị khác đang chờ bạn khám phá. Bắt đầu thôi nào! ✨
+                    `
+                },
+                {
+                    selector: '.avatar-icon-mobile',
+                    message: `
+                    Nhấn vào avatar nhỏ xinh để mở ra kho quản lý học tập của bạn nha! Ở đó có đầy đủ các mục như Trang cá nhân, Điểm tích lũy, Khóa học và nhiều điều thú vị khác đang chờ bạn khám phá. Bắt đầu thôi nào! ✨
+                    `
+                },
+                {
+                    selector: '.button-info',
+                    message: `
+                    Nếu bạn đã sở hữu khoá học, nút ‘Học ngay’ sẽ hiện ra để bạn dễ dàng quay lại học bất cứ lúc nào. Còn nếu thấy nút ‘Mua ngay’, hãy click vào đó và mình sẽ đưa bạn tới trang thanh toán nhanh chóng để sở hữu khoá học đó nhé! Chúc bạn học vui và khám phá thật nhiều điều thú vị! 🌟
                     `
                 }
             ];

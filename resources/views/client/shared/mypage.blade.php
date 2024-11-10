@@ -65,9 +65,12 @@
             text-align: center;
             margin-bottom: 1.875rem;
             transition: all var(--transition-speed) ease;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
         }
 
-        .profile-image img{
+        .profile-image img {
             width: 40px;
             height: 40px;
             border-radius: 100%;
@@ -81,7 +84,6 @@
         }
 
         .sidebar-my-page.collapsed .profile-image {
-            width: 40px;
             height: 40px;
             font-size: 1rem;
             margin-bottom: 0;
@@ -127,7 +129,7 @@
         .toggle-btn {
             position: absolute;
             left: var(--sidebar-width);
-            top: 1.25rem;
+            top: 0;
             background-color: var(--secondary);
             color: white;
             border: none;
@@ -191,13 +193,15 @@
         <div class="mypage-content position-relative">
             <aside class="sidebar-my-page">
                 <div class="profile-section">
-                    <div class="profile-image">
-                        @php
-                            $avatar = Auth::user()->image;
-                        @endphp
-                        <img src="{{ asset('uploads/users/thumbnail/' . $avatar) }}" alt="User Avatar">
-                    </div>
-                    <h5>Tran The Nguyen</h5>
+                    @if (Auth::check())
+                        <div class="profile-image">
+                            @php
+                                $avatar = Auth::user()->image;
+                            @endphp
+                            <img src="{{ asset('uploads/users/thumbnail/' . $avatar) }}" alt="User Avatar">
+                        </div>
+                        <h5>{{ Auth::user()->name }}</h5>
+                    @endif
                 </div>
                 <section>
                     <h6 class="section-title">Quản lý và học tập</h6>
@@ -214,10 +218,12 @@
                             class="nav-link-sidebar {{ setActiveClass('mypage/leaderboard') }}">
                             <i class="bi bi-trophy"></i> <span class="nav-text">Bảng xếp hạng</span>
                         </a>
-                        <a href="{{ url('mypage/my-courses') }}" class="nav-link-sidebar {{ setActiveClass('mypage/my-courses') }}">
+                        <a href="{{ url('mypage/my-courses') }}"
+                            class="nav-link-sidebar {{ setActiveClass('mypage/my-courses') }}">
                             <i class="bi bi-book"></i> <span class="nav-text">Khóa học</span>
                         </a>
-                        <a href="{{ url('mypage/my-exams') }}" class="nav-link-sidebar {{ setActiveClass('mypage/my-exams') }}">
+                        <a href="{{ url('mypage/my-exams') }}"
+                            class="nav-link-sidebar {{ setActiveClass('mypage/my-exams') }}">
                             <i class="bi bi-pencil"></i> <span class="nav-text">Khóa luyện thi</span>
                         </a>
                         <a href="{{ url('mypage/my-comments') }}"
@@ -238,7 +244,7 @@
                         </a>
                         <a href="{{ url('mypage/recharge-point') }}"
                             class="nav-link-sidebar {{ setActiveClass('mypage/recharge-point') }}">
-                            <i class="bi bi-wallet"></i> <span class="nav-text">Nạp</span>
+                            <i class="bi bi-wallet"></i> <span class="nav-text">Nạp điểm</span>
                         </a>
                     </nav>
                 </section>
@@ -250,10 +256,12 @@
 
             <main class="main-content-area">
                 <div class="px-4">
-                    <a href="/">
-                        <span>Trang chủ/</span>
-                    </a>
-                    <strong><span id="tittle_my_page">Điểm tích lũy</span></strong>
+                    <div class="mb-4">
+                        <a href="/">
+                            <span>Trang chủ/</span>
+                        </a>
+                        <strong><span id="tittle_my_page">Điểm tích lũy</span></strong>
+                    </div>
                     @yield('mypage-content')
                 </div>
             </main>

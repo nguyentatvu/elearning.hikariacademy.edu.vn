@@ -15,8 +15,8 @@
 @endsection
 
 @section('mypage-content')
-    <div class="px-5 pb-5 personal-wrapper card">
-        <div>
+    <div class="px-5 personal-wrapper">
+        {{-- <div>
             <div class="banner">
                 <div class="profile-pic">
                     @if (Auth::user()->image)
@@ -29,8 +29,8 @@
                 </div>
                 <h3 class="profile-name">{{ Auth::user()->name }}</h3>
             </div>
-        </div>
-        <div class="row mt-5">
+        </div> --}}
+        <div class="row">
             <div class="col-lg-6">
                 <section class="section">
                     <div class="d-flex justify-content-between align-items-center">
@@ -254,29 +254,29 @@
                                         {{-- <div class="course-card-teacher text-muted w-100 mb-1 line-clamp-1">{!! $recommended_series->description['teacher_description'] ?? '' !!}
                                         </div> --}}
                                         @if (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) > 1)
-                                            <button class="btn btn-primary w-100 mt-3 button-custom"
+                                            <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                                 onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $recommended_series->slug]) . '?series_action=scrollToList' }}'">
                                                 Học ngay
                                             </button>
                                         @elseif ($recommended_series->cost == 0 || (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) == 1))
                                             @if (!$recommended_series->checkAllSeriesRoadmapOfSeriesComboChosen($roadmap_chosen_list) && $recommended_series->cost !== 0)
-                                                <button class="btn btn-primary w-100 mt-3 button-custom"
+                                                <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                                     onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) . '?series_action=openRoadmapModal' }}'">
                                                     Học ngay
                                                 </button>
                                             @else
-                                                <button class="btn btn-primary w-100 mt-3 button-custom"
+                                                <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                                     onclick="event.stopPropagation(); location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'">
                                                     Học ngay
                                                 </button>
                                             @endif
                                         @elseif (Auth::check())
-                                            <button class="btn btn-primary w-100 mt-3 button-custom"
+                                            <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                                 onclick="event.stopPropagation(); location.href='{{ route('payments.lms', $recommended_series->slug) }}'">
                                                 Mua ngay
                                             </button>
                                         @else
-                                            <button class="btn btn-primary w-100 mt-3 button-custom" onclick="showAuthModalWithStopPropagation(event, true)">
+                                            <button class="btn btn-primary w-100 mt-3 button-custom button-info" onclick="showAuthModalWithStopPropagation(event, true)">
                                                 Mua ngay
                                             </button>
                                         @endif

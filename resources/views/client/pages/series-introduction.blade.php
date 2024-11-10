@@ -310,7 +310,7 @@
                                             @endif --}}
                                         </div>
                                         @if (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) > 1)
-                                            <button class="btn btn-primary w-100 mt-3 button-custom"
+                                            <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                                 onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $recommended_series->slug]) . '?series_action=scrollToList' }}'">
                                                 Học ngay
                                             </button>
@@ -320,23 +320,23 @@
                                             @if (
                                                 !$recommended_series->checkAllSeriesRoadmapOfSeriesComboChosen($roadmap_chosen_list) &&
                                                     $recommended_series->cost !== 0)
-                                                <button class="btn btn-primary w-100 mt-3 button-custom"
+                                                <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                                     onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) . '?series_action=openRoadmapModal' }}'">
                                                     Học ngay
                                                 </button>
                                             @else
-                                                <button class="btn btn-primary w-100 mt-3 button-custom"
+                                                <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                                     onclick="event.stopPropagation(); location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'">
                                                     Học ngay
                                                 </button>
                                             @endif
                                         @elseif (Auth::check())
-                                            <button class="btn btn-primary w-100 mt-3 button-custom"
+                                            <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                                 onclick="event.stopPropagation(); location.href='{{ route('payments.lms', $recommended_series->slug) }}'">
                                                 Mua ngay
                                             </button>
                                         @else
-                                            <button class="btn btn-primary w-100 mt-3 button-custom"
+                                            <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                                 onclick="showAuthModalWithStopPropagation(event, true)">
                                                 Mua ngay
                                             </button>
