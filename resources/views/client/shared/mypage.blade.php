@@ -198,7 +198,11 @@
                             @php
                                 $avatar = Auth::user()->image;
                             @endphp
-                            <img src="{{ asset('uploads/users/thumbnail/' . $avatar) }}" alt="User Avatar">
+                            @if ($avatar)
+                                <img src="{{ asset('uploads/users/thumbnail/' . $avatar) }}" alt="User Avatar">
+                            @else
+                                <img src="{{ asset('images/no-image.png') }}" alt="User Avatar">
+                            @endif
                         </div>
                         <h5>{{ Auth::user()->name }}</h5>
                     @endif
