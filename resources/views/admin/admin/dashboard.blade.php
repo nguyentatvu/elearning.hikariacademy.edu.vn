@@ -5,7 +5,12 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<ol class="breadcrumb">
-					<li><img src="public/images/Image-Icon/icon-68.png" alt="img" width="25px" height="25px">{{ $title }}</li>
+					<li class="vertical-line-bottom">
+						<a href="{{URL_ADMIN_DASHBOARD}}">
+							<i class="mdi mdi-home"></i>
+						</a>
+					</li>
+					<li>{{ $title }}</li>
 				</ol>
 			</div>
 		</div>

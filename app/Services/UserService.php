@@ -15,6 +15,7 @@ use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class UserService extends BaseService
@@ -349,4 +350,56 @@ class UserService extends BaseService
 
         $this->repository->update($userId, ['series_views_history' => $historyArray]);
     }
+
+    public function forgotPassword(string $email) {
+        $user  = $this->repository->getByConditions(['email' => $email]);
+
+        DB::beginTransaction();
+
+        if ($user != null) {
+            $password = $this->makePasswordFromUniqID();
+            $hashPassword = bcrypt($password);
+            $user->password = $hashPassword;
+            $user->save();
+
+            try {
+                $emailSent = sendEmail(
+                    'forgotpassword',
+                    array(
+                        'name' => $user->name,
+                        'username' => $user->username,
+                        'to_email' => $user->email,
+                        'password' => $password,
+                        'confirmation_link' => ''
+                    )
+                );
+
+                if (!$emailSent) {
+                    DB::rollBack();
+                    return false;
+                }
+
+                DB::commit();
+                return true;
+            } catch (Exception $ex) {
+                DB::rollBack();
+
+                Log::error('Forgot password email error: ' . $ex->getMessage());
+
+                return false;
+            }
+        }
+
+
+    }
+
+    private function makePasswordFromUniqID($length = 6){
+	    if ($length > 16)  {
+			$length = 16;
+		}
+		$uuid = uniqid('', true);
+		$password = substr($uuid, 6, $length);
+
+		return $password;
+	}
 }

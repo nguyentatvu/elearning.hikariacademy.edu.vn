@@ -99,6 +99,9 @@ $(function () {
         else if ($(this).attr('id') === 'login_form') {
             submitLogin();
         }
+        else if ($(this).attr('id') === 'forgot_password_form') {
+            submitForgotPassword();
+        }
     });
 });
 
@@ -177,6 +180,41 @@ const submitLogin = () => {
                 $(".login-failed").removeClass("d-none");
             }
         },
+    });
+}
+
+// Submit forgot password
+const submitForgotPassword = () => {
+    const formData = $('#forgot_password_form').serialize();
+
+    $.ajax({
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+        },
+        url: "/forgot-password",
+        type: "post",
+        data: formData + "&_method=POST",
+        beforeSend: function () {
+            $('#forgot_password_btn').prop('disabled', true);
+            $(".email-failed").addClass("d-none");
+        },
+        success: function (response) {
+            console.log(response);
+            $(".modal.auth-modal").modal("hide");
+            showSuccessAlert(response.message, "Thông báo", redirectMyPage);
+        },
+        error: function (error) {
+            if (error?.responseJSON?.errors && error?.responseJSON?.errors['email_forgot_password']) {
+                $(".email-failed").removeClass("d-none");
+                $(".email-failed").text(error?.responseJSON?.errors['email_forgot_password'][0]);
+            }
+            else if (error?.responseJSON?.message) {
+                showErrorAlert(error.responseJSON.message, "Thông báo");
+            }
+        },
+        complete: function () {
+            $('#forgot_password_btn').prop('disabled', false);
+        }
     });
 }
 

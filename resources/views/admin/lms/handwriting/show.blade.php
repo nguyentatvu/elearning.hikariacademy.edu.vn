@@ -40,7 +40,7 @@
                                 @if ($handwriting->type == \App\JapaneseWritingPractice::HIRAGANA)
                                     <tr class="tr-head">
                                         <th>STT</th>
-                                        <th>Hiragana</th>
+                                        <th>Hiragana/Katakana</th>
                                         <th>{{ getPhrase('action') }}</th>
                                     </tr>
                                 @elseif ($handwriting->type == \App\JapaneseWritingPractice::KANJI)
