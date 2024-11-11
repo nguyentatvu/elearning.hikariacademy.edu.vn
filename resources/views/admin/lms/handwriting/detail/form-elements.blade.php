@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-6">
             <fieldset class="form-group">
-                {{ Form::label('hiragana', 'Hiragana') }}
+                {{ Form::label('hiragana', 'Hiragana/Katakana') }}
                 <span class="text-red">
                     *
                 </span>
