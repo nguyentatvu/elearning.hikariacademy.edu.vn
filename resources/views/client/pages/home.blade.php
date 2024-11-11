@@ -130,14 +130,39 @@
             height: 100px;
             width: 100px;
         }
+
+        .animate-charcter {
+            text-transform: uppercase;
+            margin-bottom: 45px;
+            color: blue;
+            background-color: red;
+            background-size: auto auto;
+            background-clip: border-box;
+            background-size: 200% auto;
+            color: #fff;
+            background-clip: text;
+            text-fill-color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textclip 2s linear infinite;
+            display: inline-block;
+            font-size: 100px;
+            border-top: 4px solid black;
+            border-bottom: 4px solid black;
+        }
+
+        @keyframes textclip {
+            to {
+                background-position: 200% center;
+            }
+        }
     </style>
     <link rel="stylesheet" href="{{ asset('css/plugins/swiperjs/swiper-bundle.min.css') }}">
 @endsection
 
 @section('content')
-    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
-        @if (isset($banners['home_slider_banner']) &&
-                $banners['home_slider_banner']->is_active == App\Enums\BannerStatus::ACTIVE)
+    {{-- <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+        @if (isset($banners['home_slider_banner']) && $banners['home_slider_banner']->is_active == App\Enums\BannerStatus::ACTIVE)
             <div class="carousel-indicators">
                 @if (isset($banners['home_slider_banner']->image))
                     @foreach ($banners['home_slider_banner']->image as $index => $banner)
@@ -177,7 +202,7 @@
                 <span class="visually-hidden">Next</span>
             </button>
         @endif
-    </div>
+    </div> --}}
 
     {{-- Banner --}}
 
@@ -222,42 +247,54 @@
     </div>
     {{-- List course 1 --}}
     <div class="mt-5 learning-series-list">
-        <h1 class="mb-3">Khóa học</h1>
+        <h1 class="mb-3 text-primary">Khóa học</h1>
         <div class="swiper-learning-series swiper swiper-container">
             <div class="swiper-wrapper">
                 @foreach ($learning_series_list as $learning_series)
                     @if (isset($learning_series->seriesList) && count($learning_series->seriesList) > 0)
                         <div class="swiper-slide">
                             <div class="course-card"
-                                @if ($learning_series->checkMultipleCombo)
-                                    onclick="location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $learning_series->slug]) }}'"
+                                @if ($learning_series->checkMultipleCombo) onclick="location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $learning_series->slug]) }}'"
                                 @else
-                                    onclick="location.href='{{ route('series.introduction-detail', ['combo_slug' => $learning_series->slug, 'slug' => $learning_series->seriesList[0]->slug]) }}'"
-                                @endif
-                            >
-                                <img alt="course image" height="200" width="300"
-                                    src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $learning_series->image) }}" />
+                                    onclick="location.href='{{ route('series.introduction-detail', ['combo_slug' => $learning_series->slug, 'slug' => $learning_series->seriesList[0]->slug]) }}'" @endif>
+                                <div class="position-relative">
+                                    <img alt="course image" height="200" width="300"
+                                        src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $learning_series->image) }}" />
+                                </div>
                                 <div class="course-card-body">
                                     <div class="course-card-title line-clamp-2">
                                         <h5 class="course-card-text">{{ $learning_series->title }}</h5>
                                     </div>
-                                    <div class="d-flex justify-content-between gap-2 align-items-center card-price-container mb-1">
+                                    <div
+                                        class="d-flex justify-content-between align-items-center card-price-container mb-1">
                                         <div class="d-flex flex-column align-items-baseline">
-                                            <p class="course-card-price mb-0">{{ $learning_series->actualCost == 0 ? 'Miễn phí' : formatCurrencyVND($learning_series->actualCost) }}</p>
+                                            <p class="course-card-price mb-0">
+                                                {{ $learning_series->actualCost == 0 ? 'Miễn phí' : formatCurrencyVND($learning_series->actualCost) }}
+                                            </p>
                                             @if ($learning_series->checkPromotion)
-                                                <span class="orginal-price">{{ formatCurrencyVND($learning_series->cost) }}</span>
+                                                <span
+                                                    class="orginal-price">{{ formatCurrencyVND($learning_series->cost) }}</span>
                                             @endif
                                         </div>
-                                        @if ($learning_series->seriesList[0]->hasTrialContent && !$learning_series->checkMultipleCombo && !$learning_series->valid_payment)
+                                        @if (
+                                            $learning_series->seriesList[0]->hasTrialContent &&
+                                                !$learning_series->checkMultipleCombo &&
+                                                !$learning_series->valid_payment)
                                             <button class="trial-btn btn py-1"
                                                 onclick="event.stopPropagation(); location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $learning_series->slug, 'slug' => $learning_series->seriesList[0]->slug]) }}'">
                                                 Học thử
                                             </button>
                                         @endif
                                     </div>
-                                    <div class="course-card-description line-clamp-2">{!! $learning_series->short_description !!}</div>
-                                    <div class="course-card-teacher text-muted w-100 mb-1 line-clamp-1">{!! $learning_series->description['teacher_description'] ?? '' !!}</div>
-                                    <div class="d-flex align-items-center text-primary-color mt-3">
+                                    {{-- <div class="course-card-description line-clamp-2">{!! $learning_series->short_description !!}</div> --}}
+                                    {{-- <div class="course-card-teacher text-muted w-100 mb-1 line-clamp-1">{!! $learning_series->description['teacher_description'] !!}</div> --}}
+                                    <div>
+                                        <i class="bi bi-calendar-event-fill"></i>
+                                        <span class="ms-2 date-duration">Thời hạn: {{ $learning_series->time }}
+                                            tháng
+                                        </span>
+                                    </div>
+                                    <div class="d-flex align-items-center mt-2 info-course-card">
                                         <i class="bi bi-play-circle-fill"></i>
                                         <span class="ms-2">{{ $learning_series->content_count }}</span>
                                         <i class="bi bi-book ms-3"></i>
@@ -266,29 +303,32 @@
                                             chương</span>
                                     </div>
                                     @if (Auth::check() && $learning_series->valid_payment && count($learning_series->seriesList) > 1)
-                                        <button class="btn btn-primary w-100 mt-3"
+                                        <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                             onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $learning_series->slug]) . '?series_action=scrollToList' }}'">
                                             Học ngay
                                         </button>
-                                    @elseif ($learning_series->cost == 0 || (Auth::check() && $learning_series->valid_payment && count($learning_series->seriesList) == 1))
+                                    @elseif (
+                                        $learning_series->cost == 0 ||
+                                            (Auth::check() && $learning_series->valid_payment && count($learning_series->seriesList) == 1))
                                         @if (!$learning_series->checkAllSeriesRoadmapOfSeriesComboChosen($roadmap_chosen_list) && $learning_series->cost !== 0)
-                                            <button class="btn btn-primary w-100 mt-3"
+                                            <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                                 onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail', ['combo_slug' => $learning_series->slug, 'slug' => $learning_series->seriesList[0]->slug]) . '?series_action=openRoadmapModal' }}'">
                                                 Học ngay
                                             </button>
                                         @else
-                                            <button class="btn btn-primary w-100 mt-3"
+                                            <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                                 onclick="event.stopPropagation(); location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $learning_series->slug, 'slug' => $learning_series->seriesList[0]->slug]) }}'">
                                                 Học ngay
                                             </button>
                                         @endif
                                     @elseif (Auth::check())
-                                        <button class="btn btn-primary w-100 mt-3"
+                                        <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                             onclick="event.stopPropagation(); location.href='{{ route('payments.lms', $learning_series->slug) }}'">
                                             Mua ngay
                                         </button>
                                     @else
-                                        <button class="btn btn-primary w-100 mt-3" onclick="showAuthModalWithStopPropagation(event, true)">
+                                        <button class="btn btn-primary w-100 mt-3 button-custom button-info"
+                                            onclick="showAuthModalWithStopPropagation(event, true)">
                                             Mua ngay
                                         </button>
                                     @endif
@@ -305,30 +345,31 @@
 
     {{-- List course 2 --}}
     <div class="mt-5 exam-series-list">
-        <h1 class="mb-3">Khóa luyện thi</h1>
+        <h1 class="mb-3 text-primary">Khóa luyện thi</h1>
         <div class="swiper-exam-series swiper-container swiper">
             <div class="swiper-wrapper">
                 @foreach ($exam_series_list as $exam_series)
                     @if (isset($exam_series->seriesList) && count($exam_series->seriesList) > 0)
                         <div class="swiper-slide">
                             <div class="course-card"
-                                @if ($exam_series->checkMultipleCombo)
-                                    onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $exam_series->slug]) }}'"
+                                @if ($exam_series->checkMultipleCombo) onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $exam_series->slug]) }}'"
                                 @else
-                                    onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail', ['combo_slug' => $exam_series->slug, 'slug' => $exam_series->seriesList[0]->slug]) }}'"
-                                @endif
-                            >
+                                    onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail', ['combo_slug' => $exam_series->slug, 'slug' => $exam_series->seriesList[0]->slug]) }}'" @endif>
                                 <img alt="course image" height="200" width="300"
                                     src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $exam_series->image) }}" />
                                 <div class="course-card-body">
                                     <div class="course-card-title line-clamp-2">
                                         <h5 class="course-card-text">{{ $exam_series->title }}</h5>
                                     </div>
-                                    <div class="d-flex justify-content-between gap-2 align-items-center card-price-container">
+                                    <div
+                                        class="d-flex justify-content-between gap-2 align-items-center card-price-container">
                                         <div class="d-flex flex-column align-items-baseline">
-                                            <p class="course-card-price mb-0">{{ $exam_series->actualCost == 0 ? 'Miễn phí' : formatCurrencyVND($exam_series->actualCost) }}</p>
+                                            <p class="course-card-price mb-0">
+                                                {{ $exam_series->actualCost == 0 ? 'Miễn phí' : formatCurrencyVND($exam_series->actualCost) }}
+                                            </p>
                                             @if ($exam_series->checkPromotion)
-                                                <span class="orginal-price">{{ formatCurrencyVND($exam_series->cost) }}</span>
+                                                <span
+                                                    class="orginal-price">{{ formatCurrencyVND($exam_series->cost) }}</span>
                                             @endif
                                         </div>
                                         @if ($exam_series->seriesList[0]->hasTrialContent && !$exam_series->checkMultipleCombo && !$exam_series->valid_payment)
@@ -338,9 +379,15 @@
                                             </button>
                                         @endif
                                     </div>
-                                    <div class="course-card-description line-clamp-2">{!! $exam_series->short_description !!}</div>
-                                    <div class="course-card-teacher text-muted w-100 mb-1 line-clamp-1">{!! $exam_series->description['teacher_description'] ?? '' !!}</div>
-                                    <div class="d-flex align-items-center text-primary-color mt-3">
+                                    {{-- <div class="course-card-description line-clamp-2">{!! $exam_series->short_description !!}</div> --}}
+                                    <div>
+                                        <i class="bi bi-calendar-event-fill"></i>
+                                        <span class="ms-2 date-duration">Thời hạn: {{ $learning_series->time }}
+                                            tháng
+                                        </span>
+                                    </div>
+                                    {{-- <div class="course-card-teacher text-muted w-100 mb-1 line-clamp-1">{!! $exam_series->description['teacher_description'] ?? '' !!}</div> --}}
+                                    <div class="d-flex align-items-center mt-2 info-course-card">
                                         <i class="bi bi-play-circle-fill"></i>
                                         <span class="ms-2">{{ $exam_series->content_count }}</span>
                                         <i class="bi bi-book ms-3"></i>
@@ -360,22 +407,23 @@
                                         @endif --}}
                                     </div>
                                     @if (Auth::check() && $exam_series->valid_payment && count($exam_series->seriesList) > 1)
-                                        <button class="btn btn-primary w-100 mt-3"
+                                        <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                             onclick="event.stopPropagation(); location.href='{{ route('mypage.courses') }}'">
                                             Học ngay
                                         </button>
                                     @elseif (Auth::check() && $exam_series->valid_payment && count($exam_series->seriesList) == 1)
-                                        <button class="btn btn-primary w-100 mt-3"
+                                        <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                             onclick="event.stopPropagation(); location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $exam_series->slug, 'slug' => $exam_series->seriesList[0]->slug]) }}'">
                                             Học ngay
                                         </button>
                                     @elseif (Auth::check())
-                                        <button class="btn btn-primary w-100 mt-3"
+                                        <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                             onclick="event.stopPropagation(); location.href='{{ route('payments.lms', $exam_series->slug) }}'">
                                             Mua ngay
                                         </button>
                                     @else
-                                        <button class="btn btn-primary w-100 mt-3" onclick="showAuthModalWithStopPropagation(event, true)">
+                                        <button class="btn btn-primary w-100 mt-3 button-custom button-info"
+                                            onclick="showAuthModalWithStopPropagation(event, true)">
                                             Mua ngay
                                         </button>
                                     @endif

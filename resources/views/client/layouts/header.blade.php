@@ -6,7 +6,7 @@
         </a>
 
         @if (Auth::check())
-            <div class="header-my-coin ms-3 d-lg-none d-flex me-2">
+            <div class="header-my-coin ms-3 d-lg-none d-flex me-2 my-icon-info">
                 <a href="{{ route('mypage.reward-point') }}" class="owned-point">
                     {{ formatNumber(Auth::user()->reward_point + Auth::user()->recharge_point) }}
                 </a>
@@ -22,7 +22,7 @@
         <div class="d-lg-none">
             <!-- User Dropdown -->
             @if (Auth::check())
-                <button class="navbar-toggler" type="button" data-bs-toggle="dropdown" id="userDropdownMobile"
+                <button class="navbar-toggler avatar-icon-mobile" type="button" data-bs-toggle="dropdown" id="userDropdownMobile"
                     aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -70,7 +70,7 @@
                             thi</a></li>
                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Đổi mật
                             khẩu</a></li>
-                    <li><a class="dropdown-item" href="{{ route('mypage.recharge-point') }}">Nạp</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.recharge-point') }}">Nạp điểm</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
@@ -95,7 +95,7 @@
                 <div class="d-flex align-items-center">
                     @if (Auth::check())
                         <!-- Coin Balance -->
-                        <div class="header-my-coin ms-3 d-lg-flex">
+                        <div class="header-my-coin ms-3 d-lg-flex my-icon-info">
                             <a href="{{ route('mypage.reward-point') }}" class="owned-point">
                                 {{ formatNumber(Auth::user()->reward_point + Auth::user()->recharge_point) }}
                             </a>
@@ -123,7 +123,7 @@
                         <div class="btn-group mx-2">
                             <div type="button" data-bs-toggle="dropdown" aria-expanded="false"
                                 onclick="showMyCoursesDropdown()">
-                                <h5 class="mb-0 fw-semibold gradient-title-sm" style="color: #166AC9">Khóa học của tôi
+                                <h5 class="mb-0 fw-semibold gradient-title-sm my-course-info" style="color: #166AC9">Khóa học của tôi
                                 </h5>
                             </div>
                             <ul
@@ -236,7 +236,7 @@
                                         thi</a></li>
                                 <li><a class="dropdown-item" data-bs-toggle="modal"
                                         data-bs-target="#changePasswordModal">Đổi mật khẩu</a></li>
-                                <li><a class="dropdown-item" href="{{ route('mypage.recharge-point') }}">Nạp</a></li>
+                                <li><a class="dropdown-item" href="{{ route('mypage.recharge-point') }}">Nạp điểm</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>

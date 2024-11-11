@@ -238,8 +238,9 @@ class MyPageController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     function showPersonal() {
-        $randomSeriesType = Arr::random([LmsSeriesCombo::LEARNING_TYPE, LmsSeriesCombo::EXAM_TYPE]);
-        $data['other_combo_series'] = $this->lmsSeriesComboService->getAllSeriesByType($randomSeriesType);
+        $randomSeries = 8;
+        $data['other_combo_series'] = $this->lmsSeriesComboService->getRandomSeries($randomSeries);
+
         $data['view_series_history'] = $this->lmsSeriesService
             ->getHistoryViews(Auth::user()->series_views_history ?? [], Auth::user());
         $data['roadmap_chosen_list'] = $this->userRoadmapService->userChosenRoadmapList(Auth::id() ?? -1);

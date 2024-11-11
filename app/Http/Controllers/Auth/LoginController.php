@@ -56,7 +56,7 @@ class LoginController extends Controller
         $columns = array(
             'email'    => 'bail|required',
             'password'    => 'bail|required',
-            'g-recaptcha-response' => 'required|captcha',
+            // 'g-recaptcha-response' => 'required|captcha',
         );
         $this->validate($request, $columns);
 

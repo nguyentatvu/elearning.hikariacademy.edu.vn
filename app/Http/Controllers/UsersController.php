@@ -27,6 +27,7 @@ use App\Role;
 use App\Services\LmsSeriesComboService;
 use App\Services\LmsSeriesService;
 use App\Services\UserService;
+use App\UserRoadmap;
 use App\WeeklyLeaderboard;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -1558,6 +1559,10 @@ class UsersController extends Controller
         if (checkRole(['parent'])) {
             $data['active_class'] = 'children';
         }
+
+        $list = UserRoadmap::with('lmsseries')->where('user_id', $userId)->get();
+        $data['data_roadmap_user'] = $list;
+
         $view_name = 'admin.users.user-details-learning';
 
         return view($view_name, $data);

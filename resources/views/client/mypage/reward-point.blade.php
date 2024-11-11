@@ -19,7 +19,7 @@
                         <img src="{{ asset('images/icons/coin.svg') }}" class="rounded-circle coin-size-lg">
                         {{ formatNumber($point_history['total'], '.') }}
                     </div>
-                    <span>Tổng điểm</span>
+                    <span>Tổng điểm đã tích luỹ</span>
                 </div>
                 <div class="reward-point__overview-item">
                     <div class="d-flex align-items-center gap-1 fs-2 lh-1">
@@ -60,7 +60,7 @@
                         <img src="{{ asset('images/icons/coin.svg') }}" class="rounded-circle coin-size">
                         <span>{{ formatNumber($point_history['recharge'], '.') }}</span>
                     </div>
-                    <span>Nạp</span>
+                    <span>Điểm mua</span>
                 </div>
             </div>
         </div>
