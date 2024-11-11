@@ -35,7 +35,8 @@
     <div id="handwriting_container" class="handwriting-container">
         <div id="handwriting_lesson" class="d-flex align-items-center handwriting-lesson">
             <span id="handwriting_lesson_title" class="handwriting-title">
-                Đề bài:
+                <span class="fs-4">
+                    Đề bài:</span>
                 @if ($handwriting->type == \App\JapaneseWritingPractice::HIRAGANA)
                     <span id="handwriting_lesson_content" class="handwriting-lesson-content">
                         {{ $character }}</span>
