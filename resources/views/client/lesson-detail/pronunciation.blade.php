@@ -42,15 +42,19 @@
 
 @section('lesson-detail-content')
     @php
-        $pronunciationDetails = $pronunciation->pronunciationDetails;
-        $total = $pronunciationDetails->count();
+        $total = 0;
+
+        if (isset($pronunciation) && $pronunciation->pronunciationDetails) {
+            $pronunciationDetails = $pronunciation->pronunciationDetails;
+            $total = $pronunciationDetails->count();
+        }
     @endphp
     <div class="pronunciation-body">
         <div id="pronunciation_container" class="pronunciation-container">
             <div id="pronunciation_wrapper" class="pronunciation-wrapper">
                 <div class="pronunciation-practice">
                     <div class="instruction" id="instruction">
-                        Di chuột vào từng ký tự để xem đánh giá
+                        Di chuột vào từng ký tự để xem đánh giá nhé!
                     </div>
                     <div class="pronunciation-question-and-result">
                         <div class="pronunciation-text-process" id="pronunciation_text_result">
@@ -70,59 +74,12 @@
                                     <h3 class="text-center">Kết quả đánh giá phát âm</h3>
                                     <div id="resultl_level_1_assessment"
                                         class="d-flex justify-content-center gap-2 ps-2 pe-2">
-                                        <span class="char-assessment correct" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-                                            data-bs-title="Correct: 東">東</span>
-                                        <span class="char-assessment correct" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-                                            data-bs-title="Correct: 京">京</span>
-                                        <span class="char-assessment correct" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-                                            data-bs-title="Correct: は">は</span>
-                                        <span class="char-assessment incorrect" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-                                            data-bs-html="true"
-                                            data-bs-title="は<span class='text-danger'>れ</span> (hare) - Nắng<br><small class='text-danger'>Phát âm sai: はれ → はり</small>">晴</span>
-                                        <span class="char-assessment correct" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-                                            data-bs-title="Correct: れ">れ</span>
-                                        <span class="char-assessment correct" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-                                            data-bs-title="Correct: で">で</span>
-
-                                        <span class="char-assessment correct" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-                                            data-bs-title="Correct: た">た</span>
                                     </div>
                                 </div>
                                 <div id="result_level_2" class="pronunciation-result">
                                     <h3 class="text-center">Kết quả đánh giá ngữ điệu câu</h3>
                                     <div id="resultl_level_2_assessment"
                                         class="d-flex justify-content-center gap-2 ps-2 pe-2">
-                                        <span class="char-assessment correct" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-                                            data-bs-title="Correct: 東">東</span>
-                                        <span class="char-assessment intonation-error" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-                                            data-bs-title="Correct: 京">京</span>
-                                        <span class="char-assessment correct" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-                                            data-bs-title="Correct: は">は</span>
-                                        <span class="char-assessment intonation-error" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-                                            data-bs-title="Incorrect: 晴">晴</span>
-                                        <span class="char-assessment correct" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-                                            data-bs-title="Correct: れ">れ</span>
-                                        <span class="char-assessment correct" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-                                            data-bs-title="Correct: で">で</span>
-                                        <span class="char-assessment correct" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-                                            data-bs-title="Correct: し">し</span>
-                                        <span class="char-assessment correct" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-                                            data-bs-title="Correct: た">た</span>
                                     </div>
                                 </div>
                             </div>
@@ -198,13 +155,10 @@
         let playSoundBtn = $('#play_sound_btn');
         let sampleAudio;
         let instruction = $('#instruction');
-        let sentence = "";
-        let correctIndices = [];
+
 
         $(document).ready(function() {
             audioWaveform.css('display', 'none');
-            sentence = pronunciationDetail[0]['text'];
-            console.log(sentence)
             handleArrowLeftEvent();
             handleArrowRightEvent();
             updatePageNumber(1);
@@ -304,12 +258,9 @@
             gumStream.getAudioTracks()[0].stop();
             isRecording = false;
             handleAssessment();
-            displayResult(1);
-            // rec.exportWAV((userBlob) => {
-            //     uploadAudioAndSample(userBlob, sampleAudio);
-            // });
-            //uploadAudioFromSrc(testSrc);
-            //processAudio(audioBlob);
+            rec.exportWAV((userBlob) => {
+                uploadAudioAndSample(userBlob, sampleAudio);
+            });
         }
 
         /**
@@ -373,81 +324,81 @@
         }
 
         function handleResult(data) {
-            // let userResult = data['user_result'];
-            // let assessmentResult = data['assessment_results'];
-            let userResult = [{
-                    "text": "お",
-                    "start": 0,
-                    "end": 0.7199999690055847
-                },
-                {
-                    "text": "や",
-                    "start": 0.7199999690055847,
-                    "end": 0.9599999785423279
-                },
-                {
-                    "text": "す",
-                    "start": 0.9599999785423279,
-                    "end": 1.159999966621399
-                },
-                {
-                    "text": "み",
-                    "start": 1.159999966621399,
-                    "end": 1.399999976158142
-                },
-                {
-                    "text": "な",
-                    "start": 1.399999976158142,
-                    "end": 1.6399999856948853
-                },
-                {
-                    "text": "で",
-                    "start": 1.6399999856948853,
-                    "end": 1.7999999523162842
-                },
-                {
-                    "text": "い",
-                    "start": 1.7999999523162842,
-                    "end": 2.784
-                }
-            ];
+            let userResult = data['user_result'];
+            let assessmentResult = data['assessment_results'];
+            // let userResult = [{
+            //         "text": "お",
+            //         "start": 0,
+            //         "end": 0.7199999690055847
+            //     },
+            //     {
+            //         "text": "や",
+            //         "start": 0.7199999690055847,
+            //         "end": 0.9599999785423279
+            //     },
+            //     {
+            //         "text": "す",
+            //         "start": 0.9599999785423279,
+            //         "end": 1.159999966621399
+            //     },
+            //     {
+            //         "text": "み",
+            //         "start": 1.159999966621399,
+            //         "end": 1.399999976158142
+            //     },
+            //     {
+            //         "text": "な",
+            //         "start": 1.399999976158142,
+            //         "end": 1.6399999856948853
+            //     },
+            //     {
+            //         "text": "で",
+            //         "start": 1.6399999856948853,
+            //         "end": 1.7999999523162842
+            //     },
+            //     {
+            //         "text": "い",
+            //         "start": 1.7999999523162842,
+            //         "end": 2.784
+            //     }
+            // ];
 
-            let assessmentResult = [{
-                    "word": "東",
-                    "speech_time_difference": 0,
-                    "pearsonr_value": 0
-                },
-                {
-                    "word": "京",
-                    "speech_time_difference": -0.128,
-                    "pearsonr_value": 0
-                },
-                {
-                    "word": "は",
-                    "speech_time_difference": -0.224,
-                    "pearsonr_value": -0.1517995489436796
-                },
-                {
-                    "word": "晴",
-                    "speech_time_difference": 0.064,
-                    "pearsonr_value": 0
-                },
-                {
-                    "word": "れ",
-                    "speech_time_difference": 0.032,
-                    "pearsonr_value": -0.9975028291170049
-                },
-                {
-                    "word": "で",
-                    "speech_time_difference": -0.064,
-                    "pearsonr_value": 0.8868574327733133
-                },
-                {
-                    "word": "し",
-                    "speech_time_difference": 0,
-                    "pearsonr_value": 0.9709707675800048
-                }
-            ];
+            // let assessmentResult = [{
+            //         "word": "東",
+            //         "speech_time_difference": 0,
+            //         "pearsonr_value": 0
+            //     },
+            //     {
+            //         "word": "京",
+            //         "speech_time_difference": -0.128,
+            //         "pearsonr_value": 0
+            //     },
+            //     {
+            //         "word": "は",
+            //         "speech_time_difference": -0.224,
+            //         "pearsonr_value": -0.1517995489436796
+            //     },
+            //     {
+            //         "word": "晴",
+            //         "speech_time_difference": 0.064,
+            //         "pearsonr_value": 0
+            //     },
+            //     {
+            //         "word": "れ",
+            //         "speech_time_difference": 0.032,
+            //         "pearsonr_value": -0.9975028291170049
+            //     },
+            //     {
+            //         "word": "で",
+            //         "speech_time_difference": -0.064,
+            //         "pearsonr_value": 0.8868574327733133
+            //     },
+            //     {
+            //         "word": "し",
+            //         "speech_time_difference": 0,
+            //         "pearsonr_value": 0.9709707675800048
+            //     }
+            // ];
             handleWrongWords(userResult, assessmentResult);
         }
 
@@ -630,30 +581,6 @@
                     updatePageNumber(currentIndex);
                 }
             });
-        }
-
-        function displaySentence(sentence, correctIndices) {
-            studentSpeechResult.css('display', 'block');
-            pronunciationTextTitle.css('display', 'none');
-            let spanClass;
-            let incorrectData = '';
-            let highlightedSentence = $.map(sentence.split(''), function(char, index) {
-                if (char === ' ') return ' ';
-                if (correctIndices[index] === -1) {
-                    spanClass = 'missing-word';
-                } else if (correctIndices[index] === 0) {
-                    spanClass = 'correct';
-                } else if (correctIndices[index] === 1) {
-                    spanClass = 'incorrect';
-                    //  incorrectData = userWords.word[index];
-                }
-
-                return '<span class="text-result ' + spanClass + '" data-incorrect="' + incorrectData + '">' +
-                    char + '</span>';
-            }).join('');
-
-            studentSpeechResult.html(highlightedSentence);
-            handleTooltipIncorrect();
         }
 
         const processBlob = (userBlob, sampleBlob, sampleName) => {

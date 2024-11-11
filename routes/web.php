@@ -197,7 +197,6 @@ Route::prefix('point-management')
             ->name('save-rules');
 
         Route::get('/test', 'PointManagementController@getPointRule');
-
     });
 
 Route::prefix('roadmap')
@@ -1515,11 +1514,11 @@ Route::prefix('payments-order')
                     ->name('delete');
             });
     });
-// Swagger
-Route::group(['middleware' => 'web'], function () {
-    Route::get('api/documentation', '\L5Swagger\Http\Controllers\SwaggerController@api')->name('l5swagger.api');
-    Route::get('docs', '\L5Swagger\Http\Controllers\SwaggerController@docs')->name('l5-swagger.docs');
-});
+// // Swagger
+// Route::group(['middleware' => 'web'], function () {
+//     Route::get('api/documentation', '\L5Swagger\Http\Controllers\SwaggerController@api')->name('l5swagger.api');
+//     Route::get('docs', '\L5Swagger\Http\Controllers\SwaggerController@docs')->name('l5-swagger.docs');
+// });
 
 // Articles page for users
 Route::prefix('bai-viet')

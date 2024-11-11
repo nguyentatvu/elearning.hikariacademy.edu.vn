@@ -316,6 +316,9 @@ class PronunciationController extends Controller
                 $path = public_path('uploads/pronunciation');
                 $newFilePath = $path . '/' . $filename;
 
+                // CAll Api Speech to text
+                $this->pronunciationDetailService->uploadAudioFileToGetIntonations($file, $pronunciationDetail->id);
+
                 $relativePath = $this->storeAudio($file, $filename, $path);
 
                 $this->pronunciationDetailService->update($pronunciationDetail->id, [
@@ -535,6 +538,9 @@ class PronunciationController extends Controller
 
                 $path = public_path('uploads/pronunciation');
                 $newFilePath = $path . '/' . $filename;
+
+                // CAll Api Speech to text
+                $this->pronunciationDetailService->uploadAudioFileToGetIntonations($file, $detailId);
 
                 $relativePath = $this->storeAudio($file, $filename, $path);
 

@@ -40,7 +40,7 @@ class PronunciationDetailService extends BaseService
         $this->repository->updateOrCreate(
             ['id' => $pronunciationDetailId],
             [
-                // 'text' => $result['text'],
+                'text' => $result['text'],
                 'katakana_text' => $result['katakana_text'],
                 'words' => $result['words']
             ]
