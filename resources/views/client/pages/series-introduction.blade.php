@@ -389,6 +389,10 @@
                 font-size: 16px;
             }
         }
+
+        .content-inline * {
+            display: inline !important;
+        }
     </style>
 @endSection
 
@@ -426,14 +430,16 @@
                                 @if ($seriesCombo->cost == 0 && $seriesCombo->selloff == 0)
                                     <div class="discounted-price active">{{ $discountedPrice }} <span
                                             class="currency">VNĐ</span></div>
-                                @endif
-                                @if ($seriesCombo->cost > 0)
-                                    <div class="original-price">{{ $originalPrice }} <span class="currency">VNĐ</span></div>
-                                @endif
+                                @else
+                                    @if ($seriesCombo->cost > 0)
+                                        <div class="original-price">{{ $originalPrice }} <span class="currency">VNĐ</span>
+                                        </div>
+                                    @endif
 
-                                @if ($seriesCombo->selloff > 0 || $seriesCombo->selloff == 0)
-                                    <div class="discounted-price active">{{ $discountedPrice }} <span
-                                            class="currency">VNĐ</span></div>
+                                    @if ($seriesCombo->selloff > 0 || $seriesCombo->selloff == 0)
+                                        <div class="discounted-price active">{{ $discountedPrice }} <span
+                                                class="currency">VNĐ</span></div>
+                                    @endif
                                 @endif
                             @endif
                         </div>
@@ -519,19 +525,19 @@
                     @if (isset($series_description['time_description']))
                         <div class="mb-3">
                             <span class="fs-5 fw-bold"><i class="bi bi-clock"></i> Thời gian: </span>
-                            <span class="d-inline">{!! $series_description['time_description'] !!}</span>
+                            <span class="d-inline content-inline">{!! $series_description['time_description'] !!}</span>
                         </div>
                     @endif
                     @if (isset($series_description['curriculum_description']))
                         <div class="mb-3">
                             <span class="fs-5 fw-bold"><i class="bi bi-clipboard-data"></i> Giáo trình: </span>
-                            <span class="d-inline">{!! $series_description['curriculum_description'] !!}</span>
+                            <span class="d-inline content-inline">{!! $series_description['curriculum_description'] !!}</span>
                         </div>
                     @endif
                     @if (isset($series_description['teacher_description']))
                         <div class="mb-3">
                             <span class="fs-5 fw-bold"><i class="bi bi-person"></i> Giảng viên: </span>
-                            <span class="d-inline">{!! $series_description['teacher_description'] !!}</span>
+                            <span class="d-inline content-inline">{!! $series_description['teacher_description'] !!}</span>
                         </div>
                     @endif
                 </div>
