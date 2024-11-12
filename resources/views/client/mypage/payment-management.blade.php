@@ -51,7 +51,7 @@
                             <span role="button" class="text-uppercase">{{$payment->orderType}}</span>
                         </td>
                         <td class="text-center align-middle" data-payment-pending="{{ $payment->payment_method_id }}">
-                            @if ($payment->status == \App\PaymentMethod::PAYMENT_PENDING)
+                            @if (in_array($payment->status, [\App\PaymentMethod::PAYMENT_PENDING, \App\PaymentMethod::PAYMENT_PENDING_OS]))
                                 @if ($payment->orderType == 'transfer')
                                     <span class="text-warning">Đang xử lý</span><br>
                                 @else

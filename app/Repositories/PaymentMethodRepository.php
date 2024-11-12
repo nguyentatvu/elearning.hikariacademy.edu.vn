@@ -52,9 +52,9 @@ class PaymentMethodRepository extends BaseRepository
     public function checkPendingSeriesPayment() {
         return $this->model
             ->where([
-                'status' => PaymentMethod::PAYMENT_PENDING,
                 'user_id' => Auth::user()->id
             ])
+            ->whereIn('status', [PaymentMethod::PAYMENT_PENDING, PaymentMethod::PAYMENT_PENDING_OS])
             ->whereNull('recharge_coin_amount')
             ->where('orderType', '<>', 'transfer')
             ->exists();
@@ -68,9 +68,9 @@ class PaymentMethodRepository extends BaseRepository
     public function checkPendingSeriesTransferOrder() {
         return $this->model
             ->where([
-                'status' => PaymentMethod::PAYMENT_PENDING,
                 'user_id' => Auth::user()->id
             ])
+            ->whereIn('status', [PaymentMethod::PAYMENT_PENDING, PaymentMethod::PAYMENT_PENDING_OS])
             ->whereNull('recharge_coin_amount')
             ->where('orderType', 'transfer')
             ->exists();
@@ -85,9 +85,9 @@ class PaymentMethodRepository extends BaseRepository
     {
         return $this->model
             ->where([
-                'status' => PaymentMethod::PAYMENT_PENDING,
                 'user_id' => Auth::user()->id
             ])
+            ->whereIn('status', [PaymentMethod::PAYMENT_PENDING, PaymentMethod::PAYMENT_PENDING_OS])
             ->whereNotNull('recharge_coin_amount')
             ->where('orderType', '<>', 'transfer')
             ->exists();
@@ -102,9 +102,9 @@ class PaymentMethodRepository extends BaseRepository
     {
         return $this->model
             ->where([
-                'status' => PaymentMethod::PAYMENT_PENDING,
                 'user_id' => Auth::user()->id
             ])
+            ->whereIn('status', [PaymentMethod::PAYMENT_PENDING, PaymentMethod::PAYMENT_PENDING_OS])
             ->whereNotNull('recharge_coin_amount')
             ->where('orderType', 'transfer')
             ->exists();
@@ -119,9 +119,9 @@ class PaymentMethodRepository extends BaseRepository
         $minValidMinutes = config('constant.payment.min_valid_time');
         return $this->model
             ->where([
-                'status' => PaymentMethod::PAYMENT_PENDING,
                 'user_id' => Auth::user()->id
             ])
+            ->whereIn('status', [PaymentMethod::PAYMENT_PENDING, PaymentMethod::PAYMENT_PENDING_OS])
             ->whereNull('recharge_coin_amount')
             ->where('orderType', '<>', 'transfer')
             ->where('created_at', '<', Carbon::now()->subMinutes($minValidMinutes))
@@ -136,9 +136,9 @@ class PaymentMethodRepository extends BaseRepository
         $minValidMinutes = config('constant.payment.min_valid_time');
         return $this->model
             ->where([
-                'status' => PaymentMethod::PAYMENT_PENDING,
                 'user_id' => Auth::user()->id
             ])
+            ->whereIn('status', [PaymentMethod::PAYMENT_PENDING, PaymentMethod::PAYMENT_PENDING_OS])
             ->whereNotNull('recharge_coin_amount')
             ->where('orderType', '<>', 'transfer')
             ->where('created_at', '<', Carbon::now()->subMinutes($minValidMinutes))
