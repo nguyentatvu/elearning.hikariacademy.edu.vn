@@ -221,7 +221,7 @@ class UsersController extends Controller
                     'users.name',
                     'email',
                     'image',
-                    'roles.display_name',
+                    'roles.display_name as role_display_name',
                     'login_enabled',
                     'role_id',
                     'slug',
@@ -232,9 +232,10 @@ class UsersController extends Controller
         } else {
             $role = App\Role::getRoleId($slug);
             $records = User::join('roles', 'users.role_id', '=', 'roles.id', 'roles.id', '=', $role->id)
-                ->select(['name', 'image', 'email', 'roles.display_name', 'login_enabled', 'role_id', 'slug', 'users.updated_at'])
+                ->select(['name', 'image', 'email', 'roles.display_name as role_display_name', 'login_enabled', 'role_id', 'slug', 'users.updated_at'])
                 ->orderBy('users.created_at', 'desc');
         }
+
         return DataTables::of($records)
             ->addColumn('action', function ($records) {
                 $link_data = '<div class="dropdown more">
@@ -270,6 +271,9 @@ class UsersController extends Controller
             })
             ->editColumn('image', function ($records) {
                 return '<img src="' . getProfilePath($records->image) . '"  />';
+            })
+            ->filterColumn('role_display_name', function($query, $keyword) {
+                $query->whereRaw("roles.display_name like ?", ["%{$keyword}%"]);
             })
             ->removeColumn('login_enabled')
             ->removeColumn('role_id')

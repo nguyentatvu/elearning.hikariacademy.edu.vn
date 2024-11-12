@@ -56,7 +56,7 @@
 	@php
 		// MAKE DEFAULT VALUE COLUMN
 		$defaultColumns = [
-			'hid', 'name', 'email', 'image', 'display_name', 'action'
+			'hid', 'name', 'email', 'image', 'role_display_name', 'action'
 		];
 	@endphp
 	@include('admin.common.datatables', array('route'=>'users.dataTable', 'table_columns' => $defaultColumns))
