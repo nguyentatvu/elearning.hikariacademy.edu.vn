@@ -26,10 +26,12 @@
             aria-labelledby="flush-heading{{ $chapter_index }}_{{ $content_index }}" data-bs-parent="#accordion_flush_container_{{ $chapter_index }}">
             <div>
                 <ul class="list-group">
-                    @component('client.components.content-tree-lesson-link',
-                        ['contents' => $content->childContents,
+                    @component('client.components.content-tree-lesson-link',[
+                        'contents' => $content->childContents,
                         'chapter_index' => $chapter_index,
-                        'is_valid_payment' => $is_valid_payment])
+                        'is_valid_payment' => $is_valid_payment,
+                        'testContentResult' => $testContentResult
+                    ])
                     @endcomponent
                 </ul>
             </div>

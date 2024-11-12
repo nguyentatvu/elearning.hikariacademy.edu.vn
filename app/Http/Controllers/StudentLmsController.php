@@ -137,6 +137,18 @@ class StudentLmsController extends Controller
         ) {
             throw new RedirectException(redirect()->to('/'));
         }
+
+        // Set previous url
+        if ($this->prepContent['series_combo']->checkMultipleCombo) {
+            $this->prepContent['prev_url'] = route('series.introduction-detail-combo', [
+                'combo_slug' => $this->prepContent['series_combo']->slug
+            ]);
+        } else {
+            $this->prepContent['prev_url'] = route('series.introduction-detail', [
+                'combo_slug' => $this->prepContent['series_combo']->slug,
+                'slug' => $this->prepContent['series']->slug
+            ]);
+        }
     }
 
     /**
@@ -274,8 +286,19 @@ class StudentLmsController extends Controller
         $this->prepContent['viewed_content_ids'] = $contentView->where('finish', LmsStudentView::NOT_FINISHED)
             ->pluck('lmscontent_id')->toArray();
 
+        $this->prepContent['test_content'] = $this->lmsContentService->getAllByConditions([
+            'lmsseries_id' => $this->prepContent['series_id'],
+            'type' => LmsContent::TEST,
+            'delete_status' => 0
+        ])->toArray();
+
+        $this->prepContent['test_content_result'] = $this->getPassedTestInfo(
+            $this->prepContent['test_content'],
+            Auth::id()
+        );
+
         $this->prepContent['contents']->each(function ($item) use ($params) {
-            $this->setURLToPurchasedContents($item, $params);
+            $this->setRelatedInfoToDropdownContents($item, $params);
         });
     }
 
@@ -284,14 +307,15 @@ class StudentLmsController extends Controller
      *
      * @param App\LmsContent $lms_content
      * @param array $params
+     * @param int $chapter_index
      * @return void
      */
-    private function setURLToPurchasedContents(LmsContent &$lms_content, array &$params, int $chapter_index = 0)
+    private function setRelatedInfoToDropdownContents(LmsContent &$lms_content, array &$params, int $chapter_index = 0)
     {
         $typeMap = config('constant.series.type_map');
         if (in_array($lms_content->type, $typeMap['title'])) {
             foreach ($lms_content->childContents as $childContent) {
-                $this->setURLToPurchasedContents($childContent, $params, $chapter_index);
+                $this->setRelatedInfoToDropdownContents($childContent, $params, $chapter_index);
             }
         }
 
@@ -311,19 +335,55 @@ class StudentLmsController extends Controller
             $lms_content->css_class = 'active-content';
         }
 
-        // Set route
-        $routes = config('constant.series.routes');
-        $params['stt'] = $lms_content->id;
-        foreach ($routes as $type => $route) {
-            if (in_array($lms_content->type, $typeMap[$type])) {
-                $lms_content->url = route($route, $params);
-                break;
+        // Check blocked content
+        $blockedContentInfo = $lms_content->checkBlockedContent($this->prepContent['test_content_result']);
+        if ($blockedContentInfo['isContentBlocked']) {
+            $lms_content->contentLink = 'javascript:void(0);';
+            $lms_content->clickEvent = "showBLockedContentAlert('" . $blockedContentInfo['incompleteTestTitle'] . "')";
+        } else {
+            // Set route
+            $routes = config('constant.series.routes');
+            $params['stt'] = $lms_content->id;
+            foreach ($routes as $type => $route) {
+                if (in_array($lms_content->type, $typeMap[$type])) {
+                    $lms_content->url = route($route, $params);
+                    break;
+                }
             }
+            $lms_content->contentLink = $lms_content->url;
+            $lms_content->clickEvent = '';
         }
 
         if ($chapter_index > 0 && !$this->prepContent['is_valid_payment']) {
             return;
         }
+    }
+
+    /**
+     * Get passed test info
+     *
+     * @param array $testContents
+     * @param string $userId
+     * @return mixed
+     */
+    private function getPassedTestInfo(array $testContents, string $userId) {
+        $testContentIds = array_column($testContents, 'id');
+        $passedTestList = DB::table('lms_test_result')
+            ->select('lmscontent_id')
+            ->whereIn('lmscontent_id', $testContentIds)
+            ->where('users_id', $userId)
+            ->whereRaw('point >= 0.5 * total_point')
+            ->groupBy('lmscontent_id')
+            ->pluck('lmscontent_id')
+            ->toArray();
+
+        $result = [];
+        foreach ($testContents as $testContent) {
+            $result[$testContent['stt']]['is_passed'] = in_array($testContent['id'], $passedTestList);
+            $result[$testContent['stt']]['title'] = $testContent['bai'];
+        }
+
+        return $result;
     }
 
     /**
@@ -423,7 +483,9 @@ class StudentLmsController extends Controller
             'contentViewCount' => $this->prepContent['content_view_count'],
             'seriesContentCount' => $this->prepContent['series_content_count'],
             'comments' => $this->prepContent['comments'],
-            'description' => $this->prepContent['detail_content']->description
+            'description' => $this->prepContent['detail_content']->description,
+            'prevUrl' => $this->prepContent['prev_url'],
+            'testContentResult' => $this->prepContent['test_content_result']
         ];
     }
 
