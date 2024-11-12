@@ -5,13 +5,13 @@
 @endsection
 
 @section('mypage-content')
-    <div class="leaderboard">
+    <div class="leaderboard card-section">
         @if ($leaderboard->isEmpty())
             <span class="text-center highlight-message w-full">
                 Hãy là người đầu tiên tích lũy điểm và dẫn đầu bảng xếp hạng!
             </span>
         @endif
-        <div class="leaderboard-wrapper">
+        <div class="leaderboard-wrapper p-3">
             <div class="leaderboard-wrapper__top-3">
                 @php
                     $userTop1 = $leaderboard[0]->user ?? null;
