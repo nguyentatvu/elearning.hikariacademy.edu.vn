@@ -126,10 +126,11 @@
 
         .button {
             flex: 1;
-            padding: 10px;
+            min-width: 120px;
+            padding: 12px;
             border-radius: 12px;
             border: none;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             display: flex;
@@ -292,6 +293,8 @@
         .button-container {
             opacity: 0;
             animation: fadeInUp 0.8s ease 1.2s forwards;
+            display: flex;
+            justify-content: center;
         }
 
         .discounted-price::before {
@@ -410,20 +413,34 @@
                     <div class="price-tag floating">GIÁ ƯU ĐÃI</div>
                     <div class="price-change-container">
                         <div class="price-wrapper">
-                            @if (\Carbon\Carbon::parse($seriesCombo->timeto)->isPast())
-                                <div class="discounted-price active">{{ formatNumber($seriesCombo->cost) }} <span
-                                        class="currency">VNĐ</span></div>
+                            @php
+                                $originalPrice = formatNumber($seriesCombo->cost);
+                                $discountedPrice = formatNumber($seriesCombo->selloff);
+                                $isPastDate = \Carbon\Carbon::parse($seriesCombo->timeto)->isPast();
+                            @endphp
+
+                            @if ($isPastDate)
+                                <div class="discounted-price active">{{ $originalPrice }} <span class="currency">VNĐ</span>
+                                </div>
                             @else
-                                <div class="original-price">{{ formatNumber($seriesCombo->cost) }} <span
-                                        class="currency">VNĐ</span></div>
-                                <div class="discounted-price active">{{ formatNumber($seriesCombo->selloff) }} <span
-                                        class="currency">VNĐ</span></div>
+                                @if ($seriesCombo->cost == 0 && $seriesCombo->selloff == 0)
+                                    <div class="discounted-price active">{{ $discountedPrice }} <span
+                                            class="currency">VNĐ</span></div>
+                                @endif
+                                @if ($seriesCombo->cost > 0)
+                                    <div class="original-price">{{ $originalPrice }} <span class="currency">VNĐ</span></div>
+                                @endif
+
+                                @if ($seriesCombo->selloff > 0 || $seriesCombo->selloff == 0)
+                                    <div class="discounted-price active">{{ $discountedPrice }} <span
+                                            class="currency">VNĐ</span></div>
+                                @endif
                             @endif
                         </div>
                     </div>
 
                     <div class="button-container">
-                        @if (!$seriesCombo->checkMultipleCombo && $seriesCombo->cost != 0)
+                        @if (!$seriesCombo->checkMultipleCombo)
                             <button class="button primary-button me-2"
                                 onclick="location.href='{{ route('home.roadmap', ['comboSlug' => $seriesCombo->slug, 'slug' => request()->route('slug')]) }}'">
                                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -436,9 +453,10 @@
 
                         @if ($seriesCombo->cost != 0 && Auth::check() && $isValidPayment && $is_multiple_combo)
                             {{-- Student has purchased the series combo and it include multiple serises --}}
-                            <button class="button secondary-button" id="first_purchase_button" onclick="scrollToPurchasedSeriesList()">
-                                <div>Học ngay <svg class="icon" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2">
+                            <button class="button secondary-button" id="first_purchase_button"
+                                onclick="scrollToPurchasedSeriesList()">
+                                <div>Học ngay <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
                                         <path d="M5 3v4M3 5h4M6 17v4M4 19h4m4-16h8M8 7h8M8 11h8M8 15h8"></path>
                                     </svg></div>
                             </button>
@@ -452,8 +470,8 @@
                             {{-- Student has purchased the series combo and it's a single series and student hasn't chosen roadmap --}}
                             <button class="button secondary-button" id="first_purchase_button"
                                 onclick="openRoadmapSelectionModal({{ $series->id }})">
-                                <div>Học ngay <svg class="icon" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2">
+                                <div>Học ngay <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
                                         <path d="M5 3v4M3 5h4M6 17v4M4 19h4m4-16h8M8 7h8M8 11h8M8 15h8"></path>
                                     </svg></div>
                             </button>
@@ -462,8 +480,8 @@
                             {{-- Or The series combo is free --}}
                             <button class="button secondary-button" id="first_purchase_button"
                                 onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $seriesCombo->slug, 'slug' => request()->route('slug')]) }}'">
-                                <div>Học ngay <svg class="icon" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2">
+                                <div>Học ngay <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
                                         <path d="M5 3v4M3 5h4M6 17v4M4 19h4m4-16h8M8 7h8M8 11h8M8 15h8"></path>
                                     </svg></div>
                             </button>
@@ -471,8 +489,8 @@
                             {{-- Student has signed in but hasn't purchased the series combo --}}
                             <button class="button secondary-button" id="first_purchase_button"
                                 onclick="location.href='{{ route('payments.lms', $seriesCombo->slug) }}'">
-                                <div>Mua ngay <svg class="icon" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2">
+                                <div>Mua ngay <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
                                         <path d="M5 3v4M3 5h4M6 17v4M4 19h4m4-16h8M8 7h8M8 11h8M8 15h8"></path>
                                     </svg></div>
                             </button>
