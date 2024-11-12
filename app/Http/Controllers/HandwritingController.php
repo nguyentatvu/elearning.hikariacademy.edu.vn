@@ -84,7 +84,7 @@ class HandwritingController extends Controller
             })
             ->editColumn('type', function ($record) {
                 if ($record->type == JapaneseWritingPractice::HIRAGANA) {
-                    return 'Hiragana';
+                    return 'Hiragana/Katakana';
                 } elseif ($record->type == JapaneseWritingPractice::KANJI) {
                     return 'Kanji';
                 }

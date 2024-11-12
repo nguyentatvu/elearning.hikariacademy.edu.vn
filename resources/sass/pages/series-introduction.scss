@@ -45,11 +45,6 @@
 
         .course-box {
             margin-left: 200px;
-            width: 400px;
-            border-radius: 8px;
-            border: 1px solid black;
-            background: white;
-            padding: 12px;
 
             @include mq (max-tb) {
                 margin-left: 0;

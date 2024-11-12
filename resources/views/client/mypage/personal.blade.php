@@ -15,7 +15,7 @@
 @endsection
 
 @section('mypage-content')
-    <div class="px-5 personal-wrapper">
+    <div class="px-5 py-3 personal-wrapper card-section">
         {{-- <div>
             <div class="banner">
                 <div class="profile-pic">
@@ -31,64 +31,7 @@
             </div>
         </div> --}}
         <div class="row">
-            <div class="col-lg-6">
-                <section class="section">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="section-title">
-                            Khoá học đã tham gia
-                        </h5>
-                    </div>
-                    @if ($view_series_history->count() > 0)
-                        @foreach ($view_series_history as $index => $series)
-                            <div class="course-item d-flex align-items-center pb-3">
-                                <img class="series-image" alt="series image"
-                                    src="{{ '/public/uploads/lms/series/' . $series->image }}" />
-                                <div class="course-info flex-grow-1">
-                                    <div class="course-title">{{ $series->title }}</div>
-                                    <div class="course-time mb-1">Học cách đây {{ compareTime($series->viewed_time) }}</div>
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary-custom"
-                                            role="progressbar" aria-valuenow="{{ $series->progressPercent }}"
-                                            aria-valuemin="0" aria-valuemax="100"
-                                            style="width: {{ $series->progressPercent }}%">
-                                            <span class="{{ $series->progressPercent <= 10 ? 'd-none' : '' }}">
-                                                {{ $series->progressPercent }}%
-                                            </span>
-                                        </div>
-                                        <span
-                                            class="ms-1 text-primary {{ $series->progressPercent <= 10 ? '' : 'd-none' }}">
-                                            {{ $series->progressPercent }}%
-                                        </span>
-                                    </div>
-                                    @if ($series->roadmapChosen)
-                                        <a href="{{ route('learning-management.lesson.show', ['combo_slug' => $series->combo_slug, 'slug' => $series->slug]) }}"
-                                            class="text-primary mt-1 fs-6 d-block">
-                                            Tiếp tục học
-                                        </a>
-                                    @elseif (optional($series->seriesCombo)->checkMultipleCombo)
-                                        <a href="{{ route('series.introduction-detail-combo', ['combo_slug' => $series->combo_slug]) . '?series_action=scrollToList' }}"
-                                            class="text-primary mt-1 fs-6 d-block">
-                                            Chọn lộ trình và học ngay
-                                        </a>
-                                    @else
-                                        <a href="{{ route('series.introduction-detail', ['combo_slug' => $series->combo_slug, 'slug' => $series->slug]) . '?series_action=openRoadmapModal' }}"
-                                            class="text-primary mt-1 fs-6 d-block">
-                                            Chọn lộ trình và học ngay
-                                        </a>
-                                    @endif
-                                </div>
-                            </div>
-                        @endforeach
-                    @else
-                        <div>
-                            <span>Bạn chưa học bài học nào.</span>
-                            <a href="/home" class="fs-5">Hãy chọn ngay cho mình một khoá học!</a>
-                        </div>
-                    @endif
-                </section>
-            </div>
-
-            <div class="col-lg-6">
+            <div class="col-12 col-sm-12 col-lg-6 mb-2">
                 <div class="personal-information">
                     <h4 class="mb-4">Thông tin tài khoản</h4>
                     <form id="update_info_form" action="{{ route('mypage.update-info') }}" method="post"
@@ -189,35 +132,97 @@
                     </form>
                 </div>
             </div>
+
+            <div class="col-12 col-sm-12 col-lg-6">
+                <section class="section">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="section-title">
+                            Khoá học đã tham gia
+                        </h5>
+                    </div>
+                    @if ($view_series_history->count() > 0)
+                        @foreach ($view_series_history as $index => $series)
+                            <div class="course-item d-flex align-items-center pb-3">
+                                <img class="series-image" alt="series image"
+                                    src="{{ '/public/uploads/lms/series/' . $series->image }}" />
+                                <div class="course-info flex-grow-1">
+                                    <div class="course-title">{{ $series->title }}</div>
+                                    <div class="course-time mb-1">Học cách đây {{ compareTime($series->viewed_time) }}
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary-custom"
+                                            role="progressbar" aria-valuenow="{{ $series->progressPercent }}"
+                                            aria-valuemin="0" aria-valuemax="100"
+                                            style="width: {{ $series->progressPercent }}%">
+                                            <span class="{{ $series->progressPercent <= 10 ? 'd-none' : '' }}">
+                                                {{ $series->progressPercent }}%
+                                            </span>
+                                        </div>
+                                        <span
+                                            class="ms-1 text-primary {{ $series->progressPercent <= 10 ? '' : 'd-none' }}">
+                                            {{ $series->progressPercent }}%
+                                        </span>
+                                    </div>
+                                    @if ($series->roadmapChosen)
+                                        <a href="{{ route('learning-management.lesson.show', ['combo_slug' => $series->combo_slug, 'slug' => $series->slug]) }}"
+                                            class="text-primary mt-1 fs-6 d-block">
+                                            Tiếp tục học
+                                        </a>
+                                    @elseif (optional($series->seriesCombo)->checkMultipleCombo)
+                                        <a href="{{ route('series.introduction-detail-combo', ['combo_slug' => $series->combo_slug]) . '?series_action=scrollToList' }}"
+                                            class="text-primary mt-1 fs-6 d-block">
+                                            Chọn lộ trình và học ngay
+                                        </a>
+                                    @else
+                                        <a href="{{ route('series.introduction-detail', ['combo_slug' => $series->combo_slug, 'slug' => $series->slug]) . '?series_action=openRoadmapModal' }}"
+                                            class="text-primary mt-1 fs-6 d-block">
+                                            Chọn lộ trình và học ngay
+                                        </a>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    @else
+                        <div>
+                            <span>Bạn chưa học bài học nào.</span>
+                            <a href="/home" class="fs-5">Hãy chọn ngay cho mình một khoá học!</a>
+                        </div>
+                    @endif
+                </section>
+            </div>
         </div>
         <div class="recommended-series-section position-relative">
-            <h4 class="align-self-baseline mt-3">Gợi ý các khoá học</h4>
-            <div class="swiper swiper-container">
+            <div class="swiper swiper-container p-2">
+                <h4 class="align-self-baseline mt-3">Gợi ý các khoá học</h4>
                 <div class="swiper-wrapper">
                     @foreach ($other_combo_series as $recommended_series)
                         @if (isset($recommended_series->seriesList) && count($recommended_series->seriesList) > 0)
                             <div class="swiper-slide">
                                 <div class="course-card recommended"
-                                    @if ($recommended_series->checkMultipleCombo)
-                                        onclick="location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $recommended_series->slug]) }}'"
+                                    @if ($recommended_series->checkMultipleCombo) onclick="location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $recommended_series->slug]) }}'"
                                     @else
-                                        onclick="location.href='{{ route('series.introduction-detail', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'"
-                                    @endif
-                                >
+                                        onclick="location.href='{{ route('series.introduction-detail', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'" @endif>
                                     <img alt="course image" height="200" width="300"
                                         src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $recommended_series->image) }}" />
                                     <div class="course-card-body">
                                         <div class="course-card-title line-clamp-2">
                                             <h5 class="course-card-text">{{ $recommended_series->title }}</h5>
                                         </div>
-                                        <div class="d-flex justify-content-between gap-2 align-items-center card-price-container mb-1">
+                                        <div
+                                            class="d-flex justify-content-between gap-2 align-items-center card-price-container mb-1">
                                             <div class="d-flex flex-column align-items-baseline">
-                                                <p class="course-card-price mb-0">{{ $recommended_series->actualCost == 0 ? 'Miễn phí' : formatCurrencyVND($recommended_series->actualCost) }}</p>
+                                                <p class="course-card-price mb-0">
+                                                    {{ $recommended_series->actualCost == 0 ? 'Miễn phí' : formatCurrencyVND($recommended_series->actualCost) }}
+                                                </p>
                                                 @if ($recommended_series->checkPromotion)
-                                                    <span class="orginal-price">{{ formatCurrencyVND($recommended_series->cost) }}</span>
+                                                    <span
+                                                        class="orginal-price">{{ formatCurrencyVND($recommended_series->cost) }}</span>
                                                 @endif
                                             </div>
-                                            @if ($recommended_series->seriesList[0]->hasTrialContent && !$recommended_series->checkMultipleCombo && !$recommended_series->valid_payment)
+                                            @if (
+                                                $recommended_series->seriesList[0]->hasTrialContent &&
+                                                    !$recommended_series->checkMultipleCombo &&
+                                                    !$recommended_series->valid_payment)
                                                 <button class="trial-btn btn py-1"
                                                     onclick="event.stopPropagation(); location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'">
                                                     Học thử
@@ -227,8 +232,7 @@
                                         {{-- <div class="course-card-description line-clamp-2">{!! $recommended_series->short_description !!}</div> --}}
                                         <div>
                                             <i class="bi bi-calendar-event-fill"></i>
-                                            <span
-                                                class="ms-2 date-duration">Thời hạn: {{ $recommended_series->time }}
+                                            <span class="ms-2 date-duration">Thời hạn: {{ $recommended_series->time }}
                                                 tháng
                                             </span>
                                             <div class="d-flex align-items-center mt-2 info-course-card">
@@ -258,8 +262,12 @@
                                                 onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $recommended_series->slug]) . '?series_action=scrollToList' }}'">
                                                 Học ngay
                                             </button>
-                                        @elseif ($recommended_series->cost == 0 || (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) == 1))
-                                            @if (!$recommended_series->checkAllSeriesRoadmapOfSeriesComboChosen($roadmap_chosen_list) && $recommended_series->cost !== 0)
+                                        @elseif (
+                                            $recommended_series->cost == 0 ||
+                                                (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) == 1))
+                                            @if (
+                                                !$recommended_series->checkAllSeriesRoadmapOfSeriesComboChosen($roadmap_chosen_list) &&
+                                                    $recommended_series->cost !== 0)
                                                 <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                                     onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) . '?series_action=openRoadmapModal' }}'">
                                                     Học ngay
@@ -276,7 +284,8 @@
                                                 Mua ngay
                                             </button>
                                         @else
-                                            <button class="btn btn-primary w-100 mt-3 button-custom button-info" onclick="showAuthModalWithStopPropagation(event, true)">
+                                            <button class="btn btn-primary w-100 mt-3 button-custom button-info"
+                                                onclick="showAuthModalWithStopPropagation(event, true)">
                                                 Mua ngay
                                             </button>
                                         @endif
@@ -368,10 +377,10 @@
                 spaceBetween: 1,
                 loop: true,
                 allowTouchMove: false,
-                    autoplay: {
-                        delay: 5000,
-                        disableOnInteraction: false,
-                    },
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                },
                 navigation: {
                     nextEl: '.swiper-button-next',
                     prevEl: '.swiper-button-prev',

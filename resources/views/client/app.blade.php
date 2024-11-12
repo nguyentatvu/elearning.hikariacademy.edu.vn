@@ -341,10 +341,211 @@
         .button-toogle-robot:focus-visible {
             box-shadow: none;
         }
+
+        .custom-loader-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 999999999;
+        }
+
+        .custom-loader-image {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+        }
+
+        .custom-loader-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            animation: custom-bounce 2s infinite ease-in-out;
+        }
+
+        .custom-progress-container {
+            position: relative;
+            width: 300px;
+            height: 30px;
+            background: rgba(106, 196, 243, 0.2);
+            border-radius: 25px;
+            padding: 3px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .custom-progress {
+            width: 0%;
+            height: 100%;
+            background: #6AC4F3;
+            border-radius: 25px;
+            animation: custom-loading 2s ease-in-out infinite;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .custom-bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            animation: custom-float-bubble 2s infinite linear;
+        }
+
+        .custom-bubble:nth-child(1) {
+            width: 12px;
+            height: 12px;
+            left: 10%;
+            animation-delay: 0.2s;
+        }
+
+        .custom-bubble:nth-child(2) {
+            width: 8px;
+            height: 8px;
+            left: 30%;
+            animation-delay: 0.6s;
+        }
+
+        .custom-bubble:nth-child(3) {
+            width: 10px;
+            height: 10px;
+            left: 50%;
+            animation-delay: 0.4s;
+        }
+
+        .custom-star {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.6);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: custom-twinkle 1.5s infinite ease-in-out;
+        }
+
+        .custom-star:nth-child(4) {
+            left: 70%;
+            animation-delay: 0.3s;
+        }
+
+        .custom-star:nth-child(5) {
+            left: 85%;
+            animation-delay: 0.7s;
+        }
+
+        .custom-loading-text {
+            margin-top: 15px;
+            color: #6AC4F3;
+            font-size: 16px;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .custom-progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.2),
+                    transparent);
+            animation: custom-shimmer 2s infinite;
+        }
+
+        @keyframes custom-bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        @keyframes custom-loading {
+            0% {
+                width: 0%;
+            }
+
+            50% {
+                width: 100%;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+
+        @keyframes custom-float-bubble {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0.7;
+            }
+
+            50% {
+                transform: translateY(-5px) scale(1.2);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes custom-twinkle {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        @keyframes custom-shimmer {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(200%);
+            }
+        }
     </style>
 </head>
 
 <body>
+    <div class="custom-loader-container">
+        <div class="custom-loader-image">
+            <img src="https://media2.giphy.com/media/v8jUfaclrsG9x8At9Z/giphy.gif?cid=6c09b952f8e8eb8askp67jsi3d7yyr410hbs1r6sr8tbxkd7&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=g"
+                alt="Cute Loading Character" />
+        </div>
+        <div class="custom-progress-container">
+            <div class="custom-progress">
+                <div class="custom-bubble"></div>
+                <div class="custom-bubble"></div>
+                <div class="custom-bubble"></div>
+                <div class="custom-star"></div>
+                <div class="custom-star"></div>
+            </div>
+        </div>
+        <div class="custom-loading-text">Sắp xong rồi nè...bạn chờ một chút nhé 🌸</div>
+    </div>
     @if (request()->is('/'))
         <div class="robot-guide">
             <div class="robot-head">
@@ -591,76 +792,83 @@
                 }
             }
 
-            // Initialize robot guide
-            const robotGuide = new RobotGuide();
-
-            // Example usage:
-            const guideData = [{
-                    selector: '.learning-series-list',
-                    message: `
-                    🎉 Đây là danh sách các khoá học tiếng Nhật được thiết kế siêu trực quan để bạn dễ dàng tìm kiếm và chọn khoá học phù hợp nhất với mình. Hãy click vào bất kỳ khoá học nào để xem chi tiết và khám phá thêm nhé! Chúc bạn tìm được khoá học ưng ý! 🌸
-                    `
-                },
-                {
-                    selector: '.trial-btn',
-                    message: 'Để giúp học viên trải nghiệm trước khi đăng ký chính thức, mỗi khoá học có nút "Học thử". Bạn có thể nhấp vào đây để thử nghiệm nội dung mẫu của khoá học.'
-                },
-                {
-                    selector: '.date-duration',
-                    message: 'Thông tin về thời hạn của khoá học, ví dụ như "1 tháng" hoặc "2 tháng", giúp bạn lên kế hoạch học tập hợp lý.'
-                },
-                {
-                    selector: '.info-course-card',
-                    message: 'Biểu tượng số bài học và số chương cho thấy độ dài và độ chi tiết của khoá học.'
-                },
-                {
-                    selector: '.exam-series-list',
-                    message: 'Đây là danh sách các khoá luyện thi tiếng Nhật, được thiết kế trực quan để giúp học viên dễ dàng tìm hiểu và lựa chọn khoá phù hợp với nhu cầu và trình độ của mình của mình. Khi click vào 1 khoá luyện thi có thể xem được chi tiết khoá luyện thi đó đó'
-                },
-                {
-                    selector: '.my-icon-info',
-                    message: 'Điểm thưởng của bạn nè! 🌟 Con số bên cạnh huy chương này chính là thành quả hiện có bạn đã tích lũy được. Cùng tiếp tục khám phá và tăng số điểm này nhé! 🥰'
-                },
-                {
-                    selector: '.owned-login-streak',
-                    message: 'Đây là số ngày chuỗi đăng nhập liên tiếp của bạn! 🔥 Hãy cố gắng duy trì chuỗi này mỗi ngày để nhận thêm phần thưởng và giữ "ngọn lửa" học tập luôn bùng cháy nhé! 🚀'
-                },
-                {
-                    selector: '.my-course-info',
-                    message: `
-                        Đây là phần "Khóa học của tôi" – nơi bạn có thể theo dõi tiến độ học tập của mình! 📚\n
-                        Mỗi khóa học sẽ hiển thị mức độ hoàn thành, ngày giờ học gần nhất, và có nút "Tiếp tục học" để bạn dễ dàng quay lại và tiếp tục chinh phục kiến thức.\n
-                        Hãy duy trì nhịp học đều đặn để nhanh chóng hoàn thành các khóa học nhé! 🚀
-                    `
-                },
-                {
-                    selector: '.article-page',
-                    message: `
-                    📚 Khi bạn nhấn vào “Bài viết”, bạn sẽ thấy các thông tin mới nhất về sự kiện, tin tức và những bài viết hữu ích. Hãy chọn bài viết bạn thích để khám phá thêm nhé! Nếu chưa thấy bài viết nào, đừng lo, chúng mình sẽ cập nhật sớm thôi! 😊
-                    `
-                },
-                {
-                    selector: '.user-avatar',
-                    message: `
-                    Nhấn vào avatar nhỏ xinh để mở ra kho quản lý học tập của bạn nha! Ở đó có đầy đủ các mục như Trang cá nhân, Điểm tích lũy, Khóa học và nhiều điều thú vị khác đang chờ bạn khám phá. Bắt đầu thôi nào! ✨
-                    `
-                },
-                {
-                    selector: '.avatar-icon-mobile',
-                    message: `
-                    Nhấn vào avatar nhỏ xinh để mở ra kho quản lý học tập của bạn nha! Ở đó có đầy đủ các mục như Trang cá nhân, Điểm tích lũy, Khóa học và nhiều điều thú vị khác đang chờ bạn khám phá. Bắt đầu thôi nào! ✨
-                    `
-                },
-                {
-                    selector: '.button-info',
-                    message: `
-                    Nếu bạn đã sở hữu khoá học, nút ‘Học ngay’ sẽ hiện ra để bạn dễ dàng quay lại học bất cứ lúc nào. Còn nếu thấy nút ‘Mua ngay’, hãy click vào đó và mình sẽ đưa bạn tới trang thanh toán nhanh chóng để sở hữu khoá học đó nhé! Chúc bạn học vui và khám phá thật nhiều điều thú vị! 🌟
-                    `
-                }
-            ];
-
             // Set guides
-            robotGuide.setGuides(guideData);
+            @if (request()->is('/'))
+                // Initialize robot guide
+                const robotGuide = new RobotGuide();
+
+                // Example usage:
+                const guideData = [{
+                        selector: '.learning-series-list',
+                        message: `
+        🎉 Đây là danh sách các khoá học tiếng Nhật được thiết kế siêu trực quan để bạn dễ dàng tìm kiếm và chọn khoá học phù hợp nhất với mình. Hãy click vào bất kỳ khoá học nào để xem chi tiết và khám phá thêm nhé! Chúc bạn tìm được khoá học ưng ý! 🌸
+        `
+                    },
+                    {
+                        selector: '.trial-btn',
+                        message: 'Để giúp học viên trải nghiệm trước khi đăng ký chính thức, mỗi khoá học có nút "Học thử". Bạn có thể nhấp vào đây để thử nghiệm nội dung mẫu của khoá học.'
+                    },
+                    {
+                        selector: '.date-duration',
+                        message: 'Thông tin về thời hạn của khoá học, ví dụ như "1 tháng" hoặc "2 tháng", giúp bạn lên kế hoạch học tập hợp lý.'
+                    },
+                    {
+                        selector: '.info-course-card',
+                        message: 'Biểu tượng số bài học và số chương cho thấy độ dài và độ chi tiết của khoá học.'
+                    },
+                    {
+                        selector: '.exam-series-list',
+                        message: 'Đây là danh sách các khoá luyện thi tiếng Nhật, được thiết kế trực quan để giúp học viên dễ dàng tìm hiểu và lựa chọn khoá phù hợp với nhu cầu và trình độ của mình của mình. Khi click vào 1 khoá luyện thi có thể xem được chi tiết khoá luyện thi đó đó'
+                    },
+                    {
+                        selector: '.my-icon-info',
+                        message: 'Điểm thưởng của bạn nè! 🌟 Con số bên cạnh huy chương này chính là thành quả hiện có bạn đã tích lũy được. Cùng tiếp tục khám phá và tăng số điểm này nhé! 🥰'
+                    },
+                    {
+                        selector: '.owned-login-streak',
+                        message: 'Đây là số ngày chuỗi đăng nhập liên tiếp của bạn! 🔥 Hãy cố gắng duy trì chuỗi này mỗi ngày để nhận thêm phần thưởng và giữ "ngọn lửa" học tập luôn bùng cháy nhé! 🚀'
+                    },
+                    {
+                        selector: '.my-course-info',
+                        message: `
+            Đây là phần "Khóa học của tôi" – nơi bạn có thể theo dõi tiến độ học tập của mình! 📚\n
+            Mỗi khóa học sẽ hiển thị mức độ hoàn thành, ngày giờ học gần nhất, và có nút "Tiếp tục học" để bạn dễ dàng quay lại và tiếp tục chinh phục kiến thức.\n
+            Hãy duy trì nhịp học đều đặn để nhanh chóng hoàn thành các khóa học nhé! 🚀
+        `
+                    },
+                    {
+                        selector: '.article-page',
+                        message: `
+                            📚 Khi bạn nhấn vào “Bài viết”, bạn sẽ thấy các thông tin mới nhất về sự kiện, tin tức và những bài viết hữu ích. Hãy chọn bài viết bạn thích để khám phá thêm nhé! Nếu chưa thấy bài viết nào, đừng lo, chúng mình sẽ cập nhật sớm thôi! 😊
+                        `
+                    },
+                    {
+                        selector: '.user-avatar',
+                        message: `
+                            Nhấn vào avatar nhỏ xinh để mở ra kho quản lý học tập của bạn nha! Ở đó có đầy đủ các mục như Trang cá nhân, Điểm tích lũy, Khóa học và nhiều điều thú vị khác đang chờ bạn khám phá. Bắt đầu thôi nào! ✨
+                        `
+                    },
+                    {
+                        selector: '.avatar-icon-mobile',
+                        message: `
+                            Nhấn vào avatar nhỏ xinh để mở ra kho quản lý học tập của bạn nha! Ở đó có đầy đủ các mục như Trang cá nhân, Điểm tích lũy, Khóa học và nhiều điều thú vị khác đang chờ bạn khám phá. Bắt đầu thôi nào! ✨
+                        `
+                    },
+                    {
+                        selector: '.button-info',
+                        message: `
+                            Nếu bạn đã sở hữu khoá học, nút ‘Học ngay’ sẽ hiện ra để bạn dễ dàng quay lại học bất cứ lúc nào. Còn nếu thấy nút ‘Mua ngay’, hãy click vào đó và mình sẽ đưa bạn tới trang thanh toán nhanh chóng để sở hữu khoá học đó nhé! Chúc bạn học vui và khám phá thật nhiều điều thú vị! 🌟
+                        `
+                    }
+                ];
+
+                robotGuide.setGuides(guideData);
+            @endif
+        });
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelector('.custom-loader-container').style.display = 'none';
+            }, 800);
         });
     </script>
     @if (Auth::check())

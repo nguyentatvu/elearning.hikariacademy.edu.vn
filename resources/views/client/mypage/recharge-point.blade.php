@@ -1,8 +1,8 @@
 @extends('client.shared.mypage')
 
 @section('mypage-content')
-<div class="recharge-coin">
-    <div class="recharge-coin__list">
+<div class="recharge-coin card-section">
+    <div class="recharge-coin__list p-3">
         <div class="payment-list">
             <div class="payment-method selected" data-name="Momo" data-instruction="instruction_momo"
                 data-submit="submit_momo">
