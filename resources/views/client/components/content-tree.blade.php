@@ -30,6 +30,7 @@
                                 'is_valid_payment' => $isValidPayment,
                                 'isFreeSeries' => $isFreeSeries,
                                 'seriesType' => $seriesType,
+                                'testContentResult' => $testContentResult
                             ])
                             @endcomponent
                         </div>
@@ -49,8 +50,8 @@
                     <span>Nội dung bị ẩn</span>
                 </a>
             @else
-                <a href="{{ $isValidPayment || $content->type === App\LmsContent::SUMMARY_AND_INTRODUCTION ? $content->url : 'javascript:void(0)' }}"
-                    class="topic-content-link">
+                <a href="{{ $isValidPayment || $content->type === App\LmsContent::SUMMARY_AND_INTRODUCTION ? $content->contentLink : 'javascript:void(0)' }}"
+                    class="topic-content-link" onclick="{{ $content->clickEvent }}">
                     <img src="{{ asset('images/icons/' . config('constant.series.chapter_icons')[$content->type]) }}"
                         alt="image" class="chapter-image">
                     <span>{{ $content->bai }}</span>
