@@ -6,6 +6,7 @@ use App\Banner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Cache;
 
 class BannerController extends Controller
 {
@@ -111,6 +112,7 @@ class BannerController extends Controller
         }
 
         $banner->save();
+        Cache::forget('site_banners');
 
         return response()->json([
             'success' => true,
@@ -172,6 +174,7 @@ class BannerController extends Controller
         }
 
         $banner->delete();
+        Cache::forget('site_banners');
 
         return response()->json([
             'success' => true,
@@ -221,6 +224,8 @@ class BannerController extends Controller
                 }
                 $banner->image = null;
                 $banner->save();
+                Cache::forget('site_banners');
+
                 return response()->json([
                     'success' => true,
                     'message' => 'Banner updated successfully, image removed'
@@ -244,6 +249,8 @@ class BannerController extends Controller
                 }
                 $banner->image = null;
                 $banner->save();
+                Cache::forget('site_banners');
+
                 return response()->json([
                     'success' => true,
                     'message' => 'Banner updated successfully, all images removed'
@@ -295,6 +302,8 @@ class BannerController extends Controller
         }
 
         $banner->save();
+
+        Cache::forget('site_banners');
 
         return response()->json([
             'success' => true,
@@ -355,6 +364,7 @@ class BannerController extends Controller
 
         $banner->is_active = ($request->is_active === 'true') ? 1 : 0;
         $banner->save();
+        Cache::forget('site_banners');
 
         return $banner;
     }
