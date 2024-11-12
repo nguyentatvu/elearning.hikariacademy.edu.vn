@@ -2237,6 +2237,7 @@ try_again:
                         $link_data = '<p>Đã xác nhận</p>';
                         break;
                     case PaymentMethod::PAYMENT_PENDING:
+                    case PaymentMethod::PAYMENT_PENDING_OS:
                         $link_data = '
                             <div class="action-table-data">
                                 <button class="btn btn-success btn-rounded btn-fw" onclick="successOrder(' . $records->id . ')"><i class="mdi mdi-check"></i>Xác nhận</button>
@@ -2303,6 +2304,7 @@ try_again:
                         $link_data = '<p>Đã xác nhận</p>';
                         break;
                     case PaymentMethod::PAYMENT_PENDING:
+                    case PaymentMethod::PAYMENT_PENDING_OS:
                         $link_data = '
                             <div class="action-table-data">
                                 <button class="btn btn-success btn-rounded btn-fw" onclick="successOrder(' . $payment->id . ')"><i class="mdi mdi-check"></i>Xác nhận</button>
