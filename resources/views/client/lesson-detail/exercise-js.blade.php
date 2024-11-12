@@ -112,7 +112,7 @@
                     '                                            <div class="kg-study">\n' +
                     '                                                <div class="ct-lesson ct-lesson20">\n' +
                     '                                                    <div style="text-align: center" class="paragraph-les">\n' +
-                    '                                                        <div style="    text-align: left;display: inline-block;"><p style="text-align: unset">'+_currentData.mota+'</p></div>\n' +
+                    '                                                        <div style="    text-align: left;display: inline-block;"><p class="jp-font" style="text-align: unset">'+_currentData.mota+'</p></div>\n' +
                     '                                                    </div>\n' +
                     '                                                    <div class="list-select jp-font ">\n' +
                     _blockQuestion+
