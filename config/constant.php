@@ -86,7 +86,8 @@ return [
         'status' => [
             '0' => 'Chờ thanh toán',
             '1' => 'Thành công',
-            '2' => 'Thất bại'
+            '2' => 'Chờ thanh toán',
+            '3' => 'Thất bại'
         ],
         'min_valid_time' => 15
     ],

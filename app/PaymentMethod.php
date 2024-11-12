@@ -29,7 +29,8 @@ class PaymentMethod extends Model
 
     public const PAYMENT_PENDING = 0;
     public const PAYMENT_SUCCESS = 1;
-    public const PAYMENT_FAILED = 2;
+    public const PAYMENT_PENDING_OS = 2;
+    public const PAYMENT_FAILED = 3;
 
     public const PAYMENT_SERIES_TYPE = 0;
     public const PAYMENT_EXAM_SERIES_TYPE = 1;

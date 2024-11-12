@@ -184,6 +184,20 @@
                 left: 0;
             }
         }
+
+        .custom-tooltip {
+            --bs-tooltip-bg: var(--primary);
+            --bs-tooltip-color: var(--bs-white);
+            --bs-tooltip-max-width: 300px;
+        }
+
+        .custom-tooltip div {
+            text-align: start;
+        }
+
+        .custom-tooltip ul li {
+            list-style: decimal;
+        }
     </style>
     @yield('mypage-styles')
 @endsection
@@ -255,10 +269,10 @@
             </aside>
 
             <button class="toggle-btn">
-                <i class="bi bi-chevron-left" id="toggle-icon"></i>
+                <i class="bi" id="toggle-icon"></i>
             </button>
 
-            <main class="main-content-area">
+            <main class="main-content-area" style="background: #f8fafc;">
                 <div class="px-4">
                     <div class="mb-4">
                         <a href="/">
@@ -266,7 +280,9 @@
                         </a>
                         <strong><span id="tittle_my_page">Điểm tích lũy</span></strong>
                     </div>
-                    @yield('mypage-content')
+                    <div class="card-content">
+                        @yield('mypage-content')
+                    </div>
                 </div>
             </main>
         </div>
@@ -281,12 +297,28 @@
             const $toggleBtn = $('.toggle-btn');
             const $mainContent = $('.main-content-area');
             const $toggleIcon = $('#toggle-icon');
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+
+            if (isCollapsed) {
+                $sidebar.addClass('collapsed');
+                $toggleBtn.addClass('collapsed');
+                $mainContent.addClass('expanded');
+                $toggleIcon.addClass('bi-chevron-right');
+            } else {
+                $sidebar.removeClass('collapsed');
+                $toggleBtn.removeClass('collapsed');
+                $mainContent.removeClass('expanded');
+                $toggleIcon.addClass('bi-chevron-left');
+            }
 
             function toggleSidebar() {
                 $sidebar.toggleClass('collapsed');
                 $toggleBtn.toggleClass('collapsed');
                 $mainContent.toggleClass('expanded');
                 $toggleIcon.toggleClass('bi-chevron-left bi-chevron-right');
+
+                const isCollapsed = $sidebar.hasClass('collapsed');
+                localStorage.setItem('sidebarCollapsed', isCollapsed);
             }
 
             function handleMobileView() {
@@ -326,8 +358,7 @@
                 $('[data-bs-toggle="tooltip"]').tooltip();
             }
 
-            const activeText = $('.sidebar-my-page a.study-button').text();
-
+            const activeText = $('.sidebar-my-page a.study-button').text().trim();
             // Check if the text is "Điểm tích lũy" and call the function if true
             if (activeText === "Điểm tích lũy") {
                 const tooltipText =

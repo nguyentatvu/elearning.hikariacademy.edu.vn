@@ -11,7 +11,7 @@
     </style>
 @endsection
 @section('mypage-content')
-    <div class="reward-point">
+    <div class="reward-point card-section p-3">
         <div class="reward-point__wrapper">
             <div class="reward-point__overview">
                 <div class="reward-point__overview-item">
