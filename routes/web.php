@@ -68,6 +68,7 @@ Route::get('/roadmap', function () {
 Route::group([], function () {
     Route::match(['get', 'post'], '/login', 'Auth\LoginController@login')->name('login');
     Route::match(['get', 'post'], '/register', 'Auth\RegisterController@register')->name('register');
+    Route::post('/forgot-password', 'Auth\ForgotPasswordController@forgotPassword')->name('forgot-password');
     Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 });
 

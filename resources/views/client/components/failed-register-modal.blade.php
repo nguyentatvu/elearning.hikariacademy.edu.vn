@@ -24,7 +24,7 @@
                 <div class="login-failed text-danger d-none text-center">Tên hoặc mật khẩu không đúng</div>
                 <div class="captcha-failed text-danger d-none text-center">Hãy đánh dấu vào ô kiểm tra robot!</div>
                 <div class="forgot-password">
-                    <a href="#"> Quên mật khẩu </a>
+                    <a href="javascript:void(0);" class="text-secondary" data-tab="#forgot_password_content"> Quên mật khẩu </a>
                 </div>
                 <button class="btn btn-primary mt-2 submit-button" type="submit">Đăng nhập</button>
                 <div class="register">
@@ -74,6 +74,41 @@
         </form>
         <div class="side-photo">
             <img src="{{ asset('images/no-image.png') }}" alt="no iamge">
+        </div>
+    </div>
+
+    <!-- Forgot password -->
+    <div class="forgot-password-content auth-content animate__animated d-none" id="forgot_password_content">
+        <form class="forgot-password-form needs-validation" novalidate id="forgot_password_form">
+            <h1>Đặt lại mậu khẩu</h1>
+            <div>
+                <div class="mb-3">
+                    <label class="form-label text-primary" for="email_forgot_password">
+                        Email
+                    </label>
+                    <input class="form-control" type="email" name="email_forgot_password"
+                        id="email_forgot_password" placeholder="example@email.com" required />
+                    <div class="invalid-feedback">Vui lòng nhập vào đây</div>
+                    <span class="email-failed text-danger d-none"></span>
+                </div>
+                <button id="forgot_password_btn" class="btn btn-primary mt-2 submit-button" type="submit">Gửi</button>
+                <div class="register">
+                    Bạn chưa có tài khoản?
+                    <a href="javascript:void(0);" class="text-secondary"
+                        data-tab="#register_content">Đăng ký</a>
+                </div>
+                <div class="register">
+                    Bạn đã có tài khoản?
+                    <a href="javascript:void(0);" class="text-secondary"
+                        data-tab="#login_content">Đăng nhập</a>
+                </div>
+            </div>
+        </form>
+        <div class="side-photo">
+            @if (isset($banners['login_banner']) && $banners['login_banner']->is_active == \App\Enums\BannerStatus::ACTIVE)
+                <img src="{{ asset($banners['login_banner']->image) }}"
+                    alt="{{ $banners['login_banner']->title }}">
+            @endif
         </div>
     </div>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

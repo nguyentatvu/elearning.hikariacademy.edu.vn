@@ -9,6 +9,7 @@ Route::name('auth.')
         Route::post('register', 'Api\AuthController@register');
         Route::post('refresh', 'Api\AuthController@refresh');
         Route::post('logout', 'Api\AuthController@logout');
+        Route::post('forgot-password', 'Api\AuthController@forgotPassword');
         Route::patch('change-password', 'Api\AuthController@changePassword');
     });
 

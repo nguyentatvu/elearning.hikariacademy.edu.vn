@@ -32,7 +32,7 @@ class AuthController extends Controller
     public function __construct(UserService $userService, JWTAuth $jwt)
     {
         parent::__construct();
-        $this->middleware('auth:api', ['except' => ['login', 'register', 'refresh']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'refresh', 'forgotPassword']]);
         $this->userService = $userService;
     }
 
@@ -373,6 +373,74 @@ class AuthController extends Controller
         $this->userService->update($userId, ['password' => Hash::make($data['new_password'])]);
 
         return response()->json(['message' => 'Password has been successfully changed.'], Response::HTTP_OK);
+    }
+
+    /**
+     * @SWG\Post(
+     *    tags={"Auth"},
+     *    path="/auth/forgot-password",
+     *    summary="Forgot password",
+     *    @SWG\Parameter(
+     *         name="body",
+     *         in="body",
+     *         description="User's email",
+     *         required=true,
+     *         @SWG\Schema(
+     *             @SWG\Property(property="email", type="string", example="vu.nguyentat@gmail.com"),
+     *         ),
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful change password",
+     *         @SWG\Schema(
+     *             type="object",
+     *             @SWG\Property(property="message", type="string", example="Mật khẩu mới đã được gửi đi."),
+     *         )
+     *     ),
+     *     @SWG\Response(
+     *         response=422,
+     *         description="Unprocessable Entity",
+     *         @SWG\Schema(
+     *             type="object",
+     *             @SWG\Property(property="error", type="object",
+     *                 @SWG\Property(property="email", type="array", @SWG\Items(type="string"), example={"The email field is required.", "The email must be a valid email address."}),
+     *             )
+     *         )
+     *     ),
+     *     @SWG\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @SWG\Schema(
+     *             type="object",
+     *             @SWG\Property(property="error", type="string", example="Something went wrong.")
+     *         )
+     *     ),
+     *     security={{"bearer_token": {}}},
+     * )
+     */
+    public function forgotPassword(Request $request)
+    {
+        $data = $request->only(['email']);
+
+        $validator = Validator::make($data, [
+            'email' => 'bail|email|required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $result = $this->userService->forgotPassword($data['email']);
+
+        if ($result) {
+            return response()->json([
+                'message' => 'Mật khẩu mới đã được gửi đến địa chỉ ' . $data['email'] . '. (Vui lòng kiểm tra hộp thư rác).',
+            ], Response::HTTP_OK);
+        } else {
+            return response()->json([
+                'error' => 'Có luỗi xảy ra, vui lòng liên hệ với quản trị viên để khắc phục!',
+            ]);
+        }
     }
 
     /**
