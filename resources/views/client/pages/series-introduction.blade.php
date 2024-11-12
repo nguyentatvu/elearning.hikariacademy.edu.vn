@@ -121,16 +121,15 @@
 
         .button-container {
             display: flex;
-            gap: 12px;
             padding: 0 8px;
         }
 
         .button {
             flex: 1;
-            padding: 12px;
+            padding: 10px;
             border-radius: 12px;
             border: none;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             display: flex;
@@ -384,7 +383,7 @@
 
             .button {
                 padding: 10px;
-                font-size: 11px;
+                font-size: 16px;
             }
         }
     </style>
@@ -403,7 +402,7 @@
                             <circle cx="12" cy="12" r="10"></circle>
                             <polyline points="12 6 12 12 16 14"></polyline>
                         </svg>
-                        Thời gian: {{ $seriesCombo->month_duration }} tháng
+                        Thời hạn: {{ $seriesCombo->month_duration }} tháng
                     </div>
                 </div>
 
@@ -425,7 +424,7 @@
 
                     <div class="button-container">
                         @if (!$seriesCombo->checkMultipleCombo && $seriesCombo->cost != 0)
-                            <button class="button primary-button"
+                            <button class="button primary-button me-2"
                                 onclick="location.href='{{ route('home.roadmap', ['comboSlug' => $seriesCombo->slug, 'slug' => request()->route('slug')]) }}'">
                                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2">
@@ -502,19 +501,19 @@
                     @if (isset($series_description['time_description']))
                         <div class="mb-3">
                             <span class="fs-5 fw-bold"><i class="bi bi-clock"></i> Thời gian: </span>
-                            <span>{!! $series_description['time_description'] !!}</span>
+                            <span class="d-inline">{!! $series_description['time_description'] !!}</span>
                         </div>
                     @endif
                     @if (isset($series_description['curriculum_description']))
                         <div class="mb-3">
                             <span class="fs-5 fw-bold"><i class="bi bi-clipboard-data"></i> Giáo trình: </span>
-                            <span>{!! $series_description['curriculum_description'] !!}</span>
+                            <span class="d-inline">{!! $series_description['curriculum_description'] !!}</span>
                         </div>
                     @endif
                     @if (isset($series_description['teacher_description']))
                         <div class="mb-3">
                             <span class="fs-5 fw-bold"><i class="bi bi-person"></i> Giảng viên: </span>
-                            <span>{!! $series_description['teacher_description'] !!}</span>
+                            <span class="d-inline">{!! $series_description['teacher_description'] !!}</span>
                         </div>
                     @endif
                 </div>
