@@ -860,7 +860,7 @@ class MockExamController extends Controller
             }
 
             // EMAIL TEMPATE
-            $mail_template = $quiz->category_id <= 3 ? 'thongbaoketquathi' : 'thongbaoketquathi';
+            $mail_template = $quiz->category_id <= 3 ? 'thongbaoketquathi123' : 'thongbaoketquathi45';
             try {
                 sendEmail($mail_template, array(
                     'name' => $user_record->name,
