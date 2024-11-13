@@ -87,7 +87,7 @@ class UserService extends BaseService
         $point = 0;
         $pointRule = getRewardPointRule('daily_login')['milestones'];
         $convertedPointRule = collect($pointRule)->pluck('points', 'days')->all();
-        if (!$user->has_logged_in) {
+        if ($user->has_logged_in == false) {
             $reward_point = $this->caculateRewardPoints($user->login_streak, $convertedPointRule);
             $user->reward_point += $reward_point;
             $point = $reward_point;
