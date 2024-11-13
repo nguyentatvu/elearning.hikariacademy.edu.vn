@@ -49,19 +49,21 @@ class UserService extends BaseService
             ->first();
 
         if ($result && $result->type) {
-            if (in_array(
-                $result->type,
-                [
-                    LmsContent::VOCABULARY,
-                    LmsContent::STRUCTURE,
-                    LmsContent::KANJI,
-                    LmsContent::SUMMARY_AND_INTRODUCTION,
-                    LmsContent::TEST,
-                    LmsContent::PARTIAL_EXERCISE,
-                    LmsContent::SUMMARY_EXERCISE,
-                    LmsContent::REVIEW_EXERCISE
-                ]
-            )) {
+            if (
+                in_array(
+                    $result->type,
+                    [
+                        LmsContent::VOCABULARY,
+                        LmsContent::STRUCTURE,
+                        LmsContent::KANJI,
+                        LmsContent::SUMMARY_AND_INTRODUCTION,
+                        LmsContent::TEST,
+                        LmsContent::PARTIAL_EXERCISE,
+                        LmsContent::SUMMARY_EXERCISE,
+                        LmsContent::REVIEW_EXERCISE
+                    ]
+                )
+            ) {
                 DB::table('users')
                     ->where('id', $userId)
                     ->increment('reward_point', $rewardPoint);
@@ -78,44 +80,33 @@ class UserService extends BaseService
      *
      * @return void
      */
-    public function updateLoginStreak() {
+    public function updateLoginStreak()
+    {
         $user = Auth::user();
         $user->refresh();
-
-        $last_login_date = Carbon::parse($user->last_login_date);
-        $loginStreak = $user->login_streak;
         $point = 0;
         $pointRule = getRewardPointRule('daily_login')['milestones'];
         $convertedPointRule = collect($pointRule)->pluck('points', 'days')->all();
+        if (!$user->has_logged_in) {
+            $reward_point = $this->caculateRewardPoints($user->login_streak, $convertedPointRule);
+            $user->reward_point += $reward_point;
+            $point = $reward_point;
 
-        // Check if the last login was yesterday and login streak is 1 or more
-        if ($last_login_date->isYesterday() && $loginStreak >= 1) {
-            $user->login_streak += 1;
-            $reward_point = $this->caculateRewardPoints($user->login_streak, $convertedPointRule);
-            $user->reward_point += $reward_point;
-            $point = $reward_point;
-        } else {
-            // Reset login streak to 1 if login is not consecutive
-            $user->login_streak = 1;
-            $reward_point = $this->caculateRewardPoints($user->login_streak, $convertedPointRule);
-            $user->reward_point += $reward_point;
-            $point = $reward_point;
+            $dataPoint = [
+                'streak' => $point
+            ];
+
+            $this->updatePointHistory($dataPoint, $user->id);
+
+            // Update last login date and save the user
+            $user->has_logged_in = true;
+            $user->save();
+
+            return [
+                'point' => $point,
+                'streak' => $user->login_streak
+            ];
         }
-
-        $dataPoint = [
-            'streak' => $point
-        ];
-
-        $this->updatePointHistory($dataPoint, $user->id);
-
-        // Update last login date and save the user
-        $user->last_login_date = now();
-        $user->save();
-
-        return  [
-            'point' => $point,
-            'streak' => $user->login_streak
-        ];
     }
 
 
@@ -126,7 +117,8 @@ class UserService extends BaseService
      * @param  array $streak_conditions
      * @return int $rewarded_point
      */
-    public function caculateRewardPoints(int $login_streak, array $streak_conditions) {
+    public function caculateRewardPoints(int $login_streak, array $streak_conditions)
+    {
         $rewarded_point = 0;
         foreach ($streak_conditions as $min_streak => $coin_value) {
             if ($login_streak >= $min_streak) {
@@ -173,14 +165,16 @@ class UserService extends BaseService
             $user = $this->repository->create($data);
             $user->roles()->attach($user->role_id);
 
-            $emailSent = sendEmail('registration',
+            $emailSent = sendEmail(
+                'registration',
                 array(
                     'name' => $user->name,
                     'username' => $user->username,
                     'to_email' => $user->email,
                     'password' => $password,
                     'to_email_bcc' => env('TO_EMAIL_CC', 'dev@hikarinetworks.com')
-            ));
+                )
+            );
 
             if (!$emailSent) {
                 DB::rollBack();
@@ -189,7 +183,7 @@ class UserService extends BaseService
 
             DB::commit();
             return $user;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             throw $e;
         }
@@ -265,9 +259,9 @@ class UserService extends BaseService
             ->first();
 
         if ($lastUID) {
-            $uid  = $lastUID->uid;
-            $uid  = ++$uid;
-            $newUID  = str_pad($uid, 5, '0', STR_PAD_LEFT);
+            $uid = $lastUID->uid;
+            $uid = ++$uid;
+            $newUID = str_pad($uid, 5, '0', STR_PAD_LEFT);
             $newUID = '' . $newUID . '';
         }
 
@@ -305,7 +299,8 @@ class UserService extends BaseService
      * @param string $userId
      * @return void
      */
-    public function updatePointHistory($data, string $userId = '') {
+    public function updatePointHistory($data, string $userId = '')
+    {
         $this->repository->updatePointHistory($data, $userId);
     }
 
@@ -317,7 +312,8 @@ class UserService extends BaseService
      * @param string $userId
      * @return void
      */
-    public function updateSeriesViewsHistory(array $historyArray, $seriesId, ?string $userId = '') {
+    public function updateSeriesViewsHistory(array $historyArray, $seriesId, ?string $userId = '')
+    {
         $currentTime = date('Y-m-d H:i:s');
 
         $seriesIds = is_array($seriesId) ? $seriesId : [$seriesId];
@@ -351,8 +347,9 @@ class UserService extends BaseService
         $this->repository->update($userId, ['series_views_history' => $historyArray]);
     }
 
-    public function forgotPassword(string $email) {
-        $user  = $this->repository->getByConditions(['email' => $email]);
+    public function forgotPassword(string $email)
+    {
+        $user = $this->repository->getByConditions(['email' => $email]);
 
         DB::beginTransaction();
 
@@ -393,13 +390,14 @@ class UserService extends BaseService
 
     }
 
-    private function makePasswordFromUniqID($length = 6){
-	    if ($length > 16)  {
-			$length = 16;
-		}
-		$uuid = uniqid('', true);
-		$password = substr($uuid, 6, $length);
+    private function makePasswordFromUniqID($length = 6)
+    {
+        if ($length > 16) {
+            $length = 16;
+        }
+        $uuid = uniqid('', true);
+        $password = substr($uuid, 6, $length);
 
-		return $password;
-	}
+        return $password;
+    }
 }

@@ -453,10 +453,9 @@
                     await animateHicoin(rewardPoint);
                     await checkFinishContent();
                 }
-                let lastLogin = '{{ \Carbon\Carbon::parse(Auth::user()->last_login_date)->format('Y-m-d') }}';
-                let today = '{{ \Carbon\Carbon::today()->format('Y-m-d') }}';
+                let logged = '{{ Auth::user()->has_logged_in }}';
 
-                if (lastLogin != today) {
+                if (logged == false) {
                     showDailyStreak('{{ $detailContent->id }}');
                 }
             @endif
