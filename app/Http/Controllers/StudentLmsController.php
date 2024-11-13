@@ -294,7 +294,7 @@ class StudentLmsController extends Controller
 
         $this->prepContent['test_content_result'] = $this->getPassedTestInfo(
             $this->prepContent['test_content'],
-            Auth::id()
+            Auth::id() ?? "-1"
         );
 
         $this->prepContent['contents']->each(function ($item) use ($params) {

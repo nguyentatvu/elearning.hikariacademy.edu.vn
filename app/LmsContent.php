@@ -132,6 +132,14 @@ class LmsContent extends Model
         $isContentBlocked = false;
         $incompleteTestTitle = '';
         $checkTestContentExists = count($testContentResult) > 0;
+
+        if (!$checkTestContentExists) {
+            return [
+                'isContentBlocked' => false,
+                'incompleteTestTitle' => ''
+            ];
+        }
+
         $firstTestContentOrder = array_keys($testContentResult)[0];
 
         if (!$this->stt <= $testContentResult[$firstTestContentOrder]) {
@@ -149,7 +157,7 @@ class LmsContent extends Model
         }
 
         return [
-            'isContentBlocked' => $isContentBlocked && $checkTestContentExists,
+            'isContentBlocked' => $isContentBlocked,
             'incompleteTestTitle' => $incompleteTestTitle
         ];
     }
