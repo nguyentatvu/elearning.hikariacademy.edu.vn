@@ -31,6 +31,7 @@ use Response;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 class StudentLmsController extends Controller
@@ -73,7 +74,8 @@ class StudentLmsController extends Controller
      *
      * @return boolean
      */
-    private function checkRoadmapChosen() {
+    private function checkRoadmapChosen()
+    {
         $chosenRoadmapList = $this->userRoadmapService->userChosenRoadmapList(Auth::id() ?? -1);
         $series = $this->prepContent['series'];
 
@@ -94,7 +96,8 @@ class StudentLmsController extends Controller
      * @param array $params
      * @return void
      */
-    private function transferFlashMessage($params) {
+    private function transferFlashMessage($params)
+    {
         if (session()->has('flash_message') && $params['stt'] === '') {
             $message = session()->get('flash_message');
 
@@ -366,7 +369,8 @@ class StudentLmsController extends Controller
      * @param string $userId
      * @return mixed
      */
-    private function getPassedTestInfo(array $testContents, string $userId) {
+    private function getPassedTestInfo(array $testContents, string $userId)
+    {
         $testContentIds = array_column($testContents, 'id');
         $passedTestList = DB::table('lms_test_result')
             ->select('lmscontent_id')
@@ -1100,23 +1104,20 @@ class StudentLmsController extends Controller
     {
         $data['title'] = 'Roadmap';
         $data['class'] = 'roadmap';
-        if (!auth()->check()) {
-            flash('Thông báo', 'Bạn chưa đăng nhập', 'error');
-            return redirect()->route('home');
-        } else {
-            $serie = DB::table('lmsseries')->where('slug', $slug)->first();
-            $serieCombo = DB::table('lmsseries_combo')->where('slug', $comboSlug)->first();
-            $serieId = $serie->id;
-
+        $serie = DB::table('lmsseries')->where('slug', $slug)->first();
+        $serieCombo = DB::table('lmsseries_combo')->where('slug', $comboSlug)->first();
+        $serieId = $serie->id;
+        $lastViewedContent = null;
+        if (auth()->check()) {
             $lastViewedContent = $this->lmsStudentViewService->getLastViewedContentOfStudent($serieId);
-
-            $roadMap = DB::table('roadmaps')->where('lmsseries_id', $serieId)->orderBy('duration_months')->get();
-
-            $data['road_map'] = $roadMap;
-            $data['last_view'] = $lastViewedContent;
-            $data['serie'] = $serie;
-            $data['serie_combo'] = $serieCombo;
         }
+
+        $roadMap = DB::table('roadmaps')->where('lmsseries_id', $serieId)->orderBy('duration_months')->get();
+
+        $data['road_map'] = $roadMap;
+        $data['last_view'] = $lastViewedContent;
+        $data['serie'] = $serie;
+        $data['serie_combo'] = $serieCombo;
 
         return view('client.pages.roadmap', $data);
     }
@@ -1213,10 +1214,25 @@ class StudentLmsController extends Controller
             ->where('lmsseries_id', $serieId)
             ->where('duration_months', $month)
             ->first();
+        $FINISH = 1;
+        $lmsContentViewedUser = DB::table('lms_student_view')
+            ->join('lmscontents', 'lms_student_view.lmscontent_id', '=', 'lmscontents.id')
+            ->where('lms_student_view.users_id', Auth::id())
+            ->where('lmscontents.lmsseries_id', $serieId)
+            ->where('finish', $FINISH)
+            ->pluck('lms_student_view.lmscontent_id');
 
         $roadMapContent = json_decode($roadMap->contents);
         $dayViewedContent = null;
         $dayCount = count($roadMapContent);
+
+        foreach ($roadMapContent as &$day) {
+            if (isset($day->lesson_list)) {
+                foreach ($day->lesson_list as &$lesson) {
+                    $lesson->finish = in_array($lesson->id, $lmsContentViewedUser->toArray()) ? 1 : 0;
+                }
+            }
+        }
 
         if ($lastViewedContent) {
             foreach ($roadMapContent as $day) {
@@ -1232,15 +1248,73 @@ class StudentLmsController extends Controller
             $lastViewedContent = null;
         }
 
+
         $weeks = $this->groupLessonsByWeek($roadMapContent);
+        $processedWeeks = $this->processCourseCompletion($weeks);
 
         return response()->json([
-            'road_map' => $weeks,
+            'road_map' => $processedWeeks,
             'last_view' => $lastViewedContent,
             'day_last_view' => $dayViewedContent,
             'detail' => $roadMap,
             'day_count' => $dayCount,
         ]);
+    }
+
+    protected function processCourseCompletion($weeks)
+    {
+        $allWeeksFinished = true;
+
+        // Process each week
+        foreach ($weeks as &$week) {
+            $allDaysInWeekFinished = true;
+
+            // Process each day in the week
+            foreach ($week['days'] as &$day) {
+                if (isset($day->lesson_list) && !empty($day->lesson_list)) {
+                    $allLessonsFinished = true;
+
+                    // Check if day is a rest day
+                    $isRestDay = false;
+                    if (
+                        count($day->lesson_list) === 1 &&
+                        isset($day->lesson_list[0]->type) &&
+                        $day->lesson_list[0]->type === 'rest'
+                    ) {
+                        $isRestDay = true;
+                    }
+
+                    // If not a rest day, check all lessons
+                    if (!$isRestDay) {
+                        foreach ($day->lesson_list as $lesson) {
+                            if (!isset($lesson->finish) || $lesson->finish !== 1) {
+                                $allLessonsFinished = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    // Add finish_day property if all lessons are finished or it's a rest day
+                    $day->finish_day = $allLessonsFinished || $isRestDay;
+
+                    if (!$day->finish_day) {
+                        $allDaysInWeekFinished = false;
+                    }
+                }
+            }
+
+            // Add finish_week property if all days in week are finished
+            $week['finish_week'] = $allDaysInWeekFinished;
+
+            if (!$allDaysInWeekFinished) {
+                $allWeeksFinished = false;
+            }
+        }
+
+        // Add finish_course property if all weeks are finished
+        $weeks['finish_course'] = $allWeeksFinished;
+
+        return $weeks;
     }
 
     /**

@@ -293,6 +293,7 @@
                 background-size: cover;
                 height: 400px;
             }
+
             .serie-image {
                 display: none;
             }
@@ -305,6 +306,76 @@
 
         .bubble {
             z-index: 99;
+        }
+
+        .news-item {
+            position: relative;
+            width: 100%;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Content lesson section */
+        .content-lesson {
+            flex-grow: 1;
+            gap: 12px;
+        }
+
+        .content-lesson img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
+        .content-lesson p {
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        /* Link icon styles */
+        .fa-link {
+            color: #6c757d;
+            font-size: 16px;
+            margin-left: 12px;
+        }
+
+        /* Finished state styles */
+        .news-item.finished {
+            border-left: 4px solid #4CAF50;
+        }
+
+        .news-item.finished::after {
+            content: '✓';
+            position: absolute;
+            right: 40px;
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        /* Hover effect */
+        .news-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .news-item {
+                padding: 12px;
+            }
+
+            .content-lesson img {
+                width: 20px;
+                height: 20px;
+            }
         }
     </style>
 @endsection
@@ -384,6 +455,7 @@
 
         // jQuery function
         $(document).ready(function() {
+
             const styles = `
                 .bubble {
                     position: absolute;
@@ -494,7 +566,6 @@
             // Function to create a bubble
             function createBubble() {
                 const $card = $('.serie-content');
-
                 if ($card.length === 0) return;
 
                 const $bubble = $('<div class="bubble"></div>');
@@ -562,28 +633,33 @@
             // load roadmap
             loadRoadMapByURL();
 
-            // Rest of your existing code...
-            // [Keep all the existing roadmap-related functions here]
-
-            // Function to create a random pastel gradient
             function getRandomPastelGradient() {
                 const colors = [];
                 for (let i = 0; i < 2; i++) {
-                    const hue = Math.random() * 360; // H hue
-                    const saturation = Math.random() * 30 + 50; // S saturation from 50% to 80%
-                    const lightness = Math.random() * 20 + 70; // L lightness from 70% to 90%
+                    const hue = Math.random() * 360;
+                    const saturation = Math.random() * 30 + 50;
+                    const lightness = Math.random() * 20 + 70;
                     colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
                 }
                 return `linear-gradient(to right, ${colors.join(', ')})`;
             }
 
             const container = document.getElementById("news-sections");
+            let dayPositions = [];
 
-            // Current date as reference
-            const today = new Date();
+            function loadDataRoadMap(data) {
+                // Clear existing content
+                container.innerHTML = '';
 
-            function loadDataRoadMap(sections) {
-                sections.forEach((section, sectionIndex) => {
+                // Process only numeric keys (weeks) from the data object
+                Object.keys(data).forEach(key => {
+                    // Skip if not a week object (e.g., skip finish_course)
+                    if (key === 'finish_course' || !data[key].week) {
+                        return;
+                    }
+
+                    const section = data[key];
+
                     // Create header section
                     const header = document.createElement('div');
                     header.classList.add('header', 'd-flex', 'align-items-center', 'header-week');
@@ -591,40 +667,48 @@
                     header.innerHTML = `
                         <h1 class="me-auto">${section.week}</h1>
                         <p>${section.message}</p>
-                        <img class="ms-2" alt="Daily icon" src="{{ asset('images/icons/schedule-icon.png') }}" />
+                        <img class="ms-2" alt="Daily icon" src="/images/icons/schedule-icon.png" />
                     `;
                     container.appendChild(header);
 
-                    // Load the days from section.days
-                    section.days.forEach(dayData => {
-                        const dayHeader = document.createElement('h4');
-                        dayHeader.textContent =
-                            `Ngày ${dayData.day_number}`; // Set value for h4 tag
-                        dayHeader.setAttribute('data-day', dayData
-                            .day_number); // Add data-day attribute
-                        container.appendChild(dayHeader); // Add h4 tag to container
+                    // Load the days
+                    if (Array.isArray(section.days)) {
+                        section.days.forEach(dayData => {
+                            // Create day header
+                            const dayHeader = document.createElement('h4');
+                            dayHeader.textContent = `Ngày ${dayData.day_number}`;
+                            dayHeader.setAttribute('data-day', dayData.day_number);
+                            dayHeader.setAttribute('data-finished', dayData.finish_day);
+                            container.appendChild(dayHeader);
 
-                        // Create a row for each day's news items
-                        const row = document.createElement('div');
-                        row.classList.add('row');
+                            // Create row for lessons
+                            const row = document.createElement('div');
+                            row.classList.add('row');
 
-                        dayData.lesson_list.forEach(item => {
-                            const col = document.createElement('div');
-                            col.classList.add('col-12', 'col-md-6', 'col-lg-4', 'd-flex');
-                            col.innerHTML = `
-                                <div class="news-item">
-                                    <div class="content-lesson d-flex align-items-center">
-                                        <img src="${checkType(item.type)}" alt="${item.name}" />
-                                        <p>${item.name}</p>
-                                    </div>
-                                    <i class="fas fa-link"></i>
-                                </div>
-                            `;
-                            row.appendChild(col);
+                            // Add lessons
+                            if (Array.isArray(dayData.lesson_list)) {
+                                dayData.lesson_list.forEach(item => {
+                                    const col = document.createElement('div');
+                                    const isFinished = item.finish;
+                                    console.log(item);
+                                    col.classList.add('col-12', 'col-md-6', 'col-lg-4',
+                                        'd-flex');
+                                    col.innerHTML = `
+                                        <div class="news-item ${isFinished ? 'finished' : ''}">
+                                            <div class="content-lesson d-flex align-items-center">
+                                                <img src="${checkType(item.type)}" alt="${item.name}" />
+                                                <p>${item.name}</p>
+                                            </div>
+                                            <i class="fas fa-link"></i>
+                                        </div>
+                                    `;
+                                    row.appendChild(col);
+                                });
+                            }
+
+                            container.appendChild(row);
                         });
-
-                        container.appendChild(row);
-                    });
+                    }
                 });
             }
 
@@ -638,12 +722,8 @@
                     handwriting: "{{ asset('images/icons/handwriting.svg') }}",
                     rest: "{{ asset('images/icons/Paradise-icon.svg') }}",
                 };
-
                 return icons[type] || "";
             }
-
-
-            let dayPositions = [];
 
             function locationIcon() {
                 let roadMapHeight = $('.roadmap').outerHeight();
@@ -651,41 +731,42 @@
                 let seriecCardHeight = $('#serie_card').outerHeight();
 
                 $('.left-side').css('height', roadMapHeight);
+                dayPositions = [];
 
                 $('h4').each(function(index, element) {
                     const positionFromTop = $(element).offset().top;
                     dayPositions.push({
                         day: $(element).data('day'),
-                        position: positionFromTop - headerHeight - seriecCardHeight
+                        position: positionFromTop - headerHeight - seriecCardHeight,
+                        isFinished: $(element).data('finished')
                     });
                 });
 
                 dayPositions.forEach((dayPosition) => {
                     const icon = $('<span class="location-day"><i class="bi bi-geo-alt-fill"></i></span>');
 
-                    // Set the top position for each icon based on the dayPositions
+                    // Set initial color based on finish status
+                    const backgroundColor = dayPosition.isFinished ? '#198754' : '#DDDDDD';
+
                     icon.css({
-                        backgroundColor: '#DDDDDD',
+                        backgroundColor: backgroundColor,
                         borderRadius: '50%',
                         padding: '5px 10px',
                         position: 'absolute',
                         top: `${dayPosition.position}px`,
                         left: '50%',
                         transform: 'translateX(-50%)',
-                        color: 'white', // Use your preferred color
+                        color: 'white',
                         fontSize: '16px',
                         zIndex: 10,
                     });
 
-                    // Append the icon to the left-side div
                     $('.location-days').append(icon);
                 });
             }
 
             function setCarPosition(date, lms_id) {
-                if (!date && !lms_id) {
-                    return;
-                }
+                if (!date || !lms_id) return;
 
                 const currentDayPosition = dayPositions.find(dp => dp.day == date);
                 if (!currentDayPosition) {
@@ -693,108 +774,91 @@
                     return;
                 }
 
-                const currentDayIndex = dayPositions.findIndex(dp => dp.day == date);
-                const nextDayPosition = dayPositions[currentDayIndex + 1];
+                // Convert object to array and then use flatMap
+                const sectionsArray = Object.values(sections).filter(item => Array.isArray(item?.days));
+                const currentDayData = sectionsArray.flatMap(s => s.days).find(d => d.day_number == date);
 
-                const leftSideHeight = $('.left-side').outerHeight();
-                const distanceToNextDay = nextDayPosition ?
-                    nextDayPosition.position - currentDayPosition.position :
-                    leftSideHeight - currentDayPosition.position;
-
-                const sectionForDate = sections.find(section => {
-                    return section.days.some(day => (day.day_number) == date);
-                });
-
-                if (!sectionForDate) {
-                    console.error('Section not found for the given date');
+                if (!currentDayData) {
+                    console.error('Day data not found');
                     return;
                 }
 
-                const dayData = sectionForDate.days.find(day => day.day_number == date);
-                const itemIndex = dayData.lesson_list.findIndex(item => item.id == lms_id);
-
+                const itemIndex = currentDayData.lesson_list.findIndex(item => item.id == lms_id);
                 if (itemIndex == -1) {
                     console.error('LMS ID not found in sections');
                     return;
                 }
 
-                const totalItems = dayData.lesson_list.length;
-
-                const offsetPercentage = itemIndex / totalItems;
-                const itemOffsetWithinDay = distanceToNextDay * offsetPercentage;
-                const carTopPosition = currentDayPosition.position + itemOffsetWithinDay;
-
+                const carTopPosition = currentDayPosition.position;
                 const carPosition = $('.car').offset().top;
                 const distance = Math.abs(carTopPosition - carPosition);
+                const animationDuration = distance / 1000 * 1000;
 
-                const speed = 1000;
-                const animationDuration = distance / speed * 1000;
-                // Find the last day in the last week
-                const lastWeek = sections[sections.length - 1]; // Last week
-                const lastDay = lastWeek.days[lastWeek.days.length - 1]; // Last day of the last week
-                const lastItemIndex = lastDay.lesson_list.length - 1; // Last item index
+                // Check if this is the last day and course is finished
+                const lastSection = sectionsArray[sectionsArray.length - 1];
+                const isLastDay = lastSection?.days[lastSection.days.length - 1]?.day_number === date;
+                const isCourseFinished = sections.finish_course;
 
-                if (itemIndex == lastItemIndex && sectionForDate.days == lastWeek.days) {
-                    $('.car').animate({
-                        top: leftSideHeight - 10
-                    }, animationDuration, function() {
+                $('.car').animate({
+                    top: `${carTopPosition}px`
+                }, animationDuration, function() {
+                    if (isLastDay && isCourseFinished) {
                         Swal.fire({
                             title: 'Congratulations!',
                             text: 'You have completed the course.',
                             icon: 'success',
                             confirmButtonText: 'Close'
                         });
-                    });
-                    updateLocationDayColors(leftSideHeight - 10);
-                } else {
-                    $('.car').animate({
-                        top: `${carTopPosition}px`
-                    }, animationDuration, function() {
+                    }
+                });
 
-                    });
-                    updateLocationDayColors(carTopPosition);
-                }
+                updateLocationDayColors(date);
             }
 
-            const finishGateWaytHeight = $('.finish').outerHeight(true);
+            function updateLocationDayColors(currentDay) {
+                // Convert object to array and filter out non-week items
+                const sectionsArray = Object.values(sections).filter(item => Array.isArray(item?.days));
 
-            // Function to update the color of .location-day icons based on the current day's status
-            function updateLocationDayColors(carTopPosition) {
-                // Start from the first day in the dayPositions list
                 dayPositions.forEach((dayPosition, index) => {
                     const icon = $('.location-day').eq(index);
+                    const dayData = sectionsArray.flatMap(s => s.days).find(d => d.day_number == dayPosition
+                        .day);
 
                     let backgroundColor;
-
-                    // Check if the car is between the current day and the next day (still studying the current day)
-                    if (index < dayPositions.length - 1 &&
-                        carTopPosition > dayPosition.position &&
-                        carTopPosition < dayPositions[index + 1].position) {
-                        backgroundColor = '#ffc107'; // Yellow for the current day being studied
-                    } else if (carTopPosition >= dayPosition.position) {
-                        // Check if it's the last day
-                        if (index == dayPositions.length - 1) {
-                            // If the car hasn't reached the bottom of the .left-side, still show yellow
-                            const leftSideHeight = $('.left-side').outerHeight();
-                            if (carTopPosition == (leftSideHeight - 10)) {
-                                backgroundColor = '#198754'; // Green if reached the end
-                            } else if (carTopPosition < (leftSideHeight - 10)) {
-                                backgroundColor = '#ffc107'; // Yellow if not at the end yet
-                            }
+                    if (dayData) {
+                        if (dayData.finish_day) {
+                            backgroundColor = '#198754'; // Green for completed days
+                        } else if (dayPosition.day == currentDay) {
+                            backgroundColor = '#ffc107'; // Yellow for current day
                         } else {
-                            backgroundColor = 'green'; // Green for days already studied
+                            backgroundColor = '#DDDDDD'; // Gray for incomplete days
                         }
                     } else {
-                        backgroundColor = 'gray'; // Gray for days not yet studied
+                        backgroundColor = '#DDDDDD';
                     }
-                    // Update the background color of the icon
+
                     icon.css('background-color', backgroundColor);
                 });
             }
+
             $('.roadmap-select').on('change', function() {
                 const selectedValue = $(this).val();
                 const selectedMonth = parseInt(selectedValue);
-                loadRoadMap(selectedMonth, '{{ $serie_combo->slug }}', '{{ $serie->slug }}');
+
+                if ($('.main-content').scrollTop() === 0) {
+                    // If already at the top, call loadRoadMap immediately
+                    loadRoadMap(selectedMonth, '{{ $serie_combo->slug }}', '{{ $serie->slug }}');
+                } else {
+                    // Otherwise, scroll to the top and set a timeout before calling loadRoadMap
+                    $('.main-content').animate({
+                        scrollTop: 0
+                    }, 'smooth');
+
+                    setTimeout(function() {
+                        loadRoadMap(selectedMonth, '{{ $serie_combo->slug }}',
+                            '{{ $serie->slug }}');
+                    }, 500);
+                }
             });
 
             function loadRoadMap(month, comboSlug, slug) {
@@ -810,8 +874,7 @@
                         slug: slug,
                     },
                     headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                            'content')
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
                         $("#news-sections").html('');
@@ -819,27 +882,24 @@
                         sections = response.road_map;
                         dayPositions = [];
                         $('.left-side').show();
-                        $('#information-serie').html(
-                            `
-                            <div>
-                                <strong>🏁 Lộ trình ${response.detail.duration_months} tháng:</strong>
-                                Hoàn thành mục tiêu trong ${response.detail.duration_months * 30} ngày chỉ với ${response.day_count} buổi học!
-                            </div>
-                            `
-                        );
-                        loadDataRoadMap(response.road_map)
+                        $('#information-serie').html(`
+                    <div>
+                        <strong>🏁 Lộ trình ${response.detail.duration_months} tháng:</strong>
+                        Hoàn thành mục tiêu trong ${response.detail.duration_months * 30} ngày chỉ với ${response.day_count} buổi học!
+                    </div>
+                `);
+                        loadDataRoadMap(response.road_map);
                         locationIcon();
                         setCarPosition(response.day_last_view, response.last_view);
                     },
                     error: function(xhr, status, error) {
-                        console.error('Lỗi không tải dữ liệu:');
+                        console.error('Lỗi không tải dữ liệu:', error);
                     }
                 });
             }
 
             function loadRoadMapByURL() {
                 const urlParams = new URLSearchParams(window.location.search);
-
                 let month = urlParams.get('month');
 
                 if (month !== null && month !== undefined) {
