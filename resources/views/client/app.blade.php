@@ -530,7 +530,7 @@
 </head>
 
 <body>
-    {{-- <div class="custom-loader-container">
+    <div class="custom-loader-container">
         <div class="custom-loader-image">
             <img src="{{ asset('images/icons/loading.gif') }}"
                 alt="Cute Loading Character" />
@@ -545,7 +545,7 @@
             </div>
         </div>
         <div class="custom-loading-text">Sắp xong rồi nè...bạn chờ một chút nhé 🌸</div>
-    </div> --}}
+    </div>
     @if (request()->is('/'))
         <div class="robot-guide">
             <div class="robot-head">
