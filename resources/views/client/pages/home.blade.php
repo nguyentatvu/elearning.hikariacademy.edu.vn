@@ -324,12 +324,12 @@
                                     @elseif (Auth::check())
                                         <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                             onclick="event.stopPropagation(); location.href='{{ route('payments.lms', $learning_series->slug) }}'">
-                                            Học ngay
+                                            Mua ngay
                                         </button>
                                     @else
                                         <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                             onclick="showAuthModalWithStopPropagation(event, true)">
-                                            Học ngay
+                                            Mua ngay
                                         </button>
                                     @endif
                                 </div>
