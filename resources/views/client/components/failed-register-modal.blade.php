@@ -73,7 +73,10 @@
             </div>
         </form>
         <div class="side-photo">
-            <img src="{{ asset('images/no-image.png') }}" alt="no iamge">
+            @if (isset($banners['register_banner']) && $banners['register_banner']->is_active == \App\Enums\BannerStatus::ACTIVE)
+                <img src="{{ asset($banners['register_banner']->image) }}"
+                    alt="{{ $banners['register_banner']->title }}">
+            @endif
         </div>
     </div>
 

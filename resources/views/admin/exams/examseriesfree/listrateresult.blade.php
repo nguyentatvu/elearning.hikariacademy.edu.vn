@@ -59,7 +59,7 @@
  	@php
 	// MAKE DEFAULT VALUE COLUMN
 	$defaultColumns = [
-		'user_id', 'title', 'total_marks', 'total_marks', 'finish', 'action'
+		'user_id', 'title', 'quiz_1_total', 'total_marks', 'finish', 'action'
 	];
 	@endphp
 	@include('admin.common.datatables', array('route'=>$url, 'route_as_url' => TRUE, 'pdf'=>'0,1,2,3,4', 'table_columns' => $defaultColumns))

@@ -18,13 +18,43 @@
     .banner-section {
         height: 420px;
         position: relative;
-        background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='8' ry='8' stroke='%23333' stroke-width='4' stroke-dasharray='20%2c 20' stroke-dashoffset='21' stroke-linecap='square'/%3e%3c/svg%3e");
+        background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='8' ry='8' stroke='%23a3a3a3' stroke-width='4' stroke-dasharray='20%2c 20' stroke-dashoffset='21' stroke-linecap='square'/%3e%3c/svg%3e");
         border-radius: 8px;
-        display: flex;
-        align-items: center;
+        padding: 2px;
 
-        @include mq (max-tb) {
-            justify-content: center;
+        .grid-background {
+            background-image: linear-gradient(#e5e5e5 1px, transparent 1px), linear-gradient(90deg, #e5e5e5 1px, transparent 1px);
+            background-size: 20px 20px;
+            position: relative;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+
+            @include mq (max-tb) {
+                justify-content: center;
+            }
+
+            .curved-clip {
+                position: absolute;
+                transform: scale(1.05);
+                top: 16px;
+                right: 60px;
+                width: 400px;
+                height: 400px;
+                overflow: hidden;
+                clip-path: path('M361.19704,350.413877c-12.069477,14.362282-27.689809,22.496204-44.582644,28.897468-17.289848,5.225917-39.222791,5.426097-67.927555,5.206568-16.964803-.763696-47.721982-5.837777-62.137933-9.732448-13.572985-3.990884-40.884232-12.504632-55.380818-17.406657-20.649391-5.947195-41.090652-15.9041-52.740749-22.211448s-25.673824-15.413809-42.193848-28.365612c-9.437969-9.453139-22.898784-24.949224-26.060906-33.50688-8.999707-16.118945-10.172592-43.080274-5.724546-62.987411c1.93093-9.879176,10.351426-30.427432,16.36165-40.369789c5.304585-8.418404,15.423802-23.756201,21.98335-32.265884c8.209699-11.28947,28.390998-33.634796,39.989936-45.063316c18.758369-17.585972,38.370068-36.310535,61.205924-52.426257c10.051871-7.379539,25.385685-18.454868,50.011094-28.985255c12.072602-5.602555,29.928347-9.70592,44.125732-11.196963c14.72674,0,25.892747,0,46.984093,11.196963c14.126625,8.312853,14.645567,9.177756,24.790097,19.544068c10.786124,9.441187,31.024855,40.835948,36.560235,57.788048c8.130089,14.530371,17.163847,46.675099,22.744861,64.398612c4.569467,17.009984,10.556649,48.367724,12.894591,64.386646c1.345904,12.073473,2.787199,34.547045,2.606109,44.947145.032542,6.384659-.42335,24.337367-2.606109,37.579454-2.051416,14.72828-10.842604,35.397645-20.902564,50.572948Z');
+
+                @include mq (max-tb) {
+                    display: none;
+                }
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+            }
         }
 
         * {
@@ -406,11 +436,11 @@
             padding-bottom: 20px;
 
             @include mq (max-pc-lg) {
-                width: 750px;
+                width: 900px;
             }
 
             @include mq (max-tb) {
-                width: 400px;
+                width: 80%;
             }
 
             @include mq (max-sp-sl) {
@@ -653,4 +683,395 @@
             }
         }
     }
+}
+
+.banner-section {
+    .price-card {
+        background: white;
+        border-radius: 18px;
+        box-shadow: 0 15px 30px rgba(0, 108, 255, 0.1);
+        padding: 24px;
+        width: 100%;
+        max-width: 308px;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .price-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 108, 255, 0.15);
+    }
+
+    .price-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 112px;
+        background: linear-gradient(135deg, #2196f3, #00bcd4);
+        border-radius: 18px 18px 35% 35%;
+    }
+
+    .course-info {
+        position: relative;
+        color: white;
+        text-align: center;
+        margin-bottom: 28px;
+    }
+
+    .course-title {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 6px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .course-duration {
+        font-size: 12px;
+        font-weight: 500;
+        opacity: 0.9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+    }
+
+    .price-tag {
+        background: white;
+        color: #2196f3;
+        padding: 6px 18px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 18px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+    }
+
+    .price-tag:hover {
+        transform: scale(1.05);
+    }
+
+    .price-container {
+        text-align: center;
+        padding: 0 14px;
+    }
+
+    .currency {
+        color: #666;
+        font-size: 11px;
+        font-weight: 500;
+        margin-bottom: 8px;
+    }
+
+    .original-price {
+        font-size: 20px;
+        font-weight: 600;
+        color: #999;
+        margin-bottom: 6px;
+        position: relative;
+    }
+
+    .discounted-price {
+        font-size: 34px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #2196f3, #00bcd4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 24px;
+        position: relative;
+    }
+
+    .discounted-price .currency {
+        display: contents;
+    }
+
+    .discounted-price::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 42px;
+        height: 3px;
+        background: linear-gradient(135deg, #2196f3, #00bcd4);
+        border-radius: 2px;
+    }
+
+    .button-container {
+        display: flex;
+        padding: 0 8px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .button {
+        flex: 1;
+        padding: 10px;
+        border-radius: 12px;
+        border: none;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
+    }
+
+    .button::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+        top: -100%;
+        left: 0;
+        transition: top 0.3s;
+    }
+
+    .button:hover::after {
+        top: 0;
+    }
+
+    .primary-button {
+        background: white;
+        border: 2px solid #2196f3;
+        color: #2196f3;
+    }
+
+    .primary-button:hover {
+        background: #f0f7ff;
+        transform: translateY(-2px);
+    }
+
+    .secondary-button {
+        background: linear-gradient(135deg, #2196f3, #00bcd4);
+        color: white;
+        box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+    }
+
+    .secondary-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+    }
+
+    .icon {
+        width: 14px;
+        height: 14px;
+        transition: transform 0.3s;
+    }
+
+    .button:hover .icon {
+        transform: translateX(3px);
+    }
+
+    @keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-3px);
+        }
+    }
+
+    .floating {
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes strikethrough {
+        0% {
+            width: 0%;
+        }
+
+        100% {
+            width: 100%;
+        }
+    }
+
+    @keyframes fadeInUp {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .original-price {
+        font-size: 20px;
+        font-weight: 600;
+        color: #999;
+        position: relative;
+        display: inline-block;
+        margin-bottom: 6px;
+        animation: fadeIn 0.5s ease forwards;
+    }
+
+    .original-price::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 0;
+        height: 2px;
+        background: black;
+        animation: strikethrough 0.8s ease-out 0.5s forwards;
+    }
+
+    .discounted-price {
+        font-size: 34px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #2196f3, #00bcd4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 24px;
+        position: relative;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease 1s forwards;
+    }
+
+    .price-change-container {
+        height: 80px;
+        position: relative;
+        margin-bottom: 24px;
+    }
+
+    .price-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+    @keyframes shine {
+        0% {
+            background-position: -100% 50%;
+        }
+
+        100% {
+            background-position: 200% 50%;
+        }
+    }
+
+    .price-tag {
+        animation: float 3s ease-in-out infinite, fadeInUp 0.8s ease 0.3s backwards;
+    }
+
+    .currency {
+        opacity: 0;
+        animation: fadeInUp 0.8s ease 0.7s forwards;
+    }
+
+    .button-container {
+        opacity: 0;
+        animation: fadeInUp 0.8s ease 1.2s forwards;
+    }
+
+    .discounted-price::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        background-size: 200% 100%;
+        animation: shine 1s ease-in-out 1s;
+    }
+
+    @keyframes ripple {
+        0% {
+            transform: scale(0);
+            opacity: 1;
+        }
+
+        100% {
+            transform: scale(1.5);
+            opacity: 0;
+        }
+    }
+
+    .original-price::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 20px;
+        height: 20px;
+        background: rgba(255, 82, 82, 0.2);
+        border-radius: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        animation: ripple 0.8s ease-out 0.5s;
+    }
+
+    @keyframes blink {
+
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.5;
+        }
+    }
+
+    .original-price::after {
+        animation: strikethrough 0.8s ease-out 0.5s forwards, blink 0.3s ease-in-out 0.5s 2;
+    }
+
+    @keyframes wiggle {
+
+        0%,
+        100% {
+            transform: translateX(0);
+        }
+
+        25% {
+            transform: translateX(-2px);
+        }
+
+        75% {
+            transform: translateX(2px);
+        }
+    }
+
+    .discounted-price.active {
+        animation: fadeInUp 0.8s ease forwards, wiggle 0.3s ease-in-out 1.2s;
+    }
+
+    @media (max-width: 360px) {
+        .price-card {
+            padding: 20px;
+            max-width: 290px;
+        }
+
+        .course-title {
+            font-size: 18px;
+        }
+
+        .discounted-price {
+            font-size: 30px;
+        }
+
+        .button {
+            padding: 10px;
+            font-size: 16px;
+        }
+    }
+}
+
+.content-inline * {
+    display: inline !important;
 }

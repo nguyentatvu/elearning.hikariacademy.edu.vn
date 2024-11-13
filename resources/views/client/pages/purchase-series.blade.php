@@ -18,6 +18,13 @@
         </div>
         <div class="content">
             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="pills-transfer-tab" data-bs-toggle="pill" data-bs-target="#pills-transfer"
+                        type="button" role="tab" aria-controls="pills-transfer" aria-selected="false">
+                        <i class="bi bi-bank"></i>
+                        <span class="ms-1">Chuyển khoản ngân hàng</span>
+                    </button>
+                </li>
                 @if (env('ENABLE_THIRDPARTY_PAYMENT', false))
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="pills-vnpay-tab" data-bs-toggle="pill" data-bs-target="#pills-vnpay"
@@ -33,14 +40,22 @@
                             <span class="ms-1">Ví MoMo (Mã QR)</span>
                         </button>
                     </li>
+                @else
+                    <li class="nav-item" role="presentation" onclick="showMaintainancePaymentAlert()">
+                        <button class="nav-link disabled" id="pills-vnpay-tab" data-bs-toggle="pill" data-bs-target="#pills-vnpay"
+                            type="button" role="tab" aria-controls="pills-vnpay" aria-selected="true">
+                            <i class="bi bi-currency-dollar"></i>
+                            <span class="ms-1">Thanh toán qua VNPAY</span>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation" onclick="showMaintainancePaymentAlert()">
+                        <button class="nav-link disabled" id="pills-momo-tab" data-bs-toggle="pill" data-bs-target="#pills-momo" type="button"
+                            role="tab" aria-controls="pills-momo" aria-selected="false">
+                            <i class="bi bi-cash"></i>
+                            <span class="ms-1">Ví MoMo (Mã QR)</span>
+                        </button>
+                    </li>
                 @endif
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="pills-transfer-tab" data-bs-toggle="pill" data-bs-target="#pills-transfer"
-                        type="button" role="tab" aria-controls="pills-transfer" aria-selected="false">
-                        <i class="bi bi-bank"></i>
-                        <span class="ms-1">Chuyển khoản ngân hàng</span>
-                    </button>
-                </li>
             </ul>
             <div class="tab-content" id="pills-tabContent">
                 <div class="">
@@ -328,6 +343,14 @@
             if (isConfirmed) {
                 vnpayForm.submit();
             }
+        }
+
+        const showMaintainancePaymentAlert = () => {
+            Swal.fire({
+                title: `Thông báo`,
+                icon: "warning",
+                html: 'Các cổng thanh toán bên thứ 3 <strong>Momo</strong> và <strong>VNPAY</strong> đang được bảo trì. Sẽ quay lại trong khoảng thời gian sớm nhất!'
+            });
         }
     </script>
 @endsection
