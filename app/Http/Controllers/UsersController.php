@@ -2073,24 +2073,36 @@ class UsersController extends Controller
         $streakCurrent = $user->login_streak;
         $lastLoginDate = Carbon::parse($user->last_login_date)->startOfDay();
         $currentDate = Carbon::now()->startOfDay();
-        // Check if the login streak needs to be reset
+
+        // Check if the login streak needs to be reset or updated
         if ($lastLoginDate->diffInDays($currentDate) > 1) {
-            // Reset the login streak
-            $streakCurrent = 0;
+            // Reset the login streak if the last login was more than 1 day ago
+            $streakCurrent = 1;
+        } elseif (!$lastLoginDate->isToday()) {
+            // Increment the streak if the user logs in on a new day
+            $streakCurrent += 1;
+        }
+
+        // Update user streak and last login date if there were changes
+        if ($user->login_streak !== $streakCurrent || !$lastLoginDate->isToday()) {
             $user->login_streak = $streakCurrent;
+            $user->last_login_date = $currentDate;
+            $user->has_logged_in = false;
             $user->save();
         }
 
+        // Fetch streak milestones for rewards
         $streakMilestones = collect(getRewardPointRule('daily_login')['milestones'])->pluck('days')->all();
 
         // Prepare data for response
         $data = [
             'streakCurrent' => $streakCurrent,
-            'lastLoginDate' => $lastLoginDate,
+            'lastLoginDate' => $currentDate,
             'streakMilestones' => $streakMilestones,
         ];
 
         // Return the data as a JSON response
         return response()->json($data);
     }
+
 }
