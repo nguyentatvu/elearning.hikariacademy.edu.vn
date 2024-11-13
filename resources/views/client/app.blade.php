@@ -695,16 +695,27 @@
             }
 
             @if (Auth::check())
-                if (!localStorage.getItem("firstLoginShown")) {
+                if (!localStorage.getItem("lastLoginDate")) {
+                    // First time login, store current date and show modal
+                    localStorage.setItem("lastLoginDate", new Date().toDateString());
                     openModalStreak();
+                } else {
+                    // Check if it's a different day
+                    const lastLoginDate = new Date(localStorage.getItem("lastLoginDate")).toDateString();
+                    const currentDate = new Date().toDateString();
 
-                    localStorage.setItem("firstLoginShown", "true");
+                    if (lastLoginDate !== currentDate) {
+                        // It's a different day, show modal and update date
+                        openModalStreak();
+                        localStorage.setItem("lastLoginDate", currentDate);
+                    }
                 }
+
                 $('.owned-login-streak').on('click', function() {
                     openModalStreak();
-                })
+                });
             @else
-                localStorage.removeItem("firstLoginShown");
+                localStorage.removeItem("lastLoginDate");
             @endif
 
             adjustLayout();
