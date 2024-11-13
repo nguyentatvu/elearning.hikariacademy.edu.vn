@@ -1,5 +1,4 @@
 <?php
-
 return [
     'api' => [
         /*
@@ -42,7 +41,9 @@ return [
         |--------------------------------------------------------------------------
          */
         'middleware' => [
-            'api' => [],
+            'api' => [
+              \App\Http\Middleware\NotFoundWhenProduction::class,
+            ],
             'asset' => [],
             'docs' => [],
             'oauth2_callback' => [],
@@ -154,7 +155,7 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'generate_always' => env('L5_SWAGGER_GENERATE_ALWAYS', true),
+    'generate_always' => env('L5_SWAGGER_GENERATE_ALWAYS', false),
 
     /*
     |--------------------------------------------------------------------------

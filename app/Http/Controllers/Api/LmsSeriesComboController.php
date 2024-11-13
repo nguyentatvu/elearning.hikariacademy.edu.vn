@@ -180,7 +180,7 @@ class LmsSeriesComboController extends Controller
         }
 
         return response()->json([
-            "data" => $courses
+            "data" => SeriesComboResource::collection($courses)
         ],  Response::HTTP_OK);
     }
 }
