@@ -53,7 +53,8 @@ class LmsSeriesRepository extends BaseRepository
         return $this->model
             ->with([
                 'roadmaps', 'lmscontents' => function ($query) {
-                    $query->orderBy('stt', 'asc');
+                    $query->orderBy('stt', 'asc')
+                        ->where('delete_status', 0);
                 }
             ])
             ->where('delete_status', 0)

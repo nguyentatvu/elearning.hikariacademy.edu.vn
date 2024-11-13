@@ -530,7 +530,7 @@
 </head>
 
 <body>
-    <div class="custom-loader-container">
+    {{-- <div class="custom-loader-container">
         <div class="custom-loader-image">
             <img src="https://media2.giphy.com/media/v8jUfaclrsG9x8At9Z/giphy.gif?cid=6c09b952f8e8eb8askp67jsi3d7yyr410hbs1r6sr8tbxkd7&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=g"
                 alt="Cute Loading Character" />
@@ -545,7 +545,7 @@
             </div>
         </div>
         <div class="custom-loading-text">Sắp xong rồi nè...bạn chờ một chút nhé 🌸</div>
-    </div>
+    </div> --}}
     @if (request()->is('/'))
         <div class="robot-guide">
             <div class="robot-head">
