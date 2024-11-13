@@ -73,14 +73,17 @@
             </div>
         </form>
         <div class="side-photo">
-            <img src="{{ asset('images/no-image.png') }}" alt="no iamge">
+            @if (isset($banners['register_banner']) && $banners['register_banner']->is_active == \App\Enums\BannerStatus::ACTIVE)
+                <img src="{{ asset($banners['register_banner']->image) }}"
+                    alt="{{ $banners['register_banner']->title }}">
+            @endif
         </div>
     </div>
 
     <!-- Forgot password -->
     <div class="forgot-password-content auth-content animate__animated d-none" id="forgot_password_content">
         <form class="forgot-password-form needs-validation" novalidate id="forgot_password_form">
-            <h1>Đặt lại mậu khẩu</h1>
+            <h1>Đặt lại mật khẩu</h1>
             <div>
                 <div class="mb-3">
                     <label class="form-label text-primary" for="email_forgot_password">

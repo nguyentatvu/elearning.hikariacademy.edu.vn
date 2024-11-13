@@ -31,6 +31,7 @@ use Response;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 class StudentLmsController extends Controller
@@ -73,7 +74,8 @@ class StudentLmsController extends Controller
      *
      * @return boolean
      */
-    private function checkRoadmapChosen() {
+    private function checkRoadmapChosen()
+    {
         $chosenRoadmapList = $this->userRoadmapService->userChosenRoadmapList(Auth::id() ?? -1);
         $series = $this->prepContent['series'];
 
@@ -94,7 +96,8 @@ class StudentLmsController extends Controller
      * @param array $params
      * @return void
      */
-    private function transferFlashMessage($params) {
+    private function transferFlashMessage($params)
+    {
         if (session()->has('flash_message') && $params['stt'] === '') {
             $message = session()->get('flash_message');
 
@@ -136,6 +139,18 @@ class StudentLmsController extends Controller
             !$content
         ) {
             throw new RedirectException(redirect()->to('/'));
+        }
+
+        // Set previous url
+        if ($this->prepContent['series_combo']->checkMultipleCombo) {
+            $this->prepContent['prev_url'] = route('series.introduction-detail-combo', [
+                'combo_slug' => $this->prepContent['series_combo']->slug
+            ]);
+        } else {
+            $this->prepContent['prev_url'] = route('series.introduction-detail', [
+                'combo_slug' => $this->prepContent['series_combo']->slug,
+                'slug' => $this->prepContent['series']->slug
+            ]);
         }
     }
 
@@ -274,8 +289,19 @@ class StudentLmsController extends Controller
         $this->prepContent['viewed_content_ids'] = $contentView->where('finish', LmsStudentView::NOT_FINISHED)
             ->pluck('lmscontent_id')->toArray();
 
+        $this->prepContent['test_content'] = $this->lmsContentService->getAllByConditions([
+            'lmsseries_id' => $this->prepContent['series_id'],
+            'type' => LmsContent::TEST,
+            'delete_status' => 0
+        ])->toArray();
+
+        $this->prepContent['test_content_result'] = $this->getPassedTestInfo(
+            $this->prepContent['test_content'],
+            Auth::id() ?? "-1"
+        );
+
         $this->prepContent['contents']->each(function ($item) use ($params) {
-            $this->setURLToPurchasedContents($item, $params);
+            $this->setRelatedInfoToDropdownContents($item, $params);
         });
     }
 
@@ -284,14 +310,15 @@ class StudentLmsController extends Controller
      *
      * @param App\LmsContent $lms_content
      * @param array $params
+     * @param int $chapter_index
      * @return void
      */
-    private function setURLToPurchasedContents(LmsContent &$lms_content, array &$params, int $chapter_index = 0)
+    private function setRelatedInfoToDropdownContents(LmsContent &$lms_content, array &$params, int $chapter_index = 0)
     {
         $typeMap = config('constant.series.type_map');
         if (in_array($lms_content->type, $typeMap['title'])) {
             foreach ($lms_content->childContents as $childContent) {
-                $this->setURLToPurchasedContents($childContent, $params, $chapter_index);
+                $this->setRelatedInfoToDropdownContents($childContent, $params, $chapter_index);
             }
         }
 
@@ -311,19 +338,56 @@ class StudentLmsController extends Controller
             $lms_content->css_class = 'active-content';
         }
 
-        // Set route
-        $routes = config('constant.series.routes');
-        $params['stt'] = $lms_content->id;
-        foreach ($routes as $type => $route) {
-            if (in_array($lms_content->type, $typeMap[$type])) {
-                $lms_content->url = route($route, $params);
-                break;
+        // Check blocked content
+        $blockedContentInfo = $lms_content->checkBlockedContent($this->prepContent['test_content_result']);
+        if ($blockedContentInfo['isContentBlocked']) {
+            $lms_content->contentLink = 'javascript:void(0);';
+            $lms_content->clickEvent = "showBLockedContentAlert('" . $blockedContentInfo['incompleteTestTitle'] . "')";
+        } else {
+            // Set route
+            $routes = config('constant.series.routes');
+            $params['stt'] = $lms_content->id;
+            foreach ($routes as $type => $route) {
+                if (in_array($lms_content->type, $typeMap[$type])) {
+                    $lms_content->url = route($route, $params);
+                    break;
+                }
             }
+            $lms_content->contentLink = $lms_content->url;
+            $lms_content->clickEvent = '';
         }
 
         if ($chapter_index > 0 && !$this->prepContent['is_valid_payment']) {
             return;
         }
+    }
+
+    /**
+     * Get passed test info
+     *
+     * @param array $testContents
+     * @param string $userId
+     * @return mixed
+     */
+    private function getPassedTestInfo(array $testContents, string $userId)
+    {
+        $testContentIds = array_column($testContents, 'id');
+        $passedTestList = DB::table('lms_test_result')
+            ->select('lmscontent_id')
+            ->whereIn('lmscontent_id', $testContentIds)
+            ->where('users_id', $userId)
+            ->whereRaw('point >= 0.5 * total_point')
+            ->groupBy('lmscontent_id')
+            ->pluck('lmscontent_id')
+            ->toArray();
+
+        $result = [];
+        foreach ($testContents as $testContent) {
+            $result[$testContent['stt']]['is_passed'] = in_array($testContent['id'], $passedTestList);
+            $result[$testContent['stt']]['title'] = $testContent['bai'];
+        }
+
+        return $result;
     }
 
     /**
@@ -423,7 +487,9 @@ class StudentLmsController extends Controller
             'contentViewCount' => $this->prepContent['content_view_count'],
             'seriesContentCount' => $this->prepContent['series_content_count'],
             'comments' => $this->prepContent['comments'],
-            'description' => $this->prepContent['detail_content']->description
+            'description' => $this->prepContent['detail_content']->description,
+            'prevUrl' => $this->prepContent['prev_url'],
+            'testContentResult' => $this->prepContent['test_content_result']
         ];
     }
 
@@ -1038,23 +1104,20 @@ class StudentLmsController extends Controller
     {
         $data['title'] = 'Roadmap';
         $data['class'] = 'roadmap';
-        if (!auth()->check()) {
-            flash('Thông báo', 'Bạn chưa đăng nhập', 'error');
-            return redirect()->route('home');
-        } else {
-            $serie = DB::table('lmsseries')->where('slug', $slug)->first();
-            $serieCombo = DB::table('lmsseries_combo')->where('slug', $comboSlug)->first();
-            $serieId = $serie->id;
-
+        $serie = DB::table('lmsseries')->where('slug', $slug)->first();
+        $serieCombo = DB::table('lmsseries_combo')->where('slug', $comboSlug)->first();
+        $serieId = $serie->id;
+        $lastViewedContent = null;
+        if (auth()->check()) {
             $lastViewedContent = $this->lmsStudentViewService->getLastViewedContentOfStudent($serieId);
-
-            $roadMap = DB::table('roadmaps')->where('lmsseries_id', $serieId)->orderBy('duration_months')->get();
-
-            $data['road_map'] = $roadMap;
-            $data['last_view'] = $lastViewedContent;
-            $data['serie'] = $serie;
-            $data['serie_combo'] = $serieCombo;
         }
+
+        $roadMap = DB::table('roadmaps')->where('lmsseries_id', $serieId)->orderBy('duration_months')->get();
+
+        $data['road_map'] = $roadMap;
+        $data['last_view'] = $lastViewedContent;
+        $data['serie'] = $serie;
+        $data['serie_combo'] = $serieCombo;
 
         return view('client.pages.roadmap', $data);
     }
@@ -1151,10 +1214,25 @@ class StudentLmsController extends Controller
             ->where('lmsseries_id', $serieId)
             ->where('duration_months', $month)
             ->first();
+        $FINISH = 1;
+        $lmsContentViewedUser = DB::table('lms_student_view')
+            ->join('lmscontents', 'lms_student_view.lmscontent_id', '=', 'lmscontents.id')
+            ->where('lms_student_view.users_id', Auth::id())
+            ->where('lmscontents.lmsseries_id', $serieId)
+            ->where('finish', $FINISH)
+            ->pluck('lms_student_view.lmscontent_id');
 
         $roadMapContent = json_decode($roadMap->contents);
         $dayViewedContent = null;
         $dayCount = count($roadMapContent);
+
+        foreach ($roadMapContent as &$day) {
+            if (isset($day->lesson_list)) {
+                foreach ($day->lesson_list as &$lesson) {
+                    $lesson->finish = in_array($lesson->id, $lmsContentViewedUser->toArray()) ? 1 : 0;
+                }
+            }
+        }
 
         if ($lastViewedContent) {
             foreach ($roadMapContent as $day) {
@@ -1170,15 +1248,73 @@ class StudentLmsController extends Controller
             $lastViewedContent = null;
         }
 
+
         $weeks = $this->groupLessonsByWeek($roadMapContent);
+        $processedWeeks = $this->processCourseCompletion($weeks);
 
         return response()->json([
-            'road_map' => $weeks,
+            'road_map' => $processedWeeks,
             'last_view' => $lastViewedContent,
             'day_last_view' => $dayViewedContent,
             'detail' => $roadMap,
             'day_count' => $dayCount,
         ]);
+    }
+
+    protected function processCourseCompletion($weeks)
+    {
+        $allWeeksFinished = true;
+
+        // Process each week
+        foreach ($weeks as &$week) {
+            $allDaysInWeekFinished = true;
+
+            // Process each day in the week
+            foreach ($week['days'] as &$day) {
+                if (isset($day->lesson_list) && !empty($day->lesson_list)) {
+                    $allLessonsFinished = true;
+
+                    // Check if day is a rest day
+                    $isRestDay = false;
+                    if (
+                        count($day->lesson_list) === 1 &&
+                        isset($day->lesson_list[0]->type) &&
+                        $day->lesson_list[0]->type === 'rest'
+                    ) {
+                        $isRestDay = true;
+                    }
+
+                    // If not a rest day, check all lessons
+                    if (!$isRestDay) {
+                        foreach ($day->lesson_list as $lesson) {
+                            if (!isset($lesson->finish) || $lesson->finish !== 1) {
+                                $allLessonsFinished = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    // Add finish_day property if all lessons are finished or it's a rest day
+                    $day->finish_day = $allLessonsFinished || $isRestDay;
+
+                    if (!$day->finish_day) {
+                        $allDaysInWeekFinished = false;
+                    }
+                }
+            }
+
+            // Add finish_week property if all days in week are finished
+            $week['finish_week'] = $allDaysInWeekFinished;
+
+            if (!$allDaysInWeekFinished) {
+                $allWeeksFinished = false;
+            }
+        }
+
+        // Add finish_course property if all weeks are finished
+        $weeks['finish_course'] = $allWeeksFinished;
+
+        return $weeks;
     }
 
     /**

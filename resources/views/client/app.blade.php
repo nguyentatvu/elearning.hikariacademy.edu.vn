@@ -357,7 +357,7 @@
         }
 
         .custom-loader-image {
-            width: 150px;
+            width: 200px;
             height: 150px;
             margin-bottom: 20px;
         }
@@ -532,7 +532,7 @@
 <body>
     <div class="custom-loader-container">
         <div class="custom-loader-image">
-            <img src="https://media2.giphy.com/media/v8jUfaclrsG9x8At9Z/giphy.gif?cid=6c09b952f8e8eb8askp67jsi3d7yyr410hbs1r6sr8tbxkd7&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=g"
+            <img src="{{ asset('images/icons/loading.gif') }}"
                 alt="Cute Loading Character" />
         </div>
         <div class="custom-progress-container">
@@ -695,16 +695,27 @@
             }
 
             @if (Auth::check())
-                if (!localStorage.getItem("firstLoginShown")) {
+                if (!localStorage.getItem("lastLoginDate")) {
+                    // First time login, store current date and show modal
+                    localStorage.setItem("lastLoginDate", new Date().toDateString());
                     openModalStreak();
+                } else {
+                    // Check if it's a different day
+                    const lastLoginDate = new Date(localStorage.getItem("lastLoginDate")).toDateString();
+                    const currentDate = new Date().toDateString();
 
-                    localStorage.setItem("firstLoginShown", "true");
+                    if (lastLoginDate !== currentDate) {
+                        // It's a different day, show modal and update date
+                        openModalStreak();
+                        localStorage.setItem("lastLoginDate", currentDate);
+                    }
                 }
+
                 $('.owned-login-streak').on('click', function() {
                     openModalStreak();
-                })
+                });
             @else
-                localStorage.removeItem("firstLoginShown");
+                localStorage.removeItem("lastLoginDate");
             @endif
 
             adjustLayout();

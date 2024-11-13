@@ -16,7 +16,7 @@ class NotFoundWhenProduction
      */
     public function handle($request, Closure $next)
     {
-        $env = config('app.env');
+        $env = env('APP_ENV');
         if ($env == "production") {
             return $this->unauthorized();
         }

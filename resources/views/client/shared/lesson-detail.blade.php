@@ -483,6 +483,17 @@
                 }
             }
         });
+
+        const showBLockedContentAlert = (testTitle) => {
+            event.preventDefault();
+            Swal.fire({
+                title: "Thông báo",
+                html: `Hoàn thành trên 50% số điểm <strong>${testTitle}</strong> để tiếp tục học bài học này!`,
+                icon: "error",
+                timer: 3000,
+                showConfirmButton: false,
+            });
+        }
     </script>
 
 

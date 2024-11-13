@@ -1,7 +1,30 @@
 @if ($is_valid_payment)
     @foreach($contents as $content_index => $content)
     <li class="list-group-item px-5 d-flex align-items-center {{ $content->css_class }}">
-        <a href="{{ $content->url }}" class="text-dark">
+        {{-- @php
+            $contentStatus = $content->checkBlockedContent($testContentResult);
+            $contentLink = $contentStatus['isContentBlocked'] ? 'javascript:void(0);' : $content->url;
+            $clickEvent = $contentStatus['isContentBlocked'] ? `showBLockedContentAlert({$contentStatus['ineligibleTestTitle']})` : '';
+        @endphp --}}
+        {{-- @php
+            $isContentBlocked = true;
+            $checkTestContentExists = count($testContentResult) > 0;
+            $ineligibleTestTitle = '';
+
+            foreach ($testContentResult as $testContentId =>$testResult) {
+                if ($testContentId >= $content->id && $testResult['is_passed']) {
+                    $isContentBlocked = false;
+                    break;
+                } else if ($ineligibleTestTitle == '') {
+                    $ineligibleTestTitle = $testResult['title'];
+                }
+            }
+            $isContentBlocked = $isContentBlocked && $checkTestContentExists;
+            $contentLink = $isContentBlocked ? 'javascript:void(0);' : $content->url;
+            $clickEvent = $isContentBlocked ? `showBLockedContentAlert({$ineligibleTestTitle})` : '';
+        @endphp --}}
+        {{-- <a href="{{ $content->url }}" class="text-dark"> --}}
+        <a href="{{ $content->contentLink }}" class="text-dark" onclick="{{ $content->clickEvent }}">
             @if ($is_valid_payment || $chapter_index !== 0)
                 <img src="{{ asset("images/icons/{$content->checkbox_icon}") }}"alt="check box"
                 style="bottom: 1px;" class="position-relative size-16 me-1" data-content-id="{{ $content->id }}">

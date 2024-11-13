@@ -121,4 +121,63 @@ class LmsContent extends Model
             ->where('delete_status', 0)
             ->whereNotIn('type', [self::LESSON_TOPIC, self::LESSON]);
     }
+
+    /**
+     * Check blocked content
+     *
+     * @param array $testContentResult
+     * @return array
+     */
+    public function checkBlockedContent(array $testContentResult) {
+        $isContentBlocked = false;
+        $incompleteTestTitle = '';
+        $checkTestContentExists = count($testContentResult) > 0;
+
+        if (!$checkTestContentExists) {
+            return [
+                'isContentBlocked' => false,
+                'incompleteTestTitle' => ''
+            ];
+        }
+
+        $firstTestContentOrder = array_keys($testContentResult)[0];
+
+        if (!$this->stt <= $testContentResult[$firstTestContentOrder]) {
+            foreach ($testContentResult as $testContentOrder => $testResult) {
+                if ($this->stt > $testContentOrder) {
+                    if (!$testResult['is_passed']) {
+                        $isContentBlocked = true;
+                        $incompleteTestTitle = $this->getTitleOfNearestTestContent($this->stt, $testContentResult);
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
+        }
+
+        return [
+            'isContentBlocked' => $isContentBlocked,
+            'incompleteTestTitle' => $incompleteTestTitle
+        ];
+    }
+
+    /**
+     * Get title of test content
+     *
+     * @param int $currentContentOrder
+     * @param array $testContentResult
+     * @return string
+     */
+    private function getTitleOfNearestTestContent($currentContentOrder, $testContentResult) {
+        $title = '';
+
+        foreach ($testContentResult as $testContentOrder => $testResult) {
+            if ($currentContentOrder > $testContentOrder) {
+                $title = $testResult['title'];
+            }
+        }
+
+        return $title;
+    }
 }

@@ -313,28 +313,37 @@ class MyPageController extends Controller
 
         if ($data['results'] != null) {
             foreach ($data['results'] as $record) {
+                $totalMark = 0;
                 if ($record->category_id <= 3) {
                     $style1 = ($this->checkKijunTen($record->category_id, 1, $record->quiz_1_total)) ? "info" : "danger";
                     $style2 = ($this->checkKijunTen($record->category_id, 2, $record->quiz_2_total)) ? "info" : "danger";
                     $style3 = ($this->checkKijunTen($record->category_id, 3, $record->quiz_3_total)) ? "info" : "danger";
-                    $detail = '言語知識（文字・語彙・文法）: <span class="badge bg-' . $style1 . '">' . $record->quiz_1_total . '</span><br><br>読解: <span class="badge bg-' . $style2 . '">' . $record->quiz_2_total . '</span><br><br>聴解: <span class="badge bg-' . $style3 . '">' . $record->quiz_3_total . '</span>';
+                    $detail = '言語知識（文字・語彙・文法）: <span class="badge bg-' . $style1 . '">' . $record->quiz_1_total . '/60</span><br><br>読解: <span class="badge bg-' . $style2 . '">' . $record->quiz_2_total . '/60</span><br><br>聴解: <span class="badge bg-' . $style3 . '">' . $record->quiz_3_total . '/60</span>';
+                    $totalMark = $record->quiz_1_total + $record->quiz_2_total + $record->quiz_3_total;
                 } else {
                     $style1 = ($this->checkKijunTen($record->category_id, 1, $record->quiz_1_total)) ? "info" : "danger";
                     $style3 = ($this->checkKijunTen($record->category_id, 2, $record->quiz_3_total)) ? "info" : "danger";
-                    $detail = '言語知識（文字・語彙・文法）: <span class="badge bg-' . $style1 . '">' . $record->quiz_1_total . '</span><br><br>聴解: <span class="badge bg-' . $style3 . '">' . $record->quiz_3_total . '</span>';
+                    $detail = '言語知識（文字・語彙・文法）: <span class="badge bg-' . $style1 . '">' . $record->quiz_1_total . '/120</span><br><br>聴解: <span class="badge bg-' . $style3 . '">' . $record->quiz_3_total . '/60</span>';
+                    $totalMark = $record->quiz_1_total + $record->quiz_3_total;
                 }
-                $record->detail = $detail;
 
+                $record->detail = $detail;
+                $totalMarkSpan = '';
                 if ($record->finish == 3) {
                     if ($this->checkPassingscore($record->category_id, $record->total_marks) && $this->checkKijunTenAnyKubun($record->category_id, $record->quiz_1_total, $record->quiz_2_total, $record->quiz_3_total)) {
                         $ketqua = '<span class="badge bg-success">Đạt</span>';
+                        $totalMarkSpan = '<span class="badge bg-success">'.$totalMark.'/180</span>';
                     } else {
                         $ketqua = '<span class="badge bg-warning">Chưa đạt</span>';
+                        $totalMarkSpan = '<span class="badge bg-warning">'.$totalMark.'/180</span>';
                     }
 
                 } else {
                     $ketqua = '<span class="badge bg-danger">Chưa hoàn thành</span>';
+                    $totalMarkSpan = '<span class="badge bg-danger">'.$totalMark.'/180</span>';
+
                 }
+                $record->totalMark = $totalMarkSpan;
                 $record->ketqua = $ketqua;
             }
         }

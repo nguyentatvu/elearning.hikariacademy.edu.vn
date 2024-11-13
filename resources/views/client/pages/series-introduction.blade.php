@@ -3,427 +3,64 @@
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/pages/series-introduction.css') }}">
     <link rel="stylesheet" href="{{ asset('css/plugins/swiperjs/swiper-bundle.min.css') }}">
-    <style>
-        .price-card {
-            background: white;
-            border-radius: 18px;
-            box-shadow: 0 15px 30px rgba(0, 108, 255, 0.1);
-            padding: 24px;
-            width: 100%;
-            max-width: 308px;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .price-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 108, 255, 0.15);
-        }
-
-        .price-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 112px;
-            background: linear-gradient(135deg, #2196f3, #00bcd4);
-            border-radius: 18px 18px 35% 35%;
-        }
-
-        .course-info {
-            position: relative;
-            color: white;
-            text-align: center;
-            margin-bottom: 28px;
-        }
-
-        .course-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .course-duration {
-            font-size: 12px;
-            font-weight: 500;
-            opacity: 0.9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-        }
-
-        .price-tag {
-            background: white;
-            color: #2196f3;
-            padding: 6px 18px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 18px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
-        }
-
-        .price-tag:hover {
-            transform: scale(1.05);
-        }
-
-        .price-container {
-            text-align: center;
-            padding: 0 14px;
-        }
-
-        .currency {
-            color: #666;
-            font-size: 11px;
-            font-weight: 500;
-            margin-bottom: 8px;
-        }
-
-        .original-price {
-            font-size: 20px;
-            font-weight: 600;
-            color: #999;
-            margin-bottom: 6px;
-            position: relative;
-        }
-
-        .discounted-price {
-            font-size: 34px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #2196f3, #00bcd4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 24px;
-            position: relative;
-        }
-
-        .discounted-price .currency {
-            display: contents;
-        }
-
-        .discounted-price::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 42px;
-            height: 3px;
-            background: linear-gradient(135deg, #2196f3, #00bcd4);
-            border-radius: 2px;
-        }
-
-        .button-container {
-            display: flex;
-            padding: 0 8px;
-        }
-
-        .button {
-            flex: 1;
-            padding: 10px;
-            border-radius: 12px;
-            border: none;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s;
-        }
-
-        .button::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
-            top: -100%;
-            left: 0;
-            transition: top 0.3s;
-        }
-
-        .button:hover::after {
-            top: 0;
-        }
-
-        .primary-button {
-            background: white;
-            border: 2px solid #2196f3;
-            color: #2196f3;
-        }
-
-        .primary-button:hover {
-            background: #f0f7ff;
-            transform: translateY(-2px);
-        }
-
-        .secondary-button {
-            background: linear-gradient(135deg, #2196f3, #00bcd4);
-            color: white;
-            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
-        }
-
-        .secondary-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
-        }
-
-        .icon {
-            width: 14px;
-            height: 14px;
-            transition: transform 0.3s;
-        }
-
-        .button:hover .icon {
-            transform: translateX(3px);
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-3px);
-            }
-        }
-
-        .floating {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes strikethrough {
-            0% {
-                width: 0%;
-            }
-
-            100% {
-                width: 100%;
-            }
-        }
-
-        @keyframes fadeInUp {
-            0% {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .original-price {
-            font-size: 20px;
-            font-weight: 600;
-            color: #999;
-            position: relative;
-            display: inline-block;
-            margin-bottom: 6px;
-            animation: fadeIn 0.5s ease forwards;
-        }
-
-        .original-price::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            width: 0;
-            height: 2px;
-            background: black;
-            animation: strikethrough 0.8s ease-out 0.5s forwards;
-        }
-
-        .discounted-price {
-            font-size: 34px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #2196f3, #00bcd4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 24px;
-            position: relative;
-            opacity: 0;
-            animation: fadeInUp 0.8s ease 1s forwards;
-        }
-
-        .price-change-container {
-            height: 80px;
-            position: relative;
-            margin-bottom: 24px;
-        }
-
-        .price-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-
-        @keyframes shine {
-            0% {
-                background-position: -100% 50%;
-            }
-
-            100% {
-                background-position: 200% 50%;
-            }
-        }
-
-        .price-tag {
-            animation: float 3s ease-in-out infinite, fadeInUp 0.8s ease 0.3s backwards;
-        }
-
-        .currency {
-            opacity: 0;
-            animation: fadeInUp 0.8s ease 0.7s forwards;
-        }
-
-        .button-container {
-            opacity: 0;
-            animation: fadeInUp 0.8s ease 1.2s forwards;
-        }
-
-        .discounted-price::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            background-size: 200% 100%;
-            animation: shine 1s ease-in-out 1s;
-        }
-
-        @keyframes ripple {
-            0% {
-                transform: scale(0);
-                opacity: 1;
-            }
-
-            100% {
-                transform: scale(1.5);
-                opacity: 0;
-            }
-        }
-
-        .original-price::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            width: 20px;
-            height: 20px;
-            background: rgba(255, 82, 82, 0.2);
-            border-radius: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            animation: ripple 0.8s ease-out 0.5s;
-        }
-
-        @keyframes blink {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.5;
-            }
-        }
-
-        .original-price::after {
-            animation: strikethrough 0.8s ease-out 0.5s forwards, blink 0.3s ease-in-out 0.5s 2;
-        }
-
-        @keyframes wiggle {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-2px);
-            }
-
-            75% {
-                transform: translateX(2px);
-            }
-        }
-
-        .discounted-price.active {
-            animation: fadeInUp 0.8s ease forwards, wiggle 0.3s ease-in-out 1.2s;
-        }
-
-        @media (max-width: 360px) {
-            .price-card {
-                padding: 20px;
-                max-width: 290px;
-            }
-
-            .course-title {
-                font-size: 18px;
-            }
-
-            .discounted-price {
-                font-size: 30px;
-            }
-
-            .button {
-                padding: 10px;
-                font-size: 16px;
-            }
-        }
-    </style>
 @endSection
 
 @section('content')
     <div class="series-introduction">
         <div class="banner-section">
-            <img src="{{ asset('images/banner/series-banner-placeholder.png') }}" alt="Banner" class="banner-img">
-            <div class="price-card course-box">
-                <div class="course-info">
-                    <h1 class="course-title">{{ $seriesCombo->title }}</h1>
-                    <div class="course-duration">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <polyline points="12 6 12 12 16 14"></polyline>
-                        </svg>
-                        Thời hạn: {{ $seriesCombo->month_duration }} tháng
+            <div class="grid-background">
+                @if (isset($banners['course_logo']) && $banners['course_logo']->is_active == App\Enums\BannerStatus::ACTIVE)
+                    <div class="curved-clip">
+                        <img src="{{ asset($banners['course_logo']->image) }}" alt="Introduction iamge">
                     </div>
-                </div>
+                @endif
+                <div class="price-card course-box">
+                    <div class="course-info">
+                        <h1 class="course-title">{{ $seriesCombo->title }}</h1>
+                        <div class="course-duration">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            Thời hạn: {{ $seriesCombo->month_duration }} tháng
+                        </div>
+                    </div>
 
                 <div class="price-container">
                     <div class="price-tag floating">GIÁ ƯU ĐÃI</div>
                     <div class="price-change-container">
                         <div class="price-wrapper">
-                            @if (\Carbon\Carbon::parse($seriesCombo->timeto)->isPast())
-                                <div class="discounted-price active">{{ formatNumber($seriesCombo->cost) }} <span
-                                        class="currency">VNĐ</span></div>
+                            @php
+                                $originalPrice = formatNumber($seriesCombo->cost);
+                                $discountedPrice = formatNumber($seriesCombo->selloff);
+                                $isPastDate = \Carbon\Carbon::parse($seriesCombo->timeto)->isPast();
+                            @endphp
+
+                            @if ($isPastDate)
+                                <div class="discounted-price active">{{ $originalPrice }} <span class="currency">VNĐ</span>
+                                </div>
                             @else
-                                <div class="original-price">{{ formatNumber($seriesCombo->cost) }} <span
-                                        class="currency">VNĐ</span></div>
-                                <div class="discounted-price active">{{ formatNumber($seriesCombo->selloff) }} <span
-                                        class="currency">VNĐ</span></div>
+                                @if ($seriesCombo->cost == 0 && $seriesCombo->selloff == 0)
+                                    <div class="discounted-price active">{{ $discountedPrice }} <span
+                                            class="currency">VNĐ</span></div>
+                                @else
+                                    @if ($seriesCombo->cost > 0)
+                                        <div class="original-price">{{ $originalPrice }} <span class="currency">VNĐ</span>
+                                        </div>
+                                    @endif
+
+                                    @if ($seriesCombo->selloff > 0 || $seriesCombo->selloff == 0)
+                                        <div class="discounted-price active">{{ $discountedPrice }} <span
+                                                class="currency">VNĐ</span></div>
+                                    @endif
+                                @endif
                             @endif
                         </div>
                     </div>
 
                     <div class="button-container">
-                        @if (!$seriesCombo->checkMultipleCombo && $seriesCombo->cost != 0)
+                        @if (!$seriesCombo->checkMultipleCombo)
                             <button class="button primary-button me-2"
                                 onclick="location.href='{{ route('home.roadmap', ['comboSlug' => $seriesCombo->slug, 'slug' => request()->route('slug')]) }}'">
                                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -434,57 +71,62 @@
                             </button>
                         @endif
 
-                        @if ($seriesCombo->cost != 0 && Auth::check() && $isValidPayment && $is_multiple_combo)
-                            {{-- Student has purchased the series combo and it include multiple serises --}}
-                            <button class="button secondary-button" id="first_purchase_button" onclick="scrollToPurchasedSeriesList()">
-                                <div>Học ngay <svg class="icon" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M5 3v4M3 5h4M6 17v4M4 19h4m4-16h8M8 7h8M8 11h8M8 15h8"></path>
-                                    </svg></div>
-                            </button>
-                        @elseif (
-                            $seriesCombo->cost != 0 &&
-                                Auth::check() &&
-                                $isValidPayment &&
-                                !$is_multiple_combo &&
-                                !$roadmap_chosen_list[$series->id]
-                        )
-                            {{-- Student has purchased the series combo and it's a single series and student hasn't chosen roadmap --}}
-                            <button class="button secondary-button" id="first_purchase_button"
-                                onclick="openRoadmapSelectionModal({{ $series->id }})">
-                                <div>Học ngay <svg class="icon" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M5 3v4M3 5h4M6 17v4M4 19h4m4-16h8M8 7h8M8 11h8M8 15h8"></path>
-                                    </svg></div>
-                            </button>
-                        @elseif ($seriesCombo->cost == 0 || (Auth::check() && $isValidPayment))
-                            {{-- Student has purchased the series combo and it's a single series and student has chosen roadmap --}}
-                            {{-- Or The series combo is free --}}
-                            <button class="button secondary-button" id="first_purchase_button"
-                                onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $seriesCombo->slug, 'slug' => request()->route('slug')]) }}'">
-                                <div>Học ngay <svg class="icon" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M5 3v4M3 5h4M6 17v4M4 19h4m4-16h8M8 7h8M8 11h8M8 15h8"></path>
-                                    </svg></div>
-                            </button>
-                        @elseif (Auth::check() && !$isValidPayment)
-                            {{-- Student has signed in but hasn't purchased the series combo --}}
-                            <button class="button secondary-button" id="first_purchase_button"
-                                onclick="location.href='{{ route('payments.lms', $seriesCombo->slug) }}'">
-                                <div>Mua ngay <svg class="icon" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M5 3v4M3 5h4M6 17v4M4 19h4m4-16h8M8 7h8M8 11h8M8 15h8"></path>
-                                    </svg></div>
-                            </button>
-                        @else
-                            {{-- Student hasn't signed in --}}
-                            <button class="button secondary-button" id="first_purchase_button" onclick="showAuthModal()">
-                                <div><i class="bi bi-cart-fill"></i>Mua ngay <svg class="icon" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M5 3v4M3 5h4M6 17v4M4 19h4m4-16h8M8 7h8M8 11h8M8 15h8"></path>
-                                    </svg></div>
-                            </button>
-                        @endif
+                            @if ($seriesCombo->cost != 0 && Auth::check() && $isValidPayment && $is_multiple_combo)
+                                {{-- Student has purchased the series combo and it include multiple serises --}}
+                                <button class="button secondary-button" id="first_purchase_button" onclick="scrollToPurchasedSeriesList()">
+                                    <div>Học ngay
+                                        <svg class="icon" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M5 3v4M3 5h4M6 17v4M4 19h4m4-16h8M8 7h8M8 11h8M8 15h8"></path>
+                                        </svg>
+                                    </div>
+                                </button>
+                            @elseif (
+                                $seriesCombo->cost != 0 &&
+                                    Auth::check() &&
+                                    $isValidPayment &&
+                                    !$is_multiple_combo &&
+                                    !$roadmap_chosen_list[$series->id]
+                            )
+                                {{-- Student has purchased the series combo and it's a single series and student hasn't chosen roadmap --}}
+                                <button class="button secondary-button" id="first_purchase_button"
+                                    onclick="openRoadmapSelectionModal({{ $series->id }})">
+                                    <div>Học ngay <svg class="icon" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M5 3v4M3 5h4M6 17v4M4 19h4m4-16h8M8 7h8M8 11h8M8 15h8"></path>
+                                        </svg></div>
+                                </button>
+                            @elseif ($seriesCombo->cost == 0 || (Auth::check() && $isValidPayment))
+                                {{-- Student has purchased the series combo and it's a single series and student has chosen roadmap --}}
+                                {{-- Or The series combo is free --}}
+                                <button class="button secondary-button" id="first_purchase_button"
+                                    onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $seriesCombo->slug, 'slug' => request()->route('slug')]) }}'">
+                                    <div>Học ngay <svg class="icon" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M5 3v4M3 5h4M6 17v4M4 19h4m4-16h8M8 7h8M8 11h8M8 15h8"></path>
+                                        </svg></div>
+                                </button>
+                            @elseif (Auth::check() && !$isValidPayment)
+                                {{-- Student has signed in but hasn't purchased the series combo --}}
+                                <button class="button secondary-button" id="first_purchase_button"
+                                    onclick="location.href='{{ route('payments.lms', $seriesCombo->slug) }}'">
+                                    <div>Học ngay
+                                        <svg class="icon" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M5 3v4M3 5h4M6 17v4M4 19h4m4-16h8M8 7h8M8 11h8M8 15h8"></path>
+                                        </svg>
+                                    </div>
+                                </button>
+                            @else
+                                {{-- Student hasn't signed in --}}
+                                <button class="button secondary-button" id="first_purchase_button" onclick="showAuthModal()">
+                                    <div><i class="bi bi-cart-fill"></i>Mua ngay <svg class="icon" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M5 3v4M3 5h4M6 17v4M4 19h4m4-16h8M8 7h8M8 11h8M8 15h8"></path>
+                                        </svg></div>
+                                </button>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
@@ -501,19 +143,19 @@
                     @if (isset($series_description['time_description']))
                         <div class="mb-3">
                             <span class="fs-5 fw-bold"><i class="bi bi-clock"></i> Thời gian: </span>
-                            <span class="d-inline">{!! $series_description['time_description'] !!}</span>
+                            <span class="d-inline content-inline">{!! $series_description['time_description'] !!}</span>
                         </div>
                     @endif
                     @if (isset($series_description['curriculum_description']))
                         <div class="mb-3">
                             <span class="fs-5 fw-bold"><i class="bi bi-clipboard-data"></i> Giáo trình: </span>
-                            <span class="d-inline">{!! $series_description['curriculum_description'] !!}</span>
+                            <span class="d-inline content-inline">{!! $series_description['curriculum_description'] !!}</span>
                         </div>
                     @endif
                     @if (isset($series_description['teacher_description']))
                         <div class="mb-3">
                             <span class="fs-5 fw-bold"><i class="bi bi-person"></i> Giảng viên: </span>
-                            <span class="d-inline">{!! $series_description['teacher_description'] !!}</span>
+                            <span class="d-inline content-inline">{!! $series_description['teacher_description'] !!}</span>
                         </div>
                     @endif
                 </div>
@@ -843,7 +485,7 @@
                 slidesPerGroup: 1,
                 autoHeight: true,
                 breakpoints: {
-                    1300: {
+                    1400: {
                         slidesPerView: 4,
                     },
                     1000: {

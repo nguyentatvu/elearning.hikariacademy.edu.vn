@@ -193,13 +193,13 @@ return [
             'size' => '300x100',
             'image_url' => 'https://example.com/path/to/contact_logo.jpg',
         ],
-        // 10 => [
-        //     'position' => 'course_logo',
-        //     'category' => 'single_image',
-        //     'title' => 'Banner Khóa Học',
-        //     'description' => 'Banner này được sử dụng trên các trang liên quan đến khóa học để nhận diện và thương hiệu.',
-        //     'size' => '300x100',
-        //     'image_url' => 'https://example.com/path/to/course_logo.jpg',
-        // ],
+        10 => [
+            'position' => 'course_logo',
+            'category' => 'single_image',
+            'title' => 'Banner Giới thiệu khóa Học',
+            'description' => 'Banner này được sử dụng trong trang giới thiệu các khoá học',
+            'size' => '600x600',
+            'image_url' => 'https://example.com/path/to/course_logo.jpg',
+        ]
     ]
 ];

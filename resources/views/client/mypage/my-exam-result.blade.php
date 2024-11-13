@@ -13,6 +13,7 @@
                     <th class="text-center">TÊN KỲ THI</th>
                     <th class="text-center">THỜI GIAN TIẾN HÀNH</th>
                     <th class="text-center">ĐIỂM SỐ</th>
+                    <th class="text-center">TỔNG ĐIỂM</th>
                     <th class="text-center">ĐÁNH GIÁ</th>
                     <th class="text-center">CHỨNG NHẬN</th>
                     <th class="text-center">XEM CHI TIẾT</th>
@@ -27,6 +28,7 @@
                             <td>{{ $result->title }}</td>
                             <td>{{ date_format(date_create($result->created_at),"d-m-Y") }}</td>
                             <td>{!! $result->detail !!}</td>
+                            <td class="text-center align-middle">{!! $result->totalMark !!}</td>
                             <td class="text-center align-middle">{!! $result->ketqua !!}</td>
                             <td style="width: 10%;" class="text-center align-middle">
                                 @if($result->status == 1)

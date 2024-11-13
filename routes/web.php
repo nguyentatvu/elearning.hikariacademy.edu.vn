@@ -1515,7 +1515,7 @@ Route::prefix('payments-order')
                     ->name('delete');
             });
     });
-// // Swagger
+// Swagger
 // Route::group(['middleware' => 'web'], function () {
 //     Route::get('api/documentation', '\L5Swagger\Http\Controllers\SwaggerController@api')->name('l5swagger.api');
 //     Route::get('docs', '\L5Swagger\Http\Controllers\SwaggerController@docs')->name('l5-swagger.docs');

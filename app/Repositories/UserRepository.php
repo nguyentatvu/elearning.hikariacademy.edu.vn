@@ -2,8 +2,10 @@
 
 namespace App\Repositories;
 
+use App\Role;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserRepository extends BaseRepository
 {
@@ -18,7 +20,8 @@ class UserRepository extends BaseRepository
      * @param string $user_id
      * @return void
      */
-    public function restoreRedeemedPoints(?string $user_id = null) {
+    public function restoreRedeemedPoints(?string $user_id = null)
+    {
         $user = is_null($user_id) ? Auth::user() : $this->model->find($user_id);
         if ($user->redeemed_points) {
             $user->update([
@@ -37,11 +40,12 @@ class UserRepository extends BaseRepository
      * @param string $userId
      * @return void
      */
-    public function updatePointHistory($data, string $userId) {
+    public function updatePointHistory($data, string $userId)
+    {
         $user = $userId ? $this->findById((int) $userId) : Auth::user();
         $pointHistory = $user->point_history;
 
-        foreach($data as $key => $value) {
+        foreach ($data as $key => $value) {
             if (array_key_exists($key, $pointHistory) && !in_array($key, ['total', 'used'])) {
                 $pointHistory[$key] += $value;
                 $pointHistory['total'] += $value;
@@ -51,5 +55,26 @@ class UserRepository extends BaseRepository
         }
 
         $user->update(['point_history' => $pointHistory]);
+    }
+
+    /**
+     * Get new students registered
+     *
+     * @param string $startDate
+     * @param string $endDate
+     * @return mixed
+     */
+    public function getNewStudentsRegistered(string $startDate, string $endDate)
+    {
+        $newStudentsPerDay = $this->model::select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as count'))
+            ->where('created_at', '>=', $startDate)
+            ->where('created_at', '<=', $endDate)
+            ->where('role_id', Role::STUDENT)
+            ->where('deleted_at', null)
+            ->groupBy('date')
+            ->orderBy('date', 'asc')
+            ->get();
+
+        return $newStudentsPerDay;
     }
 }

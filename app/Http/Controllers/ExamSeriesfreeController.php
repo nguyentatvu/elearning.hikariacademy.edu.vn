@@ -11,6 +11,7 @@ use App\QuestionBank;
 use App\QuizCategory;
 use App\ExamSeries;
 use App\ExamRate;
+use App\ExamScore;
 use App\ExamSeriesfree;
 use Yajra\DataTables\DataTables;
 use DB;
@@ -80,7 +81,17 @@ class ExamSeriesfreeController extends Controller
         $records = DB::table('quizresultfinish')->join('users', 'users.id', '=', 'quizresultfinish.user_id')
                                 ->join('examseries', 'examseries.id', '=', 'quizresultfinish.examseri_id')
 
-                                ->select(['users.name', 'examseries.title', 'quizresultfinish.total_marks','quizresultfinish.finish', 'examseries.category_id','quizresultfinish.status'])
+                                ->select([
+                                  'users.name',
+                                  'examseries.title',
+                                  'quizresultfinish.total_marks',
+                                  'quizresultfinish.finish',
+                                  'quizresultfinish.quiz_1_total',
+                                  'quizresultfinish.quiz_2_total',
+                                  'quizresultfinish.quiz_3_total',
+                                  'examseries.category_id',
+                                  'quizresultfinish.status'
+                                ])
                                 ->wherein('quizresultfinish.examseri_id',[$dotthi->exam1_1,$dotthi->exam2_1,$dotthi->exam3_1,$dotthi->exam4_1,$dotthi->exam5_1])
                                 ->whereBetween('quizresultfinish.created_at', [$dotthi->start_date, $dotthi->end_date])
                                 ->orderBy('quizresultfinish.id', 'desc');
@@ -99,72 +110,57 @@ class ExamSeriesfreeController extends Controller
                     $link_data .=$temp;
           return $link_data;
             })
-        ->editColumn('user_id', function($records)
-        {
+        ->editColumn('user_id', function($records) {
           return $records->name;
         })
-        ->editColumn('total_marks', function($records)
-         {
+        ->editColumn('quiz_1_total', function ($records) {
+          $exam_score = new ExamScore();
           if ($records->finish == 3) {
-              $ketqua = $records->total_marks;
-              if ($records->category_id == 3) {
-                if ($ketqua >= 95) {
-                  $ketqua = $ketqua;
-                } else {
-                  $ketqua = $ketqua;
-                }
-              } else {
-                if ($ketqua >= 90) {
-                  $ketqua = $ketqua;
-                } else {
-                  $ketqua = $ketqua;
-                }
-              }
-           } else {
-              $ketqua = '<span class="label label-info">Chưa hoàn thành</span>';
-           }
-          return $ketqua;
+            if ($records->category_id <= 3) {
+              $style1 = ($exam_score->checkKijunTen($records->category_id, 1, $records->quiz_1_total)) ? "info" : "danger";
+              $style2 = ($exam_score->checkKijunTen($records->category_id, 2, $records->quiz_2_total)) ? "info" : "danger";
+              $style3 = ($exam_score->checkKijunTen($records->category_id, 3, $records->quiz_3_total)) ? "info" : "danger";
+              $detail = '言語知識（文字・語彙・文法）: <span class="label label-' . $style1 . '">' . $records->quiz_1_total . '</span><br>読解: <span class="label label-' . $style2 . '">' . $records->quiz_2_total . '</span><br>聴解: <span class="label label-' . $style3 . '">' . $records->quiz_3_total . '</span>';
+            } else {
+              $style1 = ($exam_score->checkKijunTen($records->category_id, 1, $records->quiz_1_total)) ? "info" : "danger";
+              $style3 = ($exam_score->checkKijunTen($records->category_id, 2, $records->quiz_3_total)) ? "info" : "danger";
+              $detail = '言語知識（文字・語彙・文法）: <span class="label label-' . $style1 . '">' . $records->quiz_1_total . '</span><br>聴解: <span class="label label-' . $style3 . '">' . $records->quiz_3_total . '</span>';
+            }
+          } else {
+            $detail = '<span class="label label-danger">Chưa hoàn thành</span>';
+          }
+          return $detail;
         })
-        ->editColumn('finish', function($records)
-         {
+        ->editColumn('total_marks', function ($records) {
           if ($records->finish == 3) {
 
-              // $ketqua = $records->total_marks;
-
-              // if ($records->status == 1) {
-              //     $ketqua = '<span class="label label-success">Đạt</span>';
-              //   } else {
-              //     $ketqua = ' <span class="label label-warning">Chưa đạt</span>';
-              // }
-
-              // if ($records->category_id == 3) {
-              //   if ($ketqua >= 95) {
-              //     $ketqua = '<span class="label label-success">Đạt</span>';
-              //   } else {
-              //     $ketqua = ' <span class="label label-warning">Chưa đạt</span>';
-              //   }
-              // } else {
-              //   if ($ketqua >= 90) {
-              //     $ketqua = ' <span class="label label-success">Đạt</span>';
-              //   } else {
-              //     $ketqua = ' <span class="label label-warning">Chưa đạt</span>';
-              //   }
-              // }
-
-              if ($records->status == 1) {
-                  $ketqua = '<span class="label label-success">Đạt</span>';
-                } else {
-                  $ketqua = ' <span class="label label-warning">Chưa đạt</span>';
-              }
-           } else {
-              $ketqua = '<span class="label label-info">Chưa hoàn thành</span>';
-           }
+              $exam_score = new ExamScore();
+              $style = ($exam_score->checkPassingscore($records->category_id, $records->total_marks) && $exam_score->checkKijunTenAnyKubun($records->category_id, $records->quiz_1_total, $records->quiz_2_total, $records->quiz_3_total)) ? "success" : "warning";
+              $ketqua = '<span class="label label-' . $style . '">' . $records->total_marks . '/ 180</span>';
+          } else {
+              $ketqua = '<span class="label label-danger">Chưa hoàn thành</span>';
+          }
           return $ketqua;
         })
-               
+        ->editColumn('finish', function ($records) {
+          $exam_score = new ExamScore();
+
+          if ($records->finish == 3) {
+            if ($exam_score->checkPassingscore($records->category_id, $records->total_marks) && $exam_score->checkKijunTenAnyKubun($records->category_id, $records->quiz_1_total, $records->quiz_2_total, $records->quiz_3_total)) {
+              $ketqua = '<span class="label label-success">Đạt</span>';
+            } else {
+              $ketqua = '<span class="label label-warning">Chưa đạt</span>';
+            }
+          } else {
+            $ketqua = '<span class="label label-danger">Chưa hoàn thành</span>';
+          }
+          return $ketqua;
+        })
         ->removeColumn('status')
         ->removeColumn('category_id')
-        ->rawColumns(['action', 'total_marks', 'finish'])
+        ->removeColumn('quiz_2_total')
+        ->removeColumn('quiz_3_total')
+        ->rawColumns(['action', 'total_marks', 'finish', 'quiz_1_total'])
         ->make();
     }
 

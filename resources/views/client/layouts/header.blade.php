@@ -22,8 +22,8 @@
         <div class="d-lg-none">
             <!-- User Dropdown -->
             @if (Auth::check())
-                <button class="navbar-toggler avatar-icon-mobile" type="button" data-bs-toggle="dropdown" id="userDropdownMobile"
-                    aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler avatar-icon-mobile" type="button" data-bs-toggle="dropdown"
+                    id="userDropdownMobile" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end w-200px p-2 mt-3 me-3" aria-labelledby="userDropdownMobile">
@@ -59,18 +59,26 @@
                     </li>
                     <li><a class="dropdown-item" href="{{ route('mypage.personal') }}">Trang cá nhân</a>
                     </li>
-                    <li><a class="dropdown-item" href="{{ route('mypage.leaderboard') }}">Bảng xếp
-                            hạng</a></li>
                     <li><a class="dropdown-item" href="{{ route('mypage.reward-point') }}">Điểm tích
                             luỹ</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.leaderboard') }}">Bảng xếp
+                            hạng</a></li>
                     <li><a class="dropdown-item" href="{{ route('mypage.courses') }}">Khoá học</a></li>
                     <li><a class="dropdown-item" href="{{ route('mypage.exams') }}">Khoá luyện thi</a>
                     </li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.my-comments') }}">
+                            Câu hỏi của bạn</a>
+                    </li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.mock-exam.list') }}">
+                            Phòng thi của bạn</a>
+                    </li>
                     <li><a class="dropdown-item" href="{{ route('mypage.my-exam-result') }}">Kết quả
                             thi</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.payment-management') }}">
+                            Quản lý thanh toán</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.recharge-point') }}">Nạp điểm</a></li>
                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Đổi mật
                             khẩu</a></li>
-                    <li><a class="dropdown-item" href="{{ route('mypage.recharge-point') }}">Nạp điểm</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
@@ -123,7 +131,8 @@
                         <div class="btn-group mx-2">
                             <div type="button" data-bs-toggle="dropdown" aria-expanded="false"
                                 onclick="showMyCoursesDropdown()">
-                                <h5 class="mb-0 fw-semibold gradient-title-sm my-course-info" style="color: #166AC9">Khóa học của tôi
+                                <h5 class="mb-0 fw-semibold gradient-title-sm my-course-info" style="color: #166AC9">
+                                    Khóa học của tôi
                                 </h5>
                             </div>
                             <ul
@@ -225,18 +234,27 @@
                                 </li>
                                 <li><a class="dropdown-item" href="{{ route('mypage.personal') }}">Trang cá nhân</a>
                                 </li>
-                                <li><a class="dropdown-item" href="{{ route('mypage.leaderboard') }}">Bảng xếp
-                                        hạng</a></li>
                                 <li><a class="dropdown-item" href="{{ route('mypage.reward-point') }}">Điểm tích
                                         luỹ</a></li>
+                                <li><a class="dropdown-item" href="{{ route('mypage.leaderboard') }}">Bảng xếp
+                                        hạng</a></li>
                                 <li><a class="dropdown-item" href="{{ route('mypage.courses') }}">Khoá học</a></li>
                                 <li><a class="dropdown-item" href="{{ route('mypage.exams') }}">Khoá luyện thi</a>
                                 </li>
+                                <li><a class="dropdown-item" href="{{ route('mypage.my-comments') }}">
+                                        Câu hỏi của bạn</a>
+                                </li>
+                                <li><a class="dropdown-item" href="{{ route('mypage.mock-exam.list') }}">
+                                        Phòng thi của bạn</a>
+                                </li>
                                 <li><a class="dropdown-item" href="{{ route('mypage.my-exam-result') }}">Kết quả
                                         thi</a></li>
+                                <li><a class="dropdown-item" href="{{ route('mypage.payment-management') }}">
+                                        Quản lý thanh toán</a></li>
+                                <li><a class="dropdown-item" href="{{ route('mypage.recharge-point') }}">Nạp điểm</a>
+                                </li>
                                 <li><a class="dropdown-item" data-bs-toggle="modal"
                                         data-bs-target="#changePasswordModal">Đổi mật khẩu</a></li>
-                                <li><a class="dropdown-item" href="{{ route('mypage.recharge-point') }}">Nạp điểm</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>

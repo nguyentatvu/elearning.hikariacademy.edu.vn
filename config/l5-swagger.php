@@ -1,5 +1,4 @@
 <?php
-
 return [
     'api' => [
         /*
@@ -43,7 +42,7 @@ return [
          */
         'middleware' => [
             'api' => [
-                \App\Http\Middleware\NotFoundWhenProduction::class,
+              \App\Http\Middleware\NotFoundWhenProduction::class,
             ],
             'asset' => [],
             'docs' => [],

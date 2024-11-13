@@ -480,25 +480,100 @@
                 ]
             }
         },
+        "/auth/forgot-password": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Forgot password",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "User's email",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "email": {
+                                    "type": "string",
+                                    "example": "vu.nguyentat@gmail.com"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful change password",
+                        "schema": {
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "example": "M\u1eadt kh\u1ea9u m\u1edbi \u0111a\u0303 \u0111u\u031bo\u031b\u0323c gu\u031b\u0309i \u0111i."
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "properties": {
+                                "error": {
+                                    "properties": {
+                                        "email": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "example": [
+                                                "The email field is required.",
+                                                "The email must be a valid email address."
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "example": "Something went wrong."
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/banner": {
             "get": {
                 "tags": [
                     "Banner"
                 ],
                 "summary": "Get Banners by group",
-                "description": "This API returns Banners by group.\n     *           Enum\n     *           BannerGroup: 1 - LOGIN, 2 - HOME, 3 - CONTACT, 4 - COURSE_DETAIL\n     *           BannerDisplayType: 1 - SINGLE, 2 - SLIDER",
+                "description": "This API returns Banners.",
                 "parameters": [
                     {
-                        "name": "group",
+                        "name": "position",
                         "in": "query",
-                        "description": "Banner Group: 1 - Login, 2 - Home, 3 - Contact, 4 - Course Detail",
+                        "description": "Position: home",
                         "required": true,
-                        "type": "integer",
+                        "type": "string",
                         "enum": [
-                            1,
-                            2,
-                            3,
-                            4
+                            "home"
                         ]
                     }
                 ],
@@ -510,10 +585,6 @@
                             "items": {
                                 "properties": {
                                     "id": {
-                                        "type": "integer",
-                                        "example": "1"
-                                    },
-                                    "order": {
                                         "type": "integer",
                                         "example": "1"
                                     },
@@ -529,21 +600,17 @@
                                         "type": "integer",
                                         "example": "1"
                                     },
-                                    "group": {
-                                        "type": "integer",
-                                        "example": "1"
+                                    "to_url": {
+                                        "type": "string",
+                                        "example": "https://google.com.vn"
                                     },
                                     "image": {
                                         "type": "string",
-                                        "example": "Link image"
+                                        "example": "['uploads/banners/67219d4ff3176.png','uploads/banners/67219d4ff3abd.png','uploads/banners/67219d5000502.png']"
                                     },
-                                    "to_url": {
+                                    "position": {
                                         "type": "string",
-                                        "example": "Url"
-                                    },
-                                    "created_at": {
-                                        "type": "string",
-                                        "format": "date-time"
+                                        "example": "home_slider_banner"
                                     }
                                 },
                                 "type": "object"
@@ -1366,6 +1433,10 @@
                                     "type": "integer",
                                     "example": 100
                                 },
+                                "max_point": {
+                                    "type": "integer",
+                                    "example": 100
+                                },
                                 "total_correct_answers": {
                                     "type": "integer",
                                     "example": "40"
@@ -1377,6 +1448,22 @@
                                 "is_passed": {
                                     "type": "boolean",
                                     "example": "true"
+                                },
+                                "correct_answers": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "question": {
+                                                "type": "string",
+                                                "example": "1"
+                                            },
+                                            "answer": {
+                                                "type": "string",
+                                                "example": "3"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
                                 }
                             },
                             "type": "object"
