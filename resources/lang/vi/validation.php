@@ -36,7 +36,7 @@ return [
     'digits_between'       => 'The :attribute must be between :min and :max digits.',
     'dimensions'           => 'The :attribute has invalid image dimensions.',
     'distinct'             => 'The :attribute field has a duplicate value.',
-    'email'                => ':attribute địa chỉ email không đúng',
+    'email'                => ':attribute không đúng định dạng',
     'exists'               => ':attribute tồn tại',
     'file'                 => 'The :attribute must be a file.',
     'filled'               => 'The :attribute field is required.',
