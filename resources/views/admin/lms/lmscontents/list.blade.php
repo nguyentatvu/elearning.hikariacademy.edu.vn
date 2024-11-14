@@ -294,6 +294,7 @@
                         success: function(response) {
                             let newImageUrl = response.imageUrl + '?v=' + new Date().getTime();
                             let dataId = $(fileInput).data('id');
+                            $('img[data-id="' + dataId + '"]').css('display', 'block');
                             $('img[data-id="' + dataId + '"]').attr('src', newImageUrl);
                         },
                         error: function(xhr, status, error) {
