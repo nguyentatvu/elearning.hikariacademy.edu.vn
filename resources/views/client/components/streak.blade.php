@@ -625,12 +625,6 @@
         </div>
     </div>
     <script>
-        let LOGINGTEXT = '';
-        @if (Auth::check() && Auth::user()->has_logged_in == false)
-            LOGINGTEXT = 'Siêu quá! Bạn đã duy trì thành công chuỗi đăng nhập rồi đấy! Hãy vào học để nhận điểm thưởng nhé!';
-        @else
-            LOGINGTEXT = 'Tuyệt vời! Bạn đã nhận được điểm thưởng cho chuỗi đăng nhập và học hôm nay. Hãy tiếp tục phát huy nhé!';
-        @endif
         $(document).ready(function() {
             // State management for async data
             let state = {
@@ -639,11 +633,10 @@
                 currentDate: new Date(),
                 currentDay: new Date().getDay(),
                 streakMilestone: '',
-                initialized: false
+                initialized: false,
+                hasLogin: false,
             };
 
-
-            $('#text_login_streak').text(LOGINGTEXT);
 
             // Initialize data function
             async function initializeData() {
@@ -658,11 +651,16 @@
                         streakCurrent: response.streakCurrent,
                         lastLoginDate: response.lastLoginDate,
                         streakMilestone: response.streakMilestones,
+                        hasLogin: response.hasLogin,
                         initialized: true
                     };
-
                     // Update all UI elements with new data
                     updateAllUI();
+                    if (response.hasLogin == false) {
+                        $('#text_login_streak').text('Siêu quá! Bạn đã duy trì thành công chuỗi đăng nhập rồi đấy! Hãy vào học để nhận điểm thưởng nhé!');
+                    } else {
+                        $('#text_login_streak').text('Tuyệt vời! Bạn đã nhận được điểm thưởng cho chuỗi đăng nhập và học hôm nay. Hãy tiếp tục phát huy nhé!');
+                    }
 
                     return state;
                 } catch (error) {
