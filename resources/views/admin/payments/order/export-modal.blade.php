@@ -312,6 +312,11 @@
                 orient: "horizontal",
                 top: "15%",
                 middle: "middle",
+                textStyle: {
+                    fontSize: 12,
+                    color: "#333",
+                    fontFamily: "Helvetica, Arial, sans-serif"
+                },
             },
             series: [{
                 top: "10%",
@@ -329,6 +334,8 @@
                     show: true,
                     position: "inside",
                     formatter: "{c}: ({d}%)",
+                    fontSize: 11,
+                    fontFamily: "Helvetica, Arial, sans-serif"
                 },
             }, ],
         });
@@ -418,6 +425,11 @@
             legend: {
                 selectedMode: false,
                 top: "8%",
+                textStyle: {
+                    fontSize: 12,
+                    color: "#333",
+                    fontFamily: "Helvetica, Arial, sans-serif"
+                }
             },
             grid,
             yAxis: {
@@ -428,6 +440,7 @@
                 nameTextStyle: {
                     fontSize: 14,
                     fontWeight: 'bold',
+                    fontFamily: "Helvetica, Arial, sans-serif"
                 }
             },
             xAxis: {
@@ -435,6 +448,8 @@
                 data: course,
                 axisLabel: {
                     rotate: 60,
+                    fontSize: 10,
+                    fontFamily: "Helvetica, Arial, sans-serif"
                 }
             },
             series

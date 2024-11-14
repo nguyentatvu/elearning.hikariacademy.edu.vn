@@ -54,7 +54,7 @@
             <div id="pronunciation_wrapper" class="pronunciation-wrapper">
                 <div class="pronunciation-practice">
                     <div class="instruction" id="instruction">
-                        Di chuột vào từng ký tự để xem đánh giá nhé!
+                        Di chuyển chuột vào từng ký tự để xem đánh giá nhé!
                     </div>
                     <div class="pronunciation-question-and-result">
                         <div class="pronunciation-text-process" id="pronunciation_text_result">
@@ -71,7 +71,7 @@
                         <div id="student_speech_result" class="student-speech-result">
                             <div class="result-level d-flex flex-column justify-content-center align-tiems-center">
                                 <div id="resultl_level_1" class="pronunciation-result">
-                                    <h3 class="text-center">Kết quả đánh giá phát âm</h3>
+                                    <h3 class="text-center">Kết quả đánh giá độ chính xác phát âm</h3>
                                     <div id="resultl_level_1_assessment"
                                         class="d-flex justify-content-center gap-2 ps-2 pe-2">
                                     </div>
@@ -120,8 +120,6 @@
 @endsection
 
 @section('lesson-detail-scripts')
-    <script src="{{ admin_asset('js/progressbar.min.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
     <script src="{{ admin_asset('js/recorder.js') }}"></script>
     <script>
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('.char-assessment[data-bs-toggle="tooltip"]'))
@@ -182,34 +180,20 @@
         async function toggleRecording() {
             if (mediaRecorder && mediaRecorder.state === 'recording') {
                 mediaRecorder.stop();
-                console.log("stop record: ", mediaRecorder)
                 stopRecording();
             } else {
                 try {
-                    // const stream = await navigator.mediaDevices.getUserMedia({
-                    //     audio: true
-                    // });
                     startRecording();
                 } catch (err) {
                     alert('Không thể truy cập microphone');
-                    console.error('Không thể truy cập microphone:', err);
                 }
             }
-
-            // if (!isRecording) {
-            //     startRecording();
-            // } else {
-            //     stopRecording();
-            // }
         }
 
         /**
          * Start recording
          */
         function startRecording() {
-            // mediaRecorder = new MediaRecorder(stream);
-            recordedChunks = [];
-            console.log("start record")
             handleRecording();
             let constraints = {
                 audio: true,
@@ -227,6 +211,7 @@
                 rec.record();
                 isRecording = true;
 
+                recordedChunks = [];
                 mediaRecorder.addEventListener('dataavailable', event => {
                     recordedChunks.push(event.data);
                 });
@@ -235,22 +220,18 @@
                     audioBlob = new Blob(recordedChunks, {
                         type: 'audio/wav'
                     });
-                    //processAudio(audioBlob)
-                    //uploadAudioFromSrc(testSrc);
-                    //const audioUrl = URL.createObjectURL(audioBlob);
-
                 });
 
                 mediaRecorder.start();
+
+                setTimeout(() => {
+                    if (isRecording) {
+                        stopRecording();
+                    }
+                }, 10000);
             }).catch(function(err) {
                 alert(err)
             });
-
-            // mediaRecorder.addEventListener('dataavailable', event => {
-            //     recordedChunks.push(event.data);
-            // });
-
-            // mediaRecorder.start();
         }
 
         function stopRecording() {
@@ -306,16 +287,14 @@
          */
         function handlePausing() {
             handleAssessment()
-
-            // audioWaveform.css('display', 'none');
-            // playRecordBtn.prop('disabled', false);
-            // recordBtn.prop('disabled', false);
         }
 
         function handleAssessment() {
             audioWaveformTitle.text('Đang xử lí, xin vui lòng chờ 1 chút !');
             $('#record i').removeClass('bi-pause-circle').addClass('bi-mic');
             recordBtn.prop('disabled', true);
+
+            //displayResult([]);
         }
 
         function displayResult(data) {
@@ -326,79 +305,7 @@
         function handleResult(data) {
             let userResult = data['user_result'];
             let assessmentResult = data['assessment_results'];
-            // let userResult = [{
-            //         "text": "お",
-            //         "start": 0,
-            //         "end": 0.7199999690055847
-            //     },
-            //     {
-            //         "text": "や",
-            //         "start": 0.7199999690055847,
-            //         "end": 0.9599999785423279
-            //     },
-            //     {
-            //         "text": "す",
-            //         "start": 0.9599999785423279,
-            //         "end": 1.159999966621399
-            //     },
-            //     {
-            //         "text": "み",
-            //         "start": 1.159999966621399,
-            //         "end": 1.399999976158142
-            //     },
-            //     {
-            //         "text": "な",
-            //         "start": 1.399999976158142,
-            //         "end": 1.6399999856948853
-            //     },
-            //     {
-            //         "text": "で",
-            //         "start": 1.6399999856948853,
-            //         "end": 1.7999999523162842
-            //     },
-            //     {
-            //         "text": "い",
-            //         "start": 1.7999999523162842,
-            //         "end": 2.784
-            //     }
-            // ];
 
-            // let assessmentResult = [{
-            //         "word": "東",
-            //         "speech_time_difference": 0,
-            //         "pearsonr_value": 0
-            //     },
-            //     {
-            //         "word": "京",
-            //         "speech_time_difference": -0.128,
-            //         "pearsonr_value": 0
-            //     },
-            //     {
-            //         "word": "は",
-            //         "speech_time_difference": -0.224,
-            //         "pearsonr_value": -0.1517995489436796
-            //     },
-            //     {
-            //         "word": "晴",
-            //         "speech_time_difference": 0.064,
-            //         "pearsonr_value": 0
-            //     },
-            //     {
-            //         "word": "れ",
-            //         "speech_time_difference": 0.032,
-            //         "pearsonr_value": -0.9975028291170049
-            //     },
-            //     {
-            //         "word": "で",
-            //         "speech_time_difference": -0.064,
-            //         "pearsonr_value": 0.8868574327733133
-            //     },
-            //     {
-            //         "word": "し",
-            //         "speech_time_difference": 0,
-            //         "pearsonr_value": 0.9709707675800048
-            //     }
-            // ];
             handleWrongWords(userResult, assessmentResult);
         }
 
@@ -425,7 +332,7 @@
                 }
             }
 
-            console.log(differences);
+            //console.log(differences);
             createTooltipForResultLevel1(userResult, assessmentResult, differences);
             createTooltipForResultLevel2(assessmentResult);
         }
@@ -474,36 +381,94 @@
                     .addClass('char-assessment intonation-error')
                     .text(assessmentItem.word);
 
-                if (assessmentItem.pearsonr_value > 0) {
-                    if (assessmentItem.speech_time_difference >= -0.2 && assessmentItem.speech_time_difference <=
-                        0.2) {
+                const thresholdSpeechTime = 0.2;
+                const thresholdPitch = 5;
+                const speechTimeDifference = assessmentItem.speech_time_difference;
+                const pitchValue = assessmentItem.pitch_value;
+                const pearsonrValue = assessmentItem.pearsonr_value;
+
+                if (pearsonrValue > 0.5) {
+                    if (Math.abs(speechTimeDifference) <= thresholdSpeechTime) {
                         span.addClass('correct');
                         span.removeClass('intonation-error');
                         tooltipText = "Bạn làm rất tốt! Cao độ và độ dài âm đều khớp, cứ tiếp tục phát huy nhé!";
-                    } else if (assessmentItem.speech_time_difference < -0.2) {
+                    } else if (speechTimeDifference < -1 * thresholdSpeechTime) {
                         tooltipText = "Cao độ của bạn chuẩn rồi! Thử kéo dài âm thêm chút nữa cho hoàn hảo nhé!";
-                    } else if (assessmentItem.speech_time_difference > 0.2) {
-                        tooltipText = "Bạn phát âm rất đúng cao độ! Thử nói ngắn lại một chút để độ dài âm khớp hơn nhé!";
+                    } else if (speechTimeDifference > thresholdSpeechTime) {
+                        tooltipText =
+                            "Bạn phát âm rất đúng cao độ! Thử nói ngắn lại một chút để độ dài âm khớp hơn nhé!";
                     }
-                } else if (assessmentItem.pearsonr_value === 0) {
-                    if (assessmentItem.speech_time_difference >= -0.2 && assessmentItem.speech_time_difference <=
-                        0.2) {
-                        tooltipText = "Cao độ chưa khớp, nhưng độ dài chuẩn rồi! Hãy tập trung điều chỉnh cao độ nhé!";
-                    } else if (assessmentItem.speech_time_difference < -0.2) {
-                        tooltipText = "Cả cao độ và độ dài âm đều cần điều chỉnh một chút. Hãy kéo dài âm thêm chút và điều chỉnh cao độ nhé!";
-                    } else if (assessmentItem.speech_time_difference > 0.2) {
-                        tooltipText = "Bạn cần điều chỉnh lại cao độ và thử nói ngắn hơn một chút để khớp hơn nhé!";
+                } else if (pearsonrValue > 0 && pearsonrValue <= 0.5) {
+                    if (Math.abs(speechTimeDifference) <= thresholdSpeechTime) {
+                        span.addClass('correct');
+                        span.removeClass('intonation-error');
+                        tooltipText =
+                            "Cao độ của bạn khá tốt! Độ dài âm cũng tương đối khớp, tiếp tục phát huy nhé!";
+                    } else if (speechTimeDifference < -1 * thresholdSpeechTime) {
+                        tooltipText = "Cao độ của bạn khá tốt! Thử kéo dài âm thêm chút nữa cho hoàn hảo nhé!";
+                    } else if (speechTimeDifference > thresholdSpeechTime) {
+                        tooltipText =
+                            "Cao độ của bạn khá tốt! Thử nói ngắn lại một chút để độ dài âm khớp hơn nhé!";
+                    }
+                } else if (pearsonrValue === 0) {
+                    if (Math.abs(speechTimeDifference) <= thresholdSpeechTime) {
+                        tooltipText = "Bạn thử điều chỉnh ngữ điệu để cải thiện nhé!";
+                    } else if (speechTimeDifference < -1 * thresholdSpeechTime) {
+                        tooltipText =
+                            "Bạn cần điều chỉnh ngữ điệu và thử kéo dài âm thêm một chút nữa cho hoàn hảo nhé!";
+                    } else if (speechTimeDifference > thresholdSpeechTime) {
+                        tooltipText =
+                            "Bạn cần điều chỉnh ngữ điệu và thử nói ngắn hơn một chút nữa cho chính xác nhé!";
                     }
                 } else {
-                    if (assessmentItem.speech_time_difference >= -0.2 && assessmentItem.speech_time_difference <=
-                        0.2) {
-                        tooltipText = "Cao độ hơi lệch, nhưng độ dài âm rất ổn! Hãy tập trung luyện thêm về cao độ nhé!";
-                    } else if (assessmentItem.speech_time_difference < -0.2) {
-                        tooltipText = "Cao độ chưa khớp lắm. Bạn cũng có thể kéo dài âm thêm chút để độ dài đạt chuẩn nhé!";
-                    } else if (assessmentItem.speech_time_difference > 0.2) {
-                        tooltipText = "Bạn cần điều chỉnh lại cao độ một chút. Độ dài âm thì gần chuẩn rồi, chỉ cần luyện thêm cao độ thôi!";
+                    let feedbackText = evaluatePitch(pitchValue, thresholdPitch);
+                    if (Math.abs(speechTimeDifference) <= thresholdSpeechTime) {
+                        tooltipText = feedbackText +
+                            "nhưng độ dài âm rất ổn! Hãy tập trung luyện thêm về cao độ nhé!";
+                    } else if (speechTimeDifference < -1 * thresholdSpeechTime) {
+                        tooltipText = feedbackText +
+                            "Độ dài âm hơi ngắn! Thử kéo dài âm thêm chút và điều chỉnh cao độ nữa cho hoàn hảo nhé!";
+                    } else if (speechTimeDifference > thresholdSpeechTime) {
+                        tooltipText = feedbackText +
+                            "Độ dài âm hơi dài! Thử nói ngắn lại một chút và điều chỉnh cao độ nữa cho khớp hơn nhé!";
                     }
                 }
+
+                // if (pearsonrValue > 0) {
+                //     if (Math.abs(speechTimeDifference) <= thresholdSpeechTime) {
+                //         span.addClass('correct');
+                //         span.removeClass('intonation-error');
+                //         tooltipText = "Bạn làm rất tốt! Cao độ và độ dài âm đều khớp, cứ tiếp tục phát huy nhé!";
+                //     } else if (speechTimeDifference < -1 * thresholdSpeechTime) {
+                //         tooltipText = "Cao độ của bạn chuẩn rồi! Thử kéo dài âm thêm chút nữa cho hoàn hảo nhé!";
+                //     } else if (speechTimeDifference > thresholdSpeechTime) {
+                //         tooltipText =
+                //             "Bạn phát âm rất đúng cao độ! Thử nói ngắn lại một chút để độ dài âm khớp hơn nhé!";
+                //     }
+                // } else if (pearsonrValue === 0) {
+                //     let feedbackText = evaluatePitch(pitchValue, thresholdPitch);
+                //     if (Math.abs(speechTimeDifference) <= thresholdSpeechTime) {
+                //         tooltipText = feedbackText +
+                //             "nhưng độ dài chuẩn rồi! Hãy tập trung điều chỉnh cao độ nhé!";
+                //     } else if (speechTimeDifference < -1 * thresholdSpeechTime) {
+                //         tooltipText = feedbackText +
+                //             "và độ dài âm hơi ngắn. Hãy kéo dài âm thêm chút và điều chỉnh cao độ nhé!";
+                //     } else if (speechTimeDifference > thresholdSpeechTime) {
+                //         tooltipText = feedbackText + "và độ dài âm hơi dài. Bạn cần điều chỉnh lại cao độ và thử nói ngắn hơn một chút để khớp hơn nhé!";
+                //     }
+                // } else {
+                //     let feedbackText = evaluatePitch(pitchValue, thresholdPitch);
+                //     if (Math.abs(speechTimeDifference) <= thresholdSpeechTime) {
+                //         tooltipText =
+                //             "Cao độ hơi lệch, nhưng độ dài âm rất ổn! Hãy tập trung luyện thêm về cao độ nhé!";
+                //     } else if (speechTimeDifference < -1 * thresholdSpeechTime) {
+                //         tooltipText =
+                //             "Cao độ chưa khớp lắm. Bạn cũng có thể kéo dài âm thêm chút để độ dài đạt chuẩn nhé!";
+                //     } else if (speechTimeDifference > thresholdSpeechTime) {
+                //         tooltipText =
+                //             "Bạn cần điều chỉnh lại cao độ một chút. Độ dài âm thì gần chuẩn rồi, chỉ cần luyện thêm cao độ thôi!";
+                //     }
+                // }
 
                 if (tooltipText) {
                     span.attr('data-bs-toggle', 'tooltip')
@@ -515,8 +480,21 @@
                 $('#resultl_level_2_assessment').append(span);
             });
 
-            // Khởi tạo lại Bootstrap tooltip
             $('[data-bs-toggle="tooltip"]').tooltip();
+        }
+
+        function evaluatePitch(pitchValue, thresholdPitch) {
+            let feedbackText = "";
+
+            if (Math.abs(pitchValue) > thresholdPitch) {
+                if (pitchValue > thresholdPitch) {
+                    feedbackText = "Cao độ của bạn hơi cao, ";
+                } else {
+                    feedbackText = "Cao độ của bạn hơi thấp, ";
+                }
+            }
+
+            return feedbackText;
         }
 
         function openResultBlock() {
@@ -589,9 +567,6 @@
             formData.append("user_file", userBlob, filename);
             formData.append("sample_file", sampleBlob, sampleName);
             formData.append("pronunciation_detail_id", pronunciationDetailId)
-            formData.forEach((value, key) => {
-                console.log(key + ':', value);
-            });
 
             $.ajax({
                 headers: {
@@ -604,12 +579,9 @@
                 processData: false,
                 data: formData,
                 success: function(response) {
-                    console.log(response);
                     displayResult(response);
                 },
                 error: function(xhr, error) {
-                    console.error('Error occurred:');
-                    console.error('Error message:', error);
                     audioWaveform.css('display', 'none');
                     Swal.fire("Lỗi",
                         "Hệ thống không thể nhận diện rõ ràng giọng nói của bạn. Vui lòng nói rõ hơn hoặc kiểm tra thiết bị ghi âm của bạn.",
@@ -630,43 +602,6 @@
                     console.error('Error checking audio files:', error);
                 });
         }
-
-        // function uploadAudioFromSrc(audioSrc) {
-        //     fetch(audioSrc)
-        //         .then(response => response.blob())
-        //         .then(blob => {
-        //             let formData = new FormData();
-        //             let filename = new Date().toISOString() + ".wav";
-        //             formData.append("audio_file", blob, filename);
-        //             formData.append("pronunciation_detail_id", 1)
-        //             console.log(22);
-        //             formData.forEach((value, key) => {
-        //                 console.log(key + ':', value);
-        //             });
-        //             $.ajax({
-        //                 headers: {
-        //                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
-        //                 },
-        //                 url: "{{ route('lms.pronunciation_assessment.assess') }}",
-        //                 type: 'post',
-        //                 dataType: "json",
-        //                 data: formData,
-        //                 contentType: false,
-        //                 processData: false,
-        //                 success: function(response) {
-        //                     console.log(response);
-        //                     audioWaveform.css('display', 'none');
-        //                     playRecordBtn.prop('disabled', false);
-        //                     recordBtn.prop('disabled', false);
-        //                     calcResult(response);
-        //                 },
-        //                 error: function(response) {
-        //                     console.log("Error uploading file");
-        //                 }
-        //             });
-        //         })
-        //         .catch(error => console.error('Error fetching audio:', error));
-        // }
 
         function handleTooltipIncorrect() {
             $('.text-result.incorrect').each(function() {
