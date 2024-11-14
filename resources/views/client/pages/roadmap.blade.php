@@ -395,8 +395,8 @@
             <div class="serie-info">
                 <div class="d-flex align-items-center mb-3">
                     <div class="serie-image">
-                        @if ($serie->image)
-                            <img src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $serie->image) }}"
+                        @if ($serie_combo->image)
+                            <img src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $serie_combo->image) }}"
                                 alt="" srcset="">
                         @endif
                     </div>
