@@ -413,10 +413,10 @@
                                     <option value="" selected>Chọn lộ trình bạn muốn xem</option>
                                     @foreach ($road_map as $item)
                                         @php
-                                        $roadmapContents = json_decode($item->contents);
-                                        $lastDayNum = end($roadmapContents)->day_number;
-                                    @endphp
-                                    <option value="{{ $item->duration_months }}">{{ $lastDayNum }} ngày
+                                            $roadmapContents = json_decode($item->contents);
+                                            $lastDayNum = end($roadmapContents)->day_number;
+                                        @endphp
+                                        <option value="{{ $item->duration_months }}">{{ $lastDayNum }} ngày
                                         </option>
                                     @endforeach
                                 </select>
@@ -798,30 +798,63 @@
                     return;
                 }
 
-                const carTopPosition = currentDayPosition.position;
-                const carPosition = $('.car').offset().top;
-                const distance = Math.abs(carTopPosition - carPosition);
-                const animationDuration = distance / 1000 * 1000;
-
                 // Check if this is the last day and course is finished
                 const lastSection = sectionsArray[sectionsArray.length - 1];
                 const isLastDay = lastSection?.days[lastSection.days.length - 1]?.day_number === date;
                 const isCourseFinished = sections.finish_course;
 
+                // Determine the target position for the car
+                let carTopPosition;
+                if (isLastDay && isCourseFinished) {
+                    // If course is finished, get position of the finish element
+                    const $finishElement = $('.finish');
+                    if ($finishElement.length) {
+                        const headerHeight = $('#header').outerHeight();
+                        const serieCardHeight = $('#serie_card').outerHeight();
+                        carTopPosition = $finishElement.offset().top - headerHeight - serieCardHeight;
+                    } else {
+                        carTopPosition = currentDayPosition.position;
+                    }
+                } else {
+                    carTopPosition = currentDayPosition.position;
+                }
+
+                const carPosition = $('.car').offset().top;
+                const distance = Math.abs(carTopPosition - carPosition);
+                const animationDuration = distance / 1000 * 1000;
+
                 $('.car').animate({
                     top: `${carTopPosition}px`
                 }, animationDuration, function() {
                     if (isLastDay && isCourseFinished) {
-                        Swal.fire({
-                            title: 'Congratulations!',
-                            text: 'You have completed the course.',
-                            icon: 'success',
-                            confirmButtonText: 'Close'
-                        });
+
                     }
                 });
 
                 updateLocationDayColors(date);
+            }
+
+            // Function to update the car position when course is completed
+            function updateCarPositionOnCompletion() {
+                if (sections.finish_course) {
+                    const $finishElement = $('.finish');
+                    if ($finishElement.length) {
+                        const headerHeight = $('#header').outerHeight();
+                        const serieCardHeight = $('#serie_card').outerHeight();
+                        const finishPosition = $finishElement.offset().top - headerHeight - serieCardHeight;
+                        $('.car').animate({
+                            top: `${finishPosition}px`
+                        }, 1000, function() {
+                            Swal.fire({
+                                title: 'Tuyệt vời lắm!',
+                                text: 'Bạn đã xuất sắc hoàn thành khóa học rồi! Tiếp tục cố gắng nhé!',
+                                icon: 'success',
+                                confirmButtonText: 'Đóng'
+                            });
+
+                        });
+                    }
+                }
             }
 
             function updateLocationDayColors(currentDay) {
@@ -900,6 +933,9 @@
                         loadDataRoadMap(response.road_map);
                         locationIcon();
                         setCarPosition(response.day_last_view, response.last_view);
+                        if (response.road_map.finish_course == true) {
+                            updateCarPositionOnCompletion();
+                        }
                     },
                     error: function(xhr, status, error) {
                         console.error('Lỗi không tải dữ liệu:', error);
