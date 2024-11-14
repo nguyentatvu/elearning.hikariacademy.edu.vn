@@ -146,11 +146,3 @@
         });
     </script>
 @endif
-
-@if (Session::has('popup_forgot_password'))
-    <script type="text/javascript">
-        $(function() {
-            console.log('forgot')
-        });
-    </script>
-@endif

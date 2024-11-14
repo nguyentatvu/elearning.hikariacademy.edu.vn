@@ -104,7 +104,11 @@ function showRoadmapDetails(course, roadmapId, selectedNewDurationMonths = -1) {
     } else {
         currentChosedContentIds = {};
     }
-    durationDays = Math.max(maxDayNum, currentDurationMonths * 30);
+    if (roadmapId === "new_roadmap_id") {
+        durationDays = Math.max(maxDayNum, currentDurationMonths * 30);
+    } else {
+        durationDays = maxDayNum;
+    }
 
     // show roadmap title
     $("#roadmapTitle").text(`Lộ trình ${currentDurationMonths} tháng - ${course.title}`);
@@ -131,31 +135,26 @@ function showRoadmapDetails(course, roadmapId, selectedNewDurationMonths = -1) {
 
         let td = null;
         let dayDiv = null;
-        if (day <= currentDurationMonths * 30) {
-            td = $("<td>").addClass("table-day");
-            dayDiv = $("<div>")
-                .addClass("roadmap-day")
-                .attr("data-day", day)
-                .append($("<strong>").text(`Ngày ${day}`))
-                .on("click", function () {
-                    currentDayElement = $(this);
-                    showAddLessonModal(course.id, day);
-                });
-        } else {
-            td = $('<td>').addClass('table-day removable');
-            dayDiv = $("<div>")
-                .addClass("roadmap-day")
-                .attr("data-day", day)
-                .append($("<strong>").text(`Ngày ${day}`))
-                .append(
-                    `<span aria-hidden="true" class="text-danger close-table-day" onclick="closeTableDay(this)">
-                        &times;
-                    </span>`)
-                .on("click", function () {
-                    currentDayElement = $(this);
-                    showAddLessonModal(course.id, day);
-                });
-        }
+
+        td = $("<td>").addClass("table-day");
+        dayDiv = $("<div>")
+            .addClass("roadmap-day dropdown")
+            .attr("data-day", day)
+            .append($("<strong>").text(`Ngày ${day}`))
+            .append(`
+                <span class="mdi mdi-dots-vertical dropdown-selection dropdown-toggle"
+                    type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"
+                    onclick="event.stopPropagation(); $('.dropdown-menu:visible').toggle(); $(this).next().toggle();">
+                </span>
+                <ul class="dropdown-menu remove-following-days">
+                    <li data-removed-day="${day}" onclick="removeFollowingDays(event, this)">Xóa những ngày tiếp theo</li>
+                </ul>
+            `)
+            .on("click", function () {
+                currentDayElement = $(this);
+                showAddLessonModal(course.id, day);
+            });
+
         const dayContent = roadMapDetail?.contents?.find(
             (c) => c.day_number === day
         );
@@ -344,15 +343,20 @@ function addDayToRoadmap(courseId) {
         );
     }
 
-    const td = $('<td>').addClass('table-day removable');
+    const td = $('<td>').addClass('table-day');
     const dayDiv = $("<div>")
-        .addClass("roadmap-day")
+        .addClass("roadmap-day dropdown")
         .attr("data-day", newDay)
         .append($("<strong>").text(`Ngày ${newDay}`))
-        .append(
-            `<span aria-hidden="true" class="text-danger close-table-day" onclick="closeTableDay(this)">
-                &times;
-            </span>`)
+        .append(`
+            <span class="mdi mdi-dots-vertical dropdown-selection dropdown-toggle"
+                type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"
+                onclick="event.stopPropagation(); $('.dropdown-menu:visible').toggle(); $(this).next().toggle();">
+            </span>
+            <ul class="dropdown-menu remove-following-days">
+                <li data-removed-day="${newDay}" onclick="removeFollowingDays(event, this)">Xóa những ngày tiếp theo</li>
+            </ul>
+        `)
         .on("click", function () {
             currentDayElement = $(this);
             showAddLessonModal(courseId, newDay);
@@ -602,14 +606,66 @@ const makeRoadmapDetailDraggable = () => {
     });
 }
 
+const closeDropdownWhenClickingOutside = () => {
+    $(document).on('click', (e) => {
+        if (!$(e.target).closest('.dropdown').length) {
+            $('.dropdown-menu:visible').toggle();
+        }
+    });
+}
+
+const removeFollowingDays = (event, selectedSelection) => {
+    event.stopPropagation();
+
+    // Mark the date to delete all dates following
+    const markedDate = selectedSelection.getAttribute('data-removed-day');
+
+    let restoredContentIds = [];
+    $('.roadmap-day').each(function() {
+        const currentDay = $(this).data('day');
+        if (currentDay > markedDate) {
+            $(this).closest('td.table-day').remove();
+
+            // Collect all the content ids to restore
+            $(this).find('.lesson-item').each(function() {
+                const lessonId = $(this).data('lesson-id');
+                if (!restoredContentIds.includes(lessonId)) {
+                    restoredContentIds.push(lessonId);
+                }
+            });
+        }
+    });
+
+    // Restore the disabled chosing content to be choosable
+    Object.keys(currentChosedContentIds).forEach((lessonId) => {
+        if (restoredContentIds.includes(parseInt(lessonId))) {
+            delete currentChosedContentIds[lessonId];
+        }
+    });
+
+    // Update total roadmap day count and total lesson day count
+    roadmapDays = [...new Set(Object.values(currentChosedContentIds))];
+    $('#roadmapDayCount').text(markedDate);
+    $('#roadmapLessonDayCount').text(roadmapDays.length);
+
+    // Close dropdown menu
+    $('.dropdown-menu:visible').toggle();
+
+    // Remove all the empty table calendar rows
+    $('table.table-calendar tbody tr').each(function() {
+        if ($(this).find('td').length === 1) {
+            $(this).remove();
+        }
+    })
+}
+
 $(() => {
     $("#addNewRoadmap").on("click", () => {
         const duration = $("#newRoadmapDuration").val();
         currentDurationMonths = duration;
         const course = courses.find((c) => c.id === currentCourseId);
-        const newRoadmapId = generateRandomString();
         $("#courseRoadmapsModal").modal("hide");
-        showRoadmapDetails(course, newRoadmapId, duration);
+        showRoadmapDetails(course, "new_roadmap_id", duration);
         makeRoadmapDetailDraggable();
     });
 
@@ -619,6 +675,9 @@ $(() => {
     setTimeout(() => {
         isShowingCourseRoadmapsModal = true;
     }, 500);
+
+    // Close dropdown when clicking outside
+    closeDropdownWhenClickingOutside();
 });
 
 // Resize the roadmap day heights on load and on resize

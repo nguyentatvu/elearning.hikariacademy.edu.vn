@@ -329,7 +329,7 @@
                                         </div>
                                         <div>
                                             <i class="bi bi-calendar-event-fill"></i>
-                                            <span class="ms-2 date-duration">Thời hạn: {{ $recommended_series->time }}
+                                            <span class="ms-2 date-duration">Thời hạn: {{ config('constant.series_combo.month_duration_map')[$recommended_series->time] }}
                                                 tháng
                                             </span>
                                         </div>

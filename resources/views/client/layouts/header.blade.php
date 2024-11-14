@@ -77,8 +77,7 @@
                     <li><a class="dropdown-item" href="{{ route('mypage.payment-management') }}">
                             Quản lý thanh toán</a></li>
                     <li><a class="dropdown-item" href="{{ route('mypage.recharge-point') }}">Nạp điểm</a></li>
-                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Đổi mật
-                            khẩu</a></li>
+                    <li><a class="dropdown-item" href="{{ route('mypage.personal') . '?action=change-password' }}">Đổi mật khẩu</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
@@ -253,8 +252,7 @@
                                         Quản lý thanh toán</a></li>
                                 <li><a class="dropdown-item" href="{{ route('mypage.recharge-point') }}">Nạp điểm</a>
                                 </li>
-                                <li><a class="dropdown-item" data-bs-toggle="modal"
-                                        data-bs-target="#changePasswordModal">Đổi mật khẩu</a></li>
+                                <li><a class="dropdown-item" href="{{ route('mypage.personal') . '?action=change-password' }}">Đổi mật khẩu</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
