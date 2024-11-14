@@ -13,24 +13,28 @@ use ImageSettings;
 use Yajra\DataTables\DataTables;
 use \App;
 use App\Services\HandwritingService;
+use App\Services\ImageService;
 use App\Services\LmsContentService;
 use App\Services\PronunciationService;
 
 class LmsContentController extends Controller
 {
     private $handwritingService;
-    private $lsmContentService;
+    private $lmsContentService;
     private $pronunciationService;
+    private $imageService;
 
     public function __construct(
         HandwritingService $handwritingService,
-        LmsContentService $lsmContentService,
-        PronunciationService $pronunciationService
+        LmsContentService $lmsContentService,
+        PronunciationService $pronunciationService,
+        ImageService $imageService
     ) {
         $this->middleware('auth');
         $this->handwritingService = $handwritingService;
-        $this->lsmContentService = $lsmContentService;
+        $this->lmsContentService = $lmsContentService;
         $this->pronunciationService = $pronunciationService;
+        $this->imageService = $imageService;
     }
     protected $examSettings;
     public function setSettings()
@@ -95,7 +99,7 @@ class LmsContentController extends Controller
             return back();
         }
         $records = DB::table('lmscontents')
-            ->select(['lmscontents.stt', 'lmscontents.bai', 'lmscontents.title',
+            ->select(['lmscontents.stt', 'lmscontents.bai', 'lmscontents.title', 'lmscontents.image',
                 'lmscontents.id', 'lmscontents.type', 'lmscontents.import', 'lmscontents.file_path', 'lmscontents.el_try', 'lmscontents.type'])
             ->join('lmsseries', 'lmsseries.id', '=', 'lmscontents.lmsseries_id')
             ->where([
@@ -104,7 +108,6 @@ class LmsContentController extends Controller
             ])
             ->orderBy('stt')
             ->get();
-        // dd($records);
         $this->setSettings();
         return DataTables::of($records)
             ->addColumn('hocthu', function ($records) {
@@ -123,12 +126,12 @@ class LmsContentController extends Controller
                               <i class="mdi mdi-dots-vertical"></i>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="dLabel">';
-                                if (in_array($records->type, ['3', '4', '5'])) {
-                                    $extra .= '<li><a href="' . 'content/view/' . $records->id . '"><i class="fa fa-eye"></i>' . getPhrase("view") . '</a></li>';
-                                }
+                if (in_array($records->type, ['3', '4', '5'])) {
+                    $extra .= '<li><a href="' . 'content/view/' . $records->id . '"><i class="fa fa-eye"></i>' . getPhrase("view") . '</a></li>';
+                }
                 $extra .= '<li><a href="' . 'content/edit/' . $records->id . '"><i class="fa fa-pencil"></i>' . getPhrase("edit") . '</a></li>';
                 $extra .= '<li><a href="' . 'content/add/after/' . $records->id . '"><i class="fa fa-plus"></i>Thêm vào sau</a></li>';
-                $extra .= '<li><a href="javascript:void(0)" onclick="myModal('.$records->id.')"><i class="fa fa-repeat"></i>Chuyển sau vị trí</a></li>';
+                $extra .= '<li><a href="javascript:void(0)" onclick="myModal(' . $records->id . ')"><i class="fa fa-repeat"></i>Chuyển sau vị trí</a></li>';
                 if (checkRole(getUserGrade(2))) {
                     $extra .= '<li><a href="javascript:void(0);" onclick="deleteRecord(\'' . $records->id . '\');"><i class="fa fa-trash"></i>' . getPhrase("delete") . '</a></li>';
                 }
@@ -139,16 +142,16 @@ class LmsContentController extends Controller
                 $icon = "";
                 switch ($records->type) {
                     case '0':
-                        $img = '<img src="/public/assets/images/icon-seriess/books.png" style="width: 20px;margin-right: 5px;">';
+                        $img = '<img data-id="' . $records->id . '" src="' . asset($records->image) . '" style="width: 20px; height: 20px !important; margin-right: 5px;">';
                         break;
                     case '5':
-                        $img = '<img src="/public/assets/images/icon-seriess/books.png" style="width: 20px;margin-right: 5px;">';
+                        $img = '<img data-id="' . $records->id . '" src="' . asset($records->image) . '" style="width: 20px; height: 20px !important; margin-right: 5px;">';
                         break;
                     case '8':
                         $img = '> ';
                         break;
                     case '9':
-                        $img = '<img src="/public/assets/images/icon-seriess/play.png" style="width: 20px;margin-right: 5px;">';
+                        $img = '<img data-id="' . $records->id . '" src="' . asset($records->image) . '" style="width: 20px; height: 20px !important; margin-right: 5px;">';
                         break;
                     default:
                         $img = '> >';
@@ -180,8 +183,29 @@ class LmsContentController extends Controller
                 // (in_array($records->type,['8']) ?($records->import == 1 ? '<span class="label label-success">Đã import bài tâp</span> ' : '<span class="label label-warning">Chưa import bài tâp</span>') : null);
             })
             ->editColumn('type', function ($records) {
-                $dr_loai = ['0' => 'Menu', '1' => 'Từ vựng', '2' => 'Bài học', '3' => 'Bài tập', '4' => 'Bài tập toàn bài', '5' => 'Bài test', '6' => 'Hán tự', '7' => 'Bài ôn tập', '8' => 'Sub menu', '9' => 'Giới thiệu','10' => 'Flashcard', '11' => 'Luyện viết', '12' => 'Luyện phát âm'];
+                $dr_loai = ['0' => 'Menu', '1' => 'Từ vựng', '2' => 'Bài học', '3' => 'Bài tập', '4' => 'Bài tập toàn bài', '5' => 'Bài test', '6' => 'Hán tự', '7' => 'Bài ôn tập', '8' => 'Sub menu', '9' => 'Giới thiệu', '10' => 'Flashcard', '11' => 'Luyện viết', '12' => 'Luyện phát âm'];
                 return $dr_loai[$records->type];
+            })
+            ->editColumn('image', function ($records) {
+                if (!in_array($records->type, ['0', '5', '8', '9'])) {
+                    return null;
+                }
+                $html = '<div class="flex-container">';
+
+                // Check if an image exists
+                if (!empty($records->image)) {
+                    $html .= '<img data-id="' . $records->id . '" src="' . asset($records->image) . '" alt="" style="width: 25px; height: 25px !important; object-fit: cover" />';
+                } else {
+                    $html .= '<img data-id="' . $records->id . '" src="" alt="" style="width: 25px; height: 25px ; object-fit: cover" />';
+                }
+
+                // Add an upload button and hidden input field for uploading
+                $html .= '
+                    <input type="file" name="image" class="image-upload-input" accept="image/*" style="display: none;" data-id="' . $records->id . '">
+                    <button type="button" class="btn btn-primary btn-sm upload-image" data-id="' . $records->id . '">Chọn Icon</button>
+                </div>';
+
+                return $html;
             })
             ->removeColumn('bai')
             ->removeColumn('file_path')
@@ -189,15 +213,15 @@ class LmsContentController extends Controller
             ->removeColumn('slug')
             ->removeColumn('series_slug')
             ->removeColumn('el_try')
-            ->rawColumns(['action', 'title', 'import', 'hocthu'])
-        // ->editColumn('image', function($records){
-        //   $image_path = IMAGE_PATH_UPLOAD_LMS_DEFAULT;
-        //
-        //   if($records->image)
-        //   $image_path = IMAGE_PATH_UPLOAD_LMS_CONTENTS.$records->image;
-        //
-        //   return '<img src="'.$image_path.'" height="100" width="100" />';
-        // })
+            ->rawColumns(['action', 'title', 'import', 'hocthu', 'image'])
+            // ->editColumn('image', function($records){
+            //   $image_path = IMAGE_PATH_UPLOAD_LMS_DEFAULT;
+            //
+            //   if($records->image)
+            //   $image_path = IMAGE_PATH_UPLOAD_LMS_CONTENTS.$records->image;
+            //
+            //   return '<img src="'.$image_path.'" height="100" width="100" />';
+            // })
             ->make();
     }
     /**
@@ -1410,6 +1434,35 @@ class LmsContentController extends Controller
             return $fileName;
         }
     }
+
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048', // Only allow specific image types and a maximum size of 2MB
+            'record_id' => 'required|exists:lmscontents,id',
+        ]);
+
+        $data = $request->only(['image', 'record_id']);
+        $imageUrl = config('constant.content.upload_path');
+        $name = $data['record_id'] . '-image';
+        $filename = $name . '.' . $data['image']->guessClientExtension();
+        $result = $this->lmsContentService->update($data['record_id'], ['image' => $imageUrl . $filename]);
+
+        if ($result) {
+            $this->imageService->setDestination($imageUrl);
+            $this->imageService->uploadImageFile($name, $data['image']);
+
+            return response()->json([
+                'message' => 'Image uploaded successfully',
+                'imageUrl' => asset($imageUrl . $filename)
+            ], 200);
+        }
+
+        return response()->json([
+            'message' => 'Image upload failed',
+        ]);
+    }
+
     public function importExams(Request $request)
     {
         if ($request->hasFile('file')) {

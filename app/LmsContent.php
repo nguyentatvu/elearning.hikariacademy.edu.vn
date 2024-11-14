@@ -29,6 +29,8 @@ class LmsContent extends Model
     public const ACTIVE = 0;
     public const DELETED = 1;
 
+    protected $guarded = [];
+
     public static function getRecordWithSlug($slug)
     {
         return LmsContent::where('slug', '=', $slug)->first();

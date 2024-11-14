@@ -73,11 +73,6 @@
   </fieldset>
 </div>
 <div  class="row">
-  <fieldset class="form-group  col-md-6"   >
-    {{ Form::label('image', getphrase('Hình ảnh')) }}
-    <input type="file" class="form-control" name="image"
-    accept=".png,.jpg,.jpeg" id="image_input">
-  </fieldset>
   <fieldset class="form-group col-md-6" ng-if="loai=='1' || loai=='2' || loai=='6' || loai=='9'">
     {{ Form::label('lms_file', getphrase('File video (.mp4)')) }}
     <span class="text-red">*</span>
@@ -159,11 +154,6 @@
     </div>
   </fieldset>
   @if($record)
-  @if($record->image!='')
-  <fieldset class="form-group col-md-3">
-    {{link_to_asset(IMAGE_PATH_UPLOAD_LMS_CONTENTS.$record->image, getPhrase('download image'))}}
-  </fieldset>
-  @endif
   @if($record->download_doc!='')
   <fieldset class="form-group col-md-6">
     {{link_to_asset($record->download_doc, getPhrase('download '.  basename($record->download_doc)), $attributes = array('target' => '_blank'))}}

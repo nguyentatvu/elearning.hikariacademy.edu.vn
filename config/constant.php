@@ -18,6 +18,9 @@ return [
             '15' => 15,
         ]
     ],
+    'content' => [
+        'upload_path' => 'uploads/lms/content/images/',
+    ],
     'series_combo' => [
         'image_url' => 'public/uploads/lms/combo/',
         'upload_path' => 'uploads/lms/combo/',
@@ -69,6 +72,8 @@ return [
             6 => 'lesson.png',
             7 => 'lesson.png',
             8 => 'lesson.png',
+            11 => 'lesson.png',
+            12 => 'lesson.png',
         ],
         'routes' => [
             'video' => 'learning-management.lesson.show',
