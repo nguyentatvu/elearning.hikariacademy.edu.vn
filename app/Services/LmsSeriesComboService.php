@@ -73,6 +73,22 @@ class LmsSeriesComboService extends BaseService
         return $seriesCombos;
     }
 
+
+    public function getSeriesComboDetail(int $userId, int $seriesComboId)
+    {
+        $seriesCombo = $this->repository->getSeriesComboDetail($userId, $seriesComboId);
+
+        $seriesArray = array_filter([$seriesCombo->n1, $seriesCombo->n2, $seriesCombo->n3, $seriesCombo->n4, $seriesCombo->n5], function ($value) {
+            return !is_null($value);
+        });
+
+        $seriesAndTeachers = $this->getLmsSeriesService()->getSeriesWithTeachers($seriesArray);
+        $series = SeriesAndTeacherResource::collection($seriesAndTeachers);
+        $seriesCombo->series = $series;
+
+        return $seriesCombo;
+    }
+
     /**
      * Get My Series
      *

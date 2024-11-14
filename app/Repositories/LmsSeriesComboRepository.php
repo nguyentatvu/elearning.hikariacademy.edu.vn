@@ -53,6 +53,32 @@ class LmsSeriesComboRepository extends BaseRepository
         return $data;
     }
 
+    public function getSeriesComboDetail(int $userId, int $seriesComboId)
+    {
+        $data = $this->model::select(
+            'lmsseries_combo.*',
+            DB::raw("(SELECT COUNT(id) FROM lmscontents
+              WHERE lmscontents.delete_status = 0
+              AND type NOT IN (" . LmsContent::LESSON . ", " . LmsContent::LESSON_TOPIC . ")
+              AND lmscontents.lmsseries_id IN (lmsseries_combo.n1, lmsseries_combo.n2, lmsseries_combo.n3, lmsseries_combo.n4, lmsseries_combo.n5)) as total_lessons"),
+            DB::raw("(SELECT COUNT(id) FROM lmscontents
+              WHERE lmscontents.delete_status = 0
+              AND lmscontents.el_try = 1
+              AND type NOT IN (" . LmsContent::LESSON . ", " . LmsContent::LESSON_TOPIC . ")
+              AND lmscontents.lmsseries_id IN (lmsseries_combo.n1, lmsseries_combo.n2, lmsseries_combo.n3, lmsseries_combo.n4, lmsseries_combo.n5)) as trial_lessons"),
+            DB::raw("(SELECT slug  FROM lmsseries WHERE lmsseries.id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5)
+              AND lmsseries_combo.total_items = 1 ) as slug_lmscontents"),
+            DB::raw("(SELECT COUNT(id)  FROM payment_method WHERE payment_method.item_id
+                  = lmsseries_combo.id  AND payment_method.user_id = " . $userId . "   AND payment_method.status = 1
+                    AND DATE_ADD(responseTime, INTERVAL IF(lmsseries_combo.time = 0,90,IF(lmsseries_combo.time = 1,180,365)) DAY) > NOW()) as payment")
+        )
+            ->where('lmsseries_combo.delete_status', 0)
+            ->where('lmsseries_combo.id', $seriesComboId)
+            ->first();
+
+        return $data;
+    }
+
     /**
      * Get list of my series
      *
