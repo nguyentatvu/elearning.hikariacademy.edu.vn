@@ -542,7 +542,8 @@
                             <span class="checkmark"><i class="bi bi-check"></i></span>
                         </div>
                     </div>
-                    <p>Chúc mừng! bạn đã duy trì Day streak thành công!</p>
+                    <p id="text_login_streak">Siêu quá! Bạn đã duy trì thành công chuỗi đăng nhập rồi đấy! Hãy vào học
+                        để nhận điểm thưởng nhé!</p>
                     <button type="button" id="btnViewDetail" class="btn btn-primary">Xem chi tiết</button>
                 </div>
             </div>
@@ -624,6 +625,12 @@
         </div>
     </div>
     <script>
+        let LOGINGTEXT = '';
+        @if (Auth::check() && Auth::user()->has_logged_in == false)
+            LOGINGTEXT = 'Siêu quá! Bạn đã duy trì thành công chuỗi đăng nhập rồi đấy! Hãy vào học để nhận điểm thưởng nhé!';
+        @else
+            LOGINGTEXT = 'Tuyệt vời! Bạn đã nhận được điểm thưởng cho chuỗi đăng nhập và học hôm nay. Hãy tiếp tục phát huy nhé!';
+        @endif
         $(document).ready(function() {
             // State management for async data
             let state = {
@@ -634,6 +641,9 @@
                 streakMilestone: '',
                 initialized: false
             };
+
+
+            $('#text_login_streak').text(LOGINGTEXT);
 
             // Initialize data function
             async function initializeData() {

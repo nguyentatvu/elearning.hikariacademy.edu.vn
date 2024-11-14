@@ -66,50 +66,56 @@
         </div>
         <div class="redeem-reward">
             <h4>Quy đổi điểm</h4>
-            <div class="redeem-reward__list">
-                @foreach ($redeemed_series_combo as $series)
-                    <div class="redeem-reward__item {{ $series->is_payable ? '' : 'gray-filter' }}">
-                        <div class="redeem-reward__img">
-                            <div class="dark-overlay">
-                                <div class="off-price-percent">Giảm {{ $series->redeemed_percent }}%</div>
+            @if (!$redeemed_series_combo)
+                <div class="redeem-reward__list">
+                    @foreach ($redeemed_series_combo as $series)
+                        <div class="redeem-reward__item {{ $series->is_payable ? '' : 'gray-filter' }}">
+                            <div class="redeem-reward__img">
+                                <div class="dark-overlay">
+                                    <div class="off-price-percent">Giảm {{ $series->redeemed_percent }}%</div>
+                                </div>
+                                <img src="{{ asset($series_combo_image_url . $series->image) }}" alt="series image">
                             </div>
-                            <img src="{{ asset($series_combo_image_url . $series->image) }}" alt="series image">
-                        </div>
-                        <div class="redeem-reward__info">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <span class="redeem-reward__title">{{ $series->title }}</span>
-                                <div class="d-flex align-items-center">
-                                    <div class="redeem-reward__score font-weight-bold">
-                                        {{ $series->redeem_point }}
+                            <div class="redeem-reward__info">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <span class="redeem-reward__title">{{ $series->title }}</span>
+                                    <div class="d-flex align-items-center">
+                                        <div class="redeem-reward__score font-weight-bold">
+                                            {{ $series->redeem_point }}
+                                        </div>
+                                        <img src="{{ asset('images/icons/coin.svg') }}" class="rounded-circle coin-size">
                                     </div>
-                                    <img src="{{ asset('images/icons/coin.svg') }}" class="rounded-circle coin-size">
                                 </div>
-                            </div>
-                            <div class="line-clamp-3 redeem-reward__description">
-                                {!! $series->short_description !!}
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <span class="font-weight-semibold fs-14">Giá:</span>
+                                <div class="line-clamp-3 redeem-reward__description">
+                                    {!! $series->short_description !!}
+                                </div>
                                 <div class="d-flex align-items-center">
-                                    <span class="redeem-reward__new-price ms-1">
-                                        {{ formatCurrencyVND($series->actualCost - $series->redeemed_amount) }}
-                                    </span>
-                                    <span class="redeem-reward__old-price">{{ formatCurrencyVND($series->actualCost) }}</span>
+                                    <span class="font-weight-semibold fs-14">Giá:</span>
+                                    <div class="d-flex align-items-center">
+                                        <span class="redeem-reward__new-price ms-1">
+                                            {{ formatCurrencyVND($series->actualCost - $series->redeemed_amount) }}
+                                        </span>
+                                        <span
+                                            class="redeem-reward__old-price">{{ formatCurrencyVND($series->actualCost) }}</span>
+                                    </div>
                                 </div>
                             </div>
+                            @if ($series->is_payable)
+                                <div class="redeem-reward__submit">
+                                    <a href="{{ url('payments/lms/' . $series->slug . '?is_redeemed=1') }}">Quy đổi</a>
+                                </div>
+                            @else
+                                <div class="redeem-reward__submit not-allowed">
+                                    <a href="#">Quy đổi</a>
+                                </div>
+                            @endif
                         </div>
-                        @if ($series->is_payable)
-                            <div class="redeem-reward__submit">
-                                <a href="{{ url('payments/lms/' . $series->slug . '?is_redeemed=1') }}">Quy đổi</a>
-                            </div>
-                        @else
-                            <div class="redeem-reward__submit not-allowed">
-                                <a href="#">Quy đổi</a>
-                            </div>
-                        @endif
-                    </div>
-                @endforeach
-            </div>
+                    @endforeach
+                </div>
+            @else
+                <div>Dùng điểm tích lũy để đổi lấy ưu đãi thú vị ở đây! Chi tiết sẽ được cập nhật sớm bạn
+                    nha! 😉</div>
+            @endif
         </div>
     </div>
 @endsection

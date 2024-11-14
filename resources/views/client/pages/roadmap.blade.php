@@ -404,13 +404,20 @@
                         <div>
                             <h4 class="card-title">✨ {{ $serie->title }}</h4>
                             <label for="roadmap_select"><strong>🛣 Lộ trình:</strong></label>
-                            <select id="roadmap_select" class="form-select roadmap-select"
-                                aria-label="Default select example">
-                                <option value="" selected>Chọn lộ trình bạn muốn xem</option>
-                                @foreach ($road_map as $item)
-                                    <option value="{{ $item->duration_months }}">{{ $item->duration_months }} tháng</option>
-                                @endforeach
-                            </select>
+                            @if ($road_map->isEmpty())
+                                <span>Lộ trình cho khoá học đang được chuẩn bị! Sẽ sớm có thôi, bạn hãy ghé lại sau nhé!
+                                    🌟</span>
+                            @else
+                                <select id="roadmap_select" class="form-select roadmap-select"
+                                    aria-label="Default select example">
+                                    <option value=""></option>
+                                    <option value="" selected>Chọn lộ trình bạn muốn xem</option>
+                                    @foreach ($road_map as $item)
+                                        <option value="{{ $item->duration_months }}">{{ $item->duration_months }} tháng
+                                        </option>
+                                    @endforeach
+                                </select>
+                            @endif
                         </div>
                         <div>
                             @if (isset($last_view))
