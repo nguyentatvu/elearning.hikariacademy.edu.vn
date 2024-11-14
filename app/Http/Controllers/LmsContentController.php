@@ -196,7 +196,7 @@ class LmsContentController extends Controller
                 if (!empty($records->image)) {
                     $html .= '<img data-id="' . $records->id . '" src="' . asset($records->image) . '" alt="" style="width: 25px; height: 25px !important; object-fit: cover" />';
                 } else {
-                    $html .= '<img data-id="' . $records->id . '" src="" alt="" style="width: 25px; height: 25px ; object-fit: cover" />';
+                    $html .= '<img data-id="' . $records->id . '" src="" alt="" style="display: none; width: 25px; height: 25px !important; object-fit: cover" />';
                 }
 
                 // Add an upload button and hidden input field for uploading
