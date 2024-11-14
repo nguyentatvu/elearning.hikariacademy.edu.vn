@@ -269,7 +269,7 @@ class MyPageController extends Controller
             return redirect(PREFIX . 'exams/questionbank');
         }
         if (checkRole(getUserGrade(6))) {
-            return redirect(PREFIX . 'mypage/my-personal');
+            return view('client.mypage.personal', $data);
         }
         if (checkRole(getUserGrade(5))) {
             return view('client.mypage.personal', $data);
