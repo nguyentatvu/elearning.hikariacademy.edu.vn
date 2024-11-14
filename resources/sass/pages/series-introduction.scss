@@ -75,6 +75,7 @@
 
         .course-box {
             margin-left: 200px;
+            transform: scale(1.2);
 
             @include mq (max-tb) {
                 margin-left: 0;
@@ -82,6 +83,7 @@
 
             @include mq (max-sp-sl) {
                 width: 90%;
+                transform: none;
             }
 
             .course-content {
@@ -700,8 +702,15 @@
     }
 
     .price-card:hover {
-        transform: translateY(-5px);
+        transform: scale(1.2) translateY(-5px);
         box-shadow: 0 20px 40px rgba(0, 108, 255, 0.15);
+    }
+
+    @include mq (max-sp-sl) {
+        .price-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 108, 255, 0.15);
+        }
     }
 
     .price-card::before {
