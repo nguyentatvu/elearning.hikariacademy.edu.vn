@@ -7,6 +7,7 @@ use App\Http\Resources\SeriesComboResource;
 use App\LmsSeries;
 use App\Services\LmsSeriesComboService;
 use Illuminate\Http\Response;
+use Spipu\Html2Pdf\Tag\Html\S;
 
 /**
  * @SWG\Tag(
@@ -182,5 +183,68 @@ class LmsSeriesComboController extends Controller
         return response()->json([
             "data" => SeriesComboResource::collection($courses)
         ],  Response::HTTP_OK);
+    }
+
+    /**
+     * @SWG\Get(
+     *     tags={"Series Combo"},
+     *     path="/series-combo/{seriesComboId}",
+     *     summary="Series Combo detail",
+     *     @SWG\Parameter(
+     *         name="seriesComboId",
+     *         in="path",
+     *         description="Series Combo ID",
+     *         required=true,
+     *         type="integer",
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @SWG\Schema(
+     *             type="object",
+     *                 @SWG\Property(property="id", type="integer", example="1"),
+     *                 @SWG\Property(property="title", type="string", example="Series Combo 1"),
+     *                 @SWG\Property(property="code", type="string"),
+     *                 @SWG\Property(property="slug", type="string"),
+     *                 @SWG\Property(property="cost", type="integer"),
+     *                 @SWG\Property(property="selloff", type="string"),
+     *                 @SWG\Property(property="short_description", type="string"),
+     *                 @SWG\Property(property="description", type="string"),
+     *                 @SWG\Property(property="image", type="string"),
+     *                 @SWG\Property(property="type", type="integer"),
+     *                 @SWG\Property(property="time", type="integer"),
+     *                 @SWG\Property(property="series", type="array", @SWG\Items(type="object")),
+     *                 @SWG\Property(property="timefrom", type="string", format="date-time"),
+     *                 @SWG\Property(property="timeto", type="string", format="date-time"),
+     *                 @SWG\Property(property="total_lessons", type="integer"),
+     *                 @SWG\Property(property="trial_lessons", type="integer"),
+     *                 @SWG\Property(property="payment", type="integer"),
+     *         )
+     *     ),
+     *     @SWG\Response(
+     *         response=401,
+     *         description="Unauthorized - User not authenticated",
+     *         @SWG\Schema(
+     *             type="object",
+     *             @SWG\Property(property="error", type="string", example="Unauthenticated")
+     *         )
+     *     ),
+     *     @SWG\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @SWG\Schema(
+     *             type="object",
+     *             @SWG\Property(property="error", type="string", example="Something went wrong.")
+     *         )
+     *     ),
+     *     security={{"bearer_token":{}}}
+     * )
+     */
+    public function getSeriesComboDetail(int $seriesComboId)
+    {
+        $userId = auth()->guard('api')->user()->id;
+        $seriesCombo = $this->lmsSeriesComboService->getSeriesComboDetail($userId, $seriesComboId);
+
+        return new SeriesComboResource($seriesCombo);
     }
 }

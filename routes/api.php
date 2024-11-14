@@ -36,6 +36,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::prefix('series-combo')
         ->group(function () {
             Route::get('', 'Api\LmsSeriesComboController@getSeriesCombo');
+            Route::get('/{seriesComboId}', 'Api\LmsSeriesComboController@getSeriesComboDetail');
         });
 
     Route::prefix('series')

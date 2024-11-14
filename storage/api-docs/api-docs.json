@@ -1266,6 +1266,120 @@
                 ]
             }
         },
+        "/series-combo/{seriesComboId}": {
+            "get": {
+                "tags": [
+                    "Series Combo"
+                ],
+                "summary": "Series Combo detail",
+                "parameters": [
+                    {
+                        "name": "seriesComboId",
+                        "in": "path",
+                        "description": "Series Combo ID",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "example": "1"
+                                },
+                                "title": {
+                                    "type": "string",
+                                    "example": "Series Combo 1"
+                                },
+                                "code": {
+                                    "type": "string"
+                                },
+                                "slug": {
+                                    "type": "string"
+                                },
+                                "cost": {
+                                    "type": "integer"
+                                },
+                                "selloff": {
+                                    "type": "string"
+                                },
+                                "short_description": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "image": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "integer"
+                                },
+                                "time": {
+                                    "type": "integer"
+                                },
+                                "series": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
+                                },
+                                "timefrom": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                },
+                                "timeto": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                },
+                                "total_lessons": {
+                                    "type": "integer"
+                                },
+                                "trial_lessons": {
+                                    "type": "integer"
+                                },
+                                "payment": {
+                                    "type": "integer"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - User not authenticated",
+                        "schema": {
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "example": "Unauthenticated"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "example": "Something went wrong."
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/series/{seriesId}": {
             "get": {
                 "tags": [
