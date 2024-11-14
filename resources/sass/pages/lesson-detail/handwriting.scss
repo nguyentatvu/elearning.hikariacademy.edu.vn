@@ -221,8 +221,15 @@
     }
 
     .handwriting-title {
-        font-size: 20px;
         margin-left: 4px;
+
+        .handwriting-lesson-content {
+            font-size: 28px;
+
+            @include mq(max-sp) {
+                font-size: 24px;
+            }
+        }
     }
 
     .handwriting-arrow {
