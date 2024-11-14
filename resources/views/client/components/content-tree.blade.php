@@ -7,7 +7,7 @@
                     aria-expanded="{{ $content_index === 1 ? 'true' : 'false' }}"
                     aria-controls="collapse{{ $content_index }}" type="button">
                     <div class="fw-bold d-flex align-items-center">
-                        <img src="{{ asset('images/icons/lesson.png') }}" alt="image" class="chapter-image me-1">
+                        <img src="{{ (isset($content->image) && !empty($content->image)) ? asset($content->image) : asset('images/icons/lesson.png') }}" alt="image" class="chapter-image me-1">
                         <span>{{ $content->bai }}</span>
                         @if (!empty($content->download_doc))
                             <a href="{{ asset($content->download_doc) }}" class="btn p-0 download-link" target="_blank"
@@ -52,7 +52,7 @@
             @else
                 <a href="{{ $isValidPayment || $content->type === App\LmsContent::SUMMARY_AND_INTRODUCTION ? $content->contentLink : 'javascript:void(0)' }}"
                     class="topic-content-link" onclick="{{ $content->clickEvent }}">
-                    <img src="{{ asset('images/icons/' . config('constant.series.chapter_icons')[$content->type]) }}"
+                    <img src="{{ (isset($content->image) && !empty($content->image)) ? asset($content->image) : asset('images/icons/' . config('constant.series.chapter_icons')[$content->type]) }}"
                         alt="image" class="chapter-image">
                     <span>{{ $content->bai }}</span>
                 </a>

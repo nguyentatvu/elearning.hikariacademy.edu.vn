@@ -1207,7 +1207,7 @@ Route::get('lms/series/overview-content', 'LmsSeriesController@getSeriesOverview
 # 30-9-2020
 
 Route::get('lms/{series}/content', 'LmsContentController@index');
-
+Route::post('lms/content/upload-image', 'LmsContentController@uploadImage')->name('lms.content.upload-image');
 Route::get('lms/{series}/content/view/{slug}', 'LmsContentController@view');
 
 Route::get('lms/{series}/content/getView', 'LmsContentController@getView');

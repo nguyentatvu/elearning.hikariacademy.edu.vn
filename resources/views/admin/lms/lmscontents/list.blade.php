@@ -1,6 +1,15 @@
 @extends('admin.layouts.admin.adminlayout')
 @section('header_scripts')
 <link href="{{CSS}}ajax-datatables.css" rel="stylesheet">
+<style>
+    .flex-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+    }
+</style>
 @stop
 @section('content')
 <div id="page-wrapper">
@@ -39,6 +48,7 @@
 							<tr>
 								<th>STT</th>
 								<th>Bài học</th>
+                                <th>Icon</th>
 								<th>Loại</th>
 								<th>Trạng thái</th>
 								<th class="text-center">Học thử</th>
@@ -136,7 +146,7 @@
     @php
 	// MAKE DEFAULT VALUE COLUMN
 	$defaultColumns = [
-		'stt', 'title', 'type', 'import', 'hocthu', 'action'
+		'stt', 'title', 'image', 'type', 'import', 'hocthu', 'action'
 	];
 	@endphp
     @include('admin.common.datatables', array('route'=>$datatbl_url, 'route_as_url' => true, 'table_columns' => $defaultColumns))
@@ -256,6 +266,42 @@
                     }
                 })
             }
+
+            $(document).on('click', '.upload-image', function() {
+                var inputFile = $(this).prev('.image-upload-input');
+                inputFile.trigger('click');
+            });
+
+            $(document).on('change', '.image-upload-input', function() {
+                var fileInput = this;
+                var file = fileInput.files[0];
+                var recordId = $(this).data('id');
+
+                if (file) {
+                    var formData = new FormData();
+                    formData.append('image', file);
+                    formData.append('record_id', recordId);
+
+                    $.ajax({
+                        url: '{{ route("lms.content.upload-image") }}',
+                        method: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            let newImageUrl = response.imageUrl + '?v=' + new Date().getTime();
+                            let dataId = $(fileInput).data('id');
+                            $('img[data-id="' + dataId + '"]').attr('src', newImageUrl);
+                        },
+                        error: function(xhr, status, error) {
+                            swal('Lỗi', 'Không thể upload ảnh', 'error');
+                        }
+                    });
+                }
+            });
     </script>
     <link rel="stylesheet" type="text/css" href="/public/css/select2.css">
     <script src="/public/js/select2.js"></script>

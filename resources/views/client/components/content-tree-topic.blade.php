@@ -6,12 +6,12 @@
                 aria-controls="flush-collapse{{ $chapter_index }}_{{ $content_index }}"
                 type="button" data-bs-toggle="collapse">
                 @if ($isFreeSeries)
-                    <img src="{{ asset('images/icons/sound.png') }}" class="ms-3 me-1 size-20">
+                    <img src="{{ (isset($content->image) && !empty($content->image)) ? asset($content->image) : asset('images/icons/sound.png') }}" class="ms-3 me-1 size-20 object-fit-cover">
                 @elseif ($seriesType == App\LmsSeriesCombo::EXAM_TYPE)
-                    <img src="{{ asset('images/icons/score.png') }}" class="ms-3 me-1 size-20">
+                    <img src="{{ (isset($content->image) && !empty($content->image)) ? asset($content->image) : asset('images/icons/score.png') }}" class="ms-3 me-1 size-20 object-fit-cover">
                 @else
-                    <img src="{{ asset('images/icons/' . config('constant.series.topic_icons')[$content_index]) ?? 'lesson.png' }}"
-                        class="ms-3 me-1 size-20">
+                    <img src="{{ (isset($content->image) && !empty($content->image)) ? asset($content->image) : asset('images/icons/' . config('constant.series.topic_icons')[$content_index]) ?? 'lesson.png' }}"
+                        class="ms-3 me-1 size-20 object-fit-cover">
                 @endif
                 <span>{{ $content->bai }}</span>
                 @if (!empty($content->download_doc))
