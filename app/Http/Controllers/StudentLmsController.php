@@ -1203,59 +1203,83 @@ class StudentLmsController extends Controller
      */
     public function loadRoadMapDetail(Request $request)
     {
-        $slug = $request->slug;
-        $month = $request->month;
-        $serie = DB::table('lmsseries')->where('slug', $slug)->first();
-        $serieId = $serie->id;
+        // Get basic series info
+        $serie = DB::table('lmsseries')
+            ->where('slug', $request->slug)
+            ->first(['id']);
 
-        $lastViewedContent = $this->lmsStudentViewService->getLastViewedContentOfStudent($serieId);
+        if (!$serie) {
+            return response()->json(['error' => 'Series not found'], 404);
+        }
 
+        // Get road map info
         $roadMap = DB::table('roadmaps')
-            ->where('lmsseries_id', $serieId)
-            ->where('duration_months', $month)
+            ->where('lmsseries_id', $serie->id)
+            ->where('duration_months', $request->month)
             ->first();
-        $FINISH = 1;
-        $lmsContentViewedUser = DB::table('lms_student_view')
+
+        if (!$roadMap) {
+            return response()->json(['error' => 'Roadmap not found'], 404);
+        }
+
+        // Get student viewed content in one query
+        $studentViewed = DB::table('lms_student_view')
             ->join('lmscontents', 'lms_student_view.lmscontent_id', '=', 'lmscontents.id')
             ->where('lms_student_view.users_id', Auth::id())
-            ->where('lmscontents.lmsseries_id', $serieId)
-            ->where('finish', $FINISH)
-            ->pluck('lms_student_view.lmscontent_id');
+            ->where('lmscontents.lmsseries_id', $serie->id)
+            ->select(
+                'lms_student_view.lmscontent_id',
+                'lms_student_view.finish',
+                'lms_student_view.created_date'
+            )
+            ->get();
 
+        // Get last viewed content
+        $lastViewedContent = $studentViewed->sortByDesc('created_date')->first();
+
+        // Get finished content IDs
+        $finishedContentIds = $studentViewed
+            ->where('finish', 1)
+            ->pluck('lmscontent_id')
+            ->toArray();
+
+        // Process roadmap contents
         $roadMapContent = json_decode($roadMap->contents);
         $lastRoadmapDay = $roadMapContent[count($roadMapContent) - 1]->day_number;
         $dayViewedContent = null;
         $dayCount = count($roadMapContent);
 
+        // Mark finished lessons
         foreach ($roadMapContent as &$day) {
-            if (isset($day->lesson_list)) {
+            if (!empty($day->lesson_list)) {
                 foreach ($day->lesson_list as &$lesson) {
-                    $lesson->finish = in_array($lesson->id, $lmsContentViewedUser->toArray()) ? 1 : 0;
+                    $lesson->finish = in_array($lesson->id, $finishedContentIds) ? 1 : 0;
                 }
             }
         }
 
+        $dayViewedContent = null;
         if ($lastViewedContent) {
-            foreach ($roadMapContent as $day) {
+            $targetId = $lastViewedContent->lmscontent_id;
+            $dayViewedContent = array_reduce($roadMapContent, function($carry, $day) use ($targetId) {
+                if ($carry !== null) return $carry;
+
                 foreach ($day->lesson_list as $lesson) {
-                    if ($lesson->id == $lastViewedContent->lmscontent_id) {
-                        $dayViewedContent = $day->day_number;
-                        break;
+                    if ($lesson->id === $targetId) {
+                        return $day->day_number;
                     }
                 }
-            }
-            $lastViewedContent = $lastViewedContent->lmscontent_id;
-        } else {
-            $lastViewedContent = null;
+                return null;
+            }, null);
         }
 
-
+        // Group and process weeks
         $weeks = $this->groupLessonsByWeek($roadMapContent);
         $processedWeeks = $this->processCourseCompletion($weeks);
 
         return response()->json([
             'road_map' => $processedWeeks,
-            'last_view' => $lastViewedContent,
+            'last_view' => $lastViewedContent->lmscontent_id ?? null,
             'day_last_view' => $dayViewedContent,
             'detail' => $roadMap,
             'day_count' => $dayCount,

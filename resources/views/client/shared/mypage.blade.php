@@ -158,13 +158,19 @@
 
         /* Mobile responsiveness */
         @media (max-width: 768px) {
-            .mypage-content {
-                display: unset;
+            .main-content-area {
+                width: calc(100%) !important;
+            }
+
+            .main-content-area.expanded {
+                width: calc(100%);
             }
 
             .sidebar-my-page {
+                height: 100%;
                 width: 100%;
                 position: absolute;
+                box-sizing: border-box;
             }
 
             .sidebar-my-page.collapsed {
@@ -298,6 +304,18 @@
             const $mainContent = $('.main-content-area');
             const $toggleIcon = $('#toggle-icon');
             const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            const $mainContentScroll = $('.main-content');
+
+            function preventScroll() {
+                const isMobile = $(window).width() <= 768;
+                const isCollapsed = $sidebar.hasClass('collapsed');
+
+                if (!isCollapsed && isMobile) {
+                    $mainContentScroll.css('overflow', 'hidden');
+                } else {
+                    $mainContentScroll.css('overflow', 'auto');
+                }
+            }
 
             if (isCollapsed) {
                 $sidebar.addClass('collapsed');
@@ -319,6 +337,7 @@
 
                 const isCollapsed = $sidebar.hasClass('collapsed');
                 localStorage.setItem('sidebarCollapsed', isCollapsed);
+                preventScroll();
             }
 
             function handleMobileView() {

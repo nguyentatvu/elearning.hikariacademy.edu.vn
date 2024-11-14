@@ -700,7 +700,6 @@
                                 dayData.lesson_list.forEach(item => {
                                     const col = document.createElement('div');
                                     const isFinished = item.finish;
-                                    console.log(item);
                                     col.classList.add('col-12', 'col-md-6', 'col-lg-4',
                                         'd-flex');
                                     col.innerHTML = `
