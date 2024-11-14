@@ -542,7 +542,8 @@
                             <span class="checkmark"><i class="bi bi-check"></i></span>
                         </div>
                     </div>
-                    <p>Chúc mừng! bạn đã duy trì Day streak thành công!</p>
+                    <p id="text_login_streak">Siêu quá! Bạn đã duy trì thành công chuỗi đăng nhập rồi đấy! Hãy vào học
+                        để nhận điểm thưởng nhé!</p>
                     <button type="button" id="btnViewDetail" class="btn btn-primary">Xem chi tiết</button>
                 </div>
             </div>
@@ -632,8 +633,10 @@
                 currentDate: new Date(),
                 currentDay: new Date().getDay(),
                 streakMilestone: '',
-                initialized: false
+                initialized: false,
+                hasLogin: false,
             };
+
 
             // Initialize data function
             async function initializeData() {
@@ -648,11 +651,16 @@
                         streakCurrent: response.streakCurrent,
                         lastLoginDate: response.lastLoginDate,
                         streakMilestone: response.streakMilestones,
+                        hasLogin: response.hasLogin,
                         initialized: true
                     };
-
                     // Update all UI elements with new data
                     updateAllUI();
+                    if (response.hasLogin == false) {
+                        $('#text_login_streak').text('Siêu quá! Bạn đã duy trì thành công chuỗi đăng nhập rồi đấy! Hãy vào học để nhận điểm thưởng nhé!');
+                    } else {
+                        $('#text_login_streak').text('Tuyệt vời! Bạn đã nhận được điểm thưởng cho chuỗi đăng nhập và học hôm nay. Hãy tiếp tục phát huy nhé!');
+                    }
 
                     return state;
                 } catch (error) {

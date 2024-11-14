@@ -2099,6 +2099,7 @@ class UsersController extends Controller
             'streakCurrent' => $streakCurrent,
             'lastLoginDate' => $currentDate,
             'streakMilestones' => $streakMilestones,
+            'hasLogin' => $user->has_logged_in,
         ];
 
         // Return the data as a JSON response

@@ -366,7 +366,7 @@
                         <ul>
                             <li>Làm bài tập & kiểm tra</li>
                             <li>Xem video bài học</li>
-                            <li>Duy trì chuỗi đăng nhập</li>
+                            <li>Duy trì chuỗi đăng nhập: Điểm chuỗi chỉ được cộng khi bạn vừa duy trì chuỗi đăng nhập vừa tham gia học tập.</li>
                         </ul>
                         <div>Điểm có thể dùng để quy đổi các khuyến mãi khả dụng ở mục <strong>“Quy đổi điểm”</strong> bên dưới.</div>
                         <div>Bạn cũng có thể nạp tiền để đổi thành điểm tích lũy và sử dụng cho các khuyến mãi, nhưng điểm nạp sẽ không tính vào xếp hạng tuần.</div>
