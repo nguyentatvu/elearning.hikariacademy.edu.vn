@@ -9,7 +9,7 @@
                     @if ($checkNotRoadmapChosen) onclick="openRoadmapSelectionModal({{ $series->id }})" @endif
                     aria-controls="collapse{{ $content_index }}" type="button">
                     <div class="fw-bold">
-                        <img src="{{ asset("images/icons/lesson.png") }}" alt="image" class="chapter-image">
+                        <img src="{{ (isset($content->image) && !empty($content->image)) ? asset($content->image) : asset('images/icons/lesson.png') }}" alt="image" class="chapter-image">
                         <span>{{ $content->bai }}</span>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
                 </a>
             @else
                 <a href="{{ ($isValidPayment || $content->type === App\LmsContent::SUMMARY_AND_INTRODUCTION) ? $content->url : 'javascript:void(0)' }}" class="topic-content-link">
-                    <img src="{{ asset("images/icons/" . config('constant.series.chapter_icons')[$content->type]) }}" alt="image" class="chapter-image">
+                    <img src="{{ (isset($content->image) && !empty($content->image)) ? asset($content->image) : asset("images/icons/" . config('constant.series.chapter_icons')[$content->type]) }}" alt="image" class="chapter-image">
                     <span>{{ $content->bai }}</span>
                 </a>
             @endif
