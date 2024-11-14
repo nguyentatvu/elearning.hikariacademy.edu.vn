@@ -314,7 +314,7 @@
                         <span id="roadmapTitle" class="roadmap-title"></span>
                         <span class="roadmap-status">
                             Số ngày:&nbsp;
-                            <strong id="roadmapDayCount">60</strong>&nbsp;
+                            <strong class="roadmap-day-count">60</strong>&nbsp;
                             Số buổi học:&nbsp;
                             <strong id="roadmapLessonDayCount">40</strong>
                         </span>
