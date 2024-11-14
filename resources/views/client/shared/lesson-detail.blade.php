@@ -247,9 +247,9 @@
 
                 } else if ($('.flashcard-body').length) {
                     // Set max-height and enable scrolling for exercise content when hidden
-                    $('.flashcard-body').css({
-                        'height': (studyContentHeight - navTabHeight) + 'px',
-                    });
+                    // $('.flashcard-body').css({
+                    //     'height': (studyContentHeight - navTabHeight) + 'px',
+                    // });
                 } else if ($('.pronunciation-body').length) {
                     // Set max-height and enable scrolling for exercise content when hidden
                     // $('.pronunciation-body').css({
