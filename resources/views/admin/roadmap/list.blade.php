@@ -27,6 +27,24 @@
         padding: 5px;
         overflow: hidden;
         position: relative;
+        overflow: visible;
+    }
+
+    .dropdown-menu.remove-following-days {
+        padding: 6px;
+        top: 32px !important;
+        right: 10px;
+        left: auto;
+        max-width: 134px;
+        min-width: auto !important;
+    }
+
+    .dropdown-menu.remove-following-days > li {
+        text-align: center;
+    }
+
+    .dropdown-menu.remove-following-days > li:hover {
+        background: #e1e1e1;
     }
 
     .roadmap-month {
@@ -88,8 +106,8 @@
 
     .table-calendar>tbody>tr>td {
         min-width: 152px;
-        max-width: 250px;
-        width: fit-content;
+        max-width: 226px;
+        /* width: fit-content; */
     }
 
     /* multiselect */
@@ -129,6 +147,9 @@
         opacity: 0.6;
         cursor: not-allowed;
     }
+    table.table-calendar {
+        width: auto;
+    }
     .table-day, .week-table-day {
         border-top: none !important;
     }
@@ -163,6 +184,22 @@
 
     .table-day.removable:last-of-type:hover span.text-danger {
         display: inline-block !important;
+    }
+
+    .table-day .dropdown-selection {
+        position: absolute;
+        top: 5px;
+        right: 4px;
+        font-size: 19px;
+        display: none;
+    }
+
+    .table-day:not(.removable):hover .dropdown-selection {
+        display: inline-block !important;
+    }
+
+    .table-day .dropdown-selection:hover {
+        background: rgb(194, 194, 194);
     }
     /* end multiselect */
 

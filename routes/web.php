@@ -51,6 +51,9 @@ Route::prefix('learning-management')->name('learning-management.')->group(functi
     Route::get('lesson/handwriting/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showHandwriting')
         ->name('lesson.handwriting');
 
+    Route::get('lesson/pronunciation-assessment/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showPronunciation')
+        ->name('lesson.pronunciation-assessment');
+
     Route::post('daily-streak', 'UsersController@dailyStreak')
         ->name('lesson.daily-streak');
 });
@@ -195,7 +198,6 @@ Route::prefix('point-management')
             ->name('save-rules');
 
         Route::get('/test', 'PointManagementController@getPointRule');
-
     });
 
 Route::prefix('roadmap')
@@ -1372,6 +1374,7 @@ Route::prefix('lms')
                 Route::get('{id}/edit', 'PronunciationController@edit')->name('edit');
                 Route::patch('{id}/edit', 'PronunciationController@update')->name('update');
                 Route::delete('delete/{id}', 'PronunciationController@delete')->name('delete');
+                Route::post('assess', 'PronunciationController@assess')->name('assess');
 
                 Route::prefix('{id}/detail')
                     ->name('detail.')
@@ -1513,10 +1516,10 @@ Route::prefix('payments-order')
             });
     });
 // Swagger
-Route::group(['middleware' => 'web'], function () {
-    Route::get('api/documentation', '\L5Swagger\Http\Controllers\SwaggerController@api')->name('l5swagger.api');
-    Route::get('docs', '\L5Swagger\Http\Controllers\SwaggerController@docs')->name('l5-swagger.docs');
-});
+// Route::group(['middleware' => 'web'], function () {
+//     Route::get('api/documentation', '\L5Swagger\Http\Controllers\SwaggerController@api')->name('l5swagger.api');
+//     Route::get('docs', '\L5Swagger\Http\Controllers\SwaggerController@docs')->name('l5-swagger.docs');
+// });
 
 // Articles page for users
 Route::prefix('bai-viet')
@@ -1528,14 +1531,6 @@ Route::prefix('bai-viet')
             ->name('list_by_category');
         Route::get('/{article_slug}', 'UserArticleController@detail')
             ->name('detail');
-    });
-
-
-Route::prefix('pronunciation')
-    ->name('pronunciation.')
-    ->group(function () {
-        Route::post('', 'PronunciationController@assess')
-            ->name('assess');
     });
 
 // Banner page

@@ -2541,6 +2541,7 @@ try_again:
                     AND lms_student_view.users_id = users.id AND lmscontents.lmsseries_id = lmsseries.id) 
                     as current_course")
         ])
+            ->where('users.role_id', '=', getRoleData('student'))
             ->orderBy('users.id', 'desc')
             ->get();
         // Organize records by user ID, grouping courses for each user

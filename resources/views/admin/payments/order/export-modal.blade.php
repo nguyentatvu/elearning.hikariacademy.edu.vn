@@ -5,7 +5,7 @@
     }
 
     .export-modal .modal-custom {
-        width: 1150px;
+        width: 1200px;
         overflow-x: auto;
     }
 
@@ -20,14 +20,14 @@
     .export-modal .modal-body {
         height: 450px;
         overflow-y: auto;
-        width: 1150px;
+        width: 1200px;
     }
 
     #chart1,
     #chart2 {
         border: 1px solid black;
         float: left;
-        width: 550px;
+        width: 575px;
         height: 400px;
         padding: 5px;
     }
@@ -36,19 +36,19 @@
     #chart4 {
         border: 1px solid black;
         float: left;
-        width: 550px;
+        width: 575px;
         height: 500px;
         padding: 5px;
     }
 
     .export-modal .modal-content {
-        min-width: 1150px;
+        min-width: 1200px;
     }
 
     @media (min-width: 768px) {
         .modal-dialog {
-            max-width: 1150px;
-            width: 1150px !important;
+            max-width: 1200px;
+            width: 1200px !important;
         }
     }
 
@@ -240,9 +240,15 @@
                     return all + val;
                 }, 0),
                 left: "center",
+                textStyle: {
+                    fontSize: 16,
+                    color: "#333",
+                    fontFamily: "Helvetica, Arial, sans-serif"
+                },
                 subtextStyle: {
                     fontSize: 14,
                     color: "#666",
+                    fontFamily: "Helvetica, Arial, sans-serif"
                 }
             },
             xAxis: {
@@ -288,9 +294,15 @@
                     return all + obj["value"];
                 }, 0),
                 left: "center",
+                textStyle: {
+                    fontSize: 16,
+                    color: "#333",
+                    fontFamily: "Helvetica, Arial, sans-serif"
+                },
                 subtextStyle: {
                     fontSize: 14,
                     color: "#666",
+                    fontFamily: "Helvetica, Arial, sans-serif"
                 }
             },
             tooltip: {
@@ -300,6 +312,11 @@
                 orient: "horizontal",
                 top: "15%",
                 middle: "middle",
+                textStyle: {
+                    fontSize: 12,
+                    color: "#333",
+                    fontFamily: "Helvetica, Arial, sans-serif"
+                },
             },
             series: [{
                 top: "10%",
@@ -317,6 +334,8 @@
                     show: true,
                     position: "inside",
                     formatter: "{c}: ({d}%)",
+                    fontSize: 11,
+                    fontFamily: "Helvetica, Arial, sans-serif"
                 },
             }, ],
         });
@@ -391,25 +410,46 @@
             title: {
                 text: courseStatus.title,
                 left: "center",
+                textStyle: {
+                    fontSize: 16,
+                    color: "#333",
+                    fontFamily: "Helvetica, Arial, sans-serif"
+                },
                 subtextStyle: {
                     fontSize: 14,
                     color: "#666",
+                    fontFamily: "Helvetica, Arial, sans-serif"
                 }
             },
             backgroundColor: "#fff",
             legend: {
                 selectedMode: false,
                 top: "8%",
+                textStyle: {
+                    fontSize: 12,
+                    color: "#333",
+                    fontFamily: "Helvetica, Arial, sans-serif"
+                }
             },
             grid,
             yAxis: {
-                type: "value"
+                type: "value",
+                name: "Số lượng học viên",
+                nameLocation: "middle",
+                nameGap: 30,
+                nameTextStyle: {
+                    fontSize: 14,
+                    fontWeight: 'bold',
+                    fontFamily: "Helvetica, Arial, sans-serif"
+                }
             },
             xAxis: {
                 type: "category",
                 data: course,
                 axisLabel: {
                     rotate: 60,
+                    fontSize: 10,
+                    fontFamily: "Helvetica, Arial, sans-serif"
                 }
             },
             series

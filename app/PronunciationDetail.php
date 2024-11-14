@@ -8,5 +8,9 @@ class PronunciationDetail extends Model
 {
     protected $table = "pronunciation_details";
 
-    protected $fillable = ['pronunciation_id', 'audio_input_name', 'text', 'audio'];
+    protected $fillable = ['pronunciation_id', 'katakana_text', 'text', 'audio', 'words'];
+
+    protected $casts = [
+        'words' => 'array',
+    ];
 }

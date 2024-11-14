@@ -290,7 +290,7 @@
                                     {{-- <div class="course-card-teacher text-muted w-100 mb-1 line-clamp-1">{!! $learning_series->description['teacher_description'] !!}</div> --}}
                                     <div>
                                         <i class="bi bi-calendar-event-fill"></i>
-                                        <span class="ms-2 date-duration">Thời hạn: {{ $learning_series->time }}
+                                        <span class="ms-2 date-duration">Thời hạn: {{ config('constant.series_combo.month_duration_map')[$learning_series->time] }}
                                             tháng
                                         </span>
                                     </div>
@@ -382,7 +382,7 @@
                                     {{-- <div class="course-card-description line-clamp-2">{!! $exam_series->short_description !!}</div> --}}
                                     <div>
                                         <i class="bi bi-calendar-event-fill"></i>
-                                        <span class="ms-2 date-duration">Thời hạn: {{ $learning_series->time }}
+                                        <span class="ms-2 date-duration">Thời hạn: {{ config('constant.series_combo.month_duration_map')[$learning_series->time] }}
                                             tháng
                                         </span>
                                     </div>

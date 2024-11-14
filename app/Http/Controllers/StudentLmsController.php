@@ -1088,7 +1088,7 @@ class StudentLmsController extends Controller
         $this->processLessonContent($combo_slug, $slug, $stt);
         $preparedContent = $this->getPreparedContentVariables();
         $pronunciationId = $preparedContent['detailContent']->pronunciation_id;
-        $pronunciation = $this->lmsContentService->getPronunciationContent(1);
+        $pronunciation = $this->lmsContentService->getPronunciationContent($pronunciationId);
 
         return view('client.lesson-detail.pronunciation', array_merge(
             $preparedContent,

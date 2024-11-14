@@ -76,7 +76,7 @@ return [
             'audit' => 'learning-management.lesson.audit',
             'flashcard' => 'learning-management.lesson.flashcard',
             'handwriting' => 'learning-management.lesson.handwriting',
-            //'pronunciation-assessment' => 'learning-management.lesson.pronunciation-assessment'
+            'pronunciation-assessment' => 'learning-management.lesson.pronunciation-assessment'
         ],
     ],
     'redeemed_coin' => [
@@ -102,8 +102,8 @@ return [
     ],
     'pronunciation' => [
         'endpoint' => [
-            'upload' => $pronunciationUrl . '/upload',
-            'get-intonation' => $pronunciationUrl . '/get-intonation'
+            'upload' => $pronunciationUrl . '/speech-to-text/',
+            'assessment' => $pronunciationUrl . '/assessment/'
         ],
         'comment' => [
             'excellent' => [

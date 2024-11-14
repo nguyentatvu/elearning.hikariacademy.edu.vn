@@ -334,7 +334,7 @@
                                     value="{{ Auth::user()->email }}" disabled>
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-3" id="change_name_phone_section">
                             <div class="col-md-6">
                                 <label for="name" class="text-personal-infomation">Họ và tên</label>
                                 <input type="text" name="name"
@@ -595,5 +595,19 @@
                 showAuthModal(isLogin);
             }
         }
+
+        // Scroll to change password section
+        $(function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const action = urlParams.get('action');
+
+            if (action === 'change-password') {
+                document
+                    .getElementById('change_name_phone_section')
+                    .scrollIntoView({
+                        behavior: 'smooth'
+                    });
+            }
+        });
     </script>
 @endsection

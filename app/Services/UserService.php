@@ -386,8 +386,18 @@ class UserService extends BaseService
                 return false;
             }
         }
+    }
 
-
+    /**
+     * Get new students registered
+     *
+     * @param string $startDate
+     * @param string $endDate
+     * @return mixed
+     */
+    public function getNewStudentsRegistered(string $startDate, string $endDate)
+    {
+        return $this->repository->getNewStudentsRegistered($startDate, $endDate);
     }
 
     private function makePasswordFromUniqID($length = 6)

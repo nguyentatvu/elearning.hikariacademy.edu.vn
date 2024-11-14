@@ -1540,11 +1540,13 @@ function getFullUserImage(string $userImageFile) {
  * Call API
  *
  * @param string $url
- * @param string $apiKey
+ * @param string $httpMethod
  * @param array $data
+ * @param string $contentType
+ * @param string $token
  * @return mixed
  */
-function callApi(string $url, string $httpMethod, array $data, string $contentType = 'multipart/form-data')
+function callApi(string $url, string $httpMethod, array $data, string $contentType = 'multipart/form-data', string $bearerToken = '')
 {
     $curl = curl_init();
     curl_setopt_array($curl, [
@@ -1558,6 +1560,7 @@ function callApi(string $url, string $httpMethod, array $data, string $contentTy
         CURLOPT_POSTFIELDS => $data,
         CURLOPT_HTTPHEADER => array(
             'Content-Type: ' . $contentType,
+            'Authorization: Bearer ' . $bearerToken
         ),
     ]);
 
@@ -1569,10 +1572,11 @@ function callApi(string $url, string $httpMethod, array $data, string $contentTy
         $error_no = curl_errno($curl);
         $effective_url = curl_getinfo($curl, CURLINFO_EFFECTIVE_URL);
 
-        app_log()->error($error, [
-            'error_no' => $error_no,
-            'http_code' => $httpStatus,
-            'url' => $effective_url
+        Log::error('cURL request failed', [
+            'error_message' => $error,
+            'error_code' => $error_no,
+            'url' => $effective_url,
+            'response' => $response
         ]);
 
         return null;
@@ -1581,9 +1585,10 @@ function callApi(string $url, string $httpMethod, array $data, string $contentTy
     $response = json_decode($response, true);
 
     if (!($httpStatus >= 200 && $httpStatus < 300)) {
-        app_log()->error($response['message'] ?? '', [
+        Log::error($response['message'] ?? '', [
             'http_code' => $httpStatus,
-            'url' => $url
+            'url' => $url,
+            'response' => $response
         ]);
 
         return null;
