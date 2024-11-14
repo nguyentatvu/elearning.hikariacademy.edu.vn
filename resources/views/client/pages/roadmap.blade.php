@@ -410,10 +410,13 @@
                             @else
                                 <select id="roadmap_select" class="form-select roadmap-select"
                                     aria-label="Default select example">
-                                    <option value=""></option>
                                     <option value="" selected>Chọn lộ trình bạn muốn xem</option>
                                     @foreach ($road_map as $item)
-                                        <option value="{{ $item->duration_months }}">{{ $item->duration_months }} tháng
+                                        @php
+                                        $roadmapContents = json_decode($item->contents);
+                                        $lastDayNum = end($roadmapContents)->day_number;
+                                    @endphp
+                                    <option value="{{ $item->duration_months }}">{{ $lastDayNum }} ngày
                                         </option>
                                     @endforeach
                                 </select>
@@ -891,8 +894,8 @@
                         $('.left-side').show();
                         $('#information-serie').html(`
                     <div>
-                        <strong>🏁 Lộ trình ${response.detail.duration_months} tháng:</strong>
-                        Hoàn thành mục tiêu trong ${response.detail.duration_months * 30} ngày chỉ với ${response.day_count} buổi học!
+                        <strong>🏁 Lộ trình ${response.last_roadmap_day} ngày:</strong>
+                        Hoàn thành mục tiêu trong ${response.last_roadmap_day} ngày chỉ với ${response.day_count} buổi học!
                     </div>
                 `);
                         loadDataRoadMap(response.road_map);

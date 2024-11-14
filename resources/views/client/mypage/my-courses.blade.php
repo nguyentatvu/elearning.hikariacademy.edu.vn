@@ -180,11 +180,12 @@
 
                                             if (isset($item->user_roadmap->contents)) {
                                                 $contents = json_decode($item->user_roadmap->contents, true);
+                                                $finalRoadmapDay = $contents[count($contents) - 1]['day_number'];
                                             }
                                         @endphp
                                         <div class="d-flex flex-column align-items-center">
                                             @if (isset($contents))
-                                                {{ $durationMonths }} tháng - {{ count($contents) }} buổi học
+                                                {{ $finalRoadmapDay }} ngày - {{ count($contents) }} buổi học
                                             @endif
                                             <a class="btn btn-primary mt-2 w-100px" type="button" href="/roadmap/{{ $item->combo_slug }}/{{ $item->slug }}?month={{ $durationMonths }}">
                                                 Xem chi tiết

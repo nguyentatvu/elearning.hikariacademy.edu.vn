@@ -545,14 +545,15 @@
             selectRoadmapModal.find('.custom-checkbox-container').empty();
             if (roadmapSelectionList[seriesId]) {
                 roadmapSelectionList[seriesId].forEach(roadmap => {
+                    const finalRoadmapDay = roadmap.contents[roadmap.contents.length - 1];
                     selectRoadmapModal.find('.custom-checkbox-container').append(`
                         <div class="custom-checkbox">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="studyPath" value="${roadmap.duration_months}" id="path${roadmap.duration_months}">
                                 <label class="form-check-label fs-5" for="path${roadmap.duration_months}">
-                                    ${roadmap.duration_months} tháng
+                                    ${finalRoadmapDay.day_number} ngày
                                 </label>
-                                <div class="text-muted">Hoàn thành trong ${roadmap.duration_months * 30} ngày với ${roadmap.contents.length} buổi học</div>
+                                <div class="text-muted">Hoàn thành trong ${finalRoadmapDay.day_number} ngày với ${roadmap.contents.length} buổi học</div>
                             </div>
                         </div>
                     `);

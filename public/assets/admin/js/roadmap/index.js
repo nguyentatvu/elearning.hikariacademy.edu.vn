@@ -111,8 +111,11 @@ function showRoadmapDetails(course, roadmapId, selectedNewDurationMonths = -1) {
     }
 
     // show roadmap title
-    $("#roadmapTitle").text(`Lộ trình ${currentDurationMonths} tháng - ${course.title}`);
-    $("#roadmapDayCount").text(durationDays);
+    $("#roadmapTitle").empty();
+    $("#roadmapTitle").append(`
+        Lộ trình <span class="roadmap-day-count">${durationDays}</span> ngày - ${course.title}
+    `);
+    $(".roadmap-day-count").text(durationDays);
     $("#roadmapLessonDayCount").text(roadmap?.contents?.length ?? 0);
 
     // show roadmap details
@@ -329,8 +332,8 @@ function addDayToRoadmap(courseId) {
     const dayCount = $('.roadmap-day').length;
     const newDay = dayCount + 1;
 
-    let totalRoadmapDayCount = parseInt($('#roadmapDayCount').text())
-    $('#roadmapDayCount').text(totalRoadmapDayCount + 1);
+    let totalRoadmapDayCount = parseInt($('.roadmap-day-count').first().text());
+    $('.roadmap-day-count').text(totalRoadmapDayCount + 1);
 
     if (dayCount % 7 === 0) {
         const weekNum = lastTable.find('tr').length;
@@ -364,24 +367,6 @@ function addDayToRoadmap(courseId) {
 
     td.append(dayDiv);
     lastTable.find('tr:last').append(td);
-}
-
-function closeTableDay(element) {
-    const dayNumber = $(element).closest(".roadmap-day").data("day");
-    Object.keys(currentChosedContentIds).forEach((lessonId) => {
-        if (currentChosedContentIds[lessonId] == dayNumber) {
-            delete currentChosedContentIds[lessonId];
-        }
-    });
-
-    if ($(element).closest("tr").children().length == 2) {
-        $(element).closest("tr").remove();
-    } else {
-        $(element).closest('.table-day.removable').remove();
-    }
-
-    let totalRoadmapDayCount = parseInt($('#roadmapDayCount').text())
-    $('#roadmapDayCount').text(totalRoadmapDayCount - 1);
 }
 
 function adjustRoadmapDayHeights() {
@@ -645,7 +630,7 @@ const removeFollowingDays = (event, selectedSelection) => {
 
     // Update total roadmap day count and total lesson day count
     roadmapDays = [...new Set(Object.values(currentChosedContentIds))];
-    $('#roadmapDayCount').text(markedDate);
+    $('.roadmap-day-count').text(markedDate);
     $('#roadmapLessonDayCount').text(roadmapDays.length);
 
     // Close dropdown menu

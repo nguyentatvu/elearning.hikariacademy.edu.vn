@@ -1223,6 +1223,7 @@ class StudentLmsController extends Controller
             ->pluck('lms_student_view.lmscontent_id');
 
         $roadMapContent = json_decode($roadMap->contents);
+        $lastRoadmapDay = $roadMapContent[count($roadMapContent) - 1]->day_number;
         $dayViewedContent = null;
         $dayCount = count($roadMapContent);
 
@@ -1258,6 +1259,7 @@ class StudentLmsController extends Controller
             'day_last_view' => $dayViewedContent,
             'detail' => $roadMap,
             'day_count' => $dayCount,
+            'last_roadmap_day' => $lastRoadmapDay
         ]);
     }
 

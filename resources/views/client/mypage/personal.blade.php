@@ -152,7 +152,7 @@
                                 <div class="course-item">
                                     <div class="d-flex">
                                         <img class="series-image" alt="series image"
-                                            src="{{ '/public/uploads/lms/series/' . $series->image }}" />
+                                            src="{{ '/public/uploads/lms/combo/' . $series->seriesCombo->image }}" />
                                         <div class="course-info">
                                             <div class="course-title">{{ $series->title }}</div>
                                             <div class="course-time mb-1">Học cách đây
