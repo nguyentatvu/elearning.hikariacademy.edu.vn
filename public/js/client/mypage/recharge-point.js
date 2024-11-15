@@ -2,6 +2,7 @@ $(function () {
     selectCoinPackage();
     selectPaymentMethod();
     askToCreateTransferOrder();
+    showMaintainedPaymentMethodAlert();
 });
 
 const selectCoinPackage = () => {
@@ -15,12 +16,22 @@ const selectCoinPackage = () => {
 }
 
 const selectPaymentMethod = () => {
-    $('.payment-method').on('click', function () {
+    $('.payment-method:not(.disabled)').on('click', function () {
         $('.payment-method').removeClass('selected');
         $(this).addClass('selected');
         changeTransactionDetail();
         changeTransactionInstruction();
         changeTransactionSubmit();
+    });
+}
+
+const showMaintainedPaymentMethodAlert = () => {
+    $('.payment-method.disabled').on('click', function () {
+        Swal.fire({
+            title: `Thông báo`,
+            icon: "warning",
+            html: 'Các cổng thanh toán bên thứ 3 <strong>Momo</strong> và <strong>VNPAY</strong> đang được bảo trì. Sẽ quay lại trong khoảng thời gian sớm nhất!'
+        });
     });
 }
 

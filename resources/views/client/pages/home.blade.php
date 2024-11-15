@@ -839,7 +839,7 @@
                 slidesPerView: 1,
                 spaceBetween: 1,
                 loop: true,
-                allowTouchMove: false,
+                allowTouchMove: true,
                 autoplay: {
                     delay: 5000,
                     disableOnInteraction: false,
@@ -869,7 +869,7 @@
                 slidesPerView: 1,
                 spaceBetween: 1,
                 loop: true,
-                allowTouchMove: false,
+                allowTouchMove: true,
                 autoplay: {
                     delay: 5000,
                     disableOnInteraction: false,
