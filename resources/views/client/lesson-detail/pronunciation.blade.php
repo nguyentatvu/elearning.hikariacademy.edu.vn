@@ -3,6 +3,58 @@
 @section('lesson-detail-styles')
     <link href="{{ asset('css/pages/lesson-detail/pronunciation.css') }}" rel="stylesheet">
     <style>
+        :root {
+            --dot-size: 1.25rem;
+            --max-block-size: calc(var(--dot-size) * 5);
+            --dot-color: #166bc9;
+            --dot-color-transition-1: #66a9db;
+            --dot-color-transition-2: #b3d9ef;
+            --delay: 0ms;
+        }
+
+        .audio-waveform-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            color: #166bc9;
+            text-align: center;
+        }
+
+        .loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: calc(var(--dot-size) / 2);
+            block-size: var(--max-block-size);
+        }
+
+        .dot {
+            inline-size: var(--dot-size);
+            block-size: var(--dot-size);
+            border-radius: calc(var(--dot-size) / 2);
+            background: var(--dot-color);
+            animation: y-grow 2s infinite ease-in-out;
+            animation-delay: calc(var(--delay) * 1ms);
+        }
+
+        @keyframes y-grow {
+            25% {
+                block-size: var(--max-block-size);
+                background-color: var(--dot-color-transition-1);
+            }
+
+            50% {
+                block-size: var(--dot-size);
+                background-color: var(--dot-color-transition-2);
+            }
+        }
+
         .custom-tooltip {
             --bs-tooltip-bg: #ffffff;
             --bs-tooltip-color: #333;
@@ -50,72 +102,88 @@
         }
     @endphp
     <div class="pronunciation-body">
-        <div id="pronunciation_container" class="pronunciation-container">
-            <div id="pronunciation_wrapper" class="pronunciation-wrapper">
-                <div class="pronunciation-practice">
-                    <div class="instruction" id="instruction">
-                        Di chuyển chuột vào từng ký tự để xem đánh giá nhé!
-                    </div>
-                    <div class="pronunciation-question-and-result">
-                        <div class="pronunciation-text-process" id="pronunciation_text_result">
-                            <div id="pronunciation_text" class="pronunciation-text">
-                                <span class="pronunciation-text-title" id="pronunciation_text_title">
-                                    {{ $pronunciationDetails[0]->text }}
-                                </span>
-                            </div>
-                            <div id="pronunciation_process" class="pronunciation-process">
-                                @component('client.components.audio-waveform')
-                                @endcomponent
-                            </div>
+        @if (isset($pronunciationDetails) && $pronunciationDetails->count() > 0)
+            <div id="pronunciation_container" class="pronunciation-container">
+                <div id="pronunciation_wrapper" class="pronunciation-wrapper">
+                    <div class="pronunciation-practice">
+                        <div class="instruction" id="instruction">
+                            Di chuyển chuột vào từng ký tự để xem đánh giá nhé!
                         </div>
-                        <div id="student_speech_result" class="student-speech-result">
-                            <div class="result-level d-flex flex-column justify-content-center align-tiems-center">
-                                <div id="resultl_level_1" class="pronunciation-result">
-                                    <h3 class="text-center">Kết quả đánh giá độ chính xác phát âm</h3>
-                                    <div id="resultl_level_1_assessment"
-                                        class="d-flex justify-content-center gap-2 ps-2 pe-2">
-                                    </div>
+                        <div class="pronunciation-question-and-result">
+                            <div class="pronunciation-text-process" id="pronunciation_text_result">
+                                <div id="pronunciation_text" class="pronunciation-text">
+                                    <span class="pronunciation-text-title" id="pronunciation_text_title">
+                                        {{ $pronunciationDetails[0]->text }}
+                                    </span>
                                 </div>
-                                <div id="result_level_2" class="pronunciation-result">
-                                    <h3 class="text-center">Kết quả đánh giá ngữ điệu câu</h3>
-                                    <div id="resultl_level_2_assessment"
-                                        class="d-flex justify-content-center gap-2 ps-2 pe-2">
+                                <div id="pronunciation_process" class="pronunciation-process">
+                                    <div id="audio_waveform">
+                                        <main class="audio-waveform-container">
+                                            <h2 id="audio_waveform_title"></h2>
+                                            <div class="loader js-loader" data-delay="200">
+                                                <div class="dot"></div>
+                                                <div class="dot"></div>
+                                                <div class="dot"></div>
+                                                <div class="dot"></div>
+                                                <div class="dot"></div>
+                                            </div>
+                                        </main>
                                     </div>
                                 </div>
                             </div>
+                            <div id="student_speech_result" class="student-speech-result">
+                                <div class="result-level d-flex flex-column justify-content-center align-tiems-center">
+                                    <div id="resultl_level_1" class="pronunciation-result">
+                                        <h3 class="text-center">Kết quả đánh giá độ chính xác phát âm</h3>
+                                        <div id="resultl_level_1_assessment"
+                                            class="d-flex justify-content-center gap-2 ps-2 pe-2">
+                                        </div>
+                                    </div>
+                                    <div id="result_level_2" class="pronunciation-result">
+                                        <h3 class="text-center">Kết quả đánh giá ngữ điệu câu</h3>
+                                        <div id="resultl_level_2_assessment"
+                                            class="d-flex justify-content-center gap-2 ps-2 pe-2">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div id="pronunciation_audio" class="pronunciation-audio">
-                        <div class="pronunciation-bot">
-                            <button class="btn btn-primary" id="play_sound_btn">
-                                <i class="bi bi-volume-up"></i>
-                            </button>
-                        </div>
-                        <div class="pronunciation-record">
-                            <button id="record" class="btn btn-primary" onclick="toggleRecording()">
-                                <i class="bi bi-mic"></i>
-                            </button>
-                            <button id="reload" class="reload-btn btn btn-primary">
-                                <i class="bi bi-arrow-clockwise"></i>
-                            </button>
-                        </div>
-                        <div class="pronunciation-user">
-                            <button id="play_record" class="btn btn-primary" onclick="playRecord()" disabled>
-                                <i class="bi bi-person"></i>
-                            </button>
+                        <div id="pronunciation_audio" class="pronunciation-audio">
+                            <div class="pronunciation-bot">
+                                <button class="btn btn-primary" id="play_sound_btn">
+                                    <i class="bi bi-volume-up"></i>
+                                </button>
+                            </div>
+                            <div class="pronunciation-record">
+                                <button id="record" class="btn btn-primary" onclick="toggleRecording()">
+                                    <i class="bi bi-mic"></i>
+                                </button>
+                                <button id="reload" class="reload-btn btn btn-primary">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                </button>
+                            </div>
+                            <div class="pronunciation-user">
+                                <button id="play_record" class="btn btn-primary" onclick="playRecord()" disabled>
+                                    <i class="bi bi-person"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div id="pronunciation_arrow" class="pronunciation-arrow">
-                <i id="arrow_left" class="bi bi-arrow-left arrow disabled"></i>
-                <div class="pronunciation-page">
-                    <span id="current_page">1</span> / {{ $total }}
+                <div id="pronunciation_arrow" class="pronunciation-arrow">
+                    <i id="arrow_left" class="bi bi-arrow-left arrow disabled"></i>
+                    <div class="pronunciation-page">
+                        <span id="current_page">1</span> / {{ $total }}
+                    </div>
+                    <i id="arrow_right" class="bi bi-arrow-right arrow"></i>
                 </div>
-                <i id="arrow_right" class="bi bi-arrow-right arrow"></i>
             </div>
-        </div>
+        @else
+            <div class="alert alert-warning fs-4 mt-3" role="alert">
+                <span>Chưa có bài học nào. Vui lòng quay lại sau.</span>
+            </div>
+        @endif
     </div>
 @endsection
 
@@ -128,12 +196,8 @@
         })
         const pronunciationDetail = @json($pronunciationDetails);
         let pronunciationDetailId;
-        let resultDetailText = $('#result_detail_text');
         let totalScore;
         let pronunciationComment = @json(config('constant.pronunciation.comment'));
-        let studentSpeechResult = $('#student_speech_result');
-        let pronunciationTextResult = $('#pronunciation_text_result');
-        let pronunciationTextTitle = $('#pronunciation_text_title');
         let rec;
         let gumStream;
         let total = {{ $total }};
@@ -144,19 +208,16 @@
         let arrowLeft = $('#arrow_left');
         let arrowRight = $('#arrow_right');
         let isPlayingSound = false;
-        let audioWaveform = $('#audio_waveform');
         let isRecording = false;
-        let audioWaveformTitle = $('#audio_waveform_title');
-        let recordBtn = $('#record');
-        let reloadBtn = $('#reload');
-        let playRecordBtn = $('#play_record');
         let playSoundBtn = $('#play_sound_btn');
         let sampleAudio;
         let instruction = $('#instruction');
-
+        let pronunciationData = {};
+        let currentPage = 1;
 
         $(document).ready(function() {
-            audioWaveform.css('display', 'none');
+            initializeAduioWaveform();
+            $('#audio_waveform').css('display', 'none');
             handleArrowLeftEvent();
             handleArrowRightEvent();
             updatePageNumber(1);
@@ -165,7 +226,8 @@
                 instruction.text = "Nhấn vào từng ký tự để xem đánh giá";
             }
 
-            reloadBtn.on('click', function() {
+            $('#reload').on('click', function() {
+                pronunciationData[currentPage].result_block = false;
                 closeResultBlock();
             });
 
@@ -173,6 +235,15 @@
                 playSound(sampleAudio);
             });
         })
+
+        function initializeAduioWaveform() {
+            const loader = document.querySelector(".loader");
+            const delay = +loader.dataset.delay || 200;
+            const dots = loader.querySelectorAll(".loader .dot");
+            dots.forEach((dot, index) => {
+                dot.style = `--delay: ${delay * index}`;
+            });
+        }
 
         /**
          * Toggle recording
@@ -276,9 +347,11 @@
          * Handle recording
          */
         function handleRecording() {
-            audioWaveform.css('display', 'block');
-            playRecordBtn.prop('disabled', true);
-            audioWaveformTitle.text('Đang ghi âm');
+            arrowLeft.addClass('disabled');
+            arrowRight.addClass('disabled');
+            $('#audio_waveform').css('display', 'block');
+            $('#play_record').prop('disabled', true);
+            $('#audio_waveform_title').text('Đang ghi âm');
             $('#record i').removeClass('bi-mic').addClass('bi-pause-circle');
         }
 
@@ -290,16 +363,22 @@
         }
 
         function handleAssessment() {
-            audioWaveformTitle.text('Đang xử lí, xin vui lòng chờ 1 chút !');
+            $('#audio_waveform_title').text('Đang xử lí, xin vui lòng chờ 1 chút !');
             $('#record i').removeClass('bi-pause-circle').addClass('bi-mic');
-            recordBtn.prop('disabled', true);
-
-            //displayResult([]);
+            $('#record').prop('disabled', true);
         }
 
         function displayResult(data) {
             handleResult(data);
+            pronunciationData[currentPage].result_block = true;
             openResultBlock();
+
+            if (!(currentPage === total)) {
+                arrowRight.removeClass('disabled');
+            }
+            if (!(currentPage === 1)) {
+                arrowLeft.removeClass('disabled');
+            }
         }
 
         function handleResult(data) {
@@ -434,42 +513,6 @@
                     }
                 }
 
-                // if (pearsonrValue > 0) {
-                //     if (Math.abs(speechTimeDifference) <= thresholdSpeechTime) {
-                //         span.addClass('correct');
-                //         span.removeClass('intonation-error');
-                //         tooltipText = "Bạn làm rất tốt! Cao độ và độ dài âm đều khớp, cứ tiếp tục phát huy nhé!";
-                //     } else if (speechTimeDifference < -1 * thresholdSpeechTime) {
-                //         tooltipText = "Cao độ của bạn chuẩn rồi! Thử kéo dài âm thêm chút nữa cho hoàn hảo nhé!";
-                //     } else if (speechTimeDifference > thresholdSpeechTime) {
-                //         tooltipText =
-                //             "Bạn phát âm rất đúng cao độ! Thử nói ngắn lại một chút để độ dài âm khớp hơn nhé!";
-                //     }
-                // } else if (pearsonrValue === 0) {
-                //     let feedbackText = evaluatePitch(pitchValue, thresholdPitch);
-                //     if (Math.abs(speechTimeDifference) <= thresholdSpeechTime) {
-                //         tooltipText = feedbackText +
-                //             "nhưng độ dài chuẩn rồi! Hãy tập trung điều chỉnh cao độ nhé!";
-                //     } else if (speechTimeDifference < -1 * thresholdSpeechTime) {
-                //         tooltipText = feedbackText +
-                //             "và độ dài âm hơi ngắn. Hãy kéo dài âm thêm chút và điều chỉnh cao độ nhé!";
-                //     } else if (speechTimeDifference > thresholdSpeechTime) {
-                //         tooltipText = feedbackText + "và độ dài âm hơi dài. Bạn cần điều chỉnh lại cao độ và thử nói ngắn hơn một chút để khớp hơn nhé!";
-                //     }
-                // } else {
-                //     let feedbackText = evaluatePitch(pitchValue, thresholdPitch);
-                //     if (Math.abs(speechTimeDifference) <= thresholdSpeechTime) {
-                //         tooltipText =
-                //             "Cao độ hơi lệch, nhưng độ dài âm rất ổn! Hãy tập trung luyện thêm về cao độ nhé!";
-                //     } else if (speechTimeDifference < -1 * thresholdSpeechTime) {
-                //         tooltipText =
-                //             "Cao độ chưa khớp lắm. Bạn cũng có thể kéo dài âm thêm chút để độ dài đạt chuẩn nhé!";
-                //     } else if (speechTimeDifference > thresholdSpeechTime) {
-                //         tooltipText =
-                //             "Bạn cần điều chỉnh lại cao độ một chút. Độ dài âm thì gần chuẩn rồi, chỉ cần luyện thêm cao độ thôi!";
-                //     }
-                // }
-
                 if (tooltipText) {
                     span.attr('data-bs-toggle', 'tooltip')
                         .attr('data-bs-placement', 'top')
@@ -499,23 +542,23 @@
 
         function openResultBlock() {
             instruction.css('display', 'block');
-            studentSpeechResult.css('display', 'block');
-            pronunciationTextResult.css('display', 'none');
-            recordBtn.css('display', 'none');
-            reloadBtn.css('display', 'block');
-            recordBtn.prop('disabled', false);
-            audioWaveform.css('display', 'none');
-            playRecordBtn.prop('disabled', false);
+            $('#student_speech_result').css('display', 'block');
+            $('#pronunciation_text_result').css('display', 'none');
+            $('#record').css('display', 'none');
+            $('#reload').css('display', 'block');
+            $('#record').prop('disabled', false);
+            $('#audio_waveform').css('display', 'none');
+            $('#play_record').prop('disabled', false);
         }
 
         function closeResultBlock() {
             instruction.css('display', 'none');
-            studentSpeechResult.css('display', 'none');
-            pronunciationTextResult.css('display', 'flex');
-            recordBtn.css('display', 'block');
-            reloadBtn.css('display', 'none');
+            $('#student_speech_result').css('display', 'none');
+            $('#pronunciation_text_result').css('display', 'flex');
+            $('#record').css('display', 'block');
+            $('#reload').css('display', 'none');
             audioBlob = null;
-            playRecordBtn.prop('disabled', true);
+            $('#play_record').prop('disabled', true);
         }
 
         /**
@@ -523,6 +566,8 @@
          */
         function updatePageNumber(number) {
             $('#current_page').text(number)
+            currentPage = number;
+            restorePronunciationData(number);
             updatePronunciationAssessmentLesson(number - 1)
             arrowLeft.toggleClass('disabled', number === 1);
             arrowRight.toggleClass('disabled', number === total);
@@ -530,7 +575,7 @@
 
         function updatePronunciationAssessmentLesson(index) {
             pronunciationDetailId = pronunciationDetail[index].id;
-            pronunciationTextTitle.text(pronunciationDetail[index].text);
+            $('#pronunciation_text_title').text(pronunciationDetail[index].text);
             audioPath = pronunciationDetail[index].audio
             sampleAudio = `{{ asset('${audioPath}') }}`;
         }
@@ -541,8 +586,9 @@
         function handleArrowLeftEvent() {
             arrowLeft.on('click', function() {
                 if (currentIndex > 1) {
+                    storePronunciationData(currentIndex);
                     currentIndex--;
-                    closeResultBlock();
+                    checkPronunciationData(currentIndex);
                     updatePageNumber(currentIndex);
                 }
             });
@@ -554,11 +600,37 @@
         function handleArrowRightEvent() {
             arrowRight.on('click', function() {
                 if (currentIndex < total) {
+                    storePronunciationData(currentIndex);
                     currentIndex++;
-                    closeResultBlock();
+                    checkPronunciationData(currentIndex);
                     updatePageNumber(currentIndex);
                 }
             });
+        }
+
+        function checkPronunciationData(page) {
+            if (pronunciationData[page] && pronunciationData[page].result_block) {
+                openResultBlock();
+            } else {
+                closeResultBlock();
+            }
+        }
+
+        function storePronunciationData(page) {
+            pronunciationData[page].data = $('.pronunciation-question-and-result').html();
+        }
+
+        function restorePronunciationData(page) {
+            if (!pronunciationData[page]) {
+                pronunciationData[page] = {};
+            }
+
+            if (pronunciationData[page].data) {
+                audioBlob = pronunciationData[page].user_audio;
+                $('.pronunciation-question-and-result').html('');
+                $('.pronunciation-question-and-result').html(pronunciationData[page].data);
+                $('[data-bs-toggle="tooltip"]').tooltip();
+            }
         }
 
         const processBlob = (userBlob, sampleBlob, sampleName) => {
@@ -579,15 +651,24 @@
                 processData: false,
                 data: formData,
                 success: function(response) {
+                    pronunciationData[currentPage].user_audio = audioBlob;
                     displayResult(response);
                 },
                 error: function(xhr, error) {
-                    audioWaveform.css('display', 'none');
+                    $('#audio_waveform').css('display', 'none');
                     Swal.fire("Lỗi",
                         "Hệ thống không thể nhận diện rõ ràng giọng nói của bạn. Vui lòng nói rõ hơn hoặc kiểm tra thiết bị ghi âm của bạn.",
                         "error");
-                    recordBtn.prop('disabled', false);
+                    $('#record').prop('disabled', false);
                 },
+                complete: function() {
+                    if (currentPage !== total) {
+                        arrowRight.removeClass('disabled');
+                    }
+                    if (currentPage !== 1) {
+                        arrowLeft.removeClass('disabled');
+                    }
+                }
             });
         }
 
@@ -601,32 +682,6 @@
                 .catch(error => {
                     console.error('Error checking audio files:', error);
                 });
-        }
-
-        function handleTooltipIncorrect() {
-            $('.text-result.incorrect').each(function() {
-                let incorrectWord = $(this).data('incorrect');;
-                let correctWord = $(this).text();
-
-                $(this).attr('data-bs-toggle', 'tooltip')
-                    .attr('data-bs-placement', 'bottom')
-                    .attr('title', `Bạn đã phát âm thành ${incorrectWord}, thử lại ${correctWord} xem sao!`);
-            });
-
-            $('.text-result.missing-word').each(function() {
-                $(this).attr('data-bs-toggle', 'tooltip')
-                    .attr('data-bs-placement', 'bottom')
-                    .attr('title', 'Có vẻ như bạn bỏ sót một vài từ, hãy thử lại và đảm bảo phát âm đủ nhé!');
-            });
-
-            $('[data-bs-toggle="tooltip"]').tooltip({
-                delay: {
-                    show: 500,
-                    hide: 100
-                },
-                trigger: 'hover focus',
-                animation: true
-            });
         }
     </script>
 @endsection
