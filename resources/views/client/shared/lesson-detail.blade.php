@@ -141,13 +141,21 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Khóa học này sẽ giúp bạn nâng cao kỹ năng tiếng Nhật của mình thông qua các bài học tương tác và
-                            thực hành chuyên sâu.</p>
+                        @if($series->short_description)
+                            {!! $series->short_description !!}
+                        @else
+                            <p>Khóa học này sẽ giúp bạn nâng cao kỹ năng tiếng Nhật của mình thông qua các bài học tương tác và thực hành chuyên sâu.</p>
+                        @endif
                         <div class="d-flex justify-content-between align-items-center mt-4">
-                            <span class="course-price">
-                                <i class="bi bi-currency-dollar"></i> {{ formatCurrencyVND($seriesCombo->cost) }} VNĐ
-                            </span>
-                            <button class="btn btn-buy">Mua khóa học</button>
+                            <div>
+                                <span class="course-price">
+                                    <i class="bi bi-currency-dollar"></i> {{ formatCurrencyVND($seriesCombo->actualCost) }} VNĐ
+                                </span>
+                                @if ($seriesCombo->checkPromotion)
+                                    <span class="ms-1 text-decoration-line-through text-muted">{{ formatCurrencyVND($seriesCombo->cost) }}</span>
+                                @endif
+                            </div>
+                            <a class="btn btn-buy" href="{{ route('payments.lms', $seriesCombo->slug) }}">Mua khóa học</a>
                         </div>
                     </div>
                     <div class="modal-footer">

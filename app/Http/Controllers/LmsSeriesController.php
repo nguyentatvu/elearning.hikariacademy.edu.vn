@@ -1190,7 +1190,8 @@ class LmsSeriesController extends Controller
         );
 
         $seriesId = $this->prepContent['series']->id;
-        $data['roadmap_chosen_list'] = $this->userRoadmapService->userChosenRoadmapList(Auth::id() ?? -1);
+        $userId = auth()->id();
+        $data['roadmap_chosen_list'] = $this->userRoadmapService->userChosenRoadmapList($userId);
         $data['series'] = $this->prepContent['series'];
         $data['roadmap_selection_list'] = $this->roadmapService->getRoadmapSelectionOfSeriesList([$seriesId]);
 
@@ -1198,6 +1199,8 @@ class LmsSeriesController extends Controller
             $this->lmsContentService->getContentCountBySeries($this->prepContent['series']->id);
         $this->prepContent['series_combo']->chapter_count =
             $this->lmsContentService->getChapterCountBySeries($this->prepContent['series']->id);
+
+        $data['latest_purchased_time'] = $this->paymentMethodService->getLatestPurchasedSeriesTime($userId, $this->prepContent['series_combo']->id);
 
         return view('client.pages.series-introduction', array_merge(
             $this->getPreparedContentVariables(),
@@ -1225,14 +1228,17 @@ class LmsSeriesController extends Controller
         $data['series_description'] = $data['seriesCombo']->description;
 
         $seriesIdList = array_column($data['seriesCombo']->seriesList, 'id');
-        $data['roadmap_chosen_list'] = $this->userRoadmapService->userChosenRoadmapList(Auth::id() ?? -1);
+        $userId = auth()->id() ?? -1;
+        $data['roadmap_chosen_list'] = $this->userRoadmapService->userChosenRoadmapList($userId);
         $data['roadmap_selection_list'] = $this->roadmapService->getRoadmapSelectionOfSeriesList($seriesIdList);
 
-        $data['roadmap_chosen_list'] = $this->userRoadmapService->userChosenRoadmapList(Auth::id() ?? -1);
+        $data['roadmap_chosen_list'] = $this->userRoadmapService->userChosenRoadmapList($userId);
 
         // Check valid payment
         $data['isValidPayment']
-            = $this->paymentMethodService->checkSerieValidity(auth()->id() ?? -1, $data['seriesCombo']->id);
+            = $this->paymentMethodService->checkSerieValidity($userId, $data['seriesCombo']->id);
+
+        $data['latest_purchased_time'] = $this->paymentMethodService->getLatestPurchasedSeriesTime($userId, $data['seriesCombo']->id);
 
         return view('client.pages.series-introduction', $data);
     }

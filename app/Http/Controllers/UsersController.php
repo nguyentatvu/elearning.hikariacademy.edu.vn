@@ -378,6 +378,19 @@ class UsersController extends Controller
         $user->slug = $slug;
         $user->phone = $request->phone;
         $user->address = '';
+
+        $user->last_login_date = now();
+        $user->login_streak = 1;
+        $user->reward_point = getRewardPointRule('registration')['points'];
+        $user->point_history = [
+            'total' => $user->reward_point,
+            'used' => 0,
+            'exercise_test' => 0,
+            'video' => 0,
+            'streak' => 0,
+            'recharge' => 0
+        ];
+
         if ($role_id == 5) {
             $last_uid = DB::table('users')
                 ->whereYear('created_at', '=', date('Y'))
@@ -397,14 +410,7 @@ class UsersController extends Controller
             $user->hid = $uid_code;
             $user->username = $uid_code;
         }
-        // $uid  = new Uid();
-        // $uid->uid  = $uid_code;
-        // $uid->uid_u     = $request->uid_u;
-        // $uid->uid_v     = $request->uid_v;
-        // $uid->uid_email     = $request->uid_email;
-        //       //$uid->uid_user_created  = $user->id;
-        // $uid->save();
-        // DB::commit();
+
         $user->save();
         $user->roles()->attach($user->role_id);
         $message = 'Tạo thành viên thành công';

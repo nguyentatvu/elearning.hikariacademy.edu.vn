@@ -99,4 +99,21 @@ class PaymentMethodService extends BaseService
     public function getAllMyPayments(string $userId) {
         return $this->repository->getAllMyPayments($userId);
     }
+
+    /**
+     * Get latest series purchased time
+     *
+     * @param string $userId
+     * @param string $seriesComboId
+     * @return PaymentMethod
+     */
+    public function getLatestPurchasedSeriesTime(string $userId, string $seriesComboId) {
+        $latestPurchasedSeries = $this->repository->getLatestPurchasedSeries($userId, $seriesComboId);
+
+        if ($latestPurchasedSeries) {
+            return $latestPurchasedSeries->responseTime;
+        }
+
+        return null;
+    }
 }

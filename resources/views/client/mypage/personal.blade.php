@@ -246,11 +246,10 @@
                                                     </button>
                                                 @endif
                                             </div>
-                                            {{-- <div class="course-card-description line-clamp-2">{!! $recommended_series->short_description !!}</div> --}}
                                             <div>
                                                 <i class="bi bi-calendar-event-fill"></i>
-                                                <span class="ms-2 date-duration">Thời hạn: {{ $recommended_series->time }}
-                                                    tháng
+                                                <span class="ms-2 date-duration">
+                                                    Thời hạn: {{ config('constant.series_combo.month_duration_map')[$recommended_series->time] }} tháng
                                                 </span>
                                                 <div class="d-flex align-items-center mt-2 info-course-card">
                                                     <i class="bi bi-play-circle-fill"></i>
@@ -259,21 +258,8 @@
                                                     <span
                                                         class="ms-2">{{ empty($recommended_series->chapter_count) ? 1 : $recommended_series->chapter_count }}
                                                         chương</span>
-                                                    {{-- @if ($recommended_series->checkMultipleCombo)
-                                                        <button class="btn btn-outline-primary ms-auto"
-                                                            onclick="location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $recommended_series->slug]) }}'">
-                                                            Xem thêm
-                                                        </button>
-                                                    @else
-                                                        <button class="btn btn-outline-primary ms-auto"
-                                                            onclick="location.href='{{ route('series.introduction-detail', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'">
-                                                            Xem thêm
-                                                        </button>
-                                                    @endif --}}
                                                 </div>
                                             </div>
-                                            {{-- <div class="course-card-teacher text-muted w-100 mb-1 line-clamp-1">{!! $recommended_series->description['teacher_description'] ?? '' !!}
-                                            </div> --}}
                                             @if (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) > 1)
                                                 <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                                     onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $recommended_series->slug]) . '?series_action=scrollToList' }}'">

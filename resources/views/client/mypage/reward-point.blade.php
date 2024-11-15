@@ -66,7 +66,7 @@
         </div>
         <div class="redeem-reward">
             <h4>Quy đổi điểm</h4>
-            @if (!$redeemed_series_combo)
+            @if ($redeemed_series_combo)
                 <div class="redeem-reward__list">
                     @foreach ($redeemed_series_combo as $series)
                         <div class="redeem-reward__item {{ $series->is_payable ? '' : 'gray-filter' }}">

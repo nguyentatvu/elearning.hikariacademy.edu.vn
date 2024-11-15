@@ -15,15 +15,32 @@
                     </div>
                 @endif
                 <div class="price-card course-box">
-                    <div class="course-info">
-                        <h1 class="course-title">{{ $seriesCombo->title }}</h1>
-                        <div class="course-duration">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <polyline points="12 6 12 12 16 14"></polyline>
-                            </svg>
-                            Thời hạn: {{ $seriesCombo->month_duration }} tháng
+                    <div class="course-info-container">
+                        <div class="course-info">
+                            <h1 class="course-title">{{ $seriesCombo->title }}</h1>
+                            @if ($isValidPayment)
+                                <div class="d-flex flex-column">
+                                    <div>
+                                        <i class="bi bi-cart-check"></i>
+                                        <span class="mb-1">Ngày mua: {{ Carbon::parse($latest_purchased_time)->format('d/m/Y') }}</span>
+                                    </div>
+                                    <div>
+                                        <i class="bi bi-calendar-x"></i>
+                                        <span class="mb-0">
+                                            Ngày hết hạn: {{ Carbon::parse($latest_purchased_time)->addMonths(config('constant.series_combo.month_duration_map')[$seriesCombo->time])->format('d/m/Y') }}
+                                        </span>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="course-duration">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>
+                                    Thời hạn: {{ $seriesCombo->month_duration }} tháng
+                                </div>
+                            @endif
                         </div>
                     </div>
 
