@@ -1190,7 +1190,7 @@ class LmsSeriesController extends Controller
         );
 
         $seriesId = $this->prepContent['series']->id;
-        $userId = auth()->id();
+        $userId = auth()->id() ?? "-1";
         $data['roadmap_chosen_list'] = $this->userRoadmapService->userChosenRoadmapList($userId);
         $data['series'] = $this->prepContent['series'];
         $data['roadmap_selection_list'] = $this->roadmapService->getRoadmapSelectionOfSeriesList([$seriesId]);
