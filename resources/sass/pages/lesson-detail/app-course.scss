@@ -241,7 +241,8 @@ html {
   border-radius: 5px;
 
   &:hover {
-    background-color: #333;
+    background-color: var(--primary);
+    color: #fff;
   }
 }
 

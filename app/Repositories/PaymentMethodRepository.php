@@ -31,6 +31,22 @@ class PaymentMethodRepository extends BaseRepository
     }
 
     /**
+     * Get latest series purchased
+     *
+     * @param string $userId
+     * @param string $seriesComboId
+     * @return PaymentMethod
+     */
+    public function getLatestPurchasedSeries(string $userId, string $seriesComboId) {
+        return $this->model
+            ->where('item_id', $seriesComboId)
+            ->where('user_id', $userId)
+            ->where('status', 1)
+            ->orderBy('responseTime', 'desc')
+            ->first();
+    }
+
+    /**
      * Get payment method by not null condition
      *
      * @return \Illuminate\Database\Eloquent\Collection | null

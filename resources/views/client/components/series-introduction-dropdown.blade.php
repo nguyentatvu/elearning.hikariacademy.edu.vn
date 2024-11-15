@@ -31,7 +31,7 @@
             </div>
         </div>
     @else
-        <div class="accordion-item {{ $content->css_class }} {{ !$is_roadmap_chosen ? 'disabled' : ''  }}"
+        <div class="accordion-item {{ $content->css_class }} {{ (!$is_roadmap_chosen && $isValidPayment) ? 'disabled' : ''  }}"
             @if ($checkNotRoadmapChosen) onclick="openRoadmapSelectionModal({{ $series->id }})" @endif>
             @if ($content->type == App\LmsContent::SUMMARY_AND_INTRODUCTION && $content->el_try != App\LmsContent::TRIAL_TYPE && !$isValidPayment)
                 <a href="javascript:void(0)" class="topic-content-link" onclick={{ Auth::check() ? 'showBuyCourseModal()' : 'showAuthModal(true)' }}>

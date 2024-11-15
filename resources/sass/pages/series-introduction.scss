@@ -16,7 +16,7 @@
     }
 
     .banner-section {
-        height: 420px;
+        height: 465px;
         position: relative;
         background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='8' ry='8' stroke='%23a3a3a3' stroke-width='4' stroke-dasharray='20%2c 20' stroke-dashoffset='21' stroke-linecap='square'/%3e%3c/svg%3e");
         border-radius: 8px;
@@ -30,6 +30,7 @@
             width: 100%;
             display: flex;
             align-items: center;
+            overflow-x: hidden;
 
             @include mq (max-tb) {
                 justify-content: center;
@@ -713,15 +714,14 @@
         }
     }
 
-    .price-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 112px;
+    .course-info-container {
         background: linear-gradient(135deg, #2196f3, #00bcd4);
         border-radius: 18px 18px 35% 35%;
+        margin-right: -24px;
+        margin-left: -24px;
+        margin-top: -24px;
+        padding-top: 24px;
+        padding-bottom: 4px;
     }
 
     .course-info {
@@ -749,6 +749,8 @@
     }
 
     .price-tag {
+        position: relative;
+        top: -14px;
         background: white;
         color: #2196f3;
         padding: 6px 18px;
