@@ -181,7 +181,7 @@
             </div>
         @else
             <div class="alert alert-warning fs-4 mt-3" role="alert">
-                <span>Chưa có bài học nào. Vui lòng quay lại sau.</span>
+                <span>Bài học sẽ sớm có thôi, bạn quay lại sau nhé!</span>
             </div>
         @endif
     </div>
