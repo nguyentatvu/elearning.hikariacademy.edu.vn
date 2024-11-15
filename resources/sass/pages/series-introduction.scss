@@ -363,12 +363,17 @@
                 border-radius: 8px;
             }
 
+            .btn-primary {
+                font-size: 18px;
+            }
+
             .overview-stats {
                 display: flex;
                 flex-direction: column;
                 gap: 6px;
                 align-items: flex-start;
                 width: fit-content;
+                font-size: 18px;
 
                 .stat-item {
                     color: #858597;
