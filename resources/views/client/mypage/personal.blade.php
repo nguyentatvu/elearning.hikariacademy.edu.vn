@@ -208,9 +208,9 @@
                     </button>
                 </div>
             </div>
+            <h4 class="align-self-baseline mt-3">Gợi ý các khoá học</h4>
             <div class="recommended-series-section position-relative">
                 <div class="swiper swiper-container p-2">
-                    <h4 class="align-self-baseline mt-3">Gợi ý các khoá học</h4>
                     <div class="swiper-wrapper">
                         @foreach ($other_combo_series as $recommended_series)
                             @if (isset($recommended_series->seriesList) && count($recommended_series->seriesList) > 0)
@@ -554,6 +554,27 @@
                 slidesPerGroup: 1,
                 autoHeight: true,
                 breakpoints: {
+                    3300: {
+                        slidesPerView: 13,
+                    },
+                    3000: {
+                        slidesPerView: 10,
+                    },
+                    2600: {
+                        slidesPerView: 9,
+                    },
+                    2300: {
+                        slidesPerView: 8,
+                    },
+                    2000: {
+                        slidesPerView: 7,
+                    },
+                    1700: {
+                        slidesPerView: 6,
+                    },
+                    1500: {
+                        slidesPerView: 5,
+                    },
                     1300: {
                         slidesPerView: 4,
                     },

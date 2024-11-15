@@ -151,6 +151,13 @@
             border-bottom: 4px solid black;
         }
 
+        .content-home {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
         @keyframes textclip {
             to {
                 background-position: 200% center;
@@ -161,6 +168,7 @@
 @endsection
 
 @section('content')
+    <div class="content-home">
     {{-- <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
         @if (isset($banners['home_slider_banner']) && $banners['home_slider_banner']->is_active == App\Enums\BannerStatus::ACTIVE)
             <div class="carousel-indicators">
@@ -804,6 +812,7 @@
             </div>
         </div>
     </section> --}}
+</div>
 @endsection
 
 @section('scripts')
@@ -884,7 +893,7 @@
                     1300: {
                         slidesPerView: 4,
                     },
-                    1200: {
+                    1000: {
                         slidesPerView: 3,
                     },
                     768: {

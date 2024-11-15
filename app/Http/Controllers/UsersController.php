@@ -2089,11 +2089,14 @@ class UsersController extends Controller
             $streakCurrent += 1;
         }
 
+        if (!$lastLoginDate->isToday()) {
+            $user->has_logged_in = false;
+        }
+
         // Update user streak and last login date if there were changes
         if ($user->login_streak !== $streakCurrent || !$lastLoginDate->isToday()) {
             $user->login_streak = $streakCurrent;
             $user->last_login_date = $currentDate;
-            $user->has_logged_in = false;
             $user->save();
         }
 

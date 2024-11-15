@@ -4,6 +4,25 @@
     <link href="{{ asset('css/pages/lesson-detail/audit.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/admin/css/exercise/audit.css') }}">
     <style>
+        .form-check {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .item-check-select label {
+            margin: 0;
+        }
+
+        .kg-study.kg-study-cuttom {
+            font-size: 1.5rem;
+            padding-left: 60px;
+            padding-right: 60px;
+        }
+        .font-weight-bold {
+            min-width: 15px;
+        }
     </style>
 @endsection
 
@@ -57,8 +76,8 @@
                                             <div
                                                 class="item-check-select {{ $record->display == 1 ? 'width-25' : '' }} {{ isset($record->check) && $record->dapan == (int) $keyanswers + 1 ? 'correct-answer' : '' }} {{ isset($record->check) && $record->check == (int) $keyanswers + 1 ? (isset($record->correct) ? ($record->correct == 1 ? 'correct-answer' : 'incorrect-answer') : '') : '' }}">
                                                 <div class="form-check">
-                                                    <span class="font-weight-bold">{!! $array_char[$keyanswers] !!}</span>
-                                                    <input type="radio" name="quest_{{ $record->id }}"
+                                                    <div class="font-weight-bold">{!! $array_char[$keyanswers] !!}</div>
+                                                    <input type="radio" hidden name="quest_{{ $record->id }}"
                                                         id="answers_{{ $record->cau }}_{{ $keyanswers }}"
                                                         class="form-check-input" value="{{ (int) $keyanswers + 1 }}"
                                                         {{ isset($record->check) && $record->check == (int) $keyanswers + 1 ? 'checked' : '' }}>

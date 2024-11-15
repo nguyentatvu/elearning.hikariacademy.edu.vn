@@ -98,7 +98,7 @@
         ;
         margin: 0 auto;
         gap: 20px;
-        width: 820px;
+        width: 100%;
 
         @include mq (max-sp) {
             width: 500px;
@@ -356,9 +356,8 @@
     }
 
     .leaderboard-wrapper {
-        display: flex;
         gap: 30px;
-
+        display: flex;
         @include mq (max-pc) {
             flex-direction: column;
             align-items: center;
@@ -371,7 +370,7 @@
             grid-template-columns: repeat(3, 1fr);
 
             @include mq (max-pc) {
-                width: 70%;
+                width: 100%;
             }
 
             @include mq (max-tb) {
@@ -459,7 +458,7 @@
                     font-weight: 700;
 
                     .point {
-                        font-size: 3rem;
+                        font-size: 2rem;
                         line-height: 1;
                         max-width: 120px;
                         word-wrap: break-word;

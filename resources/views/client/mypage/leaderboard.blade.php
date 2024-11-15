@@ -2,6 +2,31 @@
 
 @section('mypage-styles')
     <link href="{{ asset('css/pages/mypage.css') }}" rel="stylesheet">
+    <style>
+        .leaderboard-wrapper__top--point {
+            max-height: 320px;
+        }
+
+        @media (max-width: 500px) {
+            .leaderboard-wrapper__top--point {
+                max-height: 300px;
+            }
+            .leaderboard .leaderboard-wrapper__top--avatar {
+                width: 70px;
+                height: 70px;
+            }
+
+            .leaderboard .leaderboard-wrapper__top--point {
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 378px) {
+            .leaderboard .leaderboard-wrapper__top--point {
+                width: 70px;
+            }
+        }
+    </style>
 @endsection
 
 @section('mypage-content')
@@ -106,8 +131,8 @@
                             <td class="rank text-primary">{{ optional($userRank)->rank ?? 'Chưa xếp hạng' }}</td>
                             <td>
                                 @if (Auth::user() && Auth::user()->image)
-                                    <img src="{{ getFullUserImage(Auth::user()->image) }}"
-                                        alt="student avatar" class="avatar" />
+                                    <img src="{{ getFullUserImage(Auth::user()->image) }}" alt="student avatar"
+                                        class="avatar" />
                                 @else
                                     <img src="{{ asset('images/no-avatar.png') }}" alt="student avatar" class="avatar">
                                 @endif

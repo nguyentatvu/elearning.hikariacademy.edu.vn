@@ -502,7 +502,28 @@
                 slidesPerGroup: 1,
                 autoHeight: true,
                 breakpoints: {
-                    1400: {
+                    3300: {
+                        slidesPerView: 13,
+                    },
+                    3000: {
+                        slidesPerView: 10,
+                    },
+                    2600: {
+                        slidesPerView: 9,
+                    },
+                    2300: {
+                        slidesPerView: 8,
+                    },
+                    2000: {
+                        slidesPerView: 7,
+                    },
+                    1700: {
+                        slidesPerView: 5,
+                    },
+                    1500: {
+                        slidesPerView: 5,
+                    },
+                    1300: {
                         slidesPerView: 4,
                     },
                     1000: {

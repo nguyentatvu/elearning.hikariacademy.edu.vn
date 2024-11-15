@@ -157,7 +157,7 @@
         }
 
         /* Mobile responsiveness */
-        @media (max-width: 768px) {
+        @media (max-width: 990px) {
             .main-content-area {
                 width: calc(100%) !important;
             }
@@ -204,6 +204,11 @@
         .custom-tooltip ul li {
             list-style: decimal;
         }
+
+        .flex-column img{
+            height: 30px;
+            width: 30px;
+        }
     </style>
     @yield('mypage-styles')
 @endsection
@@ -232,43 +237,43 @@
                     <nav class="nav flex-column">
                         <a href="{{ url('mypage/my-personal') }}"
                             class="nav-link-sidebar {{ setActiveClass('mypage/my-personal') }}">
-                            <i class="bi bi-person"></i> <span class="nav-text">Trang cá nhân</span>
+                            <img src="{{ asset('images/icons/my-page/personal.png') }}" alt="" srcset=""> <span class="nav-text">Trang cá nhân</span>
                         </a>
                         <a href="{{ url('mypage/reward-point') }}"
                             class="nav-link-sidebar {{ setActiveClass('mypage/reward-point') }}">
-                            <i class="bi bi-star"></i> <span class="nav-text">Điểm tích lũy</span>
+                            <img src="{{ asset('images/icons/my-page/point.png') }}" alt="" srcset=""> <span class="nav-text">Điểm tích lũy</span>
                         </a>
                         <a href="{{ url('mypage/leaderboard') }}"
                             class="nav-link-sidebar {{ setActiveClass('mypage/leaderboard') }}">
-                            <i class="bi bi-trophy"></i> <span class="nav-text">Bảng xếp hạng</span>
+                            <img src="{{ asset('images/icons/my-page/ranking.png') }}" alt="" srcset=""> <span class="nav-text">Bảng xếp hạng</span>
                         </a>
                         <a href="{{ url('mypage/my-courses') }}"
                             class="nav-link-sidebar {{ setActiveClass('mypage/my-courses') }}">
-                            <i class="bi bi-book"></i> <span class="nav-text">Khóa học</span>
+                            <img src="{{ asset('images/icons/my-page/course.png') }}" alt="" srcset=""> <span class="nav-text">Khóa học</span>
                         </a>
                         <a href="{{ url('mypage/my-exams') }}"
                             class="nav-link-sidebar {{ setActiveClass('mypage/my-exams') }}">
-                            <i class="bi bi-pencil"></i> <span class="nav-text">Khóa luyện thi</span>
+                            <img src="{{ asset('images/icons/my-page/exam.png') }}" alt="" srcset=""> <span class="nav-text">Khóa luyện thi</span>
                         </a>
                         <a href="{{ url('mypage/my-comments') }}"
                             class="nav-link-sidebar {{ setActiveClass('mypage/my-comments') }}">
-                            <i class="bi bi-chat-dots"></i> <span class="nav-text">Câu hỏi của bạn</span>
+                            <img src="{{ asset('images/icons/my-page/comment.png') }}" alt="" srcset=""> <span class="nav-text">Câu hỏi của bạn</span>
                         </a>
                         <a href="{{ url('mypage/mock-exam/list') }}"
                             class="nav-link-sidebar {{ setActiveClass('mypage/mock-exam/*') }}">
-                            <i class="bi bi-journal-text"></i> <span class="nav-text">Phòng thi của bạn</span>
+                            <img src="{{ asset('images/icons/my-page/room-exam.png') }}" alt="" srcset=""> <span class="nav-text">Phòng thi của bạn</span>
                         </a>
                         <a href="{{ url('mypage/my-exam-result') }}"
                             class="nav-link-sidebar {{ setActiveClass('mypage/my-exam-result') }}">
-                            <i class="bi bi-bar-chart-line"></i> <span class="nav-text">Kết quả thi</span>
+                            <img src="{{ asset('images/icons/my-page/result-exam.png') }}" alt="" srcset=""> <span class="nav-text">Kết quả thi</span>
                         </a>
                         <a href="{{ url('mypage/payment-management') }}"
                             class="nav-link-sidebar {{ setActiveClass('mypage/payment-management') }}">
-                            <i class="bi bi-credit-card"></i> <span class="nav-text">Quản lý thanh toán</span>
+                            <img src="{{ asset('images/icons/my-page/management-recharge.png') }}" alt="" srcset=""> <span class="nav-text">Quản lý thanh toán</span>
                         </a>
                         <a href="{{ url('mypage/recharge-point') }}"
                             class="nav-link-sidebar {{ setActiveClass('mypage/recharge-point') }}">
-                            <i class="bi bi-wallet"></i> <span class="nav-text">Nạp điểm</span>
+                            <img src="{{ asset('images/icons/my-page/recharge-point.png') }}" alt="" srcset=""> <span class="nav-text">Nạp điểm</span>
                         </a>
                     </nav>
                 </section>
@@ -307,7 +312,7 @@
             const $mainContentScroll = $('.main-content');
 
             function preventScroll() {
-                const isMobile = $(window).width() <= 768;
+                const isMobile = $(window).width() <= 990;
                 const isCollapsed = $sidebar.hasClass('collapsed');
 
                 if (!isCollapsed && isMobile) {
