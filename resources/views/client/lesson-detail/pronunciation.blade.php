@@ -427,21 +427,31 @@
                     .addClass('char-assessment')
                     .text(assessmentItem.word);
 
-                if (difference) {
+                if (userText.trim() === '') {
                     span.addClass('incorrect')
                         .attr('data-bs-toggle', 'tooltip')
                         .attr('data-bs-placement', 'top')
                         .attr('data-bs-custom-class', 'custom-tooltip')
                         .attr('data-bs-html', 'true')
                         .attr('data-bs-title',
-                            `Bạn đã phát âm sai thành: <span class='text-danger'>${userText}</span>`);
+                            `Hãy phát âm to và rõ hơn để hệ thống nhận diện và đánh giá bạn nhé!`);
                 } else {
-                    span.addClass('correct')
-                        .attr('data-bs-toggle', 'tooltip')
-                        .attr('data-bs-placement', 'top')
-                        .attr('data-bs-custom-class', 'custom-tooltip')
-                        .attr('data-bs-html', 'true')
-                        .attr('data-bs-title', `Tuyệt vời! Bạn phát âm rất chuẩn!`);
+                    if (difference) {
+                        span.addClass('incorrect')
+                            .attr('data-bs-toggle', 'tooltip')
+                            .attr('data-bs-placement', 'top')
+                            .attr('data-bs-custom-class', 'custom-tooltip')
+                            .attr('data-bs-html', 'true')
+                            .attr('data-bs-title',
+                                `Bạn đã phát âm sai thành: <span class='text-danger'>${userText}</span>`);
+                    } else {
+                        span.addClass('correct')
+                            .attr('data-bs-toggle', 'tooltip')
+                            .attr('data-bs-placement', 'top')
+                            .attr('data-bs-custom-class', 'custom-tooltip')
+                            .attr('data-bs-html', 'true')
+                            .attr('data-bs-title', `Tuyệt vời! Bạn phát âm rất chuẩn!`);
+                    }
                 }
 
                 $('#resultl_level_1_assessment').append(span);
