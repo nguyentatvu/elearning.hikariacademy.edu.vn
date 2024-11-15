@@ -23,7 +23,7 @@
 						<a href="{{URL_QUIZ_QUESTIONBANK}}"><div class="state-icn bg-icon-purple"><i class="fa fa-registered"></i></div></a>
 					</div>
 					<div class="media-body">
-						<h4 class="card-title">{{ App\User::where('is_register' , '=', 1)->whereraw('created_at BETWEEN "2020-11-07 10:00:00" AND "2020-11-08 23:59:33"')->get()->count() }}</h4>
+						<h4 class="card-title">{{ App\User::get()->where('is_register','=',1)->count() }}</h4>
 						<a href="{{URL_QUIZ_QUESTIONBANK}}">HV đã đăng ký mới</a>
 					</div>
 				</div>
