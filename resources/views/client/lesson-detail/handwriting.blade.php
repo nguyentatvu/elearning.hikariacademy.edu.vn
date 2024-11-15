@@ -30,93 +30,106 @@
                 $totalKanji = 0;
             }
         }
+
         $total = $handwritingDetail->count();
     @endphp
-    <div id="handwriting_container" class="handwriting-container">
-        <div id="handwriting_lesson" class="d-flex align-items-center handwriting-lesson">
-            <span id="handwriting_lesson_title" class="handwriting-title">
-                <span class="fs-4">
-                    Đề bài:</span>
-                @if ($handwriting->type == \App\JapaneseWritingPractice::HIRAGANA)
-                    <span id="handwriting_lesson_content" class="handwriting-lesson-content">
-                        {{ $character }}</span>
-                @else
-                    <span id="handwriting_lesson_content" class="handwriting-lesson-content">
-                        {!! $question !!}</span>
-                @endif
-            </span>
-        </div>
-        <div id="handwriting_wrapper" class="handwriting-wrapper">
-            <div id="handwriting_tabs" class="handwriting-tabs">
-                @if ($handwriting->type == \App\JapaneseWritingPractice::HIRAGANA)
-                    <div class="handwriting-tab">
-                        <span class="handwriting-tab-title" data-kanji="{{ $character }}">
-                            {{ $character }}
-                        </span>
+    <div class="handwriting-body">
+        @if (isset($handwritingDetail) && $handwritingDetail->count() > 0)
+            <div id="handwriting_container" class="handwriting-container">
+                <div id="handwriting_lesson" class="d-flex align-items-center handwriting-lesson">
+                    <span id="handwriting_lesson_title" class="handwriting-title">
+                        @if ($handwriting->type == \App\JapaneseWritingPractice::HIRAGANA)
+                            <span id="handwriting_lesson_content" class="handwriting-lesson-content">
+                                {{ $detailContent->bai }}</span>
+                        @else
+                            <span class="fs-4">
+                                Viết phần gạch chân bằng chữ Hán:</span>
+                            <span id="handwriting_lesson_content" class="handwriting-lesson-content">
+                                {!! $question !!}</span>
+                        @endif
+                    </span>
+                </div>
+                <div id="handwriting_wrapper" class="handwriting-wrapper">
+                    <div id="handwriting_tabs" class="handwriting-tabs">
+                        @if ($handwriting->type == \App\JapaneseWritingPractice::HIRAGANA)
+                            @foreach ($handwritingDetail as $detail)
+                                <div class="handwriting-tab">
+                                    <span class="handwriting-tab-title" data-kanji="{{ $detail->character }}">
+                                        {{ $detail->character }}
+                                    </span>
+                                </div>
+                            @endforeach
+                        @else
+                            @for ($index = 0; $index < $totalKanji; $index++)
+                                <div class="handwriting-tab">
+                                    <span class="handwriting-tab-title" data-kanji="{{ mb_substr($kanji, $index, 1) }}">
+                                        Hán tự {{ $index + 1 }}
+                                    </span>
+                                </div>
+                            @endfor
+                        @endif
                     </div>
-                @else
-                    @for ($index = 0; $index < $totalKanji; $index++)
+                    <div id="guide_and_canvas_container" class="guide-and-canvas-container">
+                        <div id="left_container" class="left-container">
+                            <div class="handwriting-area">
+                                <span class="handwriting-label">Luyện viết</span>
+                                <div id="handwriting_content" class="handwriting-content">
+                                    <canvas id="handwriting_canvas" class="handwriting-canvas" width="300"
+                                        height="300"></canvas>
+                                </div>
+                                <div class="actions">
+                                    <div class="handwriting-action" onclick="clearCanvas()">
+                                        <i class="bi bi-eraser"></i>
+                                    </div>
+                                    <div class="handwriting-action" onclick="checkHandwriting()">
+                                        <span class="handwriting-action-title">Xem kết quả</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="right_container" class="right-container">
+                            <div id="handwriting_guide" class="handwriting-guide">
+                                <span class="handwriting-label">Kết quả</span>
+                                <div id="handwriting_guide_content" class="handwriting-guide-content"></div>
+                                <div class="actions">
+                                    <div id="handwriting_guide_redraw" class="hadnwriting-guide-redraw handwriting-action"
+                                        data-kanjivg-target="#animate">
+                                        <i class="bi bi-arrow-clockwise"></i>
+                                    </div>
+                                    <div id="handwriting_guide_eye" class="hadnwriting-guide-eye handwriting-action">
+                                        <i class="bi bi-eye"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="handwriting-tab-template" style="display: none;">
                         <div class="handwriting-tab">
-                            <span class="handwriting-tab-title" data-kanji="{{ mb_substr($kanji, $index, 1) }}">
-                                Hán tự {{ $index + 1 }}
-                            </span>
+                            <span class="handwriting-tab-title"></span>
                         </div>
-                    @endfor
+                    </div>
+                </div>
+                @if ($handwriting->type == \App\JapaneseWritingPractice::KANJI)
+                    <div id="handwriting_arrow" class="handwriting-arrow">
+                        <i id="arrow_left" class="bi bi-arrow-left arrow disabled"></i>
+                        <div class="handwriting-page">
+                            <span id="current_page">
+                                @if ($handwritingDetail->isNotEmpty())
+                                    1
+                                @else
+                                    0
+                                @endif
+                            </span> / {{ $total }}
+                        </div>
+                        <i id="arrow_right" class="bi bi-arrow-right arrow"></i>
+                    </div>
                 @endif
             </div>
-            <div id="guide_and_canvas_container" class="guide-and-canvas-container">
-                <div id="left_container" class="left-container">
-                    <div class="handwriting-area">
-                        <span class="handwriting-label">Luyện viết</span>
-                        <div id="handwriting_content" class="handwriting-content">
-                            <canvas id="handwriting_canvas" class="handwriting-canvas" width="300"
-                                height="300"></canvas>
-                        </div>
-                        <div class="actions">
-                            <div class="handwriting-action" onclick="clearCanvas()">
-                                <i class="bi bi-eraser"></i>
-                            </div>
-                            <div class="handwriting-action" onclick="checkHandwriting()">
-                                <span class="handwriting-action-title">Xem kết quả</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="right_container" class="right-container">
-                    <div id="handwriting_guide" class="handwriting-guide">
-                        <span class="handwriting-label">Kết quả</span>
-                        <div id="handwriting_guide_content" class="handwriting-guide-content"></div>
-                        <div class="actions">
-                            <div id="handwriting_guide_redraw" class="hadnwriting-guide-redraw handwriting-action"
-                                data-kanjivg-target="#animate">
-                                <i class="bi bi-arrow-clockwise"></i>
-                            </div>
-                            <div id="handwriting_guide_eye" class="hadnwriting-guide-eye handwriting-action">
-                                <i class="bi bi-eye"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        @else
+            <div class="alert alert-warning fs-4 mt-3" role="alert">
+                <span>Bài học sẽ sớm có thôi, bạn quay lại sau nhé!</span>
             </div>
-            <div class="handwriting-tab-template" style="display: none;">
-                <div class="handwriting-tab">
-                    <span class="handwriting-tab-title"></span>
-                </div>
-            </div>
-        </div>
-        <div id="handwriting_arrow" class="handwriting-arrow">
-            <i id="arrow_left" class="bi bi-arrow-left arrow disabled"></i>
-            <div class="handwriting-page">
-                <span id="current_page">
-                    @if ($handwritingDetail->isNotEmpty())
-                        1
-                    @else
-                        0
-                    @endif
-                </span> / {{ $total }}
-            </div>
-            <i id="arrow_right" class="bi bi-arrow-right arrow"></i>
-        </div>
+        @endif
     </div>
 @endsection
 
@@ -236,7 +249,7 @@
                     updateHandwriting(currentIndex);
 
                     if (currentIndex === total - 1) {
-                        @if($isValidPayment && !$isFinishedContent)
+                        @if ($isValidPayment && !$isFinishedContent)
                             await earnPointFinishContent('{{ $detailContent->id }}', 0, '');
                         @endif
                     }
