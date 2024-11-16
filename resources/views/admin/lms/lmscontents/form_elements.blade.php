@@ -128,7 +128,7 @@
     </div>
   </fieldset>
   <fieldset class="form-group col-md-6" ng-if="loai=='11'">
-    <?php $type = array(1 => 'Hiragana/Katakana', 2 => 'Kanji');?>
+    <?php $type = array(1 => 'Luyện viết từng chữ (Hiragana, Katakana, Kanji)', 2 => 'Viết hán tự cho phần được gạch chân');?>
     {{ Form::label('type', 'Loại bài luyện viết') }}
     <span class="text-red">*</span>
     {{ Form::select('type', $type, $value = $handwriting_type, [
