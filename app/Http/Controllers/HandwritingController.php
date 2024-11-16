@@ -84,9 +84,9 @@ class HandwritingController extends Controller
             })
             ->editColumn('type', function ($record) {
                 if ($record->type == JapaneseWritingPractice::HIRAGANA) {
-                    return 'Hiragana/Katakana';
+                    return 'Luyện viết từng chữ (Hiragana, Katakana, Kanji)';
                 } elseif ($record->type == JapaneseWritingPractice::KANJI) {
-                    return 'Kanji';
+                    return 'Viết hán tự cho phần được gạch chân';
                 }
                 return $record->type;
             })
@@ -221,12 +221,12 @@ class HandwritingController extends Controller
                 if (!$result && $handwriting->type == JapaneseWritingPractice::HIRAGANA) {
                     return redirect()
                         ->back()
-                        ->withErrors(['error' => 'File không hợp lệ cho bài luyện viết Hiragana. File chỉ nên có 2 cột.'])
+                        ->withErrors(['error' => 'File không hợp lệ cho bài luyện viết từng chữ Hiragana/Katakana/Kanji. File chỉ nên có 2 cột.'])
                         ->withInput($request->all());
                 } else if (!$result && $handwriting->type == JapaneseWritingPractice::KANJI) {
                     return redirect()
                         ->back()
-                        ->withErrors(['error' => 'File không hợp lệ cho bài luyện viết Kanji. File chỉ nên có 4 cột.'])
+                        ->withErrors(['error' => 'File không hợp lệ cho bài luyện viết Hán tự cho phần gạch chân. File chỉ nên có 4 cột.'])
                         ->withInput($request->all());
                 }
             }
@@ -364,13 +364,13 @@ class HandwritingController extends Controller
                         DB::rollBack();
                         return redirect()
                             ->back()
-                            ->withErrors(['error' => 'File không hợp lệ cho bài luyện viết Hiragana. File chỉ nên có 2 cột.'])
+                            ->withErrors(['error' => 'File không hợp lệ cho bài luyện viết từng chữ Hiragana/Katakana/Kanji. File chỉ nên có 2 cột.'])
                             ->withInput($request->all());
                     } else if ($data['type'] == JapaneseWritingPractice::KANJI) {
                         DB::rollBack();
                         return redirect()
                             ->back()
-                            ->withErrors(['error' => 'File không hợp lệ cho bài luyện viết Kanji. File chỉ nên có 4 cột.'])
+                            ->withErrors(['error' => 'File không hợp lệ cho bài luyện viết Hán tự cho phần gạch chân. File chỉ nên có 4 cột.'])
                             ->withInput($request->all());
                     }
                 }

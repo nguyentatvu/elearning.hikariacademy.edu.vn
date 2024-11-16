@@ -31,7 +31,7 @@
 </div>
 <div class="row">
     <div class="col-md-6">
-        <?php $type = [1 => 'Hiragana/Katakana', 2 => 'Kanji']; ?>
+        <?php $type = [1 => 'Luyện viết từng chữ (Hiragana, Katakana, Kanji)', 2 => 'Viết hán tự cho phần được gạch chân']; ?>
         <fieldset class="form-group">
             {{ Form::label('type', 'Loại bài luyện viết') }}
             <span class="text-red">*</span>

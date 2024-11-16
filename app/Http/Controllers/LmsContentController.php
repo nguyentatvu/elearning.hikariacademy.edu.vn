@@ -1035,7 +1035,7 @@ class LmsContentController extends Controller
                 if (!$result) {
                     DB::rollBack();
                     return redirect()->back()
-                        ->withErrors(['error' => 'Bài luyện viết và đề phải khớp với nhau'])
+                        ->withErrors(['error' => 'Bài luyện viết và loại bài luyện viết phải khớp với nhau'])
                         ->withInput($request->all());
                 }
 
