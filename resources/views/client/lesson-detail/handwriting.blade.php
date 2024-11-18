@@ -161,13 +161,19 @@
         let canvasData = {};
         new KanjivgAnimate('.hadnwriting-guide-redraw')
 
-        $(document).ready(function() {
+        $(document).ready(async function() {
             handleArrowLeftEvent();
             handleArrowRightEvent();
             handleClickHandwritingTab();
             hideAndShowHandwritingGuide();
             createCanvasByTab();
             showFirstTab();
+
+            if ({{ $handwriting->type }} == {{ \App\JapaneseWritingPractice::HIRAGANA }}) {
+                @if ($isValidPayment && !$isFinishedContent)
+                    await earnPointFinishContent('{{ $detailContent->id }}', 0, '');
+                @endif
+            }
         });
 
         /**

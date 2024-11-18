@@ -177,7 +177,6 @@
     .support-item a {
         color: #1a73e8;
         text-decoration: none;
-        word-wrap: break-word;
         overflow-wrap: break-word;
         word-break: break-all
     }
