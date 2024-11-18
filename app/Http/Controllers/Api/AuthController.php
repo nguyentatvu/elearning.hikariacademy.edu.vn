@@ -172,6 +172,9 @@ class AuthController extends Controller
             'name' => 'bail|required|max:100',
             'email' => 'bail|email|required|unique:users,email',
             'phone' => 'bail|required|regex:/^[0-9]{10,15}$/|unique:users,phone',
+        ], [
+            'phone.regex' => 'Số điện thoại không đúng định dạng!',
+            'phone.unique' => 'Số điện thoại đã được đăng ký!',
         ]);
 
         if ($validator->fails()) {
