@@ -92,7 +92,7 @@
                 '</div>');
         }
     }
-    function createElements(type = null) {
+    function createElements(type = null, completionPercentage) {
         let _currentData = null;
         let _Elements = null ;
         let _headerElements = null;
@@ -196,22 +196,35 @@
                 _Elements = _headerElements + _questionElements;
                 break;
             default:
-                _Elements = '<div class="ct-cpl-screen">\n' +
-                                '<div class="info-cpl text-center">\n' +
-                                    '<h2 class="above-text">Hoàn thành!</h2> \n' +
-                                    '<h4 class="below-text text-secondary">Chúc mừng bạn đã hoàn thành xong bài học</h4>\n' +
-                                    '<div class="score-bg-title">\n' +
-                                        '<div class="expanded-line"></div>\n' +
-                                        '<img src="{{asset("images/icons/three-stars.svg")}}" alt="">\n' +
-                                        '<div class="expanded-line"></div>\n' +
-                                    '</div>\n' +
+                if (completionPercentage >= 50) {
+                    _Elements =
+                        '<div class="ct-cpl-screen">\n' +
+                            '<div class="info-cpl text-center">\n' +
+                                '<h2 class="above-text">Hoàn thành!</h2> \n' +
+                                '<h4 class="below-text text-secondary">Chúc mừng bạn đã hoàn thành xong bài học</h4>\n' +
+                                '<div class="score-bg-title">\n' +
+                                    '<div class="expanded-line"></div>\n' +
+                                    '<img src="{{asset("images/icons/three-stars.svg")}}" alt="">\n' +
+                                    '<div class="expanded-line"></div>\n' +
                                 '</div>\n' +
-                            '</div>'
+                            '</div>\n' +
+                        '</div>';
+                } else {
+                    const threeStartImageSource = '{{admin_asset("images/exercise/score-bg.png")}}';
+                    _Elements =
+                        `<div class="ct-cpl-screen">
+                            <div class="info-cpl text-center">
+                                <h2 class="above-text">Chưa hoàn thành!</h2>
+                                <h4 class="below-text text-danger">Bạn hãy thử làm lại để có kết quả cải thiện hơn nhé!</h4>
+                                <div class="score-bg-title"><img src="${threeStartImageSource}" alt="" style="width: auto;"></div>
+                            </div>
+                        </div>`;
+                }
                 break;
         }
         return _Elements;
     }
-    var appendFooter = (type = null) =>{
+    var appendFooter = (type = null, completionPercentage) =>{
         let _actionElement = null;
         switch(type) {
             case 1:
@@ -224,7 +237,11 @@
                 _actionElement ='<a href="javascript:;" class="btn-nav-les finish-les">Câu tiếp theo &nbsp; <i  aria-hidden="true" class="bi bi-chevron-double-right"></i></a>'
                 break;
             default:
-                _actionElement = '<a href="{{$nextUrl}}" onclick="goToNextLesson()" class="btn-nav-les btn-end-exercise btn-success-light btn">Bài học kế tiếp &nbsp;<i class="bi bi-chevron-double-right" aria-hidden="true"></i></a>'
+                if (completionPercentage >= 50) {
+                    _actionElement = '<a href="{{$nextUrl}}" onclick="goToNextLesson()" class="btn-nav-les btn-end-exercise btn-success-light btn">Bài học kế tiếp &nbsp;<i class="bi bi-chevron-double-right" aria-hidden="true"></i></a>'
+                } else {
+                    _actionElement = '<a href="#" onclick="window.location.reload();" class="btn-nav-les finish-les">Làm lại&nbsp;<i class="bi bi-arrow-clockwise bi-spin" aria-hidden="true"></i></i></a>'
+                }
                 break;
         }
         return _actionElement;
@@ -438,13 +455,15 @@
             $(this).remove();
         });
         await  $(document).on('click','.btn-result-corect-les', async function(){
+            let completionPercentage = parameter.gettotalPoint() / {{$count_records}} * 100;
+
             if ($(parameter.getAppend()).length){
                 $(parameter.getAppend()).empty();
             }
-            $(parameter.getAppend()).append(createElements());
+            $(parameter.getAppend()).append(createElements(null, completionPercentage));
             $(parameter.getfooterResult()).empty();
             $(parameter.getFooter()).empty();
-            $(parameter.getFooter()).append(appendFooter());
+            $(parameter.getFooter()).append(appendFooter(null, completionPercentage));
             $('.main-bar').css('width','100%');
             @if($isValidPayment && !$isFinishedContent)
                 const rewardPoint = calculatePointsForExercise(parameter.gettotalPoint(), {{$count_records}});

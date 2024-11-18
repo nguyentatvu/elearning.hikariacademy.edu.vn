@@ -41,7 +41,7 @@
                             <div>{{ Auth::user()->name }}</div>
                             <div><span>@</span>{{ Auth::user()->username ?? '' }}</div>
                             <!-- Streak daily -->
-                            <div class="header-my-coin ms-3 d-lg-flex owned-login-streak" onclick="window.location.href = '{{ route('mypage.reward-point') }}'"
+                            <div class="header-my-coin ms-3 d-lg-flex owned-login-streak"
                                 id="owned_login_streak_mobile">
                                 <a>
                                     {{ isset(Auth::user()->login_streak) && Auth::user()->login_streak ? Auth::user()->login_streak : 0 }}
@@ -115,7 +115,7 @@
                             </div>
                         </div>
                         <!-- Streak daily -->
-                        <div class="header-my-coin ms-3 d-lg-flex owned-login-streak" id="owned_login_streak_mobile" onclick="window.location.href = '{{ route('mypage.reward-point') }}'">
+                        <div class="header-my-coin ms-3 d-lg-flex owned-login-streak" id="owned_login_streak_mobile">
                             <a>
                                 {{ isset(Auth::user()->login_streak) && Auth::user()->login_streak ? Auth::user()->login_streak : 0 }}
                             </a>

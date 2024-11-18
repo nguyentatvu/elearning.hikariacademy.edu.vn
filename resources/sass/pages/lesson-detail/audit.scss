@@ -246,3 +246,23 @@ span.hikari_question_border {
 .study-content {
   overflow: hidden;
 }
+
+.above-text.text-primary {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.text-encourage {
+  max-width: 288px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 12px;
+  color: rgb(108, 117, 125);
+}
+
+.icon-encourage {
+  height: fit-content;
+  position: relative;
+  top: 11px;
+  margin: 0 !important;
+}

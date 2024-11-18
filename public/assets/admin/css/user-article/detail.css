@@ -45,6 +45,10 @@ table[border]:not([border="0"]):not([style*="border-color"]) th {
     all: revert;
 }
 
+.article-content img {
+    max-width: 100% !important;
+}
+
 .category-container {
     width: calc(100% - 685px - 30px);
 }

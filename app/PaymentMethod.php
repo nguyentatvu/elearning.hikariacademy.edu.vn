@@ -11,6 +11,7 @@ class PaymentMethod extends Model
 
     protected $fillable = [
         'user_id',
+        'item_id',
         'item_name',
         'orderInfo',
         'amount',

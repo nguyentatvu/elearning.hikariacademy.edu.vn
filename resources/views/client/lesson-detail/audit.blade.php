@@ -166,8 +166,8 @@
                                                         @else
                                                             <a href="{{ PREFIX }}learning-management/lesson/audit/{{ $combo_slug }}/{{ $slug }}/{{ $stt }}"
                                                                 class="btn-nav-les finish-les">
-                                                                Làm lại&nbsp;<i class="fa fa-refresh fa-spin"
-                                                                    aria-hidden="true"></i>
+                                                                Làm lại&nbsp;
+                                                                <i class="bi bi-arrow-clockwise bi-spin" aria-hidden="true"></i>
                                                             </a>
                                                         @endif
                                                     @endif
@@ -193,17 +193,24 @@
 
                                 <div class="info-cpl text-center">
 
-                                    {{--   @php
-                                    if (!$value){$value = 0;}
-                                @endphp --}}
                                     <h4 class="above-text text-primary">Kết quả: {{ $totalValue }} / {{ $point }}
                                         điểm</h4>
-
-                                    {{-- <h4 class="below-text text-danger">Tổng:  điểm</h4> --}}
 
                                     <h5 class="below-text {{ $passed == 0 ? 'text-danger' : 'text-success' }}">
                                         {{ $passed == 0 ? 'Chưa đạt yêu cầu bài kiểm tra' : 'Đạt yêu cầu bài kiểm tra' }}
                                     </h5>
+
+                                    @if ($passed == 0)
+                                        <div class="d-flex justify-content-center">
+                                            <i class="bi bi-stars text-warning icon-encourage"></i>
+                                            <p class="text-encourage">Bạn đã làm tốt, nhưng hãy thử ôn lại những bài trước và làm lại để nắm vững kiến thức hơn nhé!</p>
+                                            <i class="bi bi-stars text-warning icon-encourage"></i>
+                                        </div>
+                                        <a href="{{ PREFIX }}learning-management/lesson/audit/{{ $combo_slug }}/{{ $slug }}/{{ $stt }}"
+                                            class="btn-nav-les finish-les">
+                                            Làm lại&nbsp; <i class="bi bi-arrow-clockwise bi-spin" aria-hidden="true"></i>
+                                        </a>
+                                    @endif
 
                                     <div class="score-bg-title"><img
                                             src="{{ admin_asset('images/exercise/score-bg.png') }}" alt=""></div>

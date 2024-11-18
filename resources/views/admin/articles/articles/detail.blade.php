@@ -151,6 +151,15 @@
             margin: auto;
             width: 685px;
         }
+
+        .tox-promotion {
+            width: 0 !important;
+            visibility: hidden;
+        }
+
+        .tox-statusbar__branding {
+            display: none;
+        }
     </style>
 @endsection
 
@@ -739,7 +748,7 @@
 
                         setTimeout(function() {
                             editor.getBody().querySelectorAll('img').forEach(function(img) {
-                                img.style.maxWidth = '640px';
+                                img.style.maxWidth = '100%';
                                 img.style.height = 'auto';
                             });
                         }, 100);
