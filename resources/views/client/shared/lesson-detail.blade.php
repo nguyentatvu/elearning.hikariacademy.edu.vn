@@ -200,7 +200,7 @@
             const getOuterHeight = selector => $(selector).outerHeight() || 0;
 
             adjustLayout();
-            // $(window).resize(adjustLayout);
+            $(window).resize(adjustLayout);
 
             function adjustLayout() {
                 const windowHeight = window.innerHeight;
