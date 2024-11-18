@@ -1,5 +1,5 @@
 <div class="modal auth-modal" id="modal_login_register">
-    <div class="modal-dialog">
+    <div class="modal-dialog mx-auto">
         <div class="modal-content">
             <div class="login-content auth-content animate__animated" id="login_content">
                 <form class="login-form needs-validation" novalidate id="login_form">

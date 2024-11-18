@@ -2,18 +2,22 @@
 .auth-modal {
     $color_2: #6c757d;
 
+    @include mq(max-sp-sl) {
+        .g-recaptcha {
+            transform: scale(0.77);
+            transform-origin: 0 0;
+            margin-right: -90px;
+        }
+    }
+
     .modal-dialog {
         margin-top: 60px;
         width: 1100px;
-        min-width: 1100px;
+        min-width: 1000px;
 
         @media (max-width: 1023px) {
             width: 90%;
             min-width: 90%;
-        }
-
-        @include mq(max-sp-sl) {
-            min-width: fit-content;
         }
     }
 
@@ -27,7 +31,9 @@
         right: 13px;
     }
 
-    .login-content, .register-content, .forgot-password-content {
+    .login-content,
+    .register-content,
+    .forgot-password-content {
         display: flex;
         flex-direction: row !important;
         gap: 40px;
@@ -41,7 +47,9 @@
         }
     }
 
-    .login-form, .register-form, .forgot-password-form {
+    .login-form,
+    .register-form,
+    .forgot-password-form {
         @media (max-width: 1023px) {
             flex: 1;
         }
@@ -139,7 +147,8 @@
         }
     }
 
-    .register, .login {
+    .register,
+    .login {
         text-align: center;
         font-size: 1rem;
 

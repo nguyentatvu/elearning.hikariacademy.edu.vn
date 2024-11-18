@@ -444,6 +444,7 @@
             font-size: 16px;
             letter-spacing: 2px;
             font-weight: 600;
+            text-align: center;
         }
 
         .custom-progress::after {

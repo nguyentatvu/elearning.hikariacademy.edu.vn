@@ -471,7 +471,7 @@
                     .addClass('char-assessment intonation-error')
                     .text(assessmentItem.word);
 
-                const thresholdSpeechTime = 0.2;
+                const thresholdSpeechTime = 0.15;
                 const thresholdPitch = 5;
                 const speechTimeDifference = assessmentItem.speech_time_difference;
                 const pitchValue = assessmentItem.pitch_value;
