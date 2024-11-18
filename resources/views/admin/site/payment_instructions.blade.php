@@ -163,15 +163,23 @@
 
     .support-item {
         display: flex;
-        align-items: center;
         gap: 10px;
         margin-bottom: 10px;
         color: #555;
+        word-wrap: break-word;
+    }
+
+    .support-item-title {
+        white-space: nowrap;
+
     }
 
     .support-item a {
         color: #1a73e8;
         text-decoration: none;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        word-break: break-all
     }
 
     .support-item a:hover {
@@ -310,17 +318,21 @@
         <div class="support-channels">
             <div class="support-title">KÊNH HỖ TRỢ VNPAY</div>
             <div class="support-item">
-                - Tổng đài: <a href="tel:+1900555577">*3388 hoặc 1900 55 55 77</a>
+                <span class="support-item-title">- Tổng đài: </span>
+                <a href="tel:+1900555577">*3388 hoặc 1900 55 55 77</a>
             </div>
             <div class="support-item">
-                - Zalo OA: <a href="https://zalo.me/4134983655549474109"
+                <span class="support-item-title">- Zalo OA: </span>
+                <a href="https://zalo.me/4134983655549474109"
                     target="_blank">zalo.me/4134983655549474109</a>
             </div>
             <div class="support-item">
-                - Email: <a href="mailto:hotro@vnpay.vn">hotro@vnpay.vn</a>
+                <span class="support-item-title">- Email: </span>
+                <a href="mailto:hotro@vnpay.vn">hotro@vnpay.vn</a>
             </div>
             <div class="support-item">
-                - Fanpage: <a href="https://facebook.com/VNPAYQR.vn" target="_blank">facebook.com/VNPAYQR.vn</a>
+                <span class="support-item-title">- Fanpage: </span>
+                <a href="https://facebook.com/VNPAYQR.vn" target="_blank">facebook.com/VNPAYQR.vn</a>
             </div>
         </div>
     </div>
