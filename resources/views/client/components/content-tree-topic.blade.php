@@ -29,8 +29,7 @@
                     @component('client.components.content-tree-lesson-link',[
                         'contents' => $content->childContents,
                         'chapter_index' => $chapter_index,
-                        'is_valid_payment' => $is_valid_payment,
-                        'testContentResult' => $testContentResult
+                        'is_valid_payment' => $is_valid_payment
                     ])
                     @endcomponent
                 </ul>

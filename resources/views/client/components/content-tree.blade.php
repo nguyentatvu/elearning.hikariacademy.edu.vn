@@ -29,8 +29,7 @@
                                 'chapter_index' => $content_index,
                                 'is_valid_payment' => $isValidPayment,
                                 'isFreeSeries' => $isFreeSeries,
-                                'seriesType' => $seriesType,
-                                'testContentResult' => $testContentResult
+                                'seriesType' => $seriesType
                             ])
                             @endcomponent
                         </div>
@@ -50,8 +49,8 @@
                     <span>Nội dung bị ẩn</span>
                 </a>
             @else
-                <a href="{{ $isValidPayment || $content->type === App\LmsContent::SUMMARY_AND_INTRODUCTION ? $content->contentLink : 'javascript:void(0)' }}"
-                    class="topic-content-link" onclick="{{ $content->clickEvent }}">
+                <a href="{{ $isValidPayment || $content->type === App\LmsContent::SUMMARY_AND_INTRODUCTION ? $content->url : 'javascript:void(0)' }}"
+                    class="topic-content-link">
                     <img src="{{ (isset($content->image) && !empty($content->image)) ? asset($content->image) : asset('images/icons/' . config('constant.series.chapter_icons')[$content->type]) }}"
                         alt="image" class="chapter-image">
                     <span>{{ $content->bai }}</span>

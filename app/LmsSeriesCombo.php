@@ -51,6 +51,18 @@ class LmsSeriesCombo extends Model
             : null;
     }
 
+    public function getSeriesIdListAttribute() {
+        $seriesIdList = [
+            $this->n1,
+            $this->n2,
+            $this->n3,
+            $this->n4,
+            $this->n5
+        ];
+
+        return array_filter($seriesIdList);
+    }
+
     /**
      * Check if all roadmaps for each series in a combo are selected
      *

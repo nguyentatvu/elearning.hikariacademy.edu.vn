@@ -11,7 +11,9 @@ use App\Http\Requests;
 use App\LmsCategory;
 use App\LmsContent;
 use App\LmsSeries;
+use App\LmsSeriesCombo;
 use App\LmsStudentView;
+use App\PaymentMethod;
 use App\Role;
 use App\Services\CommentService;
 use App\Services\LmsContentService;
@@ -289,17 +291,6 @@ class StudentLmsController extends Controller
         $this->prepContent['viewed_content_ids'] = $contentView->where('finish', LmsStudentView::NOT_FINISHED)
             ->pluck('lmscontent_id')->toArray();
 
-        $this->prepContent['test_content'] = $this->lmsContentService->getAllByConditions([
-            'lmsseries_id' => $this->prepContent['series_id'],
-            'type' => LmsContent::TEST,
-            'delete_status' => 0
-        ])->toArray();
-
-        $this->prepContent['test_content_result'] = $this->getPassedTestInfo(
-            $this->prepContent['test_content'],
-            Auth::id() ?? "-1"
-        );
-
         $this->prepContent['contents']->each(function ($item) use ($params) {
             $this->setRelatedInfoToDropdownContents($item, $params);
         });
@@ -338,56 +329,18 @@ class StudentLmsController extends Controller
             $lms_content->css_class = 'active-content';
         }
 
-        // Check blocked content
-        $blockedContentInfo = $lms_content->checkBlockedContent($this->prepContent['test_content_result']);
-        if ($blockedContentInfo['isContentBlocked']) {
-            $lms_content->contentLink = 'javascript:void(0);';
-            $lms_content->clickEvent = "showBLockedContentAlert('" . $blockedContentInfo['incompleteTestTitle'] . "')";
-        } else {
-            // Set route
-            $routes = config('constant.series.routes');
-            $params['stt'] = $lms_content->id;
-            foreach ($routes as $type => $route) {
-                if (in_array($lms_content->type, $typeMap[$type])) {
-                    $lms_content->url = route($route, $params);
-                    break;
-                }
+        $routes = config('constant.series.routes');
+        $params['stt'] = $lms_content->id;
+        foreach ($routes as $type => $route) {
+            if (in_array($lms_content->type, $typeMap[$type])) {
+                $lms_content->url = route($route, $params);
+                break;
             }
-            $lms_content->contentLink = $lms_content->url;
-            $lms_content->clickEvent = '';
         }
 
         if ($chapter_index > 0 && !$this->prepContent['is_valid_payment']) {
             return;
         }
-    }
-
-    /**
-     * Get passed test info
-     *
-     * @param array $testContents
-     * @param string $userId
-     * @return mixed
-     */
-    private function getPassedTestInfo(array $testContents, string $userId)
-    {
-        $testContentIds = array_column($testContents, 'id');
-        $passedTestList = DB::table('lms_test_result')
-            ->select('lmscontent_id')
-            ->whereIn('lmscontent_id', $testContentIds)
-            ->where('users_id', $userId)
-            ->whereRaw('point >= 0.5 * total_point')
-            ->groupBy('lmscontent_id')
-            ->pluck('lmscontent_id')
-            ->toArray();
-
-        $result = [];
-        foreach ($testContents as $testContent) {
-            $result[$testContent['stt']]['is_passed'] = in_array($testContent['id'], $passedTestList);
-            $result[$testContent['stt']]['title'] = $testContent['bai'];
-        }
-
-        return $result;
     }
 
     /**
@@ -466,6 +419,7 @@ class StudentLmsController extends Controller
         $this->getStudentView();
         $this->prepareContentList($params);
         $this->getCommentInCourseOfUser($combo_slug, $slug, $stt);
+        $this->saveFreeSeriesComboPayment($this->prepContent['series_combo']);
     }
 
     /**
@@ -489,7 +443,6 @@ class StudentLmsController extends Controller
             'comments' => $this->prepContent['comments'],
             'description' => $this->prepContent['detail_content']->description,
             'prevUrl' => $this->prepContent['prev_url'],
-            'testContentResult' => $this->prepContent['test_content_result']
         ];
     }
 
@@ -1358,6 +1311,77 @@ class StudentLmsController extends Controller
         if (Auth::check()) {
             $userId = Auth::user()->id;
             $this->prepContent['comments'] = $this->commentService->getCommentsInCourse($combo_slug, $slug, $stt, $userId);
+        }
+    }
+
+    /**
+     * Save free series combo payment when student views a content of free series combo
+     *
+     * @param string $combo_slug
+     * @param string $slug
+     * @param string $stt
+     */
+    private function saveFreeSeriesComboPayment(LmsSeriesCombo $seriesCombo) {
+        if ($seriesCombo->actualCost != 0) {
+            return;
+        }
+
+        $userId = Auth::user()->id;
+        $lmsseries_combo_check = DB::table('payment_method')
+            ->where('item_id', $seriesCombo->id)
+            ->where('user_id', $userId)
+            ->first();
+
+        if ($lmsseries_combo_check != null) {
+            return;
+        }
+
+        // Free order
+        $orderInfo = $seriesCombo->title;
+        $orderId = 'HIK' . time();
+        $requestId = "{$userId}_{$seriesCombo->id}_{$seriesCombo->type}";
+
+        DB::beginTransaction();
+        try {
+            $payment = new PaymentMethod([
+                'user_id' => $userId,
+                'item_id' => $seriesCombo->id,
+                'item_name' => $orderInfo,
+                'amount' => 0,
+                'requestId' => $requestId,
+                'orderId' => $orderId,
+                'orderInfo' => $orderInfo,
+                'transId' => mt_srand(10),
+                'orderType' => 'Free',
+                'payType' => 'Free',
+                'extraData' => 'merchantName=Hikari Academy',
+                'responseTime' => now(),
+                'status' => 1,
+            ]);
+            $payment->save();
+
+            for ($i = 1; $i <= 5; $i++) {
+                $n = 'n' . $i;
+                if ($seriesCombo->$n > 0) {
+                    DB::table('payments')->insert([
+                        'user_id' => $userId,
+                        'item_id' => $seriesCombo->$n,
+                        'time' => $seriesCombo->time,
+                        'payments_method_id' => $payment->id,
+                    ]);
+                }
+            }
+
+            $this->userService->updateSeriesViewsHistory(
+                Auth::user()->series_views_history ?? [],
+                $seriesCombo->seriesIdList
+            );
+
+            DB::commit();
+            flash('Thông báo', "Bạn đã mua khóa học {$orderInfo} thành công", 'success');
+        } catch (Exception $e) {
+            DB::rollBack();
+            flash('Thông báo', 'Tạo đơn hàng thất bại', 'error');
         }
     }
 }
