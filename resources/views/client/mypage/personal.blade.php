@@ -144,7 +144,7 @@
         </div> --}}
         <div class="row">
             <div class="col-12 col-sm-12 col-lg-12">
-                <h4 class="align-self-baseline mt-3">Các khoá học đã tham gia</h4>
+                <h4 class="align-self-baseline mt-3 text-center text-sm-start">Các khoá học đã tham gia</h4>
                 <div class="position-relative">
                     <div class="courses-container" id="coursesContainer">
                         @if ($view_series_history->count() > 0)
@@ -208,7 +208,7 @@
                     </button>
                 </div>
             </div>
-            <h4 class="align-self-baseline mt-3">Gợi ý các khoá học</h4>
+            <h4 class="align-self-baseline mt-3 text-center text-sm-start">Gợi ý các khoá học</h4>
             <div class="recommended-series-section position-relative">
                 <div class="swiper swiper-container p-2">
                     <div class="swiper-wrapper">
@@ -308,7 +308,7 @@
                     <form id="update_info_form" action="{{ route('mypage.update-info') }}" method="post"
                         enctype="multipart/form-data">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <div class="row mb-3">
+                        <div class="row mb-3 gap-3 gap-md-0">
                             <div class="col-md-6">
                                 <label class="text-personal-infomation">Username</label>
                                 <input type="text" class="form-control input-personal-infomation"
@@ -320,7 +320,7 @@
                                     value="{{ Auth::user()->email }}" disabled>
                             </div>
                         </div>
-                        <div class="row mb-3" id="change_name_phone_section">
+                        <div class="row mb-3 gap-3 gap-md-0" id="change_name_phone_section">
                             <div class="col-md-6">
                                 <label for="name" class="text-personal-infomation">Họ và tên</label>
                                 <input type="text" name="name"
@@ -343,7 +343,7 @@
                                 name="old_password" placeholder="">
                             <span class="text-danger invalid-feedback">{{ $errors->first('old_password') }}</span>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-3 gap-3 gap-md-0">
                             <div class="col-md-6">
                                 <label for="password" class="text-personal-infomation">Mật khẩu mới</label>
                                 <input type="password"

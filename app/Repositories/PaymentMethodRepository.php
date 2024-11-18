@@ -93,6 +93,42 @@ class PaymentMethodRepository extends BaseRepository
     }
 
     /**
+     * Check if user has a specific pending series payment
+     *
+     * @param string $seriesComboId
+     * @return bool
+     */
+    public function checkPendingSeriesPaymentOf(string $seriesComboId) {
+        return $this->model
+            ->where([
+                'user_id' => Auth::user()->id,
+                'item_id' => $seriesComboId
+            ])
+            ->whereIn('status', [PaymentMethod::PAYMENT_PENDING, PaymentMethod::PAYMENT_PENDING_OS])
+            ->whereNull('recharge_coin_amount')
+            ->where('orderType', '<>', 'transfer')
+            ->exists();
+    }
+
+    /**
+     * Check if user has a specific pending series transfering order
+     *
+     * @param string $seriesComboId
+     * @return bool
+     */
+    public function checkPendingSeriesTransferOrderOf(string $seriesComboId) {
+        return $this->model
+            ->where([
+                'user_id' => Auth::user()->id,
+                'item_id' => $seriesComboId
+            ])
+            ->whereIn('status', [PaymentMethod::PAYMENT_PENDING, PaymentMethod::PAYMENT_PENDING_OS])
+            ->whereNull('recharge_coin_amount')
+            ->where('orderType', 'transfer')
+            ->exists();
+    }
+
+    /**
      * Check if user has pending coin payment
      *
      * @return bool

@@ -2041,8 +2041,8 @@ try_again:
                 }
             }
             if ($record != null) {
-                if ($this->paymentMethodService->checkPendingSeriesTransferOrder() ||
-                    $this->paymentMethodService->checkPendingSeriesPayment())
+                if ($this->paymentMethodService->checkPendingSeriesTransferOrderOf($record->id) ||
+                    $this->paymentMethodService->checkPendingSeriesPaymentOf($record->id))
                 {
                     $data = array('error' => 3, 'message' => 'Đơn hàng đã được tạo trước đó, vui lòng đợi');
                     return json_encode($data);
