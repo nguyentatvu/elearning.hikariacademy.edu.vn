@@ -136,33 +136,64 @@ class UserService extends BaseService
      * @param array $data
      * @return User
      */
-    public function register(array $data = [])
+    public function register(array $data)
     {
         DB::beginTransaction();
         try {
+            //Kiểm tra country
+            $excludedCountryCodesString = strtolower(env('EXCLUDED_COUNTRY_CODES'));
+            $excludedCountryCodes = explode(',', $excludedCountryCodesString);
+
             $ipInfo = ip_info('Visitor', "Location");
+
+            if ($ipInfo) {
+                if (in_array(strtolower($ipInfo['country_code']), $excludedCountryCodes)) {
+                    return false;
+                }
+            }
+
+            if (preg_match("/^.+@.+\.ru$/", $data['email'])) {
+                return false;
+            }
+
+            $createData = [];
             $newUID = $this->createUID();
             $newHID = $this->createHID($newUID);
             $password = Str::random(6);
-            $data['uid'] = $newUID;
-            $data['hid'] = $newHID;
-            $data['username'] = $newHID;
-            $data['role_id'] = Role::STUDENT;
-            $data['is_register'] = 1;
-            $data['password'] = bcrypt($password);
-            $data['slug'] = createSlug($data['name']);
-            $data['login_enabled'] = 1;
-            $data['reward_point'] = 0;
+            $createData['name'] = $data['name'];
+            $createData['email'] = $data['email'];
+            $createData['phone'] = $data['phone'];
+            $createData['uid'] = $newUID;
+            $createData['hid'] = $newHID;
+            $createData['username'] = $newHID;
+            $createData['level'] = 5;
+            $createData['role_id'] = Role::STUDENT;
+            $createData['is_register'] = 1;
+            $createData['password'] = bcrypt($password);
+            $createData['slug'] = createSlug($createData['name']);
+            $createData['login_enabled'] = 1;
+            $createData['reward_point'] = getRewardPointRule('registration')['points'];
+            $createData['login_streak'] = 1;
+            $createData['last_login_date'] = now();
+            $createData['confirmation_code'] = str_random(30);
+            $createData['point_history'] = [
+                'total' => $createData['reward_point'],
+                'used' => 0,
+                'exercise_test' => 0,
+                'video' => 0,
+                'streak' => 0,
+                'recharge' => 0
+            ];
 
             if ($ipInfo) {
-                $data['country_code'] = $ipInfo['country_code'];
-                $data['country'] = $ipInfo['country'];
-                $data['city'] = $ipInfo['city'];
-                $data['state'] = $ipInfo['state'];
-                $data['ip'] = $ipInfo['ip'];
+                $createData['country_code'] = $ipInfo['country_code'];
+                $createData['country'] = $ipInfo['country'];
+                $createData['city'] = $ipInfo['city'];
+                $createData['state'] = $ipInfo['state'];
+                $createData['ip'] = $ipInfo['ip'];
             }
 
-            $user = $this->repository->create($data);
+            $user = $this->repository->create($createData);
             $user->roles()->attach($user->role_id);
 
             $emailSent = sendEmail(
@@ -185,7 +216,8 @@ class UserService extends BaseService
             return $user;
         } catch (Exception $e) {
             DB::rollBack();
-            throw $e;
+            Log::error("Register user error: " . $e->getMessage());
+            return false;
         }
     }
 
