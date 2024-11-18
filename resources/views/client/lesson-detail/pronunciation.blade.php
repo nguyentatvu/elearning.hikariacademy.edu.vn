@@ -66,6 +66,7 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             border: 1px solid #e2e8f0;
             border-radius: 0.375rem;
+            z-index: 999999;
         }
 
         /* Tooltip arrow styles */
@@ -418,6 +419,7 @@
 
         function createTooltipForResultLevel1(userResult, assessmentResult, differences) {
             $('#resultl_level_1_assessment').empty();
+            let titleLength = $('#pronunciation_text_title').text().length;
 
             $.each(assessmentResult, function(i, assessmentItem) {
                 const difference = differences.find(diff => diff.index === i);
@@ -427,31 +429,29 @@
                     .addClass('char-assessment')
                     .text(assessmentItem.word);
 
-                if (userText.trim() === '') {
-                    span.addClass('incorrect')
-                        .attr('data-bs-toggle', 'tooltip')
-                        .attr('data-bs-placement', 'top')
-                        .attr('data-bs-custom-class', 'custom-tooltip')
-                        .attr('data-bs-html', 'true')
-                        .attr('data-bs-title',
-                            `Hãy phát âm to và rõ hơn để hệ thống nhận diện và đánh giá bạn nhé!`);
-                } else {
-                    if (difference) {
+                span.attr('data-bs-toggle', 'tooltip')
+                    .attr('data-bs-placement', 'top')
+                    .attr('data-bs-custom-class', 'custom-tooltip')
+                    .attr('data-bs-html', 'true');
+
+                if (i < titleLength) {
+                    if (userText.trim() === '') {
                         span.addClass('incorrect')
-                            .attr('data-bs-toggle', 'tooltip')
-                            .attr('data-bs-placement', 'top')
-                            .attr('data-bs-custom-class', 'custom-tooltip')
-                            .attr('data-bs-html', 'true')
+                            .attr('data-bs-title',
+                                `Hãy phát âm to và rõ hơn để hệ thống nhận diện và đánh giá bạn nhé!`);
+                    } else if (difference) {
+                        span.addClass('incorrect')
                             .attr('data-bs-title',
                                 `Bạn đã phát âm sai thành: <span class='text-danger'>${userText}</span>`);
                     } else {
                         span.addClass('correct')
-                            .attr('data-bs-toggle', 'tooltip')
-                            .attr('data-bs-placement', 'top')
-                            .attr('data-bs-custom-class', 'custom-tooltip')
-                            .attr('data-bs-html', 'true')
-                            .attr('data-bs-title', `Tuyệt vời! Bạn phát âm rất chuẩn!`);
+                            .attr('data-bs-title',
+                                `Tuyệt vời! Bạn phát âm rất chuẩn!`);
                     }
+                } else {
+                    span.addClass('incorrect')
+                        .attr('data-bs-title',
+                            `Dường như bạn đã phát âm thừa từ này. Hãy thử lại và phát âm đúng theo mẫu nhé!`);
                 }
 
                 $('#resultl_level_1_assessment').append(span);
@@ -462,6 +462,7 @@
 
         function createTooltipForResultLevel2(assessmentResult) {
             $('#resultl_level_2_assessment').empty();
+            let titleLength = $('#pronunciation_text_title').text().length;
 
             $.each(assessmentResult, function(i, assessmentItem) {
                 let tooltipText = '';
@@ -476,51 +477,57 @@
                 const pitchValue = assessmentItem.pitch_value;
                 const pearsonrValue = assessmentItem.pearsonr_value;
 
-                if (pearsonrValue > 0.5) {
-                    if (Math.abs(speechTimeDifference) <= thresholdSpeechTime) {
-                        span.addClass('correct');
-                        span.removeClass('intonation-error');
-                        tooltipText = "Bạn làm rất tốt! Cao độ và độ dài âm đều khớp, cứ tiếp tục phát huy nhé!";
-                    } else if (speechTimeDifference < -1 * thresholdSpeechTime) {
-                        tooltipText = "Cao độ của bạn chuẩn rồi! Thử kéo dài âm thêm chút nữa cho hoàn hảo nhé!";
-                    } else if (speechTimeDifference > thresholdSpeechTime) {
-                        tooltipText =
-                            "Bạn phát âm rất đúng cao độ! Thử nói ngắn lại một chút để độ dài âm khớp hơn nhé!";
-                    }
-                } else if (pearsonrValue > 0 && pearsonrValue <= 0.5) {
-                    if (Math.abs(speechTimeDifference) <= thresholdSpeechTime) {
-                        span.addClass('correct');
-                        span.removeClass('intonation-error');
-                        tooltipText =
-                            "Cao độ của bạn khá tốt! Độ dài âm cũng tương đối khớp, tiếp tục phát huy nhé!";
-                    } else if (speechTimeDifference < -1 * thresholdSpeechTime) {
-                        tooltipText = "Cao độ của bạn khá tốt! Thử kéo dài âm thêm chút nữa cho hoàn hảo nhé!";
-                    } else if (speechTimeDifference > thresholdSpeechTime) {
-                        tooltipText =
-                            "Cao độ của bạn khá tốt! Thử nói ngắn lại một chút để độ dài âm khớp hơn nhé!";
-                    }
-                } else if (pearsonrValue === 0) {
-                    if (Math.abs(speechTimeDifference) <= thresholdSpeechTime) {
-                        tooltipText = "Bạn thử điều chỉnh ngữ điệu để cải thiện nhé!";
-                    } else if (speechTimeDifference < -1 * thresholdSpeechTime) {
-                        tooltipText =
-                            "Bạn cần điều chỉnh ngữ điệu và thử kéo dài âm thêm một chút nữa cho hoàn hảo nhé!";
-                    } else if (speechTimeDifference > thresholdSpeechTime) {
-                        tooltipText =
-                            "Bạn cần điều chỉnh ngữ điệu và thử nói ngắn hơn một chút nữa cho chính xác nhé!";
+                if (i < titleLength) {
+                    if (pearsonrValue > 0.5) {
+                        if (Math.abs(speechTimeDifference) <= thresholdSpeechTime) {
+                            span.addClass('correct');
+                            span.removeClass('intonation-error');
+                            tooltipText = "Bạn làm rất tốt! Cao độ và độ dài âm đều khớp, cứ tiếp tục phát huy nhé!";
+                        } else if (speechTimeDifference < -1 * thresholdSpeechTime) {
+                            tooltipText = "Cao độ của bạn chuẩn rồi! Thử kéo dài âm thêm chút nữa cho hoàn hảo nhé!";
+                        } else if (speechTimeDifference > thresholdSpeechTime) {
+                            tooltipText =
+                                "Bạn phát âm rất đúng cao độ! Thử nói ngắn lại một chút để độ dài âm khớp hơn nhé!";
+                        }
+                    } else if (pearsonrValue > 0 && pearsonrValue <= 0.5) {
+                        if (Math.abs(speechTimeDifference) <= thresholdSpeechTime) {
+                            span.addClass('correct');
+                            span.removeClass('intonation-error');
+                            tooltipText =
+                                "Cao độ của bạn khá tốt! Độ dài âm cũng tương đối khớp, tiếp tục phát huy nhé!";
+                        } else if (speechTimeDifference < -1 * thresholdSpeechTime) {
+                            tooltipText = "Cao độ của bạn khá tốt! Thử kéo dài âm thêm chút nữa cho hoàn hảo nhé!";
+                        } else if (speechTimeDifference > thresholdSpeechTime) {
+                            tooltipText =
+                                "Cao độ của bạn khá tốt! Thử nói ngắn lại một chút để độ dài âm khớp hơn nhé!";
+                        }
+                    } else if (pearsonrValue === 0) {
+                        if (Math.abs(speechTimeDifference) <= thresholdSpeechTime) {
+                            tooltipText = "Bạn thử điều chỉnh ngữ điệu để cải thiện nhé!";
+                        } else if (speechTimeDifference < -1 * thresholdSpeechTime) {
+                            tooltipText =
+                                "Bạn cần điều chỉnh ngữ điệu và thử kéo dài âm thêm một chút nữa cho hoàn hảo nhé!";
+                        } else if (speechTimeDifference > thresholdSpeechTime) {
+                            tooltipText =
+                                "Bạn cần điều chỉnh ngữ điệu và thử nói ngắn hơn một chút nữa cho chính xác nhé!";
+                        }
+                    } else {
+                        let feedbackText = evaluatePitch(pitchValue, thresholdPitch);
+                        if (Math.abs(speechTimeDifference) <= thresholdSpeechTime) {
+                            tooltipText = feedbackText +
+                                "nhưng độ dài âm rất ổn! Hãy tập trung luyện thêm về cao độ nhé!";
+                        } else if (speechTimeDifference < -1 * thresholdSpeechTime) {
+                            tooltipText = feedbackText +
+                                "Độ dài âm hơi ngắn! Thử kéo dài âm thêm chút và điều chỉnh cao độ nữa cho hoàn hảo nhé!";
+                        } else if (speechTimeDifference > thresholdSpeechTime) {
+                            tooltipText = feedbackText +
+                                "Độ dài âm hơi dài! Thử nói ngắn lại một chút và điều chỉnh cao độ nữa cho khớp hơn nhé!";
+                        }
                     }
                 } else {
-                    let feedbackText = evaluatePitch(pitchValue, thresholdPitch);
-                    if (Math.abs(speechTimeDifference) <= thresholdSpeechTime) {
-                        tooltipText = feedbackText +
-                            "nhưng độ dài âm rất ổn! Hãy tập trung luyện thêm về cao độ nhé!";
-                    } else if (speechTimeDifference < -1 * thresholdSpeechTime) {
-                        tooltipText = feedbackText +
-                            "Độ dài âm hơi ngắn! Thử kéo dài âm thêm chút và điều chỉnh cao độ nữa cho hoàn hảo nhé!";
-                    } else if (speechTimeDifference > thresholdSpeechTime) {
-                        tooltipText = feedbackText +
-                            "Độ dài âm hơi dài! Thử nói ngắn lại một chút và điều chỉnh cao độ nữa cho khớp hơn nhé!";
-                    }
+                    span.addClass('incorrect');
+                    span.removeClass('intonation-error');
+                    tooltipText = `Dường như bạn đã phát âm thừa từ này. Hãy thử lại và phát âm đúng theo mẫu nhé!`;
                 }
 
                 if (tooltipText) {

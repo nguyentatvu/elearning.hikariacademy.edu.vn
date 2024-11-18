@@ -56,7 +56,7 @@
                         aria-labelledby="nav-questions-tab" tabindex="0">
                         <div class="comment-section">
                             <div id="comment_input" class="comment-input">
-                                <img alt="User avatar" height="40" src="{{ getFullUserImage(Auth::user()->image) }}"
+                                <img alt="User avatar" height="40" src="{{ Auth::user()->image ? getFullUserImage(Auth::user()->image) : asset('images/no-avatar.png') }}"
                                     width="40" />
                                 <input id="comment_input_area" placeholder="Nhập bình luận mới của bạn" type="text" />
                             </div>
