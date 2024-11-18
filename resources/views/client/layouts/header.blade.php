@@ -6,10 +6,11 @@
         </a>
 
         @if (Auth::check())
-            <div class="header-my-coin ms-3 d-lg-none d-flex me-2 my-icon-info">
-                <a href="{{ route('mypage.reward-point') }}" class="owned-point">
+            <div class="header-my-coin ms-3 d-lg-none d-flex me-2 my-icon-info"
+                onclick="window.location.href = '{{ route('mypage.reward-point') }}'">
+                <span class="owned-point">
                     {{ formatNumber(Auth::user()->reward_point + Auth::user()->recharge_point) }}
-                </a>
+                </span>
                 <img src="{{ asset('images/icons/coin.svg') }}" alt="Coin Icon" class="ms-2" width="20">
                 <div class="hicoin-animation">
                     <span class="me-1 fs-5">+<span class="increased-point"></span></span>
@@ -40,7 +41,7 @@
                             <div>{{ Auth::user()->name }}</div>
                             <div><span>@</span>{{ Auth::user()->username ?? '' }}</div>
                             <!-- Streak daily -->
-                            <div class="header-my-coin ms-3 d-lg-flex owned-login-streak"
+                            <div class="header-my-coin ms-3 d-lg-flex owned-login-streak" onclick="window.location.href = '{{ route('mypage.reward-point') }}'"
                                 id="owned_login_streak_mobile">
                                 <a>
                                     {{ isset(Auth::user()->login_streak) && Auth::user()->login_streak ? Auth::user()->login_streak : 0 }}
@@ -102,7 +103,7 @@
                 <div class="d-flex align-items-center">
                     @if (Auth::check())
                         <!-- Coin Balance -->
-                        <div class="header-my-coin ms-3 d-lg-flex my-icon-info">
+                        <div class="header-my-coin ms-3 d-lg-flex my-icon-info" onclick="window.location.href = '{{ route('mypage.reward-point') }}'">
                             <a href="{{ route('mypage.reward-point') }}" class="owned-point">
                                 {{ formatNumber(Auth::user()->reward_point + Auth::user()->recharge_point) }}
                             </a>
@@ -114,7 +115,7 @@
                             </div>
                         </div>
                         <!-- Streak daily -->
-                        <div class="header-my-coin ms-3 d-lg-flex owned-login-streak" id="owned_login_streak_mobile">
+                        <div class="header-my-coin ms-3 d-lg-flex owned-login-streak" id="owned_login_streak_mobile" onclick="window.location.href = '{{ route('mypage.reward-point') }}'">
                             <a>
                                 {{ isset(Auth::user()->login_streak) && Auth::user()->login_streak ? Auth::user()->login_streak : 0 }}
                             </a>

@@ -24,12 +24,12 @@
 </style>
 
 <nav class="navbar navbar-custom bg-primary header-study">
-    <div class="container-fluid">
+    <div class="container-fluid flex-column flex-sm-row align-items-start align-items-sm-center">
         <a class="navbar-brand me-2 d-flex align-items-center justify-content-center" href="{{ $prevUrl }}">
             <i class="bi bi-chevron-left"></i>
             <span class="ms-2 d-inline-block">{{ $series->title }}</span>
         </a>
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center mb-2 mb-sm-0">
             @if (Auth::check())
                 <div class="header-my-coin me-3">
                     <a href="{{ route('mypage.reward-point') }}" class="owned-point text-white">

@@ -284,10 +284,10 @@
             </button>
 
             <main class="main-content-area" style="background: #f8fafc;">
-                <div class="px-4">
-                    <div class="mb-4">
+                <div class="px-0 px-sm-4">
+                    <div class="mb-4 ms-4 ms-sm-0">
                         <a href="/">
-                            <span>Trang chủ/</span>
+                            <span>Trang chủ /</span>
                         </a>
                         <strong><span id="tittle_my_page">Điểm tích lũy</span></strong>
                     </div>

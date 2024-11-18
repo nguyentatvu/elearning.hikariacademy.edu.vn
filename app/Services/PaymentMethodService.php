@@ -54,6 +54,26 @@ class PaymentMethodService extends BaseService
     }
 
     /**
+     * Check if user has a specific pending series payment
+     *
+     * @param string $seriesComboId
+     * @return bool
+     */
+    public function checkPendingSeriesPaymentOf(string $seriesComboId) {
+        return $this->repository->checkPendingSeriesPaymentOf($seriesComboId);
+    }
+
+    /**
+     * Check if user has a specific pending series transfering order
+     *
+     * @param string $seriesComboId
+     * @return bool
+     */
+    public function checkPendingSeriesTransferOrderOf(string $seriesComboId) {
+        return $this->repository->checkPendingSeriesTransferOrderOf($seriesComboId);
+    }
+
+    /**
      * Check if user has pending coin payment
      *
      * @return bool

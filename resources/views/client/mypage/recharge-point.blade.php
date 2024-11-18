@@ -177,18 +177,20 @@
                 </div>
                 <p class="warning">Vui lòng kiểm tra kỹ thông tin trước khi tiến hành thanh toán. Giao dịch không thể hoàn
                     lại sau khi hoàn tất.</p>
-                <div class="transaction-submit" id="submit_momo">
-                    <form action="#" method="get">
-                        <input type="text" name="price" hidden>
-                        <button type="submit" class="submit-button">Nạp điểm</button>
-                    </form>
-                </div>
-                <div class="transaction-submit d-none" id="submit_vnpay">
-                    <form action="{{ route('payments.coin.vnpay') }}" method="get">
-                        <input type="text" name="price" hidden>
-                        <button type="submit" class="submit-button">Nạp điểm</button>
-                    </form>
-                </div>
+                @if (env('ENABLE_THIRDPARTY_PAYMENT', false))
+                    <div class="transaction-submit" id="submit_momo">
+                        <form action="#" method="get">
+                            <input type="text" name="price" hidden>
+                            <button type="submit" class="submit-button">Nạp điểm</button>
+                        </form>
+                    </div>
+                    <div class="transaction-submit d-none" id="submit_vnpay">
+                        <form action="{{ route('payments.coin.vnpay') }}" method="get">
+                            <input type="text" name="price" hidden>
+                            <button type="submit" class="submit-button">Nạp điểm</button>
+                        </form>
+                    </div>
+                @endif
                 <div class="transaction-submit d-none" id="submit_bank_transfer">
                     <button type="submit" class="submit-button">Tạo đơn hàng</button>
                 </div>

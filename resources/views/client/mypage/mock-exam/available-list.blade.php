@@ -171,17 +171,14 @@
 @section('mypage-scripts')
     <script>
         function show_free(trinhdo) {
+            // Smooth scrolling to mock exam list
+            document.querySelector('.mock-exam-wrapper').scrollIntoView({
+                behavior: 'smooth'
+            });
+
             if (trinhdo > 0) {
                 $('#show_trinhdo, .show_n').hide();
                 $('#show_n' + trinhdo).show();
-
-                Swal.fire({
-                    title: "Bạn đã chọn trình độ N" + trinhdo,
-                    text: "",
-                    icon: "success",
-                    timer: 2000,
-                    showConfirmButton: false
-                });
             }
         }
     </script>
