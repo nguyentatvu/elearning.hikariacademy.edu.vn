@@ -661,7 +661,25 @@ class StudentLmsController extends Controller
             'finish' => LmsStudentView::NOT_FINISHED
         ]);
 
-        if ($studentView && $earnedPoints > 0) {
+        $content = $this->lmsContentService->getByConditions([
+            'id' => $contentId
+        ], ['type']);
+
+        if ($content && $studentView && in_array($content->type, [
+            LmsContent::FLASHCARD,
+            LmsContent::HANDWRITING,
+            LmsContent::PRONUNCIATION_ASSESSMENT
+        ])) {
+            $studentView->update([
+                'finish' => LmsStudentView::FINISH,
+                'reward_point' => 0,
+                'updated_at' => date('Y-m-d H:i:s')
+            ], [
+                'lmscontent_id' => $contentId,
+                'users_id' => Auth::id(),
+            ]);
+        }
+        else if ($studentView && $earnedPoints > 0) {
             $user = Auth::user();
             $this->userService->updatePointHistory([$contentType => $earnedPoints]);
             $user->update([
