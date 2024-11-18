@@ -615,12 +615,18 @@
          * Handle Arrow Event
          */
         function handleArrowRightEvent() {
-            arrowRight.on('click', function() {
+            arrowRight.on('click', async function() {
                 if (currentIndex < total) {
                     storePronunciationData(currentIndex);
                     currentIndex++;
                     checkPronunciationData(currentIndex);
                     updatePageNumber(currentIndex);
+
+                    if (currentIndex === total) {
+                        @if ($isValidPayment && !$isFinishedContent)
+                            await earnPointFinishContent('{{ $detailContent->id }}', 0, '');
+                        @endif
+                    }
                 }
             });
         }
