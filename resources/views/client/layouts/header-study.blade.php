@@ -31,10 +31,10 @@
         </a>
         <div class="d-flex align-items-center mb-2 mb-sm-0">
             @if (Auth::check())
-                <div class="header-my-coin me-3">
-                    <a href="{{ route('mypage.reward-point') }}" class="owned-point text-white">
+                <div class="header-my-coin me-3" onclick="window.location.href = '{{ route('mypage.reward-point') }}'">
+                    <span class="owned-point text-white me-1">
                         {{ formatNumber(Auth::user()->reward_point + Auth::user()->recharge_point) }}
-                    </a>
+                    </span>
                     <img src="{{ asset('images/icons/coin.svg') }}" class="rounded-circle object-fit-cover">
                     <div class="hicoin-animation">
                         <span class="me-1 fs-5 text-white">+<span class="increased-point"></span></span>
