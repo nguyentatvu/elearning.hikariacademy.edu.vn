@@ -738,11 +738,6 @@ class PronunciationController extends Controller
             $reader->select([0]);
         })->get()->toArray();
 
-        // $data = array_map(function ($row) {
-        //     return !empty(array_filter($row)); 
-        // }, $data);
-        // dd($data);
-
         $pronunciationUploadPath = public_path('uploads/pronunciation');
 
         foreach ($data as $rowData) {
