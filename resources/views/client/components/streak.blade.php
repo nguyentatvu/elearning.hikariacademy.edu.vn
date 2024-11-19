@@ -426,6 +426,7 @@
             font-size: 1.5rem;
             color: #adb5bd;
             padding: 0;
+            z-index: 999;
         }
 
         .flame-icon {

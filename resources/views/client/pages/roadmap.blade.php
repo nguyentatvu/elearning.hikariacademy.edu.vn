@@ -423,7 +423,7 @@
                             @endif
                         </div>
                         <div>
-                            @if (isset($last_view))
+                            @if (!$road_map->isEmpty() && isset($last_view))
                                 <div class="mt-1">
                                     <strong>📍 Bài học gần đây:</strong>
                                     <a href="#car" rel="noopener noreferrer">{{ $last_view->bai }} (Click để xem chi
