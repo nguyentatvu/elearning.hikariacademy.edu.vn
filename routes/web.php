@@ -145,6 +145,8 @@ Route::prefix('payments/coin')
             ->name('list');
         Route::get('/momoqr', 'PaymentsController@getMomoQrCoin')
             ->name('momoqr');
+        Route::get('/momoqrReturn', 'PaymentsController@momoReturnCoin')
+            ->name('momoqrReturn');
         Route::get('/vnpayReturn', 'PaymentsController@vnpayReturnCoin')
             ->name('vnpayReturn');
         Route::get('/vnpay', 'PaymentsController@getVNPAYCoin')

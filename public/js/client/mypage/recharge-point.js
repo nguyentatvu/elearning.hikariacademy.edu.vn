@@ -30,7 +30,7 @@ const showMaintainedPaymentMethodAlert = () => {
         Swal.fire({
             title: `Thông báo`,
             icon: "warning",
-            html: 'Các cổng thanh toán bên thứ 3 <strong>Momo</strong> và <strong>VNPAY</strong> đang được bảo trì. Sẽ quay lại trong khoảng thời gian sớm nhất!'
+            html: 'Cổng thanh toán <strong>VNPAY</strong> đang được bảo trì. Sẽ quay lại trong khoảng thời gian sớm nhất!'
         });
     });
 }
