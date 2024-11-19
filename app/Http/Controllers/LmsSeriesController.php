@@ -1431,6 +1431,7 @@ class LmsSeriesController extends Controller
         $lmsseries_combo_check = DB::table('payment_method')
             ->where('item_id', $seriesCombo->id)
             ->where('user_id', $userId)
+            ->where('status', PaymentMethod::PAYMENT_SUCCESS)
             ->first();
 
         if ($lmsseries_combo_check != null) {
