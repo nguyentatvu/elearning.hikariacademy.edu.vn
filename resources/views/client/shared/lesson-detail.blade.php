@@ -56,7 +56,8 @@
                         aria-labelledby="nav-questions-tab" tabindex="0">
                         <div class="comment-section">
                             <div id="comment_input" class="comment-input">
-                                <img alt="User avatar" height="40" src="{{ Auth::user()->image ? getFullUserImage(Auth::user()->image) : asset('images/no-avatar.png') }}"
+                                <img alt="User avatar" height="40"
+                                    src="{{ Auth::user()->image ? getFullUserImage(Auth::user()->image) : asset('images/no-avatar.png') }}"
                                     width="40" />
                                 <input id="comment_input_area" placeholder="Nhập bình luận mới của bạn" type="text" />
                             </div>
@@ -141,21 +142,25 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        @if($series->short_description)
+                        @if ($series->short_description)
                             {!! $series->short_description !!}
                         @else
-                            <p>Khóa học này sẽ giúp bạn nâng cao kỹ năng tiếng Nhật của mình thông qua các bài học tương tác và thực hành chuyên sâu.</p>
+                            <p>Khóa học này sẽ giúp bạn nâng cao kỹ năng tiếng Nhật của mình thông qua các bài học tương tác
+                                và thực hành chuyên sâu.</p>
                         @endif
                         <div class="d-flex justify-content-between align-items-center mt-4">
                             <div>
                                 <span class="course-price">
-                                    <i class="bi bi-currency-dollar"></i> {{ formatCurrencyVND($seriesCombo->actualCost) }} VNĐ
+                                    <i class="bi bi-currency-dollar"></i>
+                                    {{ formatCurrencyVND($seriesCombo->actualCost) }} VNĐ
                                 </span>
                                 @if ($seriesCombo->checkPromotion)
-                                    <span class="ms-1 text-decoration-line-through text-muted">{{ formatCurrencyVND($seriesCombo->cost) }}</span>
+                                    <span
+                                        class="ms-1 text-decoration-line-through text-muted">{{ formatCurrencyVND($seriesCombo->cost) }}</span>
                                 @endif
                             </div>
-                            <a class="btn btn-buy" href="{{ route('payments.lms', $seriesCombo->slug) }}">Mua khóa học</a>
+                            <a class="btn btn-buy" href="{{ route('payments.lms', $seriesCombo->slug) }}">Mua khóa
+                                học</a>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -223,7 +228,7 @@
 
                 $('.study-content').css({
                     'height': `${studyContentHeight - navTabHeight}px`
-                })
+                });
 
                 if ($('.wp-btn-progress-les').length) {
                     // Set max-height and enable scrolling for audit-show when hidden
@@ -236,33 +241,44 @@
                         'margin-top': (progressBarHeight) + 'px',
                     });
 
-
-                    $('.study-content').css({
-                        'height': `${studyContentHeight}`
-                    })
-
+                    if ($('.exercise-content').length) {
+                        $('.study-content').css({
+                            'height': `auto`
+                        })
+                    } else {
+                        $('.study-content').css({
+                            'height': `${studyContentHeight}`
+                        })
+                    }
                 } else if ($('.vjs-theme-fantasy').length) {
                     // Set max-height and enable scrolling for video player when hidden
+                    // $('.vjs-theme-fantasy').css({
+                    //     // 'min-height': (studyContentHeight - navTabHeight) + 'px',
+                    //     'height': (studyContentHeight - navTabHeight) + 'px',
+                    // });
+
                     $('.vjs-theme-fantasy').css({
                         'min-height': (studyContentHeight - navTabHeight) + 'px',
                         'height': (studyContentHeight - navTabHeight) + 'px',
                     });
-                } else if ($('.exercise-content').length) {
-                    // Set max-height and enable scrolling for exercise content when hidden
-                    $('.exercise-content').css({
-                        'height': (studyContentHeight - navTabHeight) + 'px',
-                    });
-
+                } else if ($('.handwriting-body').length > 0) {
+                    $('.study-content').css({
+                        'height': `auto`,
+                        'min-height': 500 + 'px'
+                    })
                 } else if ($('.flashcard-body').length) {
-                    // Set max-height and enable scrolling for exercise content when hidden
-                    // $('.flashcard-body').css({
-                    //     'height': (studyContentHeight - navTabHeight) + 'px',
-                    // });
+                    $('.study-content').css({
+                        'height': `auto`
+                    })
                 } else if ($('.pronunciation-body').length) {
                     // Set max-height and enable scrolling for exercise content when hidden
                     // $('.pronunciation-body').css({
                     //     'height': (studyContentHeight - navTabHeight) + 'px',
                     // });
+
+                    $('.study-content').css({
+                        'height': `auto`
+                    })
                 }
             };
         });

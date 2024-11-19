@@ -97,19 +97,31 @@
 
             <!--Copyright-->
             <div class="row">
-                <div class="col-12 col-sm-8 py-2">
+                <div class="col-12 col-sm-6 py-2">
                     <div>Copyright © 2024 HIKARI</div>
                     <div>Mã số thuế: 0305322160, do sở kế hoạch và Đầu tư TP.Hồ Chi Minh cấp ngày 19/11/2007</div>
                     <div>Quyết định cho phép hoạt động giáo dục Trung tâm Nhật ngữ Quang Việt, số 1789/QĐ-GDĐT-TC do Sở
                         giáo
                         dục và Đào tạo TP.Hồ Chí Minh cấp ngày 28/08/2020</div>
                 </div>
-                <div class="col-12 col-sm-4 footer-social d-flex align-items-center">
-                    <div class="col-lg-12">
-                        <a href="http://online.gov.vn/Home/WebDetails/63991" target="_blank">
+                <div class="col-12 col-sm-6 footer-social d-flex align-items-center">
+                    <div class="col-lg-12 d-flex align-items-center justify-content-center">
+                        <a href="http://online.gov.vn/Home/WebDetails/63991" class="me-2" target="_blank">
                             <img class="logo-bocongthuong ms-2 mt-2" src="{{ asset('images/bocongthuong.png') }}"
                                 alt="" height="70">
                         </a>
+                        <!-- Android Download Button -->
+                        <a href="{{ route('downloadApp', ['encoded' => Crypt::encrypt('hikari-prod-v1.0.0.apk')]) }}"
+                            class="download-button ajax-download">
+                             <img src="{{ asset('images/icons/android-dowload.png') }}" alt="">
+                         </a>
+
+                        <!-- iOS Download Button -->
+                        <a href="{{ route('downloadApp', ['encoded' => Crypt::encrypt('hikari-prod-v1.0.0.ipa')]) }}"
+                            class="download-button ajax-download">
+                            <img src="{{ asset('images/icons/ios-dowload.svg') }}" alt="">
+                        </a>
+
                     </div>
                 </div>
             </div>

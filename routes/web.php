@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Crypt;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +21,25 @@ Route::get('/', 'SiteController@homePage');
 Route::get('/home', 'SiteController@homePage')->name('home');
 
 Route::get('/daily_streak', 'UsersController@getDataUser')->name('daily_streak');
+
+Route::get('/download/{encoded}', function ($encoded) {
+    $filename = Crypt::decrypt($encoded);
+
+    $filePath = "private/{$filename}";
+
+    if (!Storage::exists($filePath)) {
+        return response()->json(['error' => 'Hiện tại chưa có phiên bản trên thiết bị này, vui lòng chờ nhé.'], 404);
+    }
+
+    $file = Storage::get($filePath);
+
+    return response()->stream(function () use ($file) {
+        echo $file;
+    }, 200, [
+        'Content-Type' => 'application/octet-stream',  // Loại file mặc định, có thể tùy chỉnh
+        'Content-Disposition' => "attachment; filename={$filename}",  // Tên file khi tải xuống
+    ]);
+})->name('downloadApp');
 
 Route::prefix('learning-management')->name('learning-management.')->group(function () {
     Route::get('lesson/next', 'StudentLmsController@getNextLesson')
