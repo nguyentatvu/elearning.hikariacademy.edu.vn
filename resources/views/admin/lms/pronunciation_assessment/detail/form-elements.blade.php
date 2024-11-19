@@ -44,13 +44,13 @@
 
 @if (!$record)
     <div class="buttons text-center">
-        <button class="btn btn-lg btn-success button" ng-disabled="!formPronunciationAssessment.$valid">
+        <button id="pronunciation_submit_btn" class="btn btn-lg btn-success button" ng-disabled="!formPronunciationAssessment.$valid">
             Tạo mới
         </button>
     </div>
 @else
     <div class="buttons text-center">
-        <button class="btn btn-lg btn-success button" ng-disabled="!formPronunciationAssessment.$valid">
+        <button id="pronunciation_submit_btn" class="btn btn-lg btn-success button" ng-disabled="!formPronunciationAssessment.$valid">
             Cập nhật
         </button>
     </div>

@@ -233,7 +233,9 @@
             });
 
             playSoundBtn.on('click', function() {
-                playSound(sampleAudio);
+                if (sampleAudio) {
+                    playSound(sampleAudio);
+                }
             });
         })
 
@@ -266,44 +268,50 @@
          * Start recording
          */
         function startRecording() {
-            handleRecording();
-            let constraints = {
-                audio: true,
-                video: false
-            }
+            if (!sampleAudio) {
+                Swal.fire("Lỗi",
+                    "Hiện tại câu này chưa có file audio mẫu, bạn hãy liên hệ với giáo viên để được hỗ trợ hoặc bạn có thể chuyển sang câu khác để thực hành trước nha.",
+                    "error");
+            } else {
+                handleRecording();
+                let constraints = {
+                    audio: true,
+                    video: false
+                }
 
-            navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
-                mediaRecorder = new MediaRecorder(stream);
-                audioContext = new AudioContext();
-                gumStream = stream;
-                input = audioContext.createMediaStreamSource(stream);
-                rec = new Recorder(input, {
-                    numChannels: 1
-                })
-                rec.record();
-                isRecording = true;
+                navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioContext = new AudioContext();
+                    gumStream = stream;
+                    input = audioContext.createMediaStreamSource(stream);
+                    rec = new Recorder(input, {
+                        numChannels: 1
+                    })
+                    rec.record();
+                    isRecording = true;
 
-                recordedChunks = [];
-                mediaRecorder.addEventListener('dataavailable', event => {
-                    recordedChunks.push(event.data);
-                });
-
-                mediaRecorder.addEventListener('stop', () => {
-                    audioBlob = new Blob(recordedChunks, {
-                        type: 'audio/wav'
+                    recordedChunks = [];
+                    mediaRecorder.addEventListener('dataavailable', event => {
+                        recordedChunks.push(event.data);
                     });
+
+                    mediaRecorder.addEventListener('stop', () => {
+                        audioBlob = new Blob(recordedChunks, {
+                            type: 'audio/wav'
+                        });
+                    });
+
+                    mediaRecorder.start();
+
+                    setTimeout(() => {
+                        if (isRecording) {
+                            stopRecording();
+                        }
+                    }, 10000);
+                }).catch(function(err) {
+                    alert(err)
                 });
-
-                mediaRecorder.start();
-
-                setTimeout(() => {
-                    if (isRecording) {
-                        stopRecording();
-                    }
-                }, 10000);
-            }).catch(function(err) {
-                alert(err)
-            });
+            }
         }
 
         function stopRecording() {
@@ -594,7 +602,12 @@
             pronunciationDetailId = pronunciationDetail[index].id;
             $('#pronunciation_text_title').text(pronunciationDetail[index].text);
             audioPath = pronunciationDetail[index].audio
-            sampleAudio = `{{ asset('${audioPath}') }}`;
+
+            if (audioPath) {
+                sampleAudio = `{{ asset('${audioPath}') }}`;
+            } else {
+                sampleAudio = null;
+            }
         }
 
         /**
