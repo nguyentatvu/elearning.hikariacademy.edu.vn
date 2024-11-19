@@ -41,7 +41,7 @@ class PronunciationDetailService extends BaseService
             $this->repository->updateOrCreate(
                 ['id' => $pronunciationDetailId],
                 [
-                    'text' => $result['text'],
+                    'recognized_text' => $result['text'],
                     'katakana_text' => $result['katakana_text'],
                     'words' => $result['words']
                 ]
@@ -61,7 +61,7 @@ class PronunciationDetailService extends BaseService
         $sampleFile = $data['sample_file'];
         $pronunciationDetail = $this->repository->getByConditions(
             ['id' => $data['pronunciation_detail_id']],
-            ['text', 'katakana_text', 'words']
+            ['recognized_text as text', 'katakana_text', 'words']
         );
 
         $body = [
