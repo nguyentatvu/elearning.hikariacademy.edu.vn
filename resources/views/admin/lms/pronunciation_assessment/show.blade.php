@@ -33,6 +33,11 @@
         .audio-cell>button {
             height: 40px;
         }
+
+        .dropdown-menu {
+            right: 0 !important;
+            left: auto !important;
+        }
     </style>
 @stop
 
@@ -66,6 +71,7 @@
                             <thead>
                                 <tr class="tr-head">
                                     <th class="th-text">Câu luyện phát âm</th>
+                                    <th class="th-text">Văn bản nhận diện được từ audio</th>
                                     <th class="th-audio">Audio</th>
                                     <th>Trạng thái</th>
                                     <th>{{ getPhrase('action') }}</th>
@@ -80,7 +86,7 @@
 @endsection
 @section('footer_scripts')
     @php
-        $defaultColumns = ['text', 'audio', 'status', 'action'];
+        $defaultColumns = ['text', 'recognized_text', 'audio', 'status', 'action'];
     @endphp
     @include('admin.common.datatables', [
         'route' => route('lms.pronunciation_assessment.show', $pronunciation_assessment->id),

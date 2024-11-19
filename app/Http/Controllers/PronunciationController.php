@@ -151,7 +151,7 @@ class PronunciationController extends Controller
 
         $records = $this->pronunciationDetailService->getByConditionsWithOrderBy(
             ['pronunciation_id' => $id],
-            ['id', 'text', 'audio'],
+            ['id', 'text', 'audio', 'recognized_text'],
             'id'
         );
 
@@ -195,7 +195,7 @@ class PronunciationController extends Controller
                     return "<div class=\"td-text\">{$record->text}</div>";
                 })
                 ->removeColumn('id')
-                ->rawColumns(['text', 'audio', 'status', 'action']);
+                ->rawColumns(['text', 'recognized_text', 'audio', 'status', 'action']);
 
             return $table->make(true);
         }
@@ -586,7 +586,8 @@ class PronunciationController extends Controller
                         'text' => $data['text'],
                         'audio' => null,
                         'katakana_text' => null,
-                        'words' => null
+                        'words' => null,
+                        'recognized_text' => null
                     ]);
 
                     return redirect()
@@ -603,6 +604,7 @@ class PronunciationController extends Controller
 
                     if (isset($relativePath)) {
                         $dataToUpdate['audio'] = $relativePath;
+                        $dataToUpdate['text'] = $data['text'];
                     }
 
                     $this->pronunciationDetailService->update($detailId, $dataToUpdate);
@@ -733,11 +735,16 @@ class PronunciationController extends Controller
         config(['excel.import.startRow' => 2]);
         $data = Excel::selectSheetsByIndex(0)->load($path, function ($reader) {
             $reader->noHeading();
+            $reader->select([0]);
         })->get()->toArray();
 
         $pronunciationUploadPath = public_path('uploads/pronunciation');
 
         foreach ($data as $rowData) {
+            if (empty($rowData[0])) {
+                return true;
+            }
+
             if (count($rowData) != 1) {
                 return false;
             }
@@ -806,7 +813,8 @@ class PronunciationController extends Controller
                 $this->pronunciationDetailService->update($pronunciationDetail->id, [
                     'audio' => null,
                     'katakana_text' => null,
-                    'words' => null
+                    'words' => null,
+                    'recognized_text' => null
                 ]);
 
                 return false;
@@ -829,7 +837,7 @@ class PronunciationController extends Controller
             // names of voices can be retrieved with $client->listVoices()
             $voice = (new VoiceSelectionParams())
                 ->setLanguageCode('ja-JP')
-                ->setSsmlGender(SsmlVoiceGender::FEMALE);
+                ->setSsmlGender(SsmlVoiceGender::NEUTRAL);
 
             $audioConfig = (new AudioConfig())
                 ->setAudioEncoding(AudioEncoding::MP3);
