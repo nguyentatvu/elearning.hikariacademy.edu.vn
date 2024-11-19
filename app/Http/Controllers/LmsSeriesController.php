@@ -20,12 +20,14 @@ use App\Services\PaymentMethodService;
 use App\Services\QuizResultFinishService;
 use App\Services\RoadmapService;
 use App\Services\UserRoadmapService;
+use App\Services\UserService;
 use Yajra\DataTables\DataTables;
 use Image;
 use ImageSettings;
 use File;
 use Input;
 use Excel;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -42,6 +44,7 @@ class LmsSeriesController extends Controller
     private $userRoadmapService;
     private $roadmapService;
 	private $lmsStudentViewService;
+    private $userService;
 
 	public function __construct(
         LmsSeriesService $lmsSeriesService,
@@ -51,7 +54,8 @@ class LmsSeriesController extends Controller
         QuizResultFinishService $quizResultFinishService,
 		LmsStudentViewService $lmsStudentViewService,
         UserRoadmapService $userRoadmapService,
-        RoadmapService $roadmapService
+        RoadmapService $roadmapService,
+        UserService $userService
     ) {
         $this->middleware('auth')->except(['introductionDetail', 'introductionDetailForCombo']);
         $this->lmsSeriesService = $lmsSeriesService;
@@ -62,6 +66,7 @@ class LmsSeriesController extends Controller
 		$this->lmsStudentViewService = $lmsStudentViewService;
         $this->userRoadmapService = $userRoadmapService;
         $this->roadmapService = $roadmapService;
+        $this->userService = $userService;
 	}
 	/**
 	 * Course listing method
@@ -1176,15 +1181,17 @@ class LmsSeriesController extends Controller
      * @param  string $slug
      * @return \Illuminate\Http\Response
      */
-    function introductionDetail(Request $request, string $combo_slug, string $slug) {
+    function introductionDetail(string $combo_slug, string $slug) {
         $data['is_multiple_combo'] = $this->checkMultipleSeriesCombo($combo_slug);
         if ($data['is_multiple_combo']) {
             abort(404);
         }
 
+        $this->saveFreeSeriesComboPayment($this->prepContent['series_combo']);
+
         $this->processLessonContent($combo_slug, $slug);
         $data['series_description'] = $this->prepContent['series_combo']->description;
-        $data['other_combo_series'] = $this->lmsSeriesComboService->getAllPaidSeriesByTypeExcludeComboId(
+        $data['other_combo_series'] = $this->lmsSeriesComboService->getAllSeriesByTypeExcludeComboId(
             $this->prepContent['series_combo']->type,
             $this->prepContent['series_combo']->id
         );
@@ -1215,11 +1222,14 @@ class LmsSeriesController extends Controller
      * @param  string $combo_slug
      * @return \Illuminate\Http\Response
      */
-    function introductionDetailForCombo(Request $request, string $combo_slug) {
+    function introductionDetailForCombo(string $combo_slug) {
         $data['is_multiple_combo'] = $this->checkMultipleSeriesCombo($combo_slug);
         if (!$data['is_multiple_combo']) {
             abort(404);
         }
+
+        $this->saveFreeSeriesComboPayment($this->prepContent['series_combo']);
+
         $data['seriesCombo'] = $this->lmsSeriesComboService->getSeriesComboBySlugWithSeries($combo_slug);
         $data['other_combo_series'] = $this->lmsSeriesComboService->getAllSeriesByTypeExcludeComboId(
             $data['seriesCombo']->type,
@@ -1405,5 +1415,75 @@ class LmsSeriesController extends Controller
                 'slug' => $seriesSlug
             ])
         ], 200);
+    }
+
+    /**
+     * Save free series combo payment when student access series introduction page
+     *
+     * @param LmsSeriesCombo $seriesCombo
+     */
+    private function saveFreeSeriesComboPayment(LmsSeriesCombo $seriesCombo) {
+        if ($seriesCombo->actualCost != 0) {
+            return;
+        }
+
+        $userId = Auth::user()->id;
+        $lmsseries_combo_check = DB::table('payment_method')
+            ->where('item_id', $seriesCombo->id)
+            ->where('user_id', $userId)
+            ->first();
+
+        if ($lmsseries_combo_check != null) {
+            return;
+        }
+
+        // Free order
+        $orderInfo = $seriesCombo->title;
+        $orderId = 'HIK' . time();
+        $requestId = "{$userId}_{$seriesCombo->id}_{$seriesCombo->type}";
+
+        DB::beginTransaction();
+        try {
+            $payment = new PaymentMethod([
+                'user_id' => $userId,
+                'item_id' => $seriesCombo->id,
+                'item_name' => $orderInfo,
+                'amount' => 0,
+                'requestId' => $requestId,
+                'orderId' => $orderId,
+                'orderInfo' => $orderInfo,
+                'transId' => mt_srand(10),
+                'orderType' => 'Free',
+                'payType' => 'Free',
+                'extraData' => 'merchantName=Hikari Academy',
+                'responseTime' => now(),
+                'status' => 1,
+            ]);
+            $payment->save();
+
+            for ($i = 1; $i <= 5; $i++) {
+                $n = 'n' . $i;
+                if ($seriesCombo->$n > 0) {
+                    DB::table('payments')->insert([
+                        'user_id' => $userId,
+                        'item_id' => $seriesCombo->$n,
+                        'time' => $seriesCombo->time,
+                        'payments_method_id' => $payment->id,
+                    ]);
+                }
+            }
+
+            $this->userService->updateSeriesViewsHistory(
+                Auth::user()->series_views_history ?? [],
+                $seriesCombo->seriesIdList
+            );
+
+            DB::commit();
+            flash('Thông báo', "Bạn đã mua khóa học {$orderInfo} thành công", 'success');
+        } catch (Exception $e) {
+            DB::rollBack();
+            flash('Thông báo', 'Tạo đơn hàng thất bại', 'error');
+            app_log()->error($e);
+        }
     }
 }

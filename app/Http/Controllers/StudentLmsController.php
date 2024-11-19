@@ -419,7 +419,6 @@ class StudentLmsController extends Controller
         $this->getStudentView();
         $this->prepareContentList($params);
         $this->getCommentInCourseOfUser($combo_slug, $slug, $stt);
-        $this->saveFreeSeriesComboPayment($this->prepContent['series_combo']);
     }
 
     /**
@@ -1329,77 +1328,6 @@ class StudentLmsController extends Controller
         if (Auth::check()) {
             $userId = Auth::user()->id;
             $this->prepContent['comments'] = $this->commentService->getCommentsInCourse($combo_slug, $slug, $stt, $userId);
-        }
-    }
-
-    /**
-     * Save free series combo payment when student views a content of free series combo
-     *
-     * @param string $combo_slug
-     * @param string $slug
-     * @param string $stt
-     */
-    private function saveFreeSeriesComboPayment(LmsSeriesCombo $seriesCombo) {
-        if ($seriesCombo->actualCost != 0) {
-            return;
-        }
-
-        $userId = Auth::user()->id;
-        $lmsseries_combo_check = DB::table('payment_method')
-            ->where('item_id', $seriesCombo->id)
-            ->where('user_id', $userId)
-            ->first();
-
-        if ($lmsseries_combo_check != null) {
-            return;
-        }
-
-        // Free order
-        $orderInfo = $seriesCombo->title;
-        $orderId = 'HIK' . time();
-        $requestId = "{$userId}_{$seriesCombo->id}_{$seriesCombo->type}";
-
-        DB::beginTransaction();
-        try {
-            $payment = new PaymentMethod([
-                'user_id' => $userId,
-                'item_id' => $seriesCombo->id,
-                'item_name' => $orderInfo,
-                'amount' => 0,
-                'requestId' => $requestId,
-                'orderId' => $orderId,
-                'orderInfo' => $orderInfo,
-                'transId' => mt_srand(10),
-                'orderType' => 'Free',
-                'payType' => 'Free',
-                'extraData' => 'merchantName=Hikari Academy',
-                'responseTime' => now(),
-                'status' => 1,
-            ]);
-            $payment->save();
-
-            for ($i = 1; $i <= 5; $i++) {
-                $n = 'n' . $i;
-                if ($seriesCombo->$n > 0) {
-                    DB::table('payments')->insert([
-                        'user_id' => $userId,
-                        'item_id' => $seriesCombo->$n,
-                        'time' => $seriesCombo->time,
-                        'payments_method_id' => $payment->id,
-                    ]);
-                }
-            }
-
-            $this->userService->updateSeriesViewsHistory(
-                Auth::user()->series_views_history ?? [],
-                $seriesCombo->seriesIdList
-            );
-
-            DB::commit();
-            flash('Thông báo', "Bạn đã mua khóa học {$orderInfo} thành công", 'success');
-        } catch (Exception $e) {
-            DB::rollBack();
-            flash('Thông báo', 'Tạo đơn hàng thất bại', 'error');
         }
     }
 }

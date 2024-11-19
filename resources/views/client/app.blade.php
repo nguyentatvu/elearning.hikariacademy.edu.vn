@@ -880,7 +880,7 @@
         window.addEventListener('load', () => {
             setTimeout(() => {
                 document.querySelector('.custom-loader-container').style.display = 'none';
-            }, 800);
+            }, 100);
         });
     </script>
     @if (Auth::check())
