@@ -1423,7 +1423,7 @@ class LmsSeriesController extends Controller
      * @param LmsSeriesCombo $seriesCombo
      */
     private function saveFreeSeriesComboPayment(LmsSeriesCombo $seriesCombo) {
-        if ($seriesCombo->actualCost != 0) {
+        if ($seriesCombo->actualCost != 0 || !Auth::check()) {
             return;
         }
 
