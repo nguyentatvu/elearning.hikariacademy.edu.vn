@@ -83,7 +83,7 @@
 
                     .flashcard-word {
                         grid-row: 1;
-                        font-size: 48px;
+                        font-size: 44px;
                         font-weight: bold;
                         color: #00185e;
                         text-align: center;
@@ -121,13 +121,13 @@
 
                     .flashcard-meaning {
                         grid-row: 1;
-                        font-size: 52px;
+                        font-size: 44px;
                         font-weight: bold;
                         color: #3e2723;
                         text-align: center;
 
                         @include mq(max-sp) {
-                            font-size: 36px;
+                            font-size: 32px;
                         }
                     }
 

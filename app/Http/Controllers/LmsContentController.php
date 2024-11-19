@@ -247,7 +247,7 @@ class LmsContentController extends Controller
         // dd($flashcard);
         $data['flashcard'] = array(''=>'-- Chọn Flashcard --') + $flashcard;
         $data['handwriting'] = array(''=>'-- Chọn bài luyện viết --') + $handwriting;
-        $data['pronunciation'] = array('' => '-- Chọn bại luyện phát âm --') + $pronunciation;
+        $data['pronunciation'] = array('' => '-- Chọn bài luyện phát âm --') + $pronunciation;
         // dd($data['flashcard']);
         $data['URL_LMS_CONTENT_ADD'] = PREFIX . "lms/$series/content/add";
         $data['URL_LMS_CONTENT']     = PREFIX . "lms/$series/content";
