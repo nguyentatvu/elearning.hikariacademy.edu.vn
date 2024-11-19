@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\IntonationResource;
 use App\Pronunciation;
+use App\PronunciationDetail;
 use App\Services\IntonationService;
 use App\Services\LmsContentService;
+use App\Services\Logger;
 use App\Services\PronunciationDetailService;
 use App\Services\PronunciationService;
 use CURLFile;
@@ -14,8 +16,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Illuminate\Http\UploadedFile;
 use Yajra\DataTables\Facades\DataTables;
+use Google\Cloud\TextToSpeech\V1\AudioConfig;
+use Google\Cloud\TextToSpeech\V1\AudioEncoding;
+use Google\Cloud\TextToSpeech\V1\SsmlVoiceGender;
+use Google\Cloud\TextToSpeech\V1\SynthesisInput;
+use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
+use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
 
 class PronunciationController extends Controller
 {
@@ -236,6 +244,7 @@ class PronunciationController extends Controller
 
         DB::beginTransaction();
         try {
+
             $pronunciation = $this->pronunciationService->create([
                 'title' => $data['title'],
             ]);
@@ -317,13 +326,23 @@ class PronunciationController extends Controller
                 $newFilePath = $path . '/' . $filename;
 
                 // CAll Api Speech to text
-                $this->pronunciationDetailService->uploadAudioFileToGetIntonations($file, $pronunciationDetail->id);
+                $result = $this->pronunciationDetailService->uploadAudioFileToGetIntonations($file, $pronunciationDetail->id);
+
+                if (!$result) {
+                    return redirect()
+                        ->back()
+                        ->withErrors(['error' => 'Hệ thống không nhận diện được file audio, xin vui lòng ghi âm lại hoặc đổi file khác.'])
+                        ->withInput($request->all());
+                }
 
                 $relativePath = $this->storeAudio($file, $filename, $path);
 
                 $this->pronunciationDetailService->update($pronunciationDetail->id, [
                     'audio' => $relativePath
                 ]);
+            } else {
+                $pronunciationUploadPath = public_path('uploads/pronunciation');
+                $resultTTS = $this->storeAudioFileFromTextToSpeech($pronunciationDetail, $pronunciationDetail->pronunciation_id, $pronunciationUploadPath);
             }
 
             DB::commit();
@@ -385,7 +404,14 @@ class PronunciationController extends Controller
             }
 
             // CAll Api Speech to text
-            $this->pronunciationDetailService->uploadAudioFileToGetIntonations($file, $detailId);
+            $result = $this->pronunciationDetailService->uploadAudioFileToGetIntonations($file, $detailId);
+
+            if (!$result) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to upload audio: ' . $e->getMessage()
+                ], 500);
+            }
 
             $relativePath = $this->storeAudio($file, $filename, $path);
 
@@ -456,6 +482,19 @@ class PronunciationController extends Controller
 
         DB::beginTransaction();
         try {
+            $pronunciationDetails = $this->pronunciationDetailService->getAllByConditions([
+                'pronunciation_id' => $id
+            ]);
+
+            foreach ($pronunciationDetails as $pronunciationDetail) {
+                $audio = $pronunciationDetail->audio;
+
+                // Remove file if has
+                if ($audio && file_exists(public_path($audio))) {
+                    unlink(public_path($audio));
+                }
+            }
+
             $pronunciation = $this->pronunciationService->findById($id);
             $pronunciation->pronunciationDetails()->delete();
 
@@ -540,19 +579,54 @@ class PronunciationController extends Controller
                 $newFilePath = $path . '/' . $filename;
 
                 // CAll Api Speech to text
-                $this->pronunciationDetailService->uploadAudioFileToGetIntonations($file, $detailId);
+                $result = $this->pronunciationDetailService->uploadAudioFileToGetIntonations($file, $detailId);
 
-                $relativePath = $this->storeAudio($file, $filename, $path);
+                if (!$result) {
+                    $this->pronunciationDetailService->update($detailId, [
+                        'text' => $data['text'],
+                        'audio' => null,
+                        'katakana_text' => null,
+                        'words' => null
+                    ]);
 
+                    return redirect()
+                        ->back()
+                        ->withErrors(['error' => 'Hệ thống không nhận diện được file audio, xin vui lòng ghi âm lại hoặc đổi file khác.'])
+                        ->withInput($request->all());
+                } else {
+                    $relativePath = $this->storeAudio($file, $filename, $path);
+
+                    // Remove old file if has
+                    if ($pronunciationDetail->audio && file_exists(public_path($pronunciationDetail->audio))) {
+                        unlink(public_path($pronunciationDetail->audio));
+                    }
+
+                    if (isset($relativePath)) {
+                        $dataToUpdate['audio'] = $relativePath;
+                    }
+
+                    $this->pronunciationDetailService->update($detailId, $dataToUpdate);
+                }
+            } else {
+                $pronunciationDetail->text = $data['text'];
+                $pronunciationDetail->save();
                 // Remove old file if has
                 if ($pronunciationDetail->audio && file_exists(public_path($pronunciationDetail->audio))) {
                     unlink(public_path($pronunciationDetail->audio));
                 }
+
+                $pronunciationUploadPath = public_path('uploads/pronunciation');
+                $resultTTS = $this->storeAudioFileFromTextToSpeech($pronunciationDetail, $id, $pronunciationUploadPath);
+
+                // if (!$resultTTS) {
+                //     flash('Lỗi', 'Hệ thống không nhận diện được file audio, xin vui lòng ghi âm lại hoặc đổi file khác.', 'error');
+                //     return redirect(route('lms.pronunciation_assessment.view', $id));
+                // }
             }
         } catch (Exception $e) {
             Log::error('Audio upload error: ' . $e->getMessage());
 
-            if ($newFilePath && file_exists($newFilePath)) {
+            if (isset($newFilePath) && file_exists($newFilePath)) {
                 unlink($newFilePath);
             }
 
@@ -561,16 +635,6 @@ class PronunciationController extends Controller
                 ->withErrors(['error' => 'File không hợp lệ'])
                 ->withInput($request->all());
         }
-
-        $dataToUpdate = [
-            'text' => $data['text'],
-        ];
-
-        if (isset($relativePath)) {
-            $dataToUpdate['audio'] = $relativePath;
-        }
-
-        $this->pronunciationDetailService->update($detailId, $dataToUpdate);
 
         flash('success', 'Cập nhật thành công', 'success');
 
@@ -587,6 +651,19 @@ class PronunciationController extends Controller
     {
         DB::beginTransaction();
         try {
+            $pronunciationDetails = $this->pronunciationDetailService->getAllByConditions([
+                'pronunciation_id' => $id
+            ]);
+
+            foreach ($pronunciationDetails as $pronunciationDetail) {
+                $audio = $pronunciationDetail->audio;
+
+                // Remove file if has
+                if ($audio && file_exists(public_path($audio))) {
+                    unlink(public_path($audio));
+                }
+            }
+
             $this->pronunciationService->delete($id);
             $this->lmsContentService->deleteByKeyValueConditions([
                 'pronunciation_id' => $id
@@ -658,15 +735,19 @@ class PronunciationController extends Controller
             $reader->noHeading();
         })->get()->toArray();
 
+        $pronunciationUploadPath = public_path('uploads/pronunciation');
+
         foreach ($data as $rowData) {
             if (count($rowData) != 1) {
                 return false;
             }
 
-            $this->pronunciationDetailService->create([
+            $pronunciationDetail = $this->pronunciationDetailService->create([
                 'pronunciation_id' => $pronunciationId,
                 'text'      => $rowData[0],
             ]);
+
+            $this->storeAudioFileFromTextToSpeech($pronunciationDetail, $pronunciationId, $pronunciationUploadPath);
         }
 
         return true;
@@ -690,5 +771,93 @@ class PronunciationController extends Controller
         $relativePath = 'uploads/pronunciation/' . $filename;
 
         return $relativePath;
+    }
+
+    protected function storeAudioFileFromTextToSpeech(PronunciationDetail $pronunciationDetail, int $pronunciationId, string $pronunciationUploadPath)
+    {
+        $filename = sprintf(
+            '%d_%d_%s.%s',
+            $pronunciationId,
+            $pronunciationDetail->id,
+            date('YmdHis'),
+            'mp3'
+        );
+
+        $pronunciationFilePath = $pronunciationUploadPath . '/' . $filename;
+        $audioFile =  $this->text2Speech($pronunciationDetail->text, $pronunciationFilePath);
+
+        if ($audioFile) {
+            // CAll Api Speech to text
+            $result = $this->pronunciationDetailService->uploadAudioFileToGetIntonations($audioFile, $pronunciationDetail->id);
+
+            if ($result) {
+                $this->pronunciationDetailService->update($pronunciationDetail->id, [
+                    'audio' => 'uploads/pronunciation/' . $filename
+                ]);
+
+                return true;
+
+            } else {
+                // Remove file if has
+                if (file_exists($pronunciationFilePath)) {
+                    unlink($pronunciationFilePath);
+                }
+
+                $this->pronunciationDetailService->update($pronunciationDetail->id, [
+                    'audio' => null,
+                    'katakana_text' => null,
+                    'words' => null
+                ]);
+
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    //Text to Speech using Google Text to Speech API
+    protected function text2Speech(string $text, string $filename)
+    {
+        try {
+            // create client object
+            $client = new TextToSpeechClient();
+            $input_text = (new SynthesisInput())
+                ->setText($text);
+
+            // note: the voice can also be specified by name
+            // names of voices can be retrieved with $client->listVoices()
+            $voice = (new VoiceSelectionParams())
+                ->setLanguageCode('ja-JP')
+                ->setSsmlGender(SsmlVoiceGender::FEMALE);
+
+            $audioConfig = (new AudioConfig())
+                ->setAudioEncoding(AudioEncoding::MP3);
+
+            $response = $client->synthesizeSpeech($input_text, $voice, $audioConfig);
+            $audioContent = $response->getAudioContent();
+
+            file_put_contents($filename, $audioContent);
+            $client->close();
+
+            $uploadedFile = new UploadedFile(
+                $filename,
+                basename($filename),
+                'audio/mpeg',
+                null,
+                true
+            );
+
+            return $uploadedFile;
+        } catch (Exception $e) {
+            if (env('APP_ENV') == 'local') {
+                Log::error('Text2Speech Error: ' . $e->getMessage());
+            } else {
+                $log = new Logger(env('APP_LOG_PATH') . '/text2speech.log');
+                $log->putLog($e->getMessage());
+            }
+
+            return null;
+        }
     }
 }

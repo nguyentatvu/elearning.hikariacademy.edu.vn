@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use \App\Logger;
 use Excel;
-
+use Illuminate\Support\Facades\Log;
 
 class FlashcardController extends Controller
 {
@@ -519,7 +519,7 @@ class FlashcardController extends Controller
 
 			return true;
 
-		} 
+		}
 		catch(Exception $e) {
 			$log = new Logger(env('APP_LOG_PATH').'/text2speech.log');
 			$log->putLog($e->getMessage());

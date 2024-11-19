@@ -124,7 +124,7 @@
                             window.location.reload();
                         },
                         error: function(xhr) {
-                            alert('Upload audio thất bại');
+                            swal('Lỗi!', 'Hệ thống không nhận diện được file audio, xin vui lòng ghi âm lại hoặc đổi file khác.', 'error');
                         }
                     });
                 }
