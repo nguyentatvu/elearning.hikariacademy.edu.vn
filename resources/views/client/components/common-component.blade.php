@@ -23,7 +23,7 @@
                 title: "{{{ Session::get('flash_message.title') }}}",
                 text: "{{{ Session::get('flash_message.text') }}}",
                 icon: "{{{ Session::get('flash_message.type') }}}",
-                timer: 1700,
+                timer: 2000,
                 showConfirmButton: false
             });
         });

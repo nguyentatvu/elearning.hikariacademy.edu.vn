@@ -294,8 +294,6 @@
                                             </button>
                                         @endif
                                     </div>
-                                    {{-- <div class="course-card-description line-clamp-2">{!! $learning_series->short_description !!}</div> --}}
-                                    {{-- <div class="course-card-teacher text-muted w-100 mb-1 line-clamp-1">{!! $learning_series->description['teacher_description'] !!}</div> --}}
                                     <div>
                                         <i class="bi bi-calendar-event-fill"></i>
                                         <span class="ms-2 date-duration">Thời hạn: {{ config('constant.series_combo.month_duration_map')[$learning_series->time] }}
@@ -310,31 +308,38 @@
                                             class="ms-2">{{ empty($learning_series->chapter_count) ? 1 : $learning_series->chapter_count }}
                                             chương</span>
                                     </div>
-                                    @if (Auth::check() && $learning_series->valid_payment && count($learning_series->seriesList) > 1)
+                                    @if ((Auth::check() && count($learning_series->seriesList) > 1) && ($learning_series->actualCost == 0 || $learning_series->valid_payment))
+                                        {{-- If a series combo has multiple series, either is free or has been paid will go in here --}}
                                         <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                             onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $learning_series->slug]) . '?series_action=scrollToList' }}'">
                                             Học ngay
                                         </button>
                                     @elseif (
-                                        $learning_series->cost == 0 ||
-                                            (Auth::check() && $learning_series->valid_payment && count($learning_series->seriesList) == 1))
-                                        @if (!$learning_series->checkAllSeriesRoadmapOfSeriesComboChosen($roadmap_chosen_list) && $learning_series->cost !== 0)
+                                        (Auth::check() && count($learning_series->seriesList) == 1) &&
+                                        ($learning_series->valid_payment || $learning_series->actualCost == 0)
+                                    )
+                                        {{-- If a series combo has only one series, either is free or has been paid will go in here --}}
+                                        @if (!$learning_series->checkAllSeriesRoadmapOfSeriesComboChosen($roadmap_chosen_list))
+                                            {{-- If student has not chosen roadmap of the series combo --}}
                                             <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                                 onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail', ['combo_slug' => $learning_series->slug, 'slug' => $learning_series->seriesList[0]->slug]) . '?series_action=openRoadmapModal' }}'">
                                                 Học ngay
                                             </button>
                                         @else
+                                            {{-- If student has chosen roadmap of the series combo --}}
                                             <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                                 onclick="event.stopPropagation(); location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $learning_series->slug, 'slug' => $learning_series->seriesList[0]->slug]) }}'">
                                                 Học ngay
                                             </button>
                                         @endif
                                     @elseif (Auth::check())
+                                        {{-- If a student has logged in --}}
                                         <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                             onclick="event.stopPropagation(); location.href='{{ route('payments.lms', $learning_series->slug) }}'">
                                             Mua ngay
                                         </button>
                                     @else
+                                        {{-- If a student has not logged in --}}
                                         <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                             onclick="showAuthModalWithStopPropagation(event, true)">
                                             Mua ngay
@@ -387,14 +392,12 @@
                                             </button>
                                         @endif
                                     </div>
-                                    {{-- <div class="course-card-description line-clamp-2">{!! $exam_series->short_description !!}</div> --}}
                                     <div>
                                         <i class="bi bi-calendar-event-fill"></i>
                                         <span class="ms-2 date-duration">Thời hạn: {{ config('constant.series_combo.month_duration_map')[$learning_series->time] }}
                                             tháng
                                         </span>
                                     </div>
-                                    {{-- <div class="course-card-teacher text-muted w-100 mb-1 line-clamp-1">{!! $exam_series->description['teacher_description'] ?? '' !!}</div> --}}
                                     <div class="d-flex align-items-center mt-2 info-course-card">
                                         <i class="bi bi-play-circle-fill"></i>
                                         <span class="ms-2">{{ $exam_series->content_count }}</span>
@@ -402,34 +405,39 @@
                                         <span
                                             class="ms-2">{{ empty($exam_series->chapter_count) ? 1 : $exam_series->chapter_count }}
                                             chương</span>
-                                        {{-- @if ($exam_series->checkMultipleCombo)
-                                            <button class="btn btn-outline-primary ms-auto"
-                                                onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $exam_series->slug]) }}'">
-                                                Xem thêm
+                                    </div>
+                                    @if ((Auth::check() && count($exam_series->seriesList) > 1) && ($exam_series->actualCost == 0 || $exam_series->valid_payment))
+                                        {{-- If a series combo has multiple series, either is free or has been paid will go in here --}}
+                                        <button class="btn btn-primary w-100 mt-3 button-custom button-info"
+                                            onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $exam_series->slug]) . '?series_action=scrollToList' }}'">
+                                            Học ngay
+                                        </button>
+                                    @elseif (
+                                        (Auth::check() && count($exam_series->seriesList) == 1) &&
+                                        ($exam_series->valid_payment || $exam_series->actualCost == 0)
+                                    )
+                                        {{-- If a series combo has only one series, either is free or has been paid will go in here --}}
+                                        @if (!$exam_series->checkAllSeriesRoadmapOfSeriesComboChosen($roadmap_chosen_list))
+                                            {{-- If student has not chosen roadmap of the series combo --}}
+                                            <button class="btn btn-primary w-100 mt-3 button-custom button-info"
+                                                onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail', ['combo_slug' => $exam_series->slug, 'slug' => $exam_series->seriesList[0]->slug]) . '?series_action=openRoadmapModal' }}'">
+                                                Học ngay
                                             </button>
                                         @else
-                                            <button class="btn btn-outline-primary ms-auto"
-                                                onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail', ['combo_slug' => $exam_series->slug, 'slug' => $exam_series->seriesList[0]->slug]) }}'">
-                                                Xem thêm
+                                            {{-- If student has chosen roadmap of the series combo --}}
+                                            <button class="btn btn-primary w-100 mt-3 button-custom button-info"
+                                                onclick="event.stopPropagation(); location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $exam_series->slug, 'slug' => $exam_series->seriesList[0]->slug]) }}'">
+                                                Học ngay
                                             </button>
-                                        @endif --}}
-                                    </div>
-                                    @if (Auth::check() && $exam_series->valid_payment && count($exam_series->seriesList) > 1)
-                                        <button class="btn btn-primary w-100 mt-3 button-custom button-info"
-                                            onclick="event.stopPropagation(); location.href='{{ route('mypage.courses') }}'">
-                                            Học ngay
-                                        </button>
-                                    @elseif (Auth::check() && $exam_series->valid_payment && count($exam_series->seriesList) == 1)
-                                        <button class="btn btn-primary w-100 mt-3 button-custom button-info"
-                                            onclick="event.stopPropagation(); location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $exam_series->slug, 'slug' => $exam_series->seriesList[0]->slug]) }}'">
-                                            Học ngay
-                                        </button>
+                                        @endif
                                     @elseif (Auth::check())
+                                        {{-- If a student has logged in --}}
                                         <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                             onclick="event.stopPropagation(); location.href='{{ route('payments.lms', $exam_series->slug) }}'">
                                             Mua ngay
                                         </button>
                                     @else
+                                        {{-- If a student has not logged in --}}
                                         <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                             onclick="showAuthModalWithStopPropagation(event, true)">
                                             Mua ngay

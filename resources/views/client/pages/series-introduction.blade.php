@@ -44,51 +44,50 @@
                         </div>
                     </div>
 
-                <div class="price-container">
-                    <div class="price-tag floating">GIÁ ƯU ĐÃI</div>
-                    <div class="price-change-container">
-                        <div class="price-wrapper">
-                            @php
-                                $originalPrice = formatNumber($seriesCombo->cost);
-                                $discountedPrice = formatNumber($seriesCombo->selloff);
-                                $isPastDate = \Carbon\Carbon::parse($seriesCombo->timeto)->isPast();
-                            @endphp
+                    <div class="price-container">
+                        <div class="price-tag floating">GIÁ ƯU ĐÃI</div>
+                        <div class="price-change-container">
+                            <div class="price-wrapper">
+                                @php
+                                    $originalPrice = formatNumber($seriesCombo->cost);
+                                    $discountedPrice = formatNumber($seriesCombo->selloff);
+                                    $isPastDate = \Carbon\Carbon::parse($seriesCombo->timeto)->isPast();
+                                @endphp
 
-                            @if ($isPastDate)
-                                <div class="discounted-price active">{{ $originalPrice }} <span class="currency">VNĐ</span>
-                                </div>
-                            @else
-                                @if ($seriesCombo->cost == 0 && $seriesCombo->selloff == 0)
-                                    <div class="discounted-price active">{{ $discountedPrice }} <span
-                                            class="currency">VNĐ</span></div>
+                                @if ($isPastDate)
+                                    <div class="discounted-price active">{{ $originalPrice }} <span class="currency">VNĐ</span>
+                                    </div>
                                 @else
-                                    @if ($seriesCombo->cost > 0)
-                                        <div class="original-price">{{ $originalPrice }} <span class="currency">VNĐ</span>
-                                        </div>
-                                    @endif
-
-                                    @if ($seriesCombo->selloff > 0 || $seriesCombo->selloff == 0)
+                                    @if ($seriesCombo->cost == 0 && $seriesCombo->selloff == 0)
                                         <div class="discounted-price active">{{ $discountedPrice }} <span
                                                 class="currency">VNĐ</span></div>
+                                    @else
+                                        @if ($seriesCombo->cost > 0)
+                                            <div class="original-price">{{ $originalPrice }} <span class="currency">VNĐ</span>
+                                            </div>
+                                        @endif
+
+                                        @if ($seriesCombo->selloff > 0 || $seriesCombo->selloff == 0)
+                                            <div class="discounted-price active">{{ $discountedPrice }} <span
+                                                    class="currency">VNĐ</span></div>
+                                        @endif
                                     @endif
                                 @endif
-                            @endif
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="button-container">
-                        @if (!$seriesCombo->checkMultipleCombo)
-                            <button class="button primary-button me-2"
-                                onclick="location.href='{{ route('home.roadmap', ['comboSlug' => $seriesCombo->slug, 'slug' => request()->route('slug')]) }}'">
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
-                                </svg>
-                                Lộ trình
-                            </button>
-                        @endif
-
-                            @if ($seriesCombo->cost != 0 && Auth::check() && $isValidPayment && $is_multiple_combo)
+                        <div class="button-container">
+                            @if (!$seriesCombo->checkMultipleCombo)
+                                <button class="button primary-button me-2"
+                                    onclick="location.href='{{ route('home.roadmap', ['comboSlug' => $seriesCombo->slug, 'slug' => request()->route('slug')]) }}'">
+                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                                    </svg>
+                                    Lộ trình
+                                </button>
+                            @endif
+                            @if (Auth::check() && $isValidPayment && $is_multiple_combo)
                                 {{-- Student has purchased the series combo and it include multiple serises --}}
                                 <button class="button secondary-button" id="first_purchase_button" onclick="scrollToPurchasedSeriesList()">
                                     <div>Học ngay
@@ -99,11 +98,10 @@
                                     </div>
                                 </button>
                             @elseif (
-                                $seriesCombo->cost != 0 &&
-                                    Auth::check() &&
-                                    $isValidPayment &&
-                                    !$is_multiple_combo &&
-                                    !$roadmap_chosen_list[$series->id]
+                                Auth::check() &&
+                                $isValidPayment &&
+                                !$is_multiple_combo &&
+                                !$roadmap_chosen_list[$series->id]
                             )
                                 {{-- Student has purchased the series combo and it's a single series and student hasn't chosen roadmap --}}
                                 <button class="button secondary-button" id="first_purchase_button"
@@ -113,9 +111,8 @@
                                             <path d="M5 3v4M3 5h4M6 17v4M4 19h4m4-16h8M8 7h8M8 11h8M8 15h8"></path>
                                         </svg></div>
                                 </button>
-                            @elseif ($seriesCombo->cost == 0 || (Auth::check() && $isValidPayment))
+                            @elseif (Auth::check() && $isValidPayment)
                                 {{-- Student has purchased the series combo and it's a single series and student has chosen roadmap --}}
-                                {{-- Or The series combo is free --}}
                                 <button class="button secondary-button" id="first_purchase_button"
                                     onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $seriesCombo->slug, 'slug' => request()->route('slug')]) }}'">
                                     <div>Học ngay <svg class="icon" viewBox="0 0 24 24"
@@ -137,10 +134,12 @@
                             @else
                                 {{-- Student hasn't signed in --}}
                                 <button class="button secondary-button" id="first_purchase_button" onclick="showAuthModal()">
-                                    <div><i class="bi bi-cart-fill"></i>Mua ngay <svg class="icon" viewBox="0 0 24 24"
+                                    <div><i class="bi bi-cart-fill"></i>Mua ngay
+                                        <svg class="icon" viewBox="0 0 24 24"
                                             fill="none" stroke="currentColor" stroke-width="2">
                                             <path d="M5 3v4M3 5h4M6 17v4M4 19h4m4-16h8M8 7h8M8 11h8M8 15h8"></path>
-                                        </svg></div>
+                                        </svg>
+                                    </div>
                                 </button>
                             @endif
                         </div>
@@ -195,14 +194,13 @@
                     <div class="overview-series">
                         <img src="{{ asset('/public/' . config('constant.series_combo.upload_path') . $seriesCombo->image) }}"
                             alt="series image">
-                        @if ($seriesCombo->cost != 0 && Auth::check() && $isValidPayment && !$roadmap_chosen_list[$series->id])
+                        @if (Auth::check() && $isValidPayment && !$roadmap_chosen_list[$series->id])
                             {{-- Student has purchased the series combo and student hasn't chosen roadmap --}}
                             <button class="btn btn-primary" onclick="openRoadmapSelectionModal({{ $series->id }})">
                                 Học ngay
                             </button>
-                        @elseif ($seriesCombo->cost == 0 || (Auth::check() && $isValidPayment))
+                        @elseif (Auth::check() && $isValidPayment)
                             {{-- Student has purchased the series combo student has chosen roadmap --}}
-                            {{-- Or The series combo is free --}}
                             <button class="btn btn-primary"
                                 onclick="location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $seriesCombo->slug, 'slug' => request()->route('slug')]) }}'">
                                 Học ngay
@@ -350,10 +348,6 @@
                                                 tháng
                                             </span>
                                         </div>
-                                        {{-- <div class="course-card-description line-clamp-2">{!! $recommended_series->short_description !!}</div> --}}
-                                        {{-- <div class="course-card-teacher text-muted w-100 mb-1 line-clamp-1">
-                                            {!! $recommended_series->description['teacher_description'] ?? '' !!}
-                                        </div> --}}
                                         <div class="d-flex align-items-center mt-2 info-course-card">
                                             <i class="bi bi-play-circle-fill"></i>
                                             <span class="ms-2">{{ $recommended_series->content_count }}</span>
@@ -361,45 +355,39 @@
                                             <span
                                                 class="ms-2">{{ empty($recommended_series->chapter_count) ? 1 : $recommended_series->chapter_count }}
                                                 chương</span>
-                                            {{-- @if ($recommended_series->checkMultipleCombo)
-                                                <button class="btn btn-outline-primary ms-auto"
-                                                    onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $recommended_series->slug]) }}'">
-                                                    Xem thêm
-                                                </button>
-                                            @else
-                                                <button class="btn btn-outline-primary ms-auto"
-                                                    onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'">
-                                                    Xem thêm
-                                                </button>
-                                            @endif --}}
                                         </div>
-                                        @if (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) > 1)
+                                        @if ((Auth::check() && count($recommended_series->seriesList) > 1) && ($recommended_series->actualCost == 0 || $recommended_series->valid_payment))
+                                            {{-- If a series combo has multiple series, either is free or has been paid will go in here --}}
                                             <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                                 onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail-combo', ['combo_slug' => $recommended_series->slug]) . '?series_action=scrollToList' }}'">
                                                 Học ngay
                                             </button>
                                         @elseif (
-                                            $recommended_series->cost == 0 ||
-                                                (Auth::check() && $recommended_series->valid_payment && count($recommended_series->seriesList) == 1))
-                                            @if (
-                                                !$recommended_series->checkAllSeriesRoadmapOfSeriesComboChosen($roadmap_chosen_list) &&
-                                                    $recommended_series->cost !== 0)
+                                            (Auth::check() && count($recommended_series->seriesList) == 1) &&
+                                            ($recommended_series->valid_payment || $recommended_series->actualCost == 0)
+                                        )
+                                            {{-- If a series combo has only one series, either is free or has been paid will go in here --}}
+                                            @if (!$recommended_series->checkAllSeriesRoadmapOfSeriesComboChosen($roadmap_chosen_list))
+                                                {{-- If student has not chosen roadmap of the series combo --}}
                                                 <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                                     onclick="event.stopPropagation(); location.href='{{ route('series.introduction-detail', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) . '?series_action=openRoadmapModal' }}'">
                                                     Học ngay
                                                 </button>
                                             @else
+                                                {{-- If student has chosen roadmap of the series combo --}}
                                                 <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                                     onclick="event.stopPropagation(); location.href='{{ route('learning-management.lesson.show', ['combo_slug' => $recommended_series->slug, 'slug' => $recommended_series->seriesList[0]->slug]) }}'">
                                                     Học ngay
                                                 </button>
                                             @endif
                                         @elseif (Auth::check())
+                                            {{-- If a student has logged in --}}
                                             <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                                 onclick="event.stopPropagation(); location.href='{{ route('payments.lms', $recommended_series->slug) }}'">
                                                 Mua ngay
                                             </button>
                                         @else
+                                            {{-- If a student has not logged in --}}
                                             <button class="btn btn-primary w-100 mt-3 button-custom button-info"
                                                 onclick="showAuthModalWithStopPropagation(event, true)">
                                                 Mua ngay
