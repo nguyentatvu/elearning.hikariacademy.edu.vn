@@ -395,14 +395,6 @@ sup {
 
 a {
 
-	color: #2e384d;
-
-	text-decoration: none;
-
-	background-color: transparent;
-
-	-webkit-text-decoration-skip: objects;
-
 }
 
 a:not([href]):not([tabindex]) {

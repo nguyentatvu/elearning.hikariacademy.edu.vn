@@ -25,6 +25,13 @@
                         <span class="ms-1">Chuyển khoản ngân hàng</span>
                     </button>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-momo-tab" data-bs-toggle="pill" data-bs-target="#pills-momo" type="button"
+                        role="tab" aria-controls="pills-momo" aria-selected="false">
+                        <i class="bi bi-cash"></i>
+                        <span class="ms-1">Ví MoMo (Mã QR)</span>
+                    </button>
+                </li>
                 @if (env('ENABLE_THIRDPARTY_PAYMENT', false))
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="pills-vnpay-tab" data-bs-toggle="pill" data-bs-target="#pills-vnpay"
@@ -33,26 +40,12 @@
                             <span class="ms-1">Thanh toán qua VNPAY</span>
                         </button>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-momo-tab" data-bs-toggle="pill" data-bs-target="#pills-momo" type="button"
-                            role="tab" aria-controls="pills-momo" aria-selected="false">
-                            <i class="bi bi-cash"></i>
-                            <span class="ms-1">Ví MoMo (Mã QR)</span>
-                        </button>
-                    </li>
                 @else
                     <li class="nav-item" role="presentation" onclick="showMaintainancePaymentAlert()">
                         <button class="nav-link disabled" id="pills-vnpay-tab" data-bs-toggle="pill" data-bs-target="#pills-vnpay"
                             type="button" role="tab" aria-controls="pills-vnpay" aria-selected="true">
                             <i class="bi bi-currency-dollar"></i>
                             <span class="ms-1">Thanh toán qua VNPAY</span>
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation" onclick="showMaintainancePaymentAlert()">
-                        <button class="nav-link disabled" id="pills-momo-tab" data-bs-toggle="pill" data-bs-target="#pills-momo" type="button"
-                            role="tab" aria-controls="pills-momo" aria-selected="false">
-                            <i class="bi bi-cash"></i>
-                            <span class="ms-1">Ví MoMo (Mã QR)</span>
                         </button>
                     </li>
                 @endif
@@ -128,34 +121,35 @@
                             </form>
                         </div>
                     </div>
-                    <div class="tab-pane" id="pills-momo" role="tabpanel" aria-labelledby="pills-momo-tab">
-                        <div id="instruction_momo" class="transaction-instruction mt-4 ml-3">
-                            <div class="col-12">
-                                <ul class="list-unstyled mb-0 recharge-coin__instruction-list">
-                                    <li class="">
-                                        <i class="bi bi-caret-right-fill me-1 text-primary"></i>Bước 1: Mở Ví MoMo, chọn “Quét
-                                        Mã”
-                                    </li>
-                                    <li class="">
-                                        <i class="bi bi-caret-right-fill me-1 text-primary"></i>Bước 2: Quét mã QR. Di chuyển
-                                        Camera để thấy và quét mã QR
-                                    </li>
-                                    <li class="">
-                                        <i class="bi bi-caret-right-fill me-1 text-primary"></i>Bước 3: Kiểm tra & Bấm “Xác
-                                        nhận”
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="series-submit" id="momo_submit">
-                            <form action="#" method="get">
-                                <button class="btn btn-primary">
-                                    Click vào đây để thanh toán
-                                </button>
-                            </form>
+                @endif
+                <div class="tab-pane" id="pills-momo" role="tabpanel" aria-labelledby="pills-momo-tab">
+                    <div id="instruction_momo" class="transaction-instruction mt-4 ml-3">
+                        <div class="col-12">
+                            <ul class="list-unstyled mb-0 recharge-coin__instruction-list">
+                                <li class="">
+                                    <i class="bi bi-caret-right-fill me-1 text-primary"></i>Bước 1: Mở Ví MoMo, chọn “Quét
+                                    Mã”
+                                </li>
+                                <li class="">
+                                    <i class="bi bi-caret-right-fill me-1 text-primary"></i>Bước 2: Quét mã QR. Di chuyển
+                                    Camera để thấy và quét mã QR
+                                </li>
+                                <li class="">
+                                    <i class="bi bi-caret-right-fill me-1 text-primary"></i>Bước 3: Kiểm tra & Bấm “Xác
+                                    nhận”
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                @endif
+                    <div class="series-submit" id="momo_submit">
+                        <form action="/payments/momoqr/{{ $series_combo->slug }}" method="get">
+                            <input type="hidden" name="is_redeemed" value="{{ $is_redeemed ? '1' : '0' }}">
+                            <button class="btn btn-primary" {{ Request::query('is_redeemed') ? 'onclick=submitMomoDiscount()' : '' }}>
+                                Click vào đây để thanh toán
+                            </button>
+                        </form>
+                    </div>
+                </div>
                 <div class="tab-pane show active" id="pills-transfer" role="tabpanel" aria-labelledby="pills-transfer-tab">
                     <div id="instruction_bank_transfer" class="transaction-instruction mt-3 ml-3">
                         <div class="col-12">
@@ -345,11 +339,24 @@
             }
         }
 
+        const submitMomoDiscount = async () => {
+            event.preventDefault();
+            const momoForm = $(event.target).closest('form');
+
+            let isConfirmed = true;
+            if (isRedeemed) {
+                isConfirmed = await showDiscountTransferWarning();
+            }
+            if (isConfirmed) {
+                momoForm.submit();
+            }
+        }
+
         const showMaintainancePaymentAlert = () => {
             Swal.fire({
                 title: `Thông báo`,
                 icon: "warning",
-                html: 'Các cổng thanh toán bên thứ 3 <strong>Momo</strong> và <strong>VNPAY</strong> đang được bảo trì. Sẽ quay lại trong khoảng thời gian sớm nhất!'
+                html: 'Cổng thanh toán <strong>VNPAY</strong> đang được bảo trì. Sẽ quay lại trong khoảng thời gian sớm nhất!'
             });
         }
     </script>

@@ -177,64 +177,6 @@ class PaymentsController extends Controller
             return redirect('/home');
         }
 
-        // Kiểm tra nếu khoá học miễn phí
-        if ($record !== null && $record->actualCost == 0) {
-            $lmsseries_combo_check = DB::table('payment_method')
-                ->where('item_id', $record->id)
-                ->where('user_id', $user->id)
-                ->first();
-
-            if ($lmsseries_combo_check !== null) {
-                flash('Thông báo', 'Đơn hàng đã được tạo trước đó', 'success');
-                return redirect($record->type == 1 ? '/lms/exam-categories/study' : '/lms/exam-categories/list');
-            }
-
-            // Đặt hàng miễn phí
-            $orderInfo = $record->title;
-            $orderId = 'HIK' . time();
-            $requestId = "{$user->id}_{$record->id}_{$record->type}";
-
-            DB::beginTransaction();
-            try {
-                $payment = new PaymentMethod([
-                    'user_id' => $user->id,
-                    'item_id' => $record->id,
-                    'item_name' => $orderInfo,
-                    'amount' => 0,
-                    'requestId' => $requestId,
-                    'orderId' => $orderId,
-                    'orderInfo' => $orderInfo,
-                    'transId' => mt_srand(10),
-                    'orderType' => 'Free',
-                    'payType' => 'Free',
-                    'extraData' => 'merchantName=Hikari Academy',
-                    'responseTime' => now(),
-                    'status' => 1,
-                ]);
-                $payment->save();
-
-                for ($i = 1; $i <= 5; $i++) {
-                    $n = 'n' . $i;
-                    if ($record->$n > 0) {
-                        DB::table('payments')->insert([
-                            'user_id' => $user->id,
-                            'item_id' => $record->$n,
-                            'time' => $record->time,
-                            'payments_method_id' => $payment->id,
-                        ]);
-                    }
-                }
-
-                DB::commit();
-                flash('Thông báo', "Bạn đã mua khóa học {$orderInfo} thành công", 'success');
-            } catch (Exception $e) {
-                DB::rollBack();
-                flash('Thông báo', 'Tạo đơn hàng thất bại', 'error');
-            }
-
-            return redirect($record->type == 1 ? '/lms/exam-categories/study' : '/lms/exam-categories/list');
-        }
-
         // Chuẩn bị dữ liệu cho view
         $data = [
             'required_redeem_point' => $record->redeem_point,
@@ -286,33 +228,43 @@ class PaymentsController extends Controller
             $accessKey   = env('MOMO_ACCESSKEY_TEST');
             $serectkey   = env('MOMO_SECRET_TEST');
         }
-        $record         = LmsSeriesCombo::getRecordWithSlug($slug);
-        $amount         = $record->cost;
-        // TODO: Add time FROM-TO issue 6
-        // $amount         = "";
-        if($record->timefrom != null && $record->timeto != null && (int)$record->selloff < (int)$record->cost)
-        {
-            $currentDate = date("Y-m-d");
-            if(strtotime($currentDate) >= strtotime(date("Y-m-d", strtotime($record->timefrom)))
-                && strtotime($currentDate) <= strtotime(date("Y-m-d", strtotime($record->timeto))))
-            {
-                $amount    = strval($record->selloff);
-            }
-            else {
-                $amount    = strval($record->cost);
-            }
 
-        } else {
-            $amount    = strval($record->cost);
+        $record         = LmsSeriesCombo::getRecordWithSlug($slug);
+        if ($record === null) {
+            return redirect('/home');
         }
+
+        $is_redeemed = !!$request->is_redeemed;
+        $user = Auth::user();
+        $reward_point = $user->reward_point;
+        $recharge_point = $user->recharge_point;
+        $total_point = $recharge_point + $reward_point;
+        $required_redeemed_point = $record->redeem_point;
+        $required_redeemed_amount = $required_redeemed_point * 1000;
+
+        if ($this->paymentMethodService->checkPendingSeriesTransferOrder() ||
+            $this->paymentMethodService->checkPendingSeriesPayment())
+        {
+            flash('Thông báo', 'Hãy hoàn thành thanh toán trước đó, hoặc đợi 10 phút để hơn hàng hết hạn!', 'error');
+            return back();
+        }
+
+        if($is_redeemed && $total_point < $required_redeemed_point) {
+            flash('Thông báo', 'Không đủ HiCoin!', 'error');
+            return back();
+        }
+
+        // Set final amount of order of series combo
+        $amount = $is_redeemed ? ($record->actualCost - $required_redeemed_amount) : $record->actualCost;
+
         $orderInfo      = $record->title;
         $returnUrl      = SITE_URL . "/payments/momoreturn";
         $notifyurl      = SITE_URL . "/api/payments/momoipn";
         $orderId        = 'HIK' . time() . "";
         $requestId      = Auth::user()->id . '_' . $record->id . '_' . $record->type;
-        $requestId_info = explode('_', $requestId);
         $requestType    = "captureMoMoWallet";
         $extraData      = "merchantName=Hikari Academy";
+
         //before sign HMAC SHA256 signature
         $rawHash   = "partnerCode=" . $partnerCode . "&accessKey=" . $accessKey . "&requestId=" . $requestId . "&amount=" . $amount . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&returnUrl=" . $returnUrl . "&notifyUrl=" . $notifyurl . "&extraData=" . $extraData;
         $signature = hash_hmac("sha256", $rawHash, $serectkey);
@@ -320,7 +272,7 @@ class PaymentsController extends Controller
             'partnerCode' => $partnerCode,
             'accessKey'   => $accessKey,
             'requestId'   => $requestId,
-            'amount'      => $amount,
+            'amount'      => (string) $amount,
             'orderId'     => $orderId,
             'orderInfo'   => $orderInfo,
             'returnUrl'   => $returnUrl,
@@ -329,7 +281,49 @@ class PaymentsController extends Controller
             'requestType' => $requestType,
             'signature'   => $signature,
         );
-try_again:        
+
+        $payment = new PaymentMethod();
+        $payment->user_id = Auth::user()->id;
+        $payment->item_id = $record->id;
+        $payment->item_name = $record->title;
+        $payment->amount = $amount;
+        $payment->requestId = $requestId;
+        $payment->orderId = $orderId;
+        $payment->orderInfo = $orderInfo;
+        $payment->transId = mt_srand(10);
+        $payment->orderType = 'momo';
+        $payment->payType = 'momo';
+        $payment->extraData    = "merchantName=Hikari Academy";
+        $payment->responseTime = date("Y-m-d H:i:s");
+        $payment->status       = PaymentMethod::PAYMENT_PENDING;
+        $payment->redeem_point = $is_redeemed ? $record->redeem_point : 0;
+        $payment->save();
+
+        for ($i = 1; $i <= 5; $i++) {
+            $n = 'n' . $i;
+            if ($record->$n > 0) {
+                DB::table('payments')->insert([
+                    'user_id'            => $payment->user_id,
+                    'item_id'            => $record->$n,
+                    'time'               => $record->time,
+                    'payments_method_id' => $payment->id,
+                ]);
+            }
+        }
+
+        // Hold the used reward points and save series order created time
+        // until the transaction is completed
+        if ($is_redeemed) {
+            $redeemedPointsArray = getRedeemedPointsArrayFromRedeemedPoint($required_redeemed_point);
+            Auth::user()->update([
+                'reward_point' => $reward_point - $redeemedPointsArray['reward_point'],
+                'recharge_point' => $recharge_point - $redeemedPointsArray['recharge_point'],
+                'redeemed_points' => $redeemedPointsArray,
+                'series_order_created_at' => date('Y-m-d H:i:s')
+            ]);
+        }
+
+        try_again:
 		$result     = $this->execPostRequest($endpoint, json_encode($data));
         $jsonResult = json_decode($result, true);
         if ($jsonResult['errorCode'] == 0) {
@@ -339,7 +333,7 @@ try_again:
             $payUrl = $jsonResult['payUrl'];
             return redirect()->away($payUrl);
         } else {
-            flash('error', $jsonResult['localMessage'], 'Xuất hiện lỗi từ phía Momo, vui lòng thử thanh toán lại!');
+            flash('error', $jsonResult['localMessage'], 'error');
             return redirect()->back();
         }
     }
@@ -348,48 +342,97 @@ try_again:
         if (!empty($_GET)) {
             $secretKey = env('MOMO_SECRET');
             if (env('DEMO_MODE')) {
-                $secretKey = 'MLqxUsNWxMuypOnUeV84CvKRh5dp2zR7';
+                $secretKey = env('MOMO_SECRET_TEST');
             }
-            $partnerCode  = $_GET["partnerCode"];
-            $accessKey    = $_GET["accessKey"];
-            $orderId      = $_GET["orderId"];
-            $localMessage = $_GET["localMessage"];
-            $message      = $_GET["message"];
-            $transId      = $_GET["transId"];
-            $orderInfo    = $_GET["orderInfo"];
-            $amount       = $_GET["amount"];
-            $errorCode    = $_GET["errorCode"];
-            $responseTime = $_GET["responseTime"];
-            $requestId    = $_GET["requestId"];
-            $extraData    = $_GET["extraData"];
-            $payType      = $_GET["payType"];
-            $orderType    = $_GET["orderType"];
-            $extraData    = $_GET["extraData"];
-            $m2signature  = $_GET["signature"];
+            $partnerCode       = $_GET["partnerCode"];
+            $accessKey         = $_GET["accessKey"];
+            $orderId           = $_GET["orderId"];
+            $localMessage      = $_GET["localMessage"];
+            $message           = $_GET["message"];
+            $transId           = $_GET["transId"];
+            $orderInfo         = $_GET["orderInfo"];
+            $amount            = $_GET["amount"];
+            $errorCode         = $_GET["errorCode"];
+            $responseTime      = $_GET["responseTime"];
+            $requestId         = $_GET["requestId"];
+            $extraData         = $_GET["extraData"];
+            $payType           = $_GET["payType"];
+            $orderType         = $_GET["orderType"];
+            $extraData         = $_GET["extraData"];
+            $m2signature       = $_GET["signature"];
             //Checksum
             $rawHash = "partnerCode=" . $partnerCode . "&accessKey=" . $accessKey . "&requestId=" . $requestId . "&amount=" . $amount . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo .
                 "&orderType=" . $orderType . "&transId=" . $transId . "&message=" . $message . "&localMessage=" . $localMessage . "&responseTime=" . $responseTime . "&errorCode=" . $errorCode .
                 "&payType=" . $payType . "&extraData=" . $extraData;
             $partnerSignature = hash_hmac("sha256", $rawHash, $secretKey);
             $requestId_info   = explode('_', $requestId);
+
+            $payment_method = $this->paymentMethodService->getByConditions([
+                'requestId' => $requestId,
+                'orderId'   => $orderId
+            ]);
+            $seriesCombo = $this->lmsSeriesComboService->getSeriesComboBySlugWithSeries($payment_method->item_id, true);
+            $purchasedSeriesList = $this->lmsSeriesService->getSeriesListOfSeriesComboSlug($seriesCombo->slug);
+
             if ($m2signature == $partnerSignature) {
                 if ($errorCode == '0') {
-                    $message_success = "Bạn đã mua {$orderInfo} thành công";
+                    $payment_method->update(
+                        ['status' => PaymentMethod::PAYMENT_SUCCESS]
+                    );
 
-                    flash($message, $message_success, 'success');
-                    if ($requestId_info[2] == 1) {
-                        return redirect('/lms/exam-categories/study');
+                    // Reseting the redeemed points and the time when the series order was created
+                    // if transaction is successful
+                    Auth::user()->update([
+                        'redeemed_points' => null,
+                        'series_order_created_at' => null
+                    ]);
+
+                    $this->userService->updatePointHistory(['used' => $payment_method->redeem_point ?? 0]);
+
+                    foreach ($purchasedSeriesList as $series) {
+                        $this->userRoadmapService->updateOrCreate([
+                            'user_id' => Auth::id(),
+                            'lmsseries_id' => $series->id,
+                        ]);
                     }
-                    return redirect('/lms/exam-categories/list');
+
+                    $this->userService->updateSeriesViewsHistory(
+                        Auth::user()->series_views_history ?? [],
+                        $purchasedSeriesList->pluck('id')->toArray()
+                    );
+
+                    flash($message, "Bạn đã mua {$orderInfo} thành công", 'success');
+
+                    if (count($seriesCombo->seriesList) > 1) {
+                        $redirect_url = route('series.introduction-detail-combo', ['combo_slug' => $seriesCombo->slug]);
+                    } else {
+                        $redirect_url = route('series.introduction-detail', [
+                            'combo_slug' => $seriesCombo->slug,
+                            'slug' => $seriesCombo->seriesList[0]->slug,
+                        ]);
+                    }
+
+                    return redirect($redirect_url ?? '/home');
                 } else {
-                    flash('error', $localMessage, 'error');
-                    $lmsseries_combo = DB::table('lmsseries_combo')->where('id', $requestId_info[1])->first();
-                    return redirect('/payments/lms/' . $lmsseries_combo->slug);
+                    $payment_method->update(
+                        ['status' => PaymentMethod::PAYMENT_FAILED]
+                    );
+                    $user = Auth::user();
+                    $restored_reward_point = $user->redeemed_points['reward_point'] + $user->reward_point;
+                    $restored_recharge_point = $user->redeemed_points['recharge_point'] + $user->recharge_point;
+                    $user->update([
+                        'redeemed_points' => null,
+                        'series_order_created_at' => null,
+                        'reward_point' => $restored_reward_point,
+                        'recharge_point' => $restored_recharge_point
+                    ]);
+
+                    flash('Thanh toán không thành công!', 'Đơn thanh toán đã bị huỷ!', 'error');
+                    return redirect('/payments/lms/' . $seriesCombo->slug . ($payment_method->redeem_point ? '?is_redeemed=1' : ''));
                 }
             } else {
-                flash('Thanh toán không thành công', $localMessage, 'error');
-                // flash('error', 'Giao dịch không thành công, chữ ký không đúng.', 'error');
-                return redirect('/site/courses');
+                flash('Thanh toán không thành công!', $localMessage, 'error');
+                return redirect('/payments/lms/' . $seriesCombo->slug . ($payment_method->redeem_point ? '?is_redeemed=1' : ''));
             }
         }
     }
@@ -2525,6 +2568,7 @@ try_again:
 
         $records = Payment::join('users', 'users.id', '=', 'payments.user_id')
         ->join('lmsseries', 'lmsseries.id', '=', 'payments.item_id')
+        ->join('payment_method', 'payment_method.id', '=', 'payments.payments_method_id')
         ->select([
             DB::raw('@rownum  := @rownum  + 1 AS stt'),
             'users.id as user_id',
@@ -2533,17 +2577,20 @@ try_again:
             'lmsseries.title',
             'users.slug',
             DB::raw("(SELECT COUNT(lmscontents.id) FROM lmscontents
-                    WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) 
+                    WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8)
                     AND lmscontents.lmsseries_id = lmsseries.id ) as total_course"),
-            DB::raw("(SELECT COUNT(lms_student_view.id) FROM lms_student_view  
-                    join lmscontents on lms_student_view.lmscontent_id = lmscontents.id 
+            DB::raw("(SELECT COUNT(lms_student_view.id) FROM lms_student_view
+                    join lmscontents on lms_student_view.lmscontent_id = lmscontents.id
                     WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) AND lms_student_view.finish = 1
-                    AND lms_student_view.users_id = users.id AND lmscontents.lmsseries_id = lmsseries.id) 
+                    AND lms_student_view.users_id = users.id AND lmscontents.lmsseries_id = lmsseries.id)
                     as current_course")
         ])
+            ->where('payment_method.status', PaymentMethod::PAYMENT_SUCCESS)
             ->where('users.role_id', '=', getRoleData('student'))
+            ->groupBy('payments.item_id', 'payments.user_id')
             ->orderBy('users.id', 'desc')
             ->get();
+
         // Organize records by user ID, grouping courses for each user
         $organizedRecords = $records->groupBy('user_id')->values()->map(function ($group, $index) {
             $user = $group->first();
@@ -2638,7 +2685,6 @@ try_again:
         $recharge_point = $user_paying->recharge_point;
         $total_point = $recharge_point + $reward_point;
         $required_redeemed_point = $record->redeem_point;
-        $amount = $record->cost;
         $required_redeemed_amount = $required_redeemed_point * 1000;
 
         if ($this->paymentMethodService->checkPendingSeriesTransferOrder() ||
@@ -2653,17 +2699,14 @@ try_again:
             return back();
         }
 
-        $amount = $record->actualCost;
-
-        if($is_redeemed) {
-            $amount -= $required_redeemed_amount;
-        }
+        // Set final amount of order of series combo
+        $amount = $is_redeemed ? ($record->actualCost - $required_redeemed_amount) : $record->actualCost;
 
 		// Tạo đơn hàng mới
 		$record         = LmsSeriesCombo::getRecordWithSlug($slug);
 		$requestId      = Auth::user()->id . '_' . $record->id . '_' . $record->type;
 		DB::beginTransaction();
-		try 
+		try
 		{
 			$payment               = new PaymentMethod();
 			$payment->user_id      = Auth::user()->id;
@@ -2808,7 +2851,7 @@ try_again:
 
 		$vnp_Url = $vnp_Url . "?" . $query;
 		if (isset($vnp_HashSecret)) {
-			$vnpSecureHash =   hash_hmac('sha512', $hashdata, $vnp_HashSecret);//  
+			$vnpSecureHash =   hash_hmac('sha512', $hashdata, $vnp_HashSecret);//
 			$vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
 		}
 
@@ -2825,7 +2868,7 @@ try_again:
 					$inputData[$key] = $value;
 				}
 			}
-			
+
 			unset($inputData['vnp_SecureHash']);
 			ksort($inputData);
 			$i = 0;
@@ -2845,8 +2888,10 @@ try_again:
                 : env('VNP_HASHSECRET', env('VNP_HASHSECRET_TEST'));
 			$secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
 			$slug = $request->slug;
+
             $orderId = $request->get('vnp_TxnRef');
             $payment_method = $this->paymentMethodService->getByCondition('orderId', $orderId);
+
             if ($secureHash == $vnp_SecureHash) {
                 $seriesCombo = $this->lmsSeriesComboService->getSeriesComboBySlugWithSeries($slug);
                 $purchasedSeriesList = $this->lmsSeriesService->getSeriesListOfSeriesComboSlug($slug);
@@ -2861,7 +2906,9 @@ try_again:
                         'redeemed_points' => null,
                         'series_order_created_at' => null
                     ]);
+
                     $this->userService->updatePointHistory(['used' => $payment_method->redeem_point ?? 0]);
+
                     foreach ($purchasedSeriesList as $series) {
                         $this->userRoadmapService->updateOrCreate([
                             'user_id' => Auth::id(),
@@ -2937,6 +2984,170 @@ try_again:
      * @param Request $request
      */
     public function getMomoQrCoin(Request $request) {
+        if ($this->paymentMethodService->checkPendingCoinPayment()) {
+            flash('Thông báo', 'Hãy hoàn thành thanh toán trước đó, hoặc đợi 15 phút để hơn hàng hết hạn!', 'error');
+            return back();
+        }
+
+        $amount = $request->price;
+        $coin_package = $this->coinRechargeService->findByPrice($amount);
+        if (is_null($amount) || is_null($coin_package)) {
+            return redirect('/home');
+        }
+
+        $endpoint    = env('MOMO_ENDPOINT');
+        $partnerCode = env('MOMO_PARTNERCODE');
+        $accessKey   = env('MOMO_ACCESSKEY');
+        $serectkey   = env('MOMO_SECRET');
+        if (env('DEMO_MODE')) {
+            $endpoint    = env('MOMO_ENDPOINT_TEST');
+            $partnerCode = env('MOMO_PARTNERCODE_TEST');
+            $accessKey   = env('MOMO_ACCESSKEY_TEST');
+            $serectkey   = env('MOMO_SECRET_TEST');
+        }
+
+        $totalCoin = $coin_package->coin + (int) ($coin_package->coin * ($coin_package->bonus_percentage / 100));
+        $orderId = 'HIK-COIN' . time();
+        $orderInfo = "Nạp {$totalCoin} Hi Coins";
+        $user_id = Auth::user()->id;
+        $requestId = sprintf('%s_coin_%s', $user_id, $coin_package->price);
+        $extraData      = "merchantName=Hikari Academy";
+
+        DB::beginTransaction();
+        try {
+            $paymentMethod = new Paymentmethod();
+            $paymentMethod->user_id = $user_id;
+            $paymentMethod->item_id = null;
+            $paymentMethod->item_name = $orderInfo;
+            $paymentMethod->amount = $amount;
+            $paymentMethod->requestId = $requestId;
+            $paymentMethod->orderId = $orderId;
+            $paymentMethod->transId = mt_srand(10);
+            $paymentMethod->orderType = 'momo';
+            $paymentMethod->payType = 'momo';
+            $paymentMethod->type = PaymentMethod::PAYMENT_RECHARGE_COIN_TYPE;
+            $paymentMethod->extraData = $extraData;
+            $paymentMethod->responseTime = date("Y-m-d H:i:s");
+            $paymentMethod->status = PaymentMethod::PAYMENT_PENDING;
+            $paymentMethod->recharge_coin_amount = $totalCoin;
+            $paymentMethod->save();
+
+            $this->paymentService->create([
+                'user_id' => $user_id,
+                'payments_method_id' => $paymentMethod->id,
+                'status' => Payment::PAYMENT_PENDING
+            ]);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            flash('Thông báo', "Tạo đơn hàng thất bại", 'error');
+            return redirect()->route('payments.coin.list');
+        }
+
+        /**
+         * PREPARE INPUT DATA TO CREATE MOMO URL
+         */
+
+        //before sign HMAC SHA256 signature
+        $returnUrl      = route('payments.coin.momoqrReturn');
+        $notifyurl      = SITE_URL . "/api/payments/momoipn";
+        $extraData      = "merchantName=Hikari Academy";
+        $requestType    = "captureMoMoWallet";
+        $rawHash   = "partnerCode=" . $partnerCode . "&accessKey=" . $accessKey . "&requestId=" . $requestId . "&amount=" . $amount . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&returnUrl=" . $returnUrl . "&notifyUrl=" . $notifyurl . "&extraData=" . $extraData;
+        $signature = hash_hmac("sha256", $rawHash, $serectkey);
+
+        $data      = array(
+            'partnerCode' => $partnerCode,
+            'accessKey'   => $accessKey,
+            'requestId'   => $requestId,
+            'amount'      => (string) $amount,
+            'orderId'     => $orderId,
+            'orderInfo'   => $orderInfo,
+            'returnUrl'   => $returnUrl,
+            'notifyUrl'   => $notifyurl,
+            'extraData'   => $extraData,
+            'requestType' => $requestType,
+            'signature'   => $signature,
+        );
+
+        try_again:
+		$result     = $this->execPostRequest($endpoint, json_encode($data));
+        $jsonResult = json_decode($result, true);
+        if ($jsonResult['errorCode'] == 0) {
+			if ($jsonResult['payUrl'] == ''){
+				goto try_again;
+			}
+            $payUrl = $jsonResult['payUrl'];
+            return redirect()->away($payUrl);
+        } else {
+            flash('error', $jsonResult['localMessage'], 'error');
+            return redirect()->back();
+        }
+    }
+
+    /**
+     * MOMO return url for coin recharge
+     *
+     * @param Request $request
+     * @return Illuminate\Http\RedirectResponse
+     */
+    public function momoReturnCoin(Request $request) {
+        if (!$request->isMethod('get')) {
+            return redirect('/home');
+        }
+
+
+        $secretKey = env('MOMO_SECRET');
+        if (env('DEMO_MODE')) {
+            $secretKey = env('MOMO_SECRET_TEST');
+        }
+        $partnerCode       = $_GET["partnerCode"];
+        $accessKey         = $_GET["accessKey"];
+        $orderId           = $_GET["orderId"];
+        $localMessage      = $_GET["localMessage"];
+        $message           = $_GET["message"];
+        $transId           = $_GET["transId"];
+        $orderInfo         = $_GET["orderInfo"];
+        $amount            = $_GET["amount"];
+        $errorCode         = $_GET["errorCode"];
+        $responseTime      = $_GET["responseTime"];
+        $requestId         = $_GET["requestId"];
+        $extraData         = $_GET["extraData"];
+        $payType           = $_GET["payType"];
+        $orderType         = $_GET["orderType"];
+        $extraData         = $_GET["extraData"];
+        $m2signature       = $_GET["signature"];
+        //Checksum
+        $rawHash = "partnerCode=" . $partnerCode . "&accessKey=" . $accessKey . "&requestId=" . $requestId . "&amount=" . $amount . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo .
+            "&orderType=" . $orderType . "&transId=" . $transId . "&message=" . $message . "&localMessage=" . $localMessage . "&responseTime=" . $responseTime . "&errorCode=" . $errorCode .
+            "&payType=" . $payType . "&extraData=" . $extraData;
+        $partnerSignature = hash_hmac("sha256", $rawHash, $secretKey);
+        $requestId_info   = explode('_', $requestId);
+
+        $user = Auth::user();
+        $unfinishedPaymentMethod = $this->paymentMethodService->getByCondition('orderId', $orderId);
+        if ($m2signature == $partnerSignature) {
+            if ($errorCode == '0') {
+                $unfinishedPaymentMethod->update(['status' => PaymentMethod::PAYMENT_SUCCESS]);
+                $this->userService->updatePointHistory(['recharge' => $unfinishedPaymentMethod->recharge_coin_amount]);
+                $user->update([
+                    'recharge_point' => $user->recharge_point + $unfinishedPaymentMethod->recharge_coin_amount
+                ]);
+
+                $formattedCoinAmount = formatNumber($unfinishedPaymentMethod->recharge_coin_amount);
+                flash('Thông báo!', "Bạn đã nạp $formattedCoinAmount HiCoins thành công!", 'success');
+                return redirect()->route('mypage.recharge-point');
+            } else {
+                $unfinishedPaymentMethod->update(['status' => PaymentMethod::PAYMENT_FAILED]);
+
+                flash('Thông báo!', 'Bạn đã huỷ đơn hàng thành toán!', 'error');
+                return redirect()->route('mypage.recharge-point');
+            }
+        } else {
+            flash('error', 'Chữ ký không hợp lệ', 'error');
+            return redirect('/home');
+        }
     }
 
     /**
@@ -3077,7 +3288,7 @@ try_again:
     }
 
     /**
-     * VNPAY return url
+     * VNPAY return url for coin recharge
      *
      * @param Request $request
      * @return Illuminate\Http\RedirectResponse

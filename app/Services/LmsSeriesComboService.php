@@ -269,11 +269,16 @@ class LmsSeriesComboService extends BaseService
      * Get series combo by slug with its series
      *
      * @param string $combo_slug
+     * @param boolean $usesId
      * @return mixed
      */
-    public function getSeriesComboBySlugWithSeries(string $combo_slug)
+    public function getSeriesComboBySlugWithSeries(string $combo_slug, $usesId = false)
     {
-        $seriesCombo = $this->getByCondition('slug', $combo_slug);
+        if ($usesId) {
+            $seriesCombo = $this->getByCondition('id', $combo_slug);
+        } else {
+            $seriesCombo = $this->getByCondition('slug', $combo_slug);
+        }
 
         $seriesList = [];
         for ($index = 1; $index <= 5; $index++) {

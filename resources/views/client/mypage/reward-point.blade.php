@@ -124,6 +124,18 @@
         function openModalStreak() {
             $('#modalLoginStreak').modal('show');
         }
+
+        $(function () {
+            const seriesComboTitles = $('.redeem-reward__title');
+
+            const maxHeight = Math.max(...seriesComboTitles.map(function () {
+                return $(this).outerHeight();
+            }).get());
+
+            seriesComboTitles.each(function () {
+                $(this).height(maxHeight);
+            });
+        });
     </script>
     @include('client.components.streak');
 @endsection

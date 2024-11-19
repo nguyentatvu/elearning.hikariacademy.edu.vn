@@ -181,6 +181,7 @@
                 addSkipButton(player);
                 allowQualitySelect(player);
                 earnPointsOnVideoEnded(player);
+                addUpperSeekbarForMobile(player);
             });
         })();
 
@@ -267,6 +268,14 @@
             // Thêm nút vào control bar
             const controlBar = player.getChild('controlBar');
             const skipButton = controlBar.addChild('SkipButton', {}, controlBar.children().length);
+        }
+
+        const addUpperSeekbarForMobile = (player) => {
+            const controlBar = player.getChild('ControlBar');
+            const progressControl = controlBar.getChild('ProgressControl');
+
+            const clonedProgress = new ProgressControl(player, {});
+            controlBar.addChild(clonedProgress, {}, 0);
         }
     </script>
 @endsection

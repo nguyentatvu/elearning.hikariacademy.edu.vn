@@ -5,22 +5,19 @@
         <div class="recharge-coin__list p-3">
             <div class="payment-list">
                 @if (env('ENABLE_THIRDPARTY_PAYMENT', false))
-                    <div class="payment-method" data-name="Momo" data-instruction="instruction_momo"
-                        data-submit="submit_momo">
-                        <img src="{{ asset('images/mypage/momo.png') }}" alt="momo logo">
-                    </div>
                     <div class="payment-method" data-name="VNPAY" data-instruction="instruction_vnpay"
                         data-submit="submit_vnpay">
                         <img src="{{ asset('images/mypage/vnpay.png') }}" alt="vnpay logo">
                     </div>
                 @else
                     <div class="payment-method disabled">
-                        <img src="{{ asset('images/mypage/momo.png') }}" alt="momo logo">
-                    </div>
-                    <div class="payment-method disabled">
                         <img src="{{ asset('images/mypage/vnpay.png') }}" alt="vnpay logo">
                     </div>
                 @endif
+                <div class="payment-method" data-name="Momo" data-instruction="instruction_momo"
+                    data-submit="submit_momo">
+                    <img src="{{ asset('images/mypage/momo.png') }}" alt="momo logo">
+                </div>
                 <div class="payment-method selected" data-name="Chuyển khoản ngân hàng" data-instruction="instruction_bank_transfer"
                     data-submit="submit_bank_transfer">
                     <img src="{{ asset('images/icons/bank.svg') }}" alt="bank logo">
@@ -178,12 +175,6 @@
                 <p class="warning">Vui lòng kiểm tra kỹ thông tin trước khi tiến hành thanh toán. Giao dịch không thể hoàn
                     lại sau khi hoàn tất.</p>
                 @if (env('ENABLE_THIRDPARTY_PAYMENT', false))
-                    <div class="transaction-submit" id="submit_momo">
-                        <form action="#" method="get">
-                            <input type="text" name="price" hidden>
-                            <button type="submit" class="submit-button">Nạp điểm</button>
-                        </form>
-                    </div>
                     <div class="transaction-submit d-none" id="submit_vnpay">
                         <form action="{{ route('payments.coin.vnpay') }}" method="get">
                             <input type="text" name="price" hidden>
@@ -191,6 +182,12 @@
                         </form>
                     </div>
                 @endif
+                <div class="transaction-submit" id="submit_momo">
+                    <form action="{{ route('payments.coin.momoqr') }}" method="get">
+                        <input type="text" name="price" hidden>
+                        <button type="submit" class="submit-button">Nạp điểm</button>
+                    </form>
+                </div>
                 <div class="transaction-submit d-none" id="submit_bank_transfer">
                     <button type="submit" class="submit-button">Tạo đơn hàng</button>
                 </div>
