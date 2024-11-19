@@ -1,4 +1,14 @@
 @extends('admin.layouts.' . getRole() . '.' . getRole() . 'layout')
+
+@section('header_scripts')
+    <style>
+        .btn-loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+    </style>
+@endsection
+
 @section('content')
     <div id="page-wrapper">
         <div class="container-fluid">
@@ -72,4 +82,13 @@
 @stop
 @section('footer_scripts')
     @include('admin.common.validations');
+
+    <script>
+        $(document).ready(function() {
+            $('#pronunciation_submit_btn').click(function() {
+                $(this).addClass('btn-loading')
+                       .html('<i class="fa fa-spinner fa-spin"></i> Đang xử lý...');
+            });
+        });
+    </script>
 @stop

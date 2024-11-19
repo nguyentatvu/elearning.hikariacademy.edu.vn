@@ -37,14 +37,20 @@ class PronunciationDetailService extends BaseService
 
         $result = callApi($uploadUrl, 'POST', $fileData, 'multipart/form-data', $token);
 
-        $this->repository->updateOrCreate(
-            ['id' => $pronunciationDetailId],
-            [
-                'text' => $result['text'],
-                'katakana_text' => $result['katakana_text'],
-                'words' => $result['words']
-            ]
-        );
+        if ($result) {
+            $this->repository->updateOrCreate(
+                ['id' => $pronunciationDetailId],
+                [
+                    'text' => $result['text'],
+                    'katakana_text' => $result['katakana_text'],
+                    'words' => $result['words']
+                ]
+            );
+
+            return true;
+        }
+
+        return false;
     }
 
     public function assess(array $data)
