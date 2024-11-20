@@ -205,7 +205,7 @@
             list-style: decimal;
         }
 
-        .flex-column img{
+        .mypage-content .flex-column img{
             height: 30px;
             width: 30px;
         }
