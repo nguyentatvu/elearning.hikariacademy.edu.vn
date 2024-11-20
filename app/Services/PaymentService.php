@@ -17,8 +17,10 @@ class PaymentService extends BaseService
         $payments = $this->repository->getCurrentCoursesForStudent($studentId);
 
         $series = $payments->filter(function ($payment) {
-            $expiryDate = Carbon::parse(calculateExpiryDate($payment->created_at, $payment->time, $payment->paymentMethod->month_extend));
-            $payment->title = $payment->series->title;
+            $monthExtend = optional($payment->paymentMethod)->month_extend ?? 0;
+            $title = optional($payment->series)->title ?? '';
+            $expiryDate = Carbon::parse(calculateExpiryDate($payment->created_at, $payment->time, $monthExtend));
+            $payment->title = $title;
 
             return $expiryDate->gte(now());
         });
