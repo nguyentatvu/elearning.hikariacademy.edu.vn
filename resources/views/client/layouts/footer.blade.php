@@ -111,13 +111,13 @@
                                 alt="" height="70">
                         </a>
                         <!-- Android Download Button -->
-                        <a href="{{ route('downloadApp', ['encoded' => Crypt::encrypt('hikari_elearning_v1.0.0.apk')]) }}"
+                        <a href="{{ route('downloadApp', ['encoded' => Crypt::encrypt('apk')]) }}"
                             class="download-button ajax-download">
                              <img src="{{ asset('images/icons/android-dowload.png') }}" alt="">
                          </a>
 
                         <!-- iOS Download Button -->
-                        <a href="{{ route('downloadApp', ['encoded' => Crypt::encrypt('hikari-prod-v1.0.0.ipa')]) }}"
+                        <a href="{{ route('downloadApp', ['encoded' => Crypt::encrypt('ipa')]) }}"
                             class="download-button ajax-download">
                             <img src="{{ asset('images/icons/ios-dowload.svg') }}" alt="">
                         </a>

@@ -25,6 +25,13 @@ Route::get('/daily_streak', 'UsersController@getDataUser')->name('daily_streak')
 Route::get('/download/{encoded}', function ($encoded) {
     try {
         $filename = Crypt::decrypt($encoded);
+
+        $extension = pathinfo($filename, PATHINFO_EXTENSION);
+        if (!in_array($extension, ['apk', 'ipa'])) {
+            flash('Thông báo', 'Định dạng file không được hỗ trợ.');
+            return redirect()->back();
+        }
+
         $filePath = "private/{$filename}";
 
         if (!Storage::exists($filePath)) {
@@ -32,14 +39,20 @@ Route::get('/download/{encoded}', function ($encoded) {
             return redirect()->back();
         }
 
+        $contentType = $extension === 'apk'
+            ? 'application/vnd.android.package-archive'
+            : 'application/octet-stream';
+
         return response()->download(storage_path("app/{$filePath}"), $filename, [
-            'Content-Type' => 'application/vnd.android.package-archive',
+            'Content-Type' => $contentType,
             'Content-Disposition' => 'attachment; filename="' . $filename . '"',
         ]);
     } catch (\Exception $e) {
-        flash( 'Thông báo', 'Hiện tại chưa có phiên bản trên thiết bị này, vui lòng chờ nhé.');
+        flash('Thông báo', 'Đã xảy ra lỗi trong quá trình tải file.');
+        return redirect()->back();
     }
 })->name('downloadApp');
+
 
 Route::prefix('learning-management')->name('learning-management.')->group(function () {
     Route::get('lesson/next', 'StudentLmsController@getNextLesson')
