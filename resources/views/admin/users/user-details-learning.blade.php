@@ -131,7 +131,7 @@
 										<p>Thời điểm gần nhất học viên tiến hành học: <span class="text-primary">{{ $study }}</span>
 										</p>
 										<p>Thời điểm gần nhất học viên tiến hành làm bài tập: <span class="text-primary">{{ $exercises }}</span></p>
-										<p>Thời điểm gần nhất học viên tiến hành làm kiểm tra: <span class="text-primary">{{ $exercises }}</span></p>
+										<p>Thời điểm gần nhất học viên tiến hành làm kiểm tra: <span class="text-primary">{{ $audit }}</span></p>
 										<p>Thời điểm gần nhất học viên tiến hành thi: <span class="text-primary">{{ $exams }}</span>
 										</p>
 									</div>

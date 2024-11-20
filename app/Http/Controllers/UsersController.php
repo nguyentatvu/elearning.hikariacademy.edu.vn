@@ -1615,6 +1615,7 @@ class UsersController extends Controller
         $data['study'] = $timeLearning->study;
         $data['exams'] = $timeLearning->exams;
         $data['exercises'] = $timeLearning->exercises;
+        $data['audit'] = $timeLearning->audit;
 
         // Get score
         $data['scores'] = $this->getScore($userId);
@@ -1859,7 +1860,24 @@ class UsersController extends Controller
         $classUser = ClassesUser::where('student_id', $userId)->orderBy('created_at', 'asc');
         $lmsView = LmsStudentView::where('users_id', $userId)->orderBy('created_date', 'asc');
         $exam = DB::table('examseries_rate')->where('user_id', $userId)->orderBy('created_at', 'asc');
-        $quiz = QuizResultfinish::where('user_id', $userId)->orderBy('created_at', 'asc');
+
+        // Exercises
+        $exercises = LmsStudentView::with('lmsContent')
+            ->where('users_id', $userId)
+            ->whereHas('lmsContent', function ($query) {
+                $query->where('type', LmsContent::PARTIAL_EXERCISE);
+            })
+            ->orderBy('created_date', 'desc');
+
+        // dd($exercises->first()->created_date);
+
+        // Audit (test)
+        $audit = LmsStudentView::with('lmsContent')
+            ->where('users_id', $userId)
+            ->whereHas('lmsContent', function ($query) {
+                $query->where('type', LmsContent::TEST);
+            })
+            ->orderBy('created_date', 'desc');
 
         // Study (If not join class -> find first video watched)
         $timeBeginStudy = $classUser->first()->created_at
@@ -1869,12 +1887,16 @@ class UsersController extends Controller
         $timeBeginExam = $exam->first()->created_at ?? config('messenger.message_learning.no_join');
 
         // Exercises
-        $timeBeginExercises = $quiz->first()->created_at ?? config('messenger.message_learning.no_join');
+        $timeBeginExercises = $exercises->first()->created_date ?? config('messenger.message_learning.no_join');
+
+        // Audit
+        $timeBeginAudit = $audit->first()->created_date ?? config('messenger.message_learning.no_join');
 
         return (object) [
             'study' => $timeBeginStudy,
             'exams' => $timeBeginExam,
-            'exercises' => $timeBeginExercises
+            'exercises' => $timeBeginExercises,
+            'audit' => $timeBeginAudit
         ];
     }
 
