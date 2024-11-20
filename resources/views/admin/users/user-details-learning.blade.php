@@ -122,13 +122,25 @@
                                 <div class="media state-media box-ws">
 									<div class="media-body">
 										<p>Điểm trung bình các bài kiểm tra đã thực hiện</p>
-										<p>Trong 1 tháng: <span class="text-primary">{{ $avg_point_month }}/100</span></p>
+										<p>Trong tháng hiện tại:
+											<span class="text-primary">
+												@if ($avg_point_month)
+													{{ $avg_point_month }}/100
+												@else
+													Học viên chưa làm bài kiểm tra
+												@endif
+											</span>
+										</p>
 										<p>Trong từng khóa học:
-											<ol>
-												@foreach ($avg_point_series as $serie => $point)
-													<li>{{ $serie }}: <span class="text-primary">{{ $point }}/100</span></li>
-												@endforeach
-											</ol>
+											@if(!empty($avg_point_series))
+												<ol>
+													@foreach ($avg_point_series as $serie => $point)
+														<li>{{ $serie }}: <span class="text-primary">{{ $point }}/100</span></li>
+													@endforeach
+												</ol>
+											@else
+												<span class="text-info"> Học viên chưa làm bài kiểm tra</span>
+											@endif
 										</p>
 									</div>
 								</div>
@@ -176,7 +188,7 @@
                                                     </table>
                                                 </div>
                                             @else
-                                                <span class="text-info text-lg" style="margin-left: -24px;">Học viên chưa làm bài thi thử nào!</span>
+                                                <span class="text-info">Học viên chưa làm bài thi thử nào!</span>
                                             @endif
                                         </div>
 									</div>

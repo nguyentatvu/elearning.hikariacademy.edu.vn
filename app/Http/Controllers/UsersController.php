@@ -1616,9 +1616,13 @@ class UsersController extends Controller
         foreach ($results as $seriesTitle => $items) {
             $averagePointsSeries[$seriesTitle] = intval(round($items->avg('test_point')));
         }
-
+        $roundedAverage = 0;
         // Round the average test score for the current month
-        $roundedAverage = intval(round($testResultOnMonth));
+        if ($testResultOnMonth) {
+            $roundedAverage = intval(round($testResultOnMonth));
+        } else {
+            $roundedAverage = null;
+        }
 
         $data['avg_point_month'] = $roundedAverage;
         $data['avg_point_series'] = $averagePointsSeries;
