@@ -17,7 +17,8 @@ class LmsStudentView extends Model
         'users_id',
         'view_time',
         'finish',
-        'type'
+        'type',
+        'created_date'
     ];
 
     /**

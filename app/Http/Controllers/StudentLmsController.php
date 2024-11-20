@@ -371,6 +371,10 @@ class StudentLmsController extends Controller
                 Auth::user()->series_views_history ?? [],
                 $this->prepContent['series_id']
             );
+        } else if ($studentView && Auth::check()) {
+            $studentView->update([
+                'created_date' => date('Y-m-d H:i:s')
+            ]);
         }
 
         $this->prepContent['is_finished_content'] = optional($studentView)->finish == LmsStudentView::FINISH;

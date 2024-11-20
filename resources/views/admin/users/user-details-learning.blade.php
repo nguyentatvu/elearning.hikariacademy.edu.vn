@@ -124,11 +124,11 @@
 								</div>
                                 <div class="media state-media box-ws">
 									<div class="media-body">
-										<p>Thời điểm học viên tiến hành học: <span class="text-primary">{{ $study }}</span>
+										<p>Thời điểm gần nhất học viên tiến hành học: <span class="text-primary">{{ $study }}</span>
 										</p>
-										<p>Thời điểm học viên tiến hành làm bài tập: <span class="text-primary">{{
-												$exercises }}</span></p>
-										<p>Thời điểm học viên tiến hành thi: <span class="text-primary">{{ $exams }}</span>
+										<p>Thời điểm gần nhất học viên tiến hành làm bài tập: <span class="text-primary">{{ $exercises }}</span></p>
+										<p>Thời điểm gần nhất học viên tiến hành làm kiểm tra: <span class="text-primary">{{ $exercises }}</span></p>
+										<p>Thời điểm gần nhất học viên tiến hành thi: <span class="text-primary">{{ $exams }}</span>
 										</p>
 									</div>
 								</div>
@@ -144,8 +144,8 @@
 									<div class="media-body">
 										<p>Danh sách điểm các bài thi thử: </p>
                                         <div class="panel-body" style="padding-top: 2px;">
-                                            <div class="table-scroll-body">
-                                                @if ($mock_exam_results->count() > 0)
+                                            @if ($mock_exam_results->count() > 0)
+                                                <div class="table-scroll-body">
                                                     <table class="table table-hover table-fixed-header" style="margin-bottom: 0px;">
                                                         <thead>
                                                             <tr>
@@ -164,10 +164,10 @@
                                                             @endforeach
                                                         </tbody>
                                                     </table>
-                                                @else
-                                                    <span>Học viên chưa làm bài thi thử nào!</span>
-                                                @endif
-                                            </div>
+                                                </div>
+                                            @else
+                                                <span class="text-info text-lg" style="margin-left: -24px;">Học viên chưa làm bài thi thử nào!</span>
+                                            @endif
                                         </div>
 									</div>
 								</div>
