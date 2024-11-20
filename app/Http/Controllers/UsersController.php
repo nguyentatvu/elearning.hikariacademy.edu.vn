@@ -21,6 +21,7 @@ use App\LmsContent;
 use App\LmsSeries;
 use App\LmsSeriesCombo;
 use App\LmsStudentView;
+use App\LmsTest;
 use App\Payment;
 use App\QuizResultfinish;
 use App\Role;
@@ -276,7 +277,7 @@ class UsersController extends Controller
             ->editColumn('image', function ($records) {
                 return '<img src="' . getProfilePath($records->image) . '"  />';
             })
-            ->filterColumn('role_display_name', function($query, $keyword) {
+            ->filterColumn('role_display_name', function ($query, $keyword) {
                 $query->whereRaw("roles.display_name like ?", ["%{$keyword}%"]);
             })
             ->removeColumn('login_enabled')
@@ -1573,10 +1574,58 @@ class UsersController extends Controller
         if (checkRole(['parent'])) {
             $data['active_class'] = 'children';
         }
+        // Fetch content views and filter by user and conditions
+        $detailQuery = LmsStudentView::with('lmsContent')
+            ->where('users_id', $userId)
+            ->where('finish', 1)
+            ->whereHas('lmsContent', function ($query) {
+                $query->whereIn('type', [1, 2, 6, 9]);
+            });
 
+        // Count total viewed courses
+        $courseViewed = $detailQuery->count();
+
+        // Count viewed courses in the current month
+        $courseViewedMonth = $detailQuery->whereMonth('created_date', Carbon::now()->month)->count();
+
+        // Fetch test results for the user
+        $testResultsQuery = DB::table('lms_test_result')
+            ->where('users_id', $userId);
+
+        // Average test score for the current month
+        $testResultOnMonth = $testResultsQuery
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->avg('point');
+
+        // Fetch all relevant results in one query
+        $results = DB::table('lms_test_result')
+            ->join('lmscontents', 'lms_test_result.lmscontent_id', '=', 'lmscontents.id')
+            ->join('lmsseries', 'lmscontents.lmsseries_id', '=', 'lmsseries.id')
+            ->where('lms_test_result.users_id', $userId)
+            ->select(
+                'lmsseries.id as series_id',
+                'lmsseries.title as series_title',
+                'lmscontents.title as content_title',
+                'lms_test_result.point as test_point'
+            )
+            ->get()
+            ->groupBy('series_title');
+
+        // Calculate average points per series
+        $averagePointsSeries = [];
+        foreach ($results as $seriesTitle => $items) {
+            $averagePointsSeries[$seriesTitle] = intval(round($items->avg('test_point')));
+        }
+
+        // Round the average test score for the current month
+        $roundedAverage = intval(round($testResultOnMonth));
+
+        $data['avg_point_month'] = $roundedAverage;
+        $data['avg_point_series'] = $averagePointsSeries;
         $list = UserRoadmap::with('lmsseries')->where('user_id', $userId)->get();
         $data['data_roadmap_user'] = $list;
-
+        $data['course_viewed'] = $courseViewed;
+        $data['course_viewed_month'] = $courseViewedMonth;
         $view_name = 'admin.users.user-details-learning';
 
         return view($view_name, $data);
@@ -1641,7 +1690,8 @@ class UsersController extends Controller
      * @param string $userId
      * @return array
      */
-    private function getDataForMockExam(string $userId) {
+    private function getDataForMockExam(string $userId)
+    {
         $examResults = $this->quizResultFinishService->getStudentResultExam($userId, false);
 
         if ($examResults != null) {
@@ -1665,15 +1715,15 @@ class UsersController extends Controller
                 if ($record->finish == 3) {
                     if ($this->checkPassingscore($record->category_id, $record->total_marks) && $this->checkKijunTenAnyKubun($record->category_id, $record->quiz_1_total, $record->quiz_2_total, $record->quiz_3_total)) {
                         $ketqua = '<span class="badge bg-success">Đạt</span>';
-                        $totalMarkSpan = '<span class="label label-success">'.$totalMark.'/180</span>';
+                        $totalMarkSpan = '<span class="label label-success">' . $totalMark . '/180</span>';
                     } else {
                         $ketqua = '<span class="badge bg-warning">Chưa đạt</span>';
-                        $totalMarkSpan = '<span class="label label-warning">'.$totalMark.'/180</span>';
+                        $totalMarkSpan = '<span class="label label-warning">' . $totalMark . '/180</span>';
                     }
 
                 } else {
                     $ketqua = '<span class="badge bg-danger">Chưa hoàn thành</span>';
-                    $totalMarkSpan = '<span class="label label-danger">'.$totalMark.'/180</span>';
+                    $totalMarkSpan = '<span class="label label-danger">' . $totalMark . '/180</span>';
 
                 }
                 $record->totalMark = $totalMarkSpan;

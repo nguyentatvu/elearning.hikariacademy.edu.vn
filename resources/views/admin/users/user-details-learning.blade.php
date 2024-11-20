@@ -121,9 +121,15 @@
 								</div>
                                 <div class="media state-media box-ws">
 									<div class="media-body">
-										<p>Điểm trung bình các bài test</p>
-										<p>Trong 1 tháng: <span class="text-primary">{{ $total_score_of_month }}</span></p>
-										<p>Trong toàn khóa học: <span class="text-primary">{{ $total_score }}</span></p>
+										<p>Điểm trung bình các bài kiểm tra đã thực hiện</p>
+										<p>Trong 1 tháng: <span class="text-primary">{{ $avg_point_month }}/100</span></p>
+										<p>Trong từng khóa học:
+											<ol>
+												@foreach ($avg_point_series as $serie => $point)
+													<li>{{ $serie }}: <span class="text-primary">{{ $point }}/100</span></li>
+												@endforeach
+											</ol>
+										</p>
 									</div>
 								</div>
                                 <div class="media state-media box-ws">
@@ -138,8 +144,8 @@
 								</div>
                                 <div class="media state-media box-ws">
 									<div class="media-body">
-										<p>Clip trung bình học viên đã xem/tháng: <span class="text-primary">{{
-												$average_videos_per_month }}</span></p>
+										<p>Clip học viên đã xem/tháng hiện tại: <span class="text-primary">{{
+												$course_viewed_month }}</span></p>
 									</div>
 								</div>
 							</div>
@@ -181,7 +187,7 @@
 							<div class="col-sm-6">
 								<div class="media state-media box-ws">
 									<div class="media-body">
-										<p>Số clip đã xem: <span class="text-primary">{{ $video_watched }}</span></p>
+										<p>Số clip đã xem: <span class="text-primary">{{ $course_viewed }}</span></p>
 									</div>
 								</div>
 							</div>
