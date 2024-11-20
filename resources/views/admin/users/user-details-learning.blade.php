@@ -92,8 +92,12 @@
 							<div class="col-md-6 col-sm-6">
 								<div class="media state-media box-ws">
 									<div class="media-body">
-										<p>Khoá học học viên đang học: <span class="text-primary">{{ $learning_path
-												}}</span></p>
+										<p>Khoá học học viên đang học: </p>
+										<div>
+											@foreach ($series as $data)
+												<span class="text-primary">- {{ $data->title }}</span></br>
+											@endforeach
+										</div>
 									</div>
 								</div>
 							</div>

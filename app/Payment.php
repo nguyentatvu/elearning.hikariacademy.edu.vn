@@ -162,4 +162,14 @@ class Payment extends Model
         }
         return 'notpurchased';
     }
+
+    public function series()
+    {
+        return $this->belongsTo(LmsSeries::class, 'item_id', 'id');
+    }
+
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class, 'payments_method_id', 'id');
+    }
 }

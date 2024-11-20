@@ -612,7 +612,7 @@ class PronunciationController extends Controller
             } else {
                 $pronunciationDetail->text = $data['text'];
                 $pronunciationDetail->save();
-                // Remove old file if has
+
                 if (!($pronunciationDetail->audio && file_exists(public_path($pronunciationDetail->audio)))) {
                     $pronunciationUploadPath = public_path('uploads/pronunciation');
                     $resultTTS = $this->storeAudioFileFromTextToSpeech($pronunciationDetail, $id, $pronunciationUploadPath);

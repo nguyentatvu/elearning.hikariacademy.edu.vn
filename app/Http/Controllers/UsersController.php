@@ -1628,6 +1628,9 @@ class UsersController extends Controller
         // Get data for mock exam
         $data['mock_exam_results'] = $this->getDataForMockExam($userId);
 
+        // Get series
+        $data['series'] = $this->userService->getCurrentCoursesForStudent($userId);
+
         return $data;
     }
 

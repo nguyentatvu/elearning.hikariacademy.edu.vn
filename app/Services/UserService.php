@@ -22,13 +22,19 @@ class UserService extends BaseService
 {
     private $imageService;
     private $lmsSeriesComboService;
+    private $paymentService;
 
-    public function __construct(UserRepository $repository, ImageService $imageService, LmsSeriesComboService $lmsSeriesComboService)
-    {
+    public function __construct(
+        UserRepository $repository,
+        ImageService $imageService,
+        LmsSeriesComboService $lmsSeriesComboService,
+        PaymentService $paymentService
+    ) {
         parent::__construct($repository);
         $this->imageService = $imageService;
         $this->imageService->setDestination(app('App\ImageSettings')->getUploadUserThumbnailPath());
         $this->lmsSeriesComboService = $lmsSeriesComboService;
+        $this->paymentService = $paymentService;
     }
 
     /**
@@ -441,5 +447,12 @@ class UserService extends BaseService
         $password = substr($uuid, 6, $length);
 
         return $password;
+    }
+
+    public function getCurrentCoursesForStudent(int $studentId)
+    {
+        $currentSeries = $this->paymentService->getCurrentCoursesForStudent($studentId);
+
+        return $currentSeries;
     }
 }
