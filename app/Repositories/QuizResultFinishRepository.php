@@ -15,10 +15,11 @@ class QuizResultFinishRepository extends BaseRepository
      * Get student result exam
      *
      * @param string $userId
+     * param boolean $isPaginated
      * @return mixed
      */
-    public function getStudentResultExam(string $userId) {
-        return $this->model
+    public function getStudentResultExam(string $userId, $isPaginated) {
+        $results = $this->model
             ->join('examseries', 'examseries.id', '=', 'quizresultfinish.examseri_id')
             ->where('quizresultfinish.user_id', '=', $userId)
             ->orderBy('quizresultfinish.created_at', 'desc')
@@ -33,7 +34,12 @@ class QuizResultFinishRepository extends BaseRepository
                 'quizresultfinish.quiz_3_total',
                 'quizresultfinish.total_marks',
                 'quizresultfinish.status'
-            )
-            ->paginate(15);
+            );
+
+        if ($isPaginated) {
+            return $results->paginate(10);
+        }
+
+        return $results->get();
     }
 }

@@ -105,11 +105,12 @@
                         dục và Đào tạo TP.Hồ Chí Minh cấp ngày 28/08/2020</div>
                 </div>
                 <div class="col-12 col-sm-6 footer-social d-flex align-items-center">
-                    <div class="col-lg-12 d-flex align-items-center justify-content-center">
+                    <div class="col-lg-12 d-flex flex-column flex-lg-row align-items-start align-items-lg-center gap-3 gap-lg-0 justify-content-center">
                         <a href="http://online.gov.vn/Home/WebDetails/63991" class="me-2" target="_blank">
                             <img class="logo-bocongthuong ms-2 mt-2" src="{{ asset('images/bocongthuong.png') }}"
                                 alt="" height="70">
                         </a>
+<<<<<<< Updated upstream
                         <!-- Android Download Button -->
                         <a href="{{ route('downloadApp', ['encoded' => Crypt::encrypt('apk')]) }}"
                             class="download-button ajax-download">
@@ -121,6 +122,21 @@
                             class="download-button ajax-download">
                             <img src="{{ asset('images/icons/ios-dowload.svg') }}" alt="">
                         </a>
+=======
+                        <div class="d-flex">
+                            <!-- Android Download Button -->
+                            <a href="{{ route('downloadApp', ['encoded' => Crypt::encrypt('hikari-prod-v1.0.0.apk')]) }}"
+                                class="download-button ajax-download">
+                                <img src="{{ asset('images/icons/android-dowload.png') }}" alt="">
+                            </a>
+
+                            <!-- iOS Download Button -->
+                            <a href="{{ route('downloadApp', ['encoded' => Crypt::encrypt('hikari-prod-v1.0.0.ipa')]) }}"
+                                class="download-button ajax-download">
+                                <img src="{{ asset('images/icons/ios-dowload.svg') }}" alt="">
+                            </a>
+                        </div>
+>>>>>>> Stashed changes
                     </div>
                 </div>
             </div>

@@ -26,6 +26,7 @@ use App\QuizResultfinish;
 use App\Role;
 use App\Services\LmsSeriesComboService;
 use App\Services\LmsSeriesService;
+use App\Services\QuizResultFinishService;
 use App\Services\UserService;
 use App\UserRoadmap;
 use App\WeeklyLeaderboard;
@@ -37,16 +38,19 @@ class UsersController extends Controller
     public $excel_data = array();
     private $userService;
     private $lmsSeriesService;
+    private $quizResultFinishService;
 
     public function __construct(
         UserService $userService,
         LmsSeriesComboService $lmsSeriesComboService,
-        LmsSeriesService $lmsSeriesService
+        LmsSeriesService $lmsSeriesService,
+        QuizResultFinishService $quizResultFinishService
     ) {
         $currentUser = Auth::user();
         $this->userService = $userService;
         $this->lmsSeriesComboService = $lmsSeriesComboService;
         $this->lmsSeriesService = $lmsSeriesService;
+        $this->quizResultFinishService = $quizResultFinishService;
 
         $this->middleware('auth');
     }
@@ -1621,7 +1625,58 @@ class UsersController extends Controller
         $data['number_of_courses'] = $dataChartTotalNumOfCourses['number_of_courses'];
         $data['percentage_of_course'] = $dataChartTotalNumOfCoursesByUser['percentage_of_course_by_user'];
 
+        // Get data for mock exam
+        $data['mock_exam_results'] = $this->getDataForMockExam($userId);
+
         return $data;
+    }
+
+    /**
+     * Get data for mock exam
+     *
+     * @param string $userId
+     * @return array
+     */
+    private function getDataForMockExam(string $userId) {
+        $examResults = $this->quizResultFinishService->getStudentResultExam($userId, false);
+
+        if ($examResults != null) {
+            foreach ($examResults as $record) {
+                $totalMark = 0;
+                if ($record->category_id <= 3) {
+                    $style1 = ($this->checkKijunTen($record->category_id, 1, $record->quiz_1_total)) ? "info" : "danger";
+                    $style2 = ($this->checkKijunTen($record->category_id, 2, $record->quiz_2_total)) ? "info" : "danger";
+                    $style3 = ($this->checkKijunTen($record->category_id, 3, $record->quiz_3_total)) ? "info" : "danger";
+                    $detail = '言語知識（文字・語彙・文法）: <span class="badge bg-' . $style1 . '">' . $record->quiz_1_total . '/60</span><br><br>読解: <span class="badge bg-' . $style2 . '">' . $record->quiz_2_total . '/60</span><br><br>聴解: <span class="badge bg-' . $style3 . '">' . $record->quiz_3_total . '/60</span>';
+                    $totalMark = $record->quiz_1_total + $record->quiz_2_total + $record->quiz_3_total;
+                } else {
+                    $style1 = ($this->checkKijunTen($record->category_id, 1, $record->quiz_1_total)) ? "info" : "danger";
+                    $style3 = ($this->checkKijunTen($record->category_id, 2, $record->quiz_3_total)) ? "info" : "danger";
+                    $detail = '言語知識（文字・語彙・文法）: <span class="badge bg-' . $style1 . '">' . $record->quiz_1_total . '/120</span><br><br>聴解: <span class="badge bg-' . $style3 . '">' . $record->quiz_3_total . '/60</span>';
+                    $totalMark = $record->quiz_1_total + $record->quiz_3_total;
+                }
+
+                $record->detail = $detail;
+                $totalMarkSpan = '';
+                if ($record->finish == 3) {
+                    if ($this->checkPassingscore($record->category_id, $record->total_marks) && $this->checkKijunTenAnyKubun($record->category_id, $record->quiz_1_total, $record->quiz_2_total, $record->quiz_3_total)) {
+                        $ketqua = '<span class="badge bg-success">Đạt</span>';
+                        $totalMarkSpan = '<span class="label label-success">'.$totalMark.'/180</span>';
+                    } else {
+                        $ketqua = '<span class="badge bg-warning">Chưa đạt</span>';
+                        $totalMarkSpan = '<span class="label label-warning">'.$totalMark.'/180</span>';
+                    }
+
+                } else {
+                    $ketqua = '<span class="badge bg-danger">Chưa hoàn thành</span>';
+                    $totalMarkSpan = '<span class="label label-danger">'.$totalMark.'/180</span>';
+
+                }
+                $record->totalMark = $totalMarkSpan;
+                $record->ketqua = $ketqua;
+            }
+        }
+        return $examResults;
     }
 
     /**

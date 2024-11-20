@@ -1,6 +1,50 @@
 @extends($layout)
 
 @section('header_scripts')
+    <style>
+
+    .table-fixed-header {
+      position: relative;
+    }
+
+    .table-fixed-header thead {
+      position: sticky;
+      top: 0;
+      background-color: #fff;
+      z-index: 1;
+    }
+
+    .table-scroll-body {
+      max-height: 382px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+    }
+
+    .table-fixed-header th:nth-child(1),
+    .table-fixed-header td:nth-child(1) {
+      width: 20%;
+    }
+
+    .table-fixed-header th:nth-child(2),
+    .table-fixed-header td:nth-child(2) {
+      width: 60%;
+    }
+
+    .table-fixed-header th:nth-child(3),
+    .table-fixed-header td:nth-child(3) {
+      width: 20%;
+    }
+
+    .table-fixed-header th,
+    .table-fixed-header td {
+      border: 1px solid #ddd !important;
+      padding: 12px !important;
+    }
+
+    .table-fixed-header tbody tr:hover {
+      background-color: #f5f5f5;
+    }
+    </style>
 @stop
 
 @section('content')
@@ -71,42 +115,14 @@
 												}}</span></p>
 									</div>
 								</div>
-							</div>
-							<div class="col-sm-6">
-								<div class="media state-media box-ws">
-									<div class="media-body">
-										<p>Điểm các bài test, bài thi trong khóa học: </p>
-										@if(count($scores))
-										<div class="scrollable-container">
-											<div class="content">
-												@foreach($scores as $score)
-												<p><span class="text-primary">{{ $score->title }} ({{ $score->bai }}): {{
-														$score->point }}/{{ $score->total_point }}</span></p>
-												@endforeach
-											</div>
-										</div>
-										@else
-										<p>
-											<span class="text-primary">{{ config('messenger.message_learning.no_join')
-												}}</span>
-										</p>
-										@endif
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-6 col-sm-6">
-								<div class="media state-media box-ws">
+                                <div class="media state-media box-ws">
 									<div class="media-body">
 										<p>Điểm trung bình các bài test</p>
 										<p>Trong 1 tháng: <span class="text-primary">{{ $total_score_of_month }}</span></p>
 										<p>Trong toàn khóa học: <span class="text-primary">{{ $total_score }}</span></p>
 									</div>
 								</div>
-							</div>
-							<div class="col-sm-6">
-								<div class="media state-media box-ws">
+                                <div class="media state-media box-ws">
 									<div class="media-body">
 										<p>Thời điểm học viên tiến hành học: <span class="text-primary">{{ $study }}</span>
 										</p>
@@ -116,11 +132,7 @@
 										</p>
 									</div>
 								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-6 col-sm-6">
-								<div class="media state-media box-ws">
+                                <div class="media state-media box-ws">
 									<div class="media-body">
 										<p>Clip trung bình học viên đã xem/tháng: <span class="text-primary">{{
 												$average_videos_per_month }}</span></p>
@@ -130,13 +142,45 @@
 							<div class="col-sm-6">
 								<div class="media state-media box-ws">
 									<div class="media-body">
-										<p>Số clip đã xem: <span class="text-primary">{{ $video_watched }}</span></p>
-										{{-- <p>% hoàn thành: <span class="text-primary">{{ $overall_completion }}%</span></p> --}}
+										<p>Danh sách điểm các bài thi thử: </p>
+                                        <div class="panel-body" style="padding-top: 2px;">
+                                            <div class="table-scroll-body">
+                                                @if ($mock_exam_results->count() > 0)
+                                                    <table class="table table-hover table-fixed-header" style="margin-bottom: 0px;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width: 25%;">Thời gian</th>
+                                                                <th>Tên bộ đề thi</th>
+                                                                <th style="width: 20%;">Tổng điểm</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach ($mock_exam_results as $result)
+                                                                <tr>
+                                                                    <td>{{ $result->created_at }}</td>
+                                                                    <td>{{ $result->title }}</td>
+                                                                    <td>{!! $result->totalMark !!}</td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                @else
+                                                    <span>Học viên chưa làm bài thi thử nào!</span>
+                                                @endif
+                                            </div>
+                                        </div>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="row">
+							<div class="col-sm-6">
+								<div class="media state-media box-ws">
+									<div class="media-body">
+										<p>Số clip đã xem: <span class="text-primary">{{ $video_watched }}</span></p>
+									</div>
+								</div>
+							</div>
 							<div class="col-sm-6">
 								<div class="media state-media box-ws">
 									<div class="media-body">

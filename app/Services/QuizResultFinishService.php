@@ -15,10 +15,11 @@ class QuizResultFinishService extends BaseService
      * Get student result exam
      *
      * @param string $userId
+     * param boolean $isPaginated
      * @return mixed
      */
-    public function getStudentResultExam(string $userId)
+    public function getStudentResultExam(string $userId, $isPaginated = true)
     {
-        return $this->repository->getStudentResultExam($userId);
+        return $this->repository->getStudentResultExam($userId, $isPaginated);
     }
 }
