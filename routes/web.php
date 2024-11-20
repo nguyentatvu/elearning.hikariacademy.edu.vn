@@ -23,22 +23,22 @@ Route::get('/home', 'SiteController@homePage')->name('home');
 Route::get('/daily_streak', 'UsersController@getDataUser')->name('daily_streak');
 
 Route::get('/download/{encoded}', function ($encoded) {
-    $filename = Crypt::decrypt($encoded);
+    try {
+        $filename = Crypt::decrypt($encoded);
+        $filePath = "private/{$filename}";
 
-    $filePath = "private/{$filename}";
+        if (!Storage::exists($filePath)) {
+            flash('Thông báo', 'Hiện tại chưa có phiên bản trên thiết bị này, vui lòng chờ nhé.');
+            return redirect()->back();
+        }
 
-    if (!Storage::exists($filePath)) {
-        return response()->json(['error' => 'Hiện tại chưa có phiên bản trên thiết bị này, vui lòng chờ nhé.'], 404);
+        return response()->download(storage_path("app/{$filePath}"), $filename, [
+            'Content-Type' => 'application/vnd.android.package-archive',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
+    } catch (\Exception $e) {
+        flash( 'Thông báo', 'Hiện tại chưa có phiên bản trên thiết bị này, vui lòng chờ nhé.');
     }
-
-    $file = Storage::get($filePath);
-
-    return response()->stream(function () use ($file) {
-        echo $file;
-    }, 200, [
-        'Content-Type' => 'application/octet-stream',  // Loại file mặc định, có thể tùy chỉnh
-        'Content-Disposition' => "attachment; filename={$filename}",  // Tên file khi tải xuống
-    ]);
 })->name('downloadApp');
 
 Route::prefix('learning-management')->name('learning-management.')->group(function () {

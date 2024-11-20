@@ -893,54 +893,6 @@
                 document.querySelector('.custom-loader-container').style.display = 'none';
             }, 100);
         });
-
-        $('.ajax-download').on('click', function(event) {
-            event.preventDefault();
-
-            const downloadUrl = $(this).attr('href');
-
-            $.ajax({
-                url: downloadUrl,
-                type: 'GET',
-                xhrFields: {
-                    responseType: 'blob'
-                },
-                success: function(data, status, xhr) {
-                    let filename = xhr.getResponseHeader('Content-Disposition')
-                        ?.split('filename=')[1] || 'downloaded-file';
-
-                    const url = window.URL.createObjectURL(data);
-
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.download = filename.replace(/"/g, '');
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-
-                    window.URL.revokeObjectURL(url);
-                },
-                error: function(xhr, status, error) {
-                    try {
-                        const response = JSON.parse(xhr
-                            .responseText);
-                        const errorMessage = response.error || 'Có lỗi xảy ra. Vui lòng thử lại.';
-
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Lỗi!',
-                            text: errorMessage,
-                        });
-                    } catch (e) {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Thông báo!',
-                            text: 'Ứng dụng sắp được ra mắt trên iOS trong thời gian sớm nhất! Cảm ơn bạn đã chờ đợi!',
-                        });
-                    }
-                }
-            });
-        });
     </script>
     @if (Auth::check())
         @include('client.components.streak');
