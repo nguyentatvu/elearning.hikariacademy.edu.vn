@@ -24,24 +24,28 @@ Route::get('/daily_streak', 'UsersController@getDataUser')->name('daily_streak')
 
 Route::get('/download/{encoded}', function ($encoded) {
     try {
-        $filename = Crypt::decrypt($encoded);
+        $extension = Crypt::decrypt($encoded);
 
-        $extension = pathinfo($filename, PATHINFO_EXTENSION);
-        if (!in_array($extension, ['apk', 'ipa'])) {
-            flash('Thông báo', 'Định dạng file không được hỗ trợ.');
-            return redirect()->back();
-        }
+        $files = Storage::files('private');
+        $filteredFiles = array_filter($files, function ($file) use ($extension) {
+            return pathinfo($file, PATHINFO_EXTENSION) === $extension;
+        });
 
-        $filePath = "private/{$filename}";
-
-        if (!Storage::exists($filePath)) {
+        if (empty($filteredFiles)) {
             flash('Thông báo', 'Hiện tại chưa có phiên bản trên thiết bị này, vui lòng chờ nhé.');
             return redirect()->back();
         }
 
-        $contentType = $extension === 'apk'
-            ? 'application/vnd.android.package-archive'
-            : 'application/octet-stream';
+        $filePath = reset($filteredFiles);
+        $filename = basename($filePath);
+
+        if ($extension === 'apk') {
+            $contentType = 'application/vnd.android.package-archive';
+        } elseif ($extension === 'ipa') {
+            $contentType = 'application/octet-stream';
+        } else {
+            $contentType = 'application/octet-stream';
+        }
 
         return response()->download(storage_path("app/{$filePath}"), $filename, [
             'Content-Type' => $contentType,
@@ -52,7 +56,6 @@ Route::get('/download/{encoded}', function ($encoded) {
         return redirect()->back();
     }
 })->name('downloadApp');
-
 
 Route::prefix('learning-management')->name('learning-management.')->group(function () {
     Route::get('lesson/next', 'StudentLmsController@getNextLesson')
