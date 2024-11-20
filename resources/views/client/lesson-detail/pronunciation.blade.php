@@ -601,7 +601,7 @@
             pronunciationDetailId = pronunciationDetail[index].id;
             $('#pronunciation_text_title').text(pronunciationDetail[index].text);
             audioPath = pronunciationDetail[index].audio;
-            recognizedTextLength = pronunciationDetail[index]?.recognized_text?.length || 0;;
+            recognizedTextLength = pronunciationDetail[index]?.recognized_text?.length || 0;
 
             if (audioPath) {
                 sampleAudio = `{{ asset('${audioPath}') }}`;
