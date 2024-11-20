@@ -616,25 +616,27 @@
     <script>
         $(document).ready(function() {
             let isHiddenRobot = localStorage.getItem('robotHidden') === 'true'; // Retrieve state from localStorage
-
+            toggleAssistant();
             // Toggle function to show or hide assistant
             function toggleAssistant() {
                 isHiddenRobot = !isHiddenRobot;
 
                 // Save the new state to localStorage
                 localStorage.setItem('robotHidden', isHiddenRobot);
-
+                $('#toggle_assistant').css({
+                    'width': '124px'
+                });
                 if (isHiddenRobot) {
                     $('.robot-head').hide(); // Hide the robot
                     $('.robot-guide').css({
-                        'z-index': 0
+                        'width': 0
                     });
                     $('#robot-speech').hide(); // Hide the speech bubble
                     $('#toggle_assistant').text('Hiện hướng dẫn');
                 } else {
                     $('.robot-head').show(); // Show the robot
                     $('.robot-guide').css({
-                        'z-index': 999
+                        'width': '220px'
                     });
                     $('#robot-speech').show(); // Show the speech bubble
                     $('#toggle_assistant').text('Ẩn hướng dẫn');
@@ -644,16 +646,10 @@
             // Set initial visibility based on localStorage
             if (isHiddenRobot) {
                 $('.robot-head').hide(); // Hide the robot if the state is stored as hidden
-                $('.robot-guide').css({
-                    'z-index': 0
-                });
                 $('#robot-speech').hide(); // Hide the speech bubble
                 $('#toggle_assistant').text('Hiện hướng dẫn');
             } else {
                 $('.robot-head').show(); // Show the robot if the state is stored as shown
-                $('.robot-guide').css({
-                    'z-index': 999
-                });
                 $('#robot-speech').show(); // Show the speech bubble
                 $('#toggle_assistant').text('Ẩn hướng dẫn');
             }

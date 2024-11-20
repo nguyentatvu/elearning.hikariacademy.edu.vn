@@ -104,7 +104,7 @@
                         giáo
                         dục và Đào tạo TP.Hồ Chí Minh cấp ngày 28/08/2020</div>
                 </div>
-                <div class="col-12 col-sm-6 footer-social d-flex align-items-center">
+                <div class="col-12 col-sm-6 footer-social d-flex">
                     <div class="col-lg-12 d-flex flex-column flex-lg-row align-items-start align-items-lg-center gap-3 gap-lg-0 justify-content-center">
                         <a href="http://online.gov.vn/Home/WebDetails/63991" class="me-2" target="_blank">
                             <img class="logo-bocongthuong ms-2 mt-2" src="{{ asset('images/bocongthuong.png') }}"
@@ -112,7 +112,7 @@
                         </a>
                         <!-- Android Download Button -->
                         <a href="{{ route('downloadApp', ['encoded' => Crypt::encrypt('apk')]) }}"
-                            class="download-button ajax-download">
+                            class="download-button ajax-download android-img">
                              <img src="{{ asset('images/icons/android-dowload.png') }}" alt="">
                          </a>
 
