@@ -215,6 +215,7 @@
         let instruction = $('#instruction');
         let pronunciationData = {};
         let currentPage = 1;
+        let recognizedTextLength = 0;
 
         $(document).ready(function() {
             initializeAduioWaveform();
@@ -427,7 +428,6 @@
 
         function createTooltipForResultLevel1(userResult, assessmentResult, differences) {
             $('#resultl_level_1_assessment').empty();
-            let titleLength = $('#pronunciation_text_title').text().length;
 
             $.each(assessmentResult, function(i, assessmentItem) {
                 const difference = differences.find(diff => diff.index === i);
@@ -442,7 +442,7 @@
                     .attr('data-bs-custom-class', 'custom-tooltip')
                     .attr('data-bs-html', 'true');
 
-                if (i < titleLength) {
+                if (i < recognizedTextLength) {
                     if (userText.trim() === '') {
                         span.addClass('incorrect')
                             .attr('data-bs-title',
@@ -470,7 +470,6 @@
 
         function createTooltipForResultLevel2(assessmentResult) {
             $('#resultl_level_2_assessment').empty();
-            let titleLength = $('#pronunciation_text_title').text().length;
 
             $.each(assessmentResult, function(i, assessmentItem) {
                 let tooltipText = '';
@@ -485,7 +484,7 @@
                 const pitchValue = assessmentItem.pitch_value;
                 const pearsonrValue = assessmentItem.pearsonr_value;
 
-                if (i < titleLength) {
+                if (i < recognizedTextLength) {
                     if (pearsonrValue > 0.5) {
                         if (Math.abs(speechTimeDifference) <= thresholdSpeechTime) {
                             span.addClass('correct');
@@ -601,7 +600,8 @@
         function updatePronunciationAssessmentLesson(index) {
             pronunciationDetailId = pronunciationDetail[index].id;
             $('#pronunciation_text_title').text(pronunciationDetail[index].text);
-            audioPath = pronunciationDetail[index].audio
+            audioPath = pronunciationDetail[index].audio;
+            recognizedTextLength = pronunciationDetail[index]?.recognized_text?.length || 0;;
 
             if (audioPath) {
                 sampleAudio = `{{ asset('${audioPath}') }}`;
