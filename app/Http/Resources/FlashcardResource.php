@@ -17,12 +17,12 @@ class FlashcardResource extends Resource
         $audioUrl = config('constant.flash_card.audio_url') . $this->mp3;
 
         return [
-            'word' => $this->m1tuvung,
-            'front_example' => $this->m1vidu,
-            'pronunciation' => $this->m2cachdoc,
-            'sino_vietnamese' => $this->m2amhanviet,
-            'meaning' => $this->m2ynghia,
-            'back_example' => $this->m2vidu,
+            'word' => $this->m1tuvung ?? '',
+            'front_example' => $this->m1vidu ?? '',
+            'pronunciation' => $this->m2cachdoc ?? '',
+            'sino_vietnamese' => $this->m2amhanviet ?? '',
+            'meaning' => $this->m2ynghia ?? '',
+            'back_example' => $this->m2vidu ?? '',
             'stt' => $this->stt,
             'audio' => $audioUrl,
         ];
