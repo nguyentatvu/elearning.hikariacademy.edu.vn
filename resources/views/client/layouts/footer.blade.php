@@ -110,7 +110,6 @@
                             <img class="logo-bocongthuong ms-2 mt-2" src="{{ asset('images/bocongthuong.png') }}"
                                 alt="" height="70">
                         </a>
-<<<<<<< Updated upstream
                         <!-- Android Download Button -->
                         <a href="{{ route('downloadApp', ['encoded' => Crypt::encrypt('apk')]) }}"
                             class="download-button ajax-download">
@@ -122,21 +121,6 @@
                             class="download-button ajax-download">
                             <img src="{{ asset('images/icons/ios-dowload.svg') }}" alt="">
                         </a>
-=======
-                        <div class="d-flex">
-                            <!-- Android Download Button -->
-                            <a href="{{ route('downloadApp', ['encoded' => Crypt::encrypt('hikari-prod-v1.0.0.apk')]) }}"
-                                class="download-button ajax-download">
-                                <img src="{{ asset('images/icons/android-dowload.png') }}" alt="">
-                            </a>
-
-                            <!-- iOS Download Button -->
-                            <a href="{{ route('downloadApp', ['encoded' => Crypt::encrypt('hikari-prod-v1.0.0.ipa')]) }}"
-                                class="download-button ajax-download">
-                                <img src="{{ asset('images/icons/ios-dowload.svg') }}" alt="">
-                            </a>
-                        </div>
->>>>>>> Stashed changes
                     </div>
                 </div>
             </div>
