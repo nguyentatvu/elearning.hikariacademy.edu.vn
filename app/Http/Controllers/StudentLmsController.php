@@ -866,7 +866,19 @@ class StudentLmsController extends Controller
                 $passed = (int) $totalValue / (int) $point;
                 $sendUrl = null;
 
-                if ($passed >= 0) {
+                // Save test result regardless of point
+                DB::table('lms_test_result')->insert([
+                    'lmscontent_id' => $content_id,
+                    'combo_slug' => $combo_slug,
+                    'finish' => 1,
+                    'total_point' => $point,
+                    'users_id' => Auth::id(),
+                    'point' => $totalValue,
+                    'time_result' => $time,
+                    'created_by' => Auth::id(),
+                ]);
+
+                if ($passed >= 0.65) {
                     // Add rewarded point to user and save point history
                     $pointRule = getRewardPointRule('learning')['test']['thresholds'];
                     $pointPercent = (int) ($passed * 100);
@@ -897,16 +909,6 @@ class StudentLmsController extends Controller
 
                         try {
                             DB::beginTransaction();
-                            DB::table('lms_test_result')->insert([
-                                'lmscontent_id' => $content_id,
-                                'combo_slug' => $combo_slug,
-                                'finish' => 1,
-                                'total_point' => $point,
-                                'users_id' => Auth::id(),
-                                'point' => $totalValue,
-                                'time_result' => $time,
-                                'created_by' => Auth::id(),
-                            ]);
                             $this->userService->updatePoint($rewardPoint, $content_id, Auth::id());
 
                             DB::table('lms_student_view')
