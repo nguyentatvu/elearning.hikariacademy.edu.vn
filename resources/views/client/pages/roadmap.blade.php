@@ -684,11 +684,14 @@
                     // Load the days
                     if (Array.isArray(section.days)) {
                         section.days.forEach(dayData => {
+                            dayData.studied = dayData.lesson_list.some(item => item.finish == 1 && !dayData.finish_day);
                             // Create day header
                             const dayHeader = document.createElement('h4');
                             dayHeader.textContent = `Ngày ${dayData.day_number}`;
                             dayHeader.setAttribute('data-day', dayData.day_number);
                             dayHeader.setAttribute('data-finished', dayData.finish_day);
+                            dayHeader.setAttribute('data-studied', dayData.studied && dayData
+                                .finish_day == false ? dayData.studied : '');
                             container.appendChild(dayHeader);
 
                             // Create row for lessons
@@ -747,7 +750,8 @@
                     dayPositions.push({
                         day: $(element).data('day'),
                         position: positionFromTop - headerHeight - seriecCardHeight,
-                        isFinished: $(element).data('finished')
+                        isFinished: $(element).data('finished'),
+                        isStudied: $(element).data('studied')
                     });
                 });
 
@@ -755,8 +759,12 @@
                     const icon = $('<span class="location-day"><i class="bi bi-geo-alt-fill"></i></span>');
 
                     // Set initial color based on finish status
-                    const backgroundColor = dayPosition.isFinished ? '#198754' : '#DDDDDD';
-
+                    let backgroundColor = dayPosition.isFinished ? '#198754' : '#DDDDDD';
+                    if (dayPosition.isStudied == true) {
+                        backgroundColor = '#ffc107';
+                    } else {
+                        backgroundColor = dayPosition.isFinished ? '#198754' : '#DDDDDD';
+                    }
                     icon.css({
                         backgroundColor: backgroundColor,
                         borderRadius: '50%',
@@ -831,7 +839,7 @@
                     }
                 });
 
-                updateLocationDayColors(date);
+                // updateLocationDayColors(date);
             }
 
             // Function to update the car position when course is completed
@@ -857,31 +865,31 @@
                 }
             }
 
-            function updateLocationDayColors(currentDay) {
-                // Convert object to array and filter out non-week items
-                const sectionsArray = Object.values(sections).filter(item => Array.isArray(item?.days));
+            // function updateLocationDayColors(currentDay) {
+            //     // Convert object to array and filter out non-week items
+            //     const sectionsArray = Object.values(sections).filter(item => Array.isArray(item?.days));
 
-                dayPositions.forEach((dayPosition, index) => {
-                    const icon = $('.location-day').eq(index);
-                    const dayData = sectionsArray.flatMap(s => s.days).find(d => d.day_number == dayPosition
-                        .day);
+            //     dayPositions.forEach((dayPosition, index) => {
+            //         const icon = $('.location-day').eq(index);
+            //         const dayData = sectionsArray.flatMap(s => s.days).find(d => d.day_number == dayPosition
+            //             .day);
 
-                    let backgroundColor;
-                    if (dayData) {
-                        if (dayData.finish_day) {
-                            backgroundColor = '#198754'; // Green for completed days
-                        } else if (dayPosition.day == currentDay) {
-                            backgroundColor = '#ffc107'; // Yellow for current day
-                        } else {
-                            backgroundColor = '#DDDDDD'; // Gray for incomplete days
-                        }
-                    } else {
-                        backgroundColor = '#DDDDDD';
-                    }
+            //         let backgroundColor;
+            //         if (dayData) {
+            //             if (dayData.finish_day) {
+            //                 backgroundColor = '#198754'; // Green for completed days
+            //             } else if (dayPosition.day == currentDay) {
+            //                 backgroundColor = '#ffc107'; // Yellow for current day
+            //             } else {
+            //                 backgroundColor = '#DDDDDD'; // Gray for incomplete days
+            //             }
+            //         } else {
+            //             backgroundColor = '#DDDDDD';
+            //         }
 
-                    icon.css('background-color', backgroundColor);
-                });
-            }
+            //         icon.css('background-color', backgroundColor);
+            //     });
+            // }
 
             $('.roadmap-select').on('change', function() {
                 const selectedValue = $(this).val();
