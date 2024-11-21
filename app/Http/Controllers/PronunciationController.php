@@ -299,7 +299,7 @@ class PronunciationController extends Controller
     {
         $request->validate([
             'text' => 'required|string|max:255',
-            'audio' => 'file|mimes:mp3,wav|max:10240' // 10MB max
+            'audio' => 'file|mimes:mp3,wav,|max:10240' // 10MB max
         ]);
 
         $data = $request->only('pronunciation_id', 'text', 'audio');
@@ -331,7 +331,7 @@ class PronunciationController extends Controller
                 if (!$result) {
                     return redirect()
                         ->back()
-                        ->withErrors(['error' => 'Hệ thống không nhận diện được file audio, xin vui lòng ghi âm lại hoặc đổi file khác.'])
+                        ->withErrors(['error' => 'Hệ thống không nhận diện được file audio, xin vui lòng upload file định dang mp3.'])
                         ->withInput($request->all());
                 }
 
@@ -592,7 +592,7 @@ class PronunciationController extends Controller
 
                     return redirect()
                         ->back()
-                        ->withErrors(['error' => 'Hệ thống không nhận diện được file audio, xin vui lòng ghi âm lại hoặc đổi file khác.'])
+                        ->withErrors(['error' => 'Hệ thống không nhận diện được file audio, xin vui lòng upload file định dang mp3.'])
                         ->withInput($request->all());
                 } else {
                     $relativePath = $this->storeAudio($file, $filename, $path);
@@ -619,7 +619,7 @@ class PronunciationController extends Controller
                 }
 
                 // if (!$resultTTS) {
-                //     flash('Lỗi', 'Hệ thống không nhận diện được file audio, xin vui lòng ghi âm lại hoặc đổi file khác.', 'error');
+                //     flash('Lỗi', 'Hệ thống không nhận diện được file audio, xin vui lòng upload file định dang mp3.', 'error');
                 //     return redirect(route('lms.pronunciation_assessment.view', $id));
                 // }
             }
