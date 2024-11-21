@@ -299,7 +299,7 @@ class PronunciationController extends Controller
     {
         $request->validate([
             'text' => 'required|string|max:255',
-            'audio' => 'file|mimes:mp3,wav,|max:10240' // 10MB max
+            'audio' => 'file|mimes:mp3,wav|max:10240' // 10MB max
         ]);
 
         $data = $request->only('pronunciation_id', 'text', 'audio');
