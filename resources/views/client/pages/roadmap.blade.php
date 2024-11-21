@@ -733,6 +733,7 @@
                     title: "{{ asset('images/icons/tittle.svg') }}",
                     handwriting: "{{ asset('images/icons/handwriting.svg') }}",
                     rest: "{{ asset('images/icons/Paradise-icon.svg') }}",
+                    'pronunciation-assessment': "{{ asset('images/icons/talk.png') }}",
                 };
                 return icons[type] || "";
             }
