@@ -664,6 +664,9 @@ class PronunciationController extends Controller
                 }
             }
 
+            $this->pronunciationDetailService->deleteByKeyValueConditions([
+                'pronunciation_id' => $id
+            ]);
             $this->pronunciationService->delete($id);
             $this->lmsContentService->deleteByKeyValueConditions([
                 'pronunciation_id' => $id
