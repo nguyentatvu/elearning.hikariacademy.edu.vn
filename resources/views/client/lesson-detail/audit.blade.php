@@ -196,11 +196,11 @@
                                     <h4 class="above-text text-primary">Kết quả: {{ $totalValue }} / {{ $point }}
                                         điểm</h4>
 
-                                    <h5 class="below-text {{ $passed == 0 ? 'text-danger' : 'text-success' }}">
-                                        {{ $passed == 0 ? 'Chưa đạt yêu cầu bài kiểm tra' : 'Đạt yêu cầu bài kiểm tra' }}
+                                    <h5 class="below-text {{ $passed < 0.65 ? 'text-danger' : 'text-success' }}">
+                                        {{ $passed < 0.65 ? 'Chưa đạt yêu cầu bài kiểm tra' : 'Đạt yêu cầu bài kiểm tra' }}
                                     </h5>
 
-                                    @if ($passed == 0)
+                                    @if ($passed < 0.65)
                                         <div class="d-flex justify-content-center">
                                             <i class="bi bi-stars text-warning icon-encourage"></i>
                                             <p class="text-encourage">Bạn đã làm tốt, nhưng hãy thử ôn lại những bài trước và làm lại để nắm vững kiến thức hơn nhé!</p>
