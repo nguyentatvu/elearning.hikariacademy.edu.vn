@@ -25,6 +25,7 @@ class PaymentRepository extends BaseRepository
             })
             ->select('id', 'user_id', 'item_id', 'payments_method_id', 'time', 'created_at')
             ->orderBy('created_at', 'desc')
+            ->groupBy('payments.item_id')
             ->get()
             ->values();
 
