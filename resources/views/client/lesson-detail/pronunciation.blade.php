@@ -24,6 +24,10 @@
             font-size: 1.75rem;
             color: #166bc9;
             text-align: center;
+
+            @media (max-width: 768px) {
+                font-size: 1.5rem;
+            }
         }
 
         .loader {
@@ -106,10 +110,10 @@
         @if (isset($pronunciationDetails) && $pronunciationDetails->count() > 0)
             <div id="pronunciation_container" class="pronunciation-container">
                 <div id="pronunciation_wrapper" class="pronunciation-wrapper">
+                    <div class="instruction" id="instruction">
+                        Di chuyển chuột vào từng ký tự để xem đánh giá nhé!
+                    </div>
                     <div class="pronunciation-practice">
-                        <div class="instruction" id="instruction">
-                            Di chuyển chuột vào từng ký tự để xem đánh giá nhé!
-                        </div>
                         <div class="pronunciation-question-and-result">
                             <div class="pronunciation-text-process" id="pronunciation_text_result">
                                 <div id="pronunciation_text" class="pronunciation-text">
@@ -137,13 +141,13 @@
                                     <div id="resultl_level_1" class="pronunciation-result">
                                         <h3 class="text-center">Kết quả đánh giá độ chính xác phát âm</h3>
                                         <div id="resultl_level_1_assessment"
-                                            class="d-flex justify-content-center gap-2 ps-2 pe-2">
+                                            class="d-flex flex-wrap justify-content-center gap-2 ps-2 pe-2">
                                         </div>
                                     </div>
                                     <div id="result_level_2" class="pronunciation-result">
                                         <h3 class="text-center">Kết quả đánh giá ngữ điệu câu</h3>
                                         <div id="resultl_level_2_assessment"
-                                            class="d-flex justify-content-center gap-2 ps-2 pe-2">
+                                            class="d-flex flex-wrap justify-content-center gap-2 ps-2 pe-2">
                                         </div>
                                     </div>
                                 </div>
@@ -578,7 +582,7 @@
         function closeResultBlock() {
             instruction.css('display', 'none');
             $('#student_speech_result').css('display', 'none');
-            $('#pronunciation_text_result').css('display', 'flex');
+            $('#pronunciation_text_result').css('display', 'grid');
             $('#record').css('display', 'block');
             $('#reload').css('display', 'none');
             audioBlob = null;
