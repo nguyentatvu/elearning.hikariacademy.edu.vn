@@ -614,10 +614,8 @@ class PronunciationController extends Controller
                 $pronunciationDetail->text = $data['text'];
                 $pronunciationDetail->save();
 
-                if (!($pronunciationDetail->audio && file_exists(public_path($pronunciationDetail->audio)))) {
-                    $pronunciationUploadPath = public_path('uploads/pronunciation');
-                    $resultTTS = $this->storeAudioFileFromTextToSpeech($pronunciationDetail, $id, $pronunciationUploadPath);
-                }
+                $pronunciationUploadPath = public_path('uploads/pronunciation');
+                $resultTTS = $this->storeAudioFileFromTextToSpeech($pronunciationDetail, $id, $pronunciationUploadPath);
 
                 // if (!$resultTTS) {
                 //     flash('Lỗi', 'Hệ thống không nhận diện được file audio, xin vui lòng upload file định dạng mp3.', 'error');
