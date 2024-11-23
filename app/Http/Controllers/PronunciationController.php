@@ -838,7 +838,7 @@ class PronunciationController extends Controller
             // names of voices can be retrieved with $client->listVoices()
             $voice = (new VoiceSelectionParams())
                 ->setLanguageCode('ja-JP')
-                ->setSsmlGender(SsmlVoiceGender::NEUTRAL);
+                ->setSsmlGender(SsmlVoiceGender::MALE);
 
             $audioConfig = (new AudioConfig())
                 ->setAudioEncoding(AudioEncoding::MP3);
