@@ -7,7 +7,6 @@ use App\Pronunciation;
 use App\PronunciationDetail;
 use App\Services\IntonationService;
 use App\Services\LmsContentService;
-use App\Services\Logger;
 use App\Services\PronunciationDetailService;
 use App\Services\PronunciationService;
 use CURLFile;
@@ -24,6 +23,7 @@ use Google\Cloud\TextToSpeech\V1\SsmlVoiceGender;
 use Google\Cloud\TextToSpeech\V1\SynthesisInput;
 use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
 use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
+use \App\Logger;
 
 class PronunciationController extends Controller
 {
@@ -303,6 +303,7 @@ class PronunciationController extends Controller
         ]);
 
         $data = $request->only('pronunciation_id', 'text', 'audio');
+        $newFilePath = '';
 
         DB::beginTransaction();
         try {
@@ -352,7 +353,7 @@ class PronunciationController extends Controller
             DB::rollBack();
             Log::error('Audio upload error: ' . $e->getMessage());
 
-            if ($newFilePath && file_exists($newFilePath)) {
+            if (isset($newFilePath) && file_exists($newFilePath)) {
                 unlink($newFilePath);
             }
 
