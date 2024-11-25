@@ -414,9 +414,8 @@
                                     @foreach ($road_map as $item)
                                         @php
                                             $roadmapContents = json_decode($item->contents);
-                                            $lastDayNum = end($roadmapContents)->day_number;
                                         @endphp
-                                        <option value="{{ $item->duration_months }}">{{ $lastDayNum }} ngày
+                                        <option value="{{ $item->duration_months }}">{{ $item->duration_months }} tháng
                                         </option>
                                     @endforeach
                                 </select>
@@ -687,7 +686,7 @@
                             dayData.studied = dayData.lesson_list.some(item => item.finish == 1 && !dayData.finish_day);
                             // Create day header
                             const dayHeader = document.createElement('h4');
-                            dayHeader.textContent = `Ngày ${dayData.day_number}`;
+                            dayHeader.textContent = `Tháng ${dayData.day_number}`;
                             dayHeader.setAttribute('data-day', dayData.day_number);
                             dayHeader.setAttribute('data-finished', dayData.finish_day);
                             dayHeader.setAttribute('data-studied', dayData.studied && dayData
@@ -935,7 +934,7 @@
                         $('.left-side').show();
                         $('#information-serie').html(`
                     <div>
-                        <strong>🏁 Lộ trình ${response.last_roadmap_day} ngày:</strong>
+                        <strong>🏁 Lộ trình ${response.last_roadmap_month} tháng:</strong>
                         Hoàn thành mục tiêu trong ${response.last_roadmap_day} ngày chỉ với ${response.day_count} buổi học!
                     </div>
                 `);
