@@ -113,7 +113,7 @@ function showRoadmapDetails(course, roadmapId, selectedNewDurationMonths = -1) {
     // show roadmap title
     $("#roadmapTitle").empty();
     $("#roadmapTitle").append(`
-        Lộ trình <span class="roadmap-day-count">${durationDays}</span> ngày - ${course.title}
+        Lộ trình <span class="roadmap-month-count">${currentDurationMonths}</span> tháng - ${course.title}
     `);
     $(".roadmap-day-count").text(durationDays);
     $("#roadmapLessonDayCount").text(roadmap?.contents?.length ?? 0);
