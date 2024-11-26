@@ -37,7 +37,7 @@ class ForgotPasswordController extends Controller
             ], 200);
         } else {
             return response()->json([
-                'message' => 'Có luỗi xảy ra, vui lòng liên hệ với quản trị viên để khắc phục!'
+                'message' => 'Có lỗi xảy ra, vui lòng liên hệ với quản trị viên để khắc phục!'
             ], 500);
         }
     }

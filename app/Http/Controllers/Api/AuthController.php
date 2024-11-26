@@ -441,7 +441,7 @@ class AuthController extends Controller
             ], Response::HTTP_OK);
         } else {
             return response()->json([
-                'error' => 'Có luỗi xảy ra, vui lòng liên hệ với quản trị viên để khắc phục!',
+                'error' => 'Có lỗi xảy ra, vui lòng liên hệ với quản trị viên để khắc phục!',
             ]);
         }
     }

@@ -66,6 +66,11 @@ class LmsSeriesComboService extends BaseService
             });
 
             $seriesAndTeachers = $this->getLmsSeriesService()->getSeriesWithTeachers($seriesArray);
+
+            if (count($seriesAndTeachers) == 1) {
+                $seriesAndTeachers[0]->image = $seriesCombo->image;
+            }
+
             $series = SeriesAndTeacherResource::collection($seriesAndTeachers);
             $seriesCombo->series = $series;
         }
@@ -83,6 +88,11 @@ class LmsSeriesComboService extends BaseService
         });
 
         $seriesAndTeachers = $this->getLmsSeriesService()->getSeriesWithTeachers($seriesArray);
+
+        if (count($seriesAndTeachers) == 1) {
+            $seriesAndTeachers[0]->image = $seriesCombo->image;
+        }
+
         $series = SeriesAndTeacherResource::collection($seriesAndTeachers);
         $seriesCombo->series = $series;
 
@@ -101,12 +111,26 @@ class LmsSeriesComboService extends BaseService
         $mySeries = $this->repository->getMySeries($userId, $type);
 
         foreach ($mySeries as &$series) {
-            $expiryDate = calculateExpiryDate($series->created_at, $series->time, $series->month_extend);
+            $expiryDate = calculateExpiryDate($series->responseTime, $series->time, $series->month_extend);
             $expiryDateTime = new DateTime($expiryDate);
             $currentDate = new DateTime();
             $series->expiry_date = $expiryDate;
             $series->is_active = ($expiryDateTime > $currentDate);
         }
+
+        $filteredSeries = [];
+        foreach ($mySeries as $series) {
+            $seriesId = $series->series_id;
+
+            if (
+                !isset($filteredSeries[$seriesId]) ||
+                new DateTime($series->expiry_date) > new DateTime($filteredSeries[$seriesId]->expiry_date)
+            ) {
+                $filteredSeries[$seriesId] = $series;
+            }
+        }
+
+        $mySeries = array_values($filteredSeries);
 
         return $mySeries;
     }
@@ -238,7 +262,7 @@ class LmsSeriesComboService extends BaseService
             if (count($seriesIdList) == 1) {
                 $item->content_count = $this->getLmsContentService()->getContentCountBySeries($seriesIdList[0]);
                 $item->chapter_count = $this->getLmsContentService()->getChapterCountBySeries($seriesIdList[0]);
-                $item->seriesList = [ $this->getLmsSeriesService()->findByIdWithRelations($seriesIdList[0], ['lmscontents']) ];
+                $item->seriesList = [$this->getLmsSeriesService()->findByIdWithRelations($seriesIdList[0], ['lmscontents'])];
             } elseif (count($seriesIdList) > 1) {
                 $chapterCount = 0;
                 $contentCount = 0;
@@ -302,7 +326,8 @@ class LmsSeriesComboService extends BaseService
      * @param string $seriesId
      * @return mixed
      */
-    public function getSingleSeriesComboBySeriesId(string $seriesId) {
+    public function getSingleSeriesComboBySeriesId(string $seriesId)
+    {
         return $this->repository->getSingleSeriesComboBySeriesId($seriesId);
     }
 }
