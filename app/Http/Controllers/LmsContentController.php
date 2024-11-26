@@ -15,6 +15,7 @@ use \App;
 use App\Services\HandwritingService;
 use App\Services\ImageService;
 use App\Services\LmsContentService;
+use App\Services\LmsFlashcardService;
 use App\Services\PronunciationService;
 
 class LmsContentController extends Controller
@@ -22,18 +23,21 @@ class LmsContentController extends Controller
     private $handwritingService;
     private $lmsContentService;
     private $pronunciationService;
+    private $lmsFlashcardService;
     private $imageService;
 
     public function __construct(
         HandwritingService $handwritingService,
         LmsContentService $lmsContentService,
         PronunciationService $pronunciationService,
+        LmsFlashcardService $lmsFlashcardService,
         ImageService $imageService
     ) {
         $this->middleware('auth');
         $this->handwritingService = $handwritingService;
         $this->lmsContentService = $lmsContentService;
         $this->pronunciationService = $pronunciationService;
+        $this->lmsFlashcardService = $lmsFlashcardService;
         $this->imageService = $imageService;
     }
     protected $examSettings;
@@ -649,6 +653,8 @@ class LmsContentController extends Controller
             return back();
         }
         $record                       = LmsContent::getRecordWithId($slug);
+        $listFlashcard = $this->lmsFlashcardService->getAll();
+        $flashcard = array_pluck($listFlashcard, 'name', 'id');
         $listHandwriting = $this->handwritingService->getAll();
         $handwriting = array_pluck($listHandwriting, 'title', 'id');
         $handwritingType = null;
@@ -664,6 +670,7 @@ class LmsContentController extends Controller
         $data['URL_LMS_CONTENT']      = PREFIX . "lms/$series/content";
         $data['series_slug']          = $series;
         $data['record']               = $record;
+        $data['flashcard'] = array(''=>'-- Chọn Flashcard --') + $flashcard;
         $data['handwriting'] = array(''=>'-- Chọn bài luyện viết --') + $handwriting;
         $data['handwriting_type'] = $handwritingType;
         $data['pronunciation'] = array('' => '-- Chọn bài luyện phát âm --') + $pronunciation;
@@ -1024,6 +1031,22 @@ class LmsContentController extends Controller
                     $record->import = '1';
                     $record->save();
                 }
+            }
+
+            if ((int) $request->loai == LmsContent::FLASHCARD) {
+                $result = $this->lmsFlashcardService->getByConditions([
+                    'id' => $request->flashcard,
+                ]);
+
+                if (!$result) {
+                    DB::rollBack();
+                    return redirect()->back()
+                        ->withErrors(['error' => 'Bài Flashcard không tồn tại'])
+                        ->withInput($request->all());
+                }
+
+                $record->flashcard_id = $request->flashcard;
+                $record->save();
             }
 
             if ((int) $request->loai == LmsContent::HANDWRITING) {

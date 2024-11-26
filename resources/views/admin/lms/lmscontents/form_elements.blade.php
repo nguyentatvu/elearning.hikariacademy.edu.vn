@@ -115,6 +115,18 @@
     class="form-control"
     name="lms_type_4" accept=".xls,.xlsx" >
   </fieldset>
+  <fieldset class="form-group col-md-6" ng-if="loai=='10'">
+    {{ Form::label('flashcard', 'Chọn bài Flashcard') }}
+    <span class="text-red">*</span>
+    {{ Form::select('flashcard', $flashcard, $value = $record->flashcard_id , $attributes = array('class'=>'form-control',
+      'ng-model'=>'flashcard',
+      'required' => true,
+      'ng-class'=>'{"has-error": formLms.flashcard.$touched}',
+      )) }}
+    <div class="validation-error" ng-messages="formLms.flashcard.$error">
+        {!! getValidationMessage()!!}
+    </div>
+  </fieldset>
   <fieldset class="form-group col-md-6" ng-if="loai=='11'">
     {{ Form::label('handwriting', 'Chọn bài luyện viết') }}
     <span class="text-red">*</span>
