@@ -262,6 +262,7 @@ class UserController extends Controller
     {
         $userId = auth()->guard('api')->user()->id;
         $mySeries = $this->userService->getMySeries($userId);
+        $mySeries = collect($mySeries);
 
         return MyCourseResource::collection($mySeries);
     }

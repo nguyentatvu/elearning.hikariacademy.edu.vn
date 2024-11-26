@@ -17,6 +17,7 @@ class UserResource extends Resource
     {
         $imageSettings = new ImageSettings();
         $image = $imageSettings->getProfilePicsThumbnailpath() . $this->image;
+        $timestamp = time();
 
         if (!$this->image || $this->image == "") {
             $image = $imageSettings->getDefaultprofilePicsThumbnailpath();
@@ -28,7 +29,7 @@ class UserResource extends Resource
             'username' => $this->username,
             'email' => $this->email,
             'phone' => $this->phone,
-            'image' => $image,
+            'image' => $image . '?t=' . $timestamp,
             'address' => $this->address,
             'reward_point' => $this->reward_point,
         ];

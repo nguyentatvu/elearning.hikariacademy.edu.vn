@@ -17,7 +17,7 @@ class SeriesComboResource extends Resource
     {
         $timeValues = config('constant.series.time');
         $imageUrl = config('constant.series_combo.image_url');
-
+        $timestamp = time();
         $currentDate = Carbon::now();
         $timeFrom = Carbon::parse($this->timefrom);
         $timeTo = Carbon::parse($this->timeto);
@@ -33,7 +33,7 @@ class SeriesComboResource extends Resource
             'selloff' => $selloffValue,
             'short_description' => $this->short_description,
             'description' => $this->description,
-            'image' => $imageUrl . $this->image,
+            'image' => $imageUrl . $this->image . '?t=' . $timestamp,
             'type' => $this->type,
             'time' => $timeValues[$this->time],
             'total_items' => $this->total_items,

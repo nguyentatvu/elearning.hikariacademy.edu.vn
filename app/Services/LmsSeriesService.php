@@ -88,7 +88,7 @@ class LmsSeriesService extends BaseService
         $series = $this->repository->getByColumnIn('id', $seriesIdList);
 
         $seriesCombo = $this->getLmsSeriesComboService()->getMySeries($user->id, LmsSeries::COURSE_AND_EXAM);
-        $seriesCombo = collect($seriesCombo->items());
+        $seriesCombo = collect($seriesCombo);
 
         $userRoadmaps = $this->userRoadmapService->getAllByConditions(['user_id' => $user->id]);
         // Create a map from 'series_id' to view info

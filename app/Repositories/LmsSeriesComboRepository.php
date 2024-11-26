@@ -103,6 +103,7 @@ class LmsSeriesComboRepository extends BaseRepository
                 'lmsseries.id as series_id',
                 'lmsseries.title',
                 'payments.time',
+                'payment_method.responseTime',
                 'payment_method.created_at',
                 'payment_method.status',
                 'payment_method.month_extend',

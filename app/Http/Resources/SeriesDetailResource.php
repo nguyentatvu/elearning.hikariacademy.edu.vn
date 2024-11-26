@@ -16,13 +16,14 @@ class SeriesDetailResource extends Resource
     {
         $timeValues = config('constant.series.time');
         $imageUrl = config('constant.series_combo.image_url');
+        $timestamp = time();
 
         return [
             'id' => $this->id,
             'title' => $this->title,
             'cost' => (int) $this->cost,
             'description' => $this->description,
-            'image' => $imageUrl . $this->image,
+            'image' => $imageUrl . $this->image . '?t=' . $timestamp,
             'time' => $timeValues[$this->time],
             'total_lessons' => $this->total_lessons,
             'payment' => $this->payment
