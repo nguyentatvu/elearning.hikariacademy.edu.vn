@@ -28,24 +28,21 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="pills-momo-tab" data-bs-toggle="pill" data-bs-target="#pills-momo" type="button"
                         role="tab" aria-controls="pills-momo" aria-selected="false">
-                        <i class="bi bi-cash"></i>
-                        <span class="ms-1">Ví MoMo (Mã QR)</span>
+                        <img src="{{ asset('images/icons/momo_square_pinkbg.svg') }}" alt="" style="width: 20px;">
                     </button>
                 </li>
                 @if (env('ENABLE_THIRDPARTY_PAYMENT', false))
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="pills-vnpay-tab" data-bs-toggle="pill" data-bs-target="#pills-vnpay"
                             type="button" role="tab" aria-controls="pills-vnpay" aria-selected="true">
-                            <i class="bi bi-currency-dollar"></i>
-                            <span class="ms-1">Thanh toán qua VNPAY</span>
+                            <img src="{{ asset('images/icons/vnpay_logo_horizontal.svg') }}" alt="" style="width: 60px;">
                         </button>
                     </li>
                 @else
                     <li class="nav-item" role="presentation" onclick="showMaintainancePaymentAlert()">
-                        <button class="nav-link disabled" id="pills-vnpay-tab" data-bs-toggle="pill" data-bs-target="#pills-vnpay"
+                        <button class="nav-link disabled"
                             type="button" role="tab" aria-controls="pills-vnpay" aria-selected="true">
-                            <i class="bi bi-currency-dollar"></i>
-                            <span class="ms-1">Thanh toán qua VNPAY</span>
+                            <img src="{{ asset('images/icons/vnpay_logo_horizontal.svg') }}" alt="" style="width: 60px; filter: grayscale(70%); opacity: 0.4;">
                         </button>
                     </li>
                 @endif

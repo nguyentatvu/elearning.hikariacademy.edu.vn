@@ -686,7 +686,7 @@
                             dayData.studied = dayData.lesson_list.some(item => item.finish == 1 && !dayData.finish_day);
                             // Create day header
                             const dayHeader = document.createElement('h4');
-                            dayHeader.textContent = `Tháng ${dayData.day_number}`;
+                            dayHeader.textContent = `Ngày ${dayData.day_number}`;
                             dayHeader.setAttribute('data-day', dayData.day_number);
                             dayHeader.setAttribute('data-finished', dayData.finish_day);
                             dayHeader.setAttribute('data-studied', dayData.studied && dayData

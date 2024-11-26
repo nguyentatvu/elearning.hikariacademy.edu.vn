@@ -577,7 +577,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="studyPath" value="${roadmap.duration_months}" id="path${roadmap.duration_months}">
                                 <label class="form-check-label fs-5" for="path${roadmap.duration_months}">
-                                    ${finalRoadmapDay.day_number} ngày
+                                    ${roadmap.duration_months} tháng
                                 </label>
                                 <div class="text-muted">Hoàn thành trong ${finalRoadmapDay.day_number} ngày với ${roadmap.contents.length} buổi học</div>
                             </div>
