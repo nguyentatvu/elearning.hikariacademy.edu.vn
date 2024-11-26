@@ -57,7 +57,8 @@
             'series_slug'=>$series_slug,
             'handwriting' => $handwriting,
             'handwriting_type' => $handwriting_type,
-            'pronunciation' => $pronunciation
+            'pronunciation' => $pronunciation,
+            'flashcard' => $flashcard
           ))
 
           {!! Form::close() !!}

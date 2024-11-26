@@ -515,7 +515,12 @@ class StudentLmsController extends Controller
         $this->processLessonContent($combo_slug, $slug, $stt);
         $preparedContent = $this->getPreparedContentVariables();
         $flashcardId = $preparedContent['detailContent']->flashcard_id;
-        $flashcard = $this->lmsContentService->getFlashcardContent($flashcardId);
+        $flashcard = null;
+
+        if ($flashcardId) {
+            $flashcard = $this->lmsContentService->getFlashcardContent($flashcardId);
+        }
+
         return view('client.lesson-detail.flashcard', array_merge(
             $preparedContent,
             ['type' => 'flashcard'],

@@ -7,56 +7,69 @@
 
 @section('lesson-detail-content')
     @php
-        $flashcardDetail = $flashcard->flashcardDetails;
+        if (isset($flashcard)) {
+            $flashcardDetail = $flashcard->flashcardDetails;
+        } else {
+            $flashcardDetail = null;
+        }
+
     @endphp
     <div id="flashcard_body" class="flashcard-body">
-        <div class="flashcard-container">
-            <div id="flashcard_wrapper" class="flashcard-wrapper">
-                <div id="flashcard_arrow_left" class="flashcard-arrow">
-                    <img src="{{ asset('images/icons/arrow-left.png') }}" alt="flashcard_arrow_left">
-                </div>
-                <div id="flashcard_content" class="flashcard-content">
-                    @foreach ($flashcardDetail as $detail)
-                        <div id="card{{ $loop->index + 1 }}" class="flashcard" data-card-id="{{ $loop->index + 1 }}">
-                            <div id="flashcard_front" class="flashcard-side front">
-                                <span class="flashcard-word">{!! change_furigana($detail->m1tuvung, 'echo') !!}</span>
-                                <span class="flashcard-example">{!! change_furigana($detail->m1vidu, 'echo') !!}</span>
-                                <span class="flashcard-instruction">クリックして反転</span>
+        @if (isset($flashcardDetail) && $flashcardDetail->count() > 0)
+            <div class="flashcard-container">
+                <div id="flashcard_wrapper" class="flashcard-wrapper">
+                    <div id="flashcard_arrow_left" class="flashcard-arrow">
+                        <img src="{{ asset('images/icons/arrow-left.png') }}" alt="flashcard_arrow_left">
+                    </div>
+                    <div id="flashcard_content" class="flashcard-content">
+                        @foreach ($flashcardDetail as $detail)
+                            <div id="card{{ $loop->index + 1 }}" class="flashcard" data-card-id="{{ $loop->index + 1 }}">
+                                <div id="flashcard_front" class="flashcard-side front">
+                                    <span class="flashcard-word">{!! change_furigana($detail->m1tuvung, 'echo') !!}</span>
+                                    <span class="flashcard-example">{!! change_furigana($detail->m1vidu, 'echo') !!}</span>
+                                    <span class="flashcard-instruction">クリックして反転</span>
+                                </div>
+                                <div id="flashcard_back" class="flashcard-side back">
+                                    <span class="flashcard-meaning">{!! change_furigana($detail->m2ynghia, 'echo') !!}</span>
+                                    <span class="flashcard-reading">{!! change_furigana($detail->m2cachdoc, 'echo') !!}</span>
+                                    <span class="flashcard-sino-vietnamese">{!! change_furigana($detail->m2amhanviet, 'echo') !!}</span>
+                                    <span class="flashcard-example">{!! change_furigana($detail->m2vidu, 'echo') !!}</span>
+                                    <span class="flashcard-instruction">Click để lật mặt</span>
+                                </div>
+                                <div id="audio{{ $loop->index + 1 }}" data-audio ="{{ $detail->mp3 }}" style="display: none">
+                                </div>
                             </div>
-                            <div id="flashcard_back" class="flashcard-side back">
-                                <span class="flashcard-meaning">{!! change_furigana($detail->m2ynghia, 'echo') !!}</span>
-                                <span class="flashcard-reading">{!! change_furigana($detail->m2cachdoc, 'echo') !!}</span>
-                                <span class="flashcard-sino-vietnamese">{!! change_furigana($detail->m2amhanviet, 'echo') !!}</span>
-                                <span class="flashcard-example">{!! change_furigana($detail->m2vidu, 'echo') !!}</span>
-                                <span class="flashcard-instruction">Click để lật mặt</span>
-                            </div>
-                            <div id="audio{{ $loop->index + 1 }}" data-audio ="{{ $detail->mp3 }}" style="display: none">
-                            </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
+                    <div id="flashcard_arrow_right" class="flashcard-arrow">
+                        <img src="{{ asset('images/icons/arrow-right.png') }}" alt="flashcard_arrow_left">
+                    </div>
                 </div>
-                <div id="flashcard_arrow_right" class="flashcard-arrow">
-                    <img src="{{ asset('images/icons/arrow-right.png') }}" alt="flashcard_arrow_left">
+                <div class="flashcard-page">
+                    <span id="current_page">1</span> / {{ count($flashcardDetail) }}
                 </div>
-            </div>
-            <div class="flashcard-page">
-                <span id="current_page">1</span> / {{ count($flashcardDetail) }}
-            </div>
-            <div class="flashcard-mode">
-                <div id="mode_auto" class="mode mode-atuo" onclick="changeMode('mode_auto')">Tự động
-                    chuyển</div>
-                <div id="mode_normal" class="mode mode-normal active" onclick="changeMode('mode_normal')">
-                    Ngừng</div>
-                <div id="mode_random" class="mode mode-random" onclick="changeMode('mode_random')">Xem ngẫu
-                    nhiên
+                <div class="flashcard-mode">
+                    <div id="mode_auto" class="mode mode-atuo" onclick="changeMode('mode_auto')">Tự động
+                        chuyển</div>
+                    <div id="mode_normal" class="mode mode-normal active" onclick="changeMode('mode_normal')">
+                        Ngừng</div>
+                    <div id="mode_random" class="mode mode-random" onclick="changeMode('mode_random')">Xem ngẫu
+                        nhiên
+                    </div>
+                </div>
+                <div class="flashcard-toggle-switch">
+                    <input type="checkbox" id="flashcard-toggle" class="flashcard-toggle-checkbox">
+                    <label for="flashcard-toggle" class="flashcard-toggle-label"></label>
+                    <span>Âm thanh</span>
                 </div>
             </div>
-            <div class="flashcard-toggle-switch">
-                <input type="checkbox" id="flashcard-toggle" class="flashcard-toggle-checkbox">
-                <label for="flashcard-toggle" class="flashcard-toggle-label"></label>
-                <span>Âm thanh</span>
+        @else
+            <div class="d-flex justify-content-center align-items-center w-100" style="height: 40vh;">
+                <div class="alert alert-warning fs-4 mt-3" role="alert">
+                    <span>Bài học sẽ sớm có thôi, bạn quay lại sau nhé!</span>
+                </div>
             </div>
-        </div>
+        @endif
     </div>
 @endsection
 
