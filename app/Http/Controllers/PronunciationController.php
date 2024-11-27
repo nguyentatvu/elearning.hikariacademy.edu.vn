@@ -410,7 +410,7 @@ class PronunciationController extends Controller
             if (!$result) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Failed to upload audio: ' . $e->getMessage()
+                    'message' => 'Failed to upload audio'
                 ], 500);
             }
 

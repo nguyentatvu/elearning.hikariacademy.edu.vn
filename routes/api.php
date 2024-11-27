@@ -49,6 +49,9 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::get('', 'Api\LmsContentController@getContents');
             Route::get('in-progress', 'Api\LmsContentController@getInProgressContent');
             Route::get('{lessonId}', 'Api\LmsContentController@getContentById');
+            Route::post('start', 'Api\LmsContentController@startContent');
+            Route::post('finish', 'Api\LmsContentController@finishContent');
+
         });
 
     Route::prefix('test')

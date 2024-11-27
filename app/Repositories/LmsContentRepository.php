@@ -16,7 +16,7 @@ class LmsContentRepository extends BaseRepository
      * @param bool $isValid
      * @return \Illuminate\Support\Collection
      */
-    public function getContents(int $seriesId, bool $isValid)
+    public function getContents(int $userId, int $seriesId, bool $isValid)
     {
         $series = LmsSeries::where('delete_status', 0)->find($seriesId);
 
@@ -24,7 +24,7 @@ class LmsContentRepository extends BaseRepository
             return null;
         }
 
-        return $this->getChildContent(null, $seriesId, $isValid);
+        return $this->getChildContent(null, $seriesId, $isValid, $userId);
     }
 
     /**
@@ -35,10 +35,14 @@ class LmsContentRepository extends BaseRepository
      * @param bool $isValid
      * @return \Illuminate\Support\Collection
      */
-    private function getChildContent(?int $parentId, int $seriesId, bool $isValid)
+    private function getChildContent(?int $parentId, int $seriesId, bool $isValid, int $userId)
     {
         $contents = $this->model::query()
             ->select('id', 'bai as title', 'type', 'el_try', 'parent_id')
+            ->with(['lmsStudentView' => function ($query) use ($userId) {
+                $query->select('finish', 'lmscontent_id')
+                    ->where('users_id', $userId);
+            }])
             ->where('lmsseries_id', $seriesId)
             ->where('parent_id', $parentId)
             ->where('delete_status', 0)
@@ -56,17 +60,22 @@ class LmsContentRepository extends BaseRepository
                     LmsContent::SUMMARY_EXERCISE,
                     LmsContent::TEST,
                     LmsContent::KANJI,
+                    LmsContent::REVIEW_EXERCISE,
                     LmsContent::SUMMARY_AND_INTRODUCTION,
-                    LmsContent::FLASHCARD
+                    LmsContent::FLASHCARD,
+                    LmsContent::HANDWRITING,
+                    LmsContent::PRONUNCIATION_ASSESSMENT
                 ])
             ) {
                 $content->is_locked = true;
+                $content->is_finished = false;
             } else {
                 $content->is_locked = false;
+                $content->is_finished = ($content->lmsStudentView->first() && $content->lmsStudentView->first()->finish == 1) ? true : false;
             }
 
-            $content->makeHidden(['el_try']);
-            $content->children = $this->getChildContent($content->id, $seriesId, $isValid);
+            $content->makeHidden(['el_try', 'lmsStudentView']);
+            $content->children = $this->getChildContent($content->id, $seriesId, $isValid, $userId);
         }
 
         return $contents;
@@ -100,12 +109,11 @@ class LmsContentRepository extends BaseRepository
             $query->where('delete_status', 0);
         }])
             ->whereHas('lmsStudentView', function ($query) use ($userId) {
-                $query->where('users_id', $userId)
-                    ->where('finish', 0);
+                $query->where('users_id', $userId);
             })
             ->where('lmsseries_id', $seriesId)
             ->where('delete_status', 0)
-            ->orderBy('stt', 'desc')
+            ->orderBy('created_at', 'desc')
             ->first();
 
         return $content;

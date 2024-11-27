@@ -190,10 +190,7 @@ class UserController extends Controller
      *         response=200,
      *         description="List of my courses",
      *         @SWG\Schema(
-     *             type="object",
-     *             @SWG\Property(
-     *                 property="data",
-     *                 type="array",
+     *             type="array",
      *                 @SWG\Items(
      *                     type="object",
      *                     @SWG\Property(property="series_combo_id", type="integer", example="1"),
@@ -217,26 +214,6 @@ class UserController extends Controller
      *                         "completed_lessons": 5
      *                     }
      *                 }
-     *             ),
-     *             @SWG\Property(
-     *                 property="links",
-     *                 type="object",
-     *                 @SWG\Property(property="first", type="string", example="http://hikari.test:8091/api/user/my-courses?page=1"),
-     *                 @SWG\Property(property="last", type="string", example="http://hikari.test:8091/api/user/my-courses?page=1"),
-     *                 @SWG\Property(property="prev", type="string", example=null),
-     *                 @SWG\Property(property="next", type="string", example=null)
-     *             ),
-     *             @SWG\Property(
-     *                 property="meta",
-     *                 type="object",
-     *                 @SWG\Property(property="current_page", type="integer", example=1),
-     *                 @SWG\Property(property="from", type="integer", example=1),
-     *                 @SWG\Property(property="last_page", type="integer", example=1),
-     *                 @SWG\Property(property="path", type="string", example="http://hikari.test:8091/api/user/my-courses"),
-     *                 @SWG\Property(property="per_page", type="integer", example=10),
-     *                 @SWG\Property(property="to", type="integer", example=8),
-     *                 @SWG\Property(property="total", type="integer", example=8)
-     *             )
      *         )
      *     ),
      *     @SWG\Response(
@@ -264,6 +241,8 @@ class UserController extends Controller
         $mySeries = $this->userService->getMySeries($userId);
         $mySeries = collect($mySeries);
 
-        return MyCourseResource::collection($mySeries);
+        return response()->json([
+            'data' => MyCourseResource::collection($mySeries)
+        ]);
     }
 }

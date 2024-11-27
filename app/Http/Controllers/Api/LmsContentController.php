@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\ContentResource;
+use App\LmsContent;
 use App\Services\LmsContentService;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * @SWG\Tag(
@@ -278,5 +280,161 @@ class LmsContentController extends Controller
         }
 
         return new ContentResource($content);
+    }
+
+    /**
+     * @SWG\Post(
+     *     tags={"Lesson"},
+     *     path="/lesson/start",
+     *     summary="Start lesson",
+     *     @SWG\Parameter(
+     *         name="body",
+     *         in="body",
+     *         description="Lesson start",
+     *         required=true,
+     *         @SWG\Schema(
+     *             @SWG\Property(property="content_id", type="integer", example=1),
+     *             @SWG\Property(property="series_id", type="integer", example=43),
+     *         ),
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successfully",
+     *         @SWG\Schema(
+     *             type="object",
+     *             @SWG\Property(property="message", type="string", example="Cập nhật thành công"),
+     *         )
+     *     ),
+     *     @SWG\Response(
+     *         response=422,
+     *         description="Unprocessable Entity",
+     *         @SWG\Schema(
+     *             type="object",
+     *             @SWG\Property(property="error", type="object",
+     *                 @SWG\Property(property="content_id", type="array", @SWG\Items(type="integer")),
+     *                 @SWG\Property(property="series_id", type="array", @SWG\Items(type="integer"))
+     *             )
+     *         )
+     *     ),
+     *     @SWG\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @SWG\Schema(
+     *             type="object",
+     *             @SWG\Property(property="error", type="string", example="Something went wrong.")
+     *         )
+     *     ),
+     *     security={{"bearer_token": {}}},
+     * )
+     */
+    public function startContent(Request $request)
+    {
+        $data = $request->only(['content_id', 'series_id']);
+        $validator = Validator::make($data, [
+            'content_id' => 'bail|required|exists:lmscontents,id',
+            'series_id' => 'bail|required|exists:lmsseries,id',
+        ], [
+            'content_id.exists' => 'Bài học không tồn tại',
+            'series_id.exists' => 'Khoá học không tồn tại',
+        ]);
+
+        $user = auth()->guard('api')->user();
+        $this->lmsSContentService->startContent($user, $data['series_id'], $data['content_id']);
+        return response()->json(['message' => 'Cập nhật thành công'], Response::HTTP_OK);
+    }
+
+    /**
+     * @SWG\Post(
+     *     tags={"Lesson"},
+     *     path="/lesson/finish",
+     *     summary="Finish lesson",
+     *     @SWG\Parameter(
+     *         name="body",
+     *         in="body",
+     *         description="Lesson finish",
+     *         required=true,
+     *         @SWG\Schema(
+     *             @SWG\Property(property="content_id", type="integer", example=1),
+     *             @SWG\Property(property="score_percentage", type="number", example=65.5),
+     *         ),
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successfully",
+     *         @SWG\Schema(
+     *             type="object",
+     *             @SWG\Property(property="message", type="string", example="Hoàn thành bài học"),
+     *         )
+     *     ),
+     *     @SWG\Response(
+     *         response=422,
+     *         description="Unprocessable Entity",
+     *         @SWG\Schema(
+     *             type="object",
+     *             @SWG\Property(property="error", type="object",
+     *                 @SWG\Property(property="content_id", type="array", @SWG\Items(type="integer")),
+     *                 @SWG\Property(property="score_percentage", type="array", @SWG\Items(type="integer"))
+     *             )
+     *         )
+     *     ),
+     *     @SWG\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @SWG\Schema(
+     *             type="object",
+     *             @SWG\Property(property="error", type="string", example="Something went wrong.")
+     *         )
+     *     ),
+     *     security={{"bearer_token": {}}},
+     * )
+     */
+    public function finishContent(Request $request)
+    {
+        $data = $request->only(['content_id', 'score_percentage']);
+        $validator = Validator::make($data, [
+            'content_id' => 'bail|required|exists:lmscontents,id',
+            'score_percentage' => 'bail|required|numeric|min:65|max:100',
+        ], [
+            'content_id.exists' => 'Bài học không tồn tại',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $contentType = $this->lmsSContentService->findById($data['content_id'])->type;
+        $userId = auth()->guard('api')->user()->id;
+
+        if (in_array($contentType, [LmsContent::VOCABULARY, LmsContent::STRUCTURE, LmsContent::KANJI, LmsContent::SUMMARY_AND_INTRODUCTION])) {
+            $rewardPoints = getRewardPointRule('learning')['video']['completion_points'];
+            $this->lmsSContentService->finishContent($userId, $data['content_id'], $rewardPoints, 'video');
+        } else if (in_array($contentType, [LmsContent::PARTIAL_EXERCISE, LmsContent::SUMMARY_EXERCISE, LmsContent::REVIEW_EXERCISE])) {
+            $pointRule = getRewardPointRule('learning')['exercise']['thresholds'];
+            $rewardPoints = 0;
+
+            for ($i = count($pointRule) - 1; $i >= 0; $i--) {
+                if ($data['score_percentage'] >= $pointRule[$i]['percentage']) {
+                    $rewardPoints = $pointRule[$i]['points'];
+                    break;
+                }
+            }
+
+            $this->lmsSContentService->finishContent($userId, $data['content_id'], $rewardPoints, 'exercise_test');
+        } else if (in_array($contentType, [LmsContent::TEST])) {
+            $pointRule = getRewardPointRule('learning')['test']['thresholds'];
+            $rewardedPoint = 0;
+
+            for ($i = 0; $i < count($pointRule); $i++) {
+                if ($data['score_percentage'] >= $pointRule[$i]['percentage']) {
+                    $rewardedPoint = $pointRule[$i]['points'];
+                }
+            }
+
+            $this->lmsSContentService->finishContent($userId, $data['content_id'], $rewardedPoint, 'exercise_test');
+        }
+
+        return response()->json([
+            'message' => 'Hoàn thành bài học'
+        ], Response::HTTP_OK);
     }
 }

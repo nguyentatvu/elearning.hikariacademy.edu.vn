@@ -6,10 +6,12 @@ use App\Http\Resources\ExerciseResource;
 use App\Http\Resources\FlashcardResource;
 use App\Http\Resources\TestResource;
 use App\LmsContent;
+use App\LmsStudentView;
 use App\Repositories\LmsContentRepository;
 use App\Repositories\LmsExamRepository;
 use App\Repositories\LmsTestRepository;
 use App\Repositories\PaymentMethodRepository;
+use App\User;
 
 class LmsContentService extends BaseService
 {
@@ -21,6 +23,8 @@ class LmsContentService extends BaseService
     private $handwritingService;
     private $lmsSeriesComboService;
     private $pronunciationService;
+    private $userService;
+    private $lmsStudentViewService;
 
     public function __construct(
         LmsContentRepository $repository,
@@ -31,7 +35,9 @@ class LmsContentService extends BaseService
         LmsSeriesService $lmsSeriesService,
         HandwritingService $handwritingService,
         LmsSeriesComboService $lmsSeriesComboService,
-        PronunciationService $pronunciationService
+        PronunciationService $pronunciationService,
+        UserService $userService,
+        LmsStudentViewService $lmsStudentViewService
     ) {
         parent::__construct($repository);
         $this->paymentMethodRepository = $paymentMethodRepository;
@@ -42,6 +48,8 @@ class LmsContentService extends BaseService
         $this->handwritingService = $handwritingService;
         $this->lmsSeriesComboService = $lmsSeriesComboService;
         $this->pronunciationService = $pronunciationService;
+        $this->userService = $userService;
+        $this->lmsStudentViewService = $lmsStudentViewService;
     }
 
     /**
@@ -62,7 +70,7 @@ class LmsContentService extends BaseService
 
         $isValid = $this->paymentMethodRepository->checkSerieValidity($userId, $seriesComboId);
 
-        return $this->repository->getContents($seriesId, $isValid);
+        return $this->repository->getContents($userId, $seriesId, $isValid);
     }
 
     /**
@@ -107,10 +115,14 @@ class LmsContentService extends BaseService
         }
 
         if ($lmsContent->type == LmsContent::FLASHCARD) {
-            $content = $this->getFlashcardContent($lmsContent->flashcard_id);
+            if (!$lmsContent->flashcard_id) {
+                $lmsContent->content = [];
+            } else {
+                $content = $this->getFlashcardContent($lmsContent->flashcard_id);
 
-            if ($content) {
-                $content = FlashcardResource::collection($content->flashcardDetails);
+                if ($content) {
+                    $content = FlashcardResource::collection($content->flashcardDetails);
+                }
             }
         }
 
@@ -135,7 +147,7 @@ class LmsContentService extends BaseService
             return null;
         }
 
-        $lmsContent = $this->repository->getInProgressContent($userId, $seriesId);
+        $lmsContent = $this->lmsStudentViewService->getLastFinishedContentOfStudent($seriesId);
         $content = [];
 
         if (!$lmsContent) {
@@ -151,10 +163,14 @@ class LmsContentService extends BaseService
         }
 
         if ($lmsContent->type == LmsContent::FLASHCARD) {
-            $content = $this->getFlashcardContent($lmsContent->flashcard_id);
+            if (!$lmsContent->flashcard_id) {
+                $lmsContent->content = [];
+            } else {
+                $content = $this->getFlashcardContent($lmsContent->flashcard_id);
 
-            if ($content) {
-                $content = FlashcardResource::collection($content->flashcardDetails);
+                if ($content) {
+                    $content = FlashcardResource::collection($content->flashcardDetails);
+                }
             }
         }
 
@@ -208,7 +224,8 @@ class LmsContentService extends BaseService
      * @param string $seriesId
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    function getListContents(string $seriesId) {
+    function getListContents(string $seriesId)
+    {
         return $this->repository->getListContents($seriesId);
     }
 
@@ -219,7 +236,8 @@ class LmsContentService extends BaseService
      * @param string $contentId
      * @return array
      */
-    public function getActiveContentIdList(string $contentId) {
+    public function getActiveContentIdList(string $contentId)
+    {
         $content = $this->repository->findByIdWithAncestors($contentId);
 
         if (is_null($content)) {
@@ -244,7 +262,8 @@ class LmsContentService extends BaseService
      * @param string $contentId
      * @return boolean
      */
-    public function checkTrialContent(string $contentId) {
+    public function checkTrialContent(string $contentId)
+    {
         return optional($this->repository->findById((int) $contentId))->el_try === LmsContent::TRIAL_TYPE;
     }
 
@@ -254,7 +273,8 @@ class LmsContentService extends BaseService
      * @param string $seriesId
      * @return mixed(LmsContent|null)
      */
-    public function getFirstContentOfSeries(string $seriesId) {
+    public function getFirstContentOfSeries(string $seriesId)
+    {
         return $this->repository->getFirstContentOfSeries($seriesId);
     }
 
@@ -264,7 +284,8 @@ class LmsContentService extends BaseService
      * @param string $seriesId
      * @return mixed(LmsContent|null)
      */
-    public function getFirstTrialContentOfSeries(string $seriesId) {
+    public function getFirstTrialContentOfSeries(string $seriesId)
+    {
         return $this->repository->getFirstTrialContentOfSeries($seriesId);
     }
 
@@ -275,7 +296,8 @@ class LmsContentService extends BaseService
      * @param mixed $seriesSlug
      * @return mixed(LmsContent|null)
      */
-    public function getNextContent($contentId, $seriesSlug) {
+    public function getNextContent($contentId, $seriesSlug)
+    {
         $seriesId = optional($this->lmsSeriesService->getByCondition('slug', $seriesSlug))->id;
         $contentOrder = optional($this->repository->findById($contentId))->stt;
         if (is_null($seriesId) || is_null($contentOrder)) {
@@ -292,7 +314,8 @@ class LmsContentService extends BaseService
      * @param mixed $seriesSlug
      * @return mixed(LmsContent|null)
      */
-    public function getPreviousContent($contentId, $seriesSlug) {
+    public function getPreviousContent($contentId, $seriesSlug)
+    {
         $seriesId = optional($this->lmsSeriesService->getByCondition('slug', $seriesSlug))->id;
         $contentOrder = optional($this->repository->findById($contentId))->stt;
         if (is_null($seriesId) || is_null($contentOrder)) {
@@ -308,7 +331,8 @@ class LmsContentService extends BaseService
      * @param string $contentId
      * @return \Illuminate\Support\Collection
      */
-    public function getFormattedExerciseContent(string $contentId) {
+    public function getFormattedExerciseContent(string $contentId)
+    {
         $exercises =  $this->repository->getFormattedExerciseContent($contentId);
 
         if (!$exercises->isEmpty()) {
@@ -347,7 +371,8 @@ class LmsContentService extends BaseService
      * @param int $seriesId
      * @return int
      */
-    public function getContentCountBySeries(int $seriesId) {
+    public function getContentCountBySeries(int $seriesId)
+    {
         return $this->repository->getContentCountBySeries($seriesId);
     }
 
@@ -375,5 +400,75 @@ class LmsContentService extends BaseService
     public function getChapterCountBySeries(int $seriesId)
     {
         return $this->repository->getChapterCountBySeries($seriesId);
+    }
+
+    public function startContent(User $user, int $seriesId, int $contentId)
+    {
+        $studentView = $this->lmsStudentViewService
+            ->getByConditions([
+                'lmscontent_id' => $contentId,
+                'users_id' => $user->id,
+            ]);
+
+        if (!$studentView) {
+            $this->lmsStudentViewService->insert([
+                'lmscontent_id' => $contentId,
+                'users_id' => $user->id,
+                'finish' => LmsStudentView::NOT_FINISHED,
+                'created_date' => date('Y-m-d H:i:s'),
+            ]);
+
+            $this->userService->updateSeriesViewsHistory(
+                $user->series_views_history ?? [],
+                $seriesId
+            );
+        } else if ($studentView) {
+            $studentView->update([
+                'created_date' => date('Y-m-d H:i:s')
+            ]);
+        }
+    }
+
+    public function finishContent(int $userId, int $contentId, int $earnedPoints, string $pointHistoryType)
+    {
+        $studentView = $this->lmsStudentViewService->getByConditions([
+            'lmscontent_id' => $contentId,
+            'users_id' => $userId,
+            'finish' => LmsStudentView::NOT_FINISHED
+        ]);
+
+        $content = $this->repository->getByConditions([
+            'id' => $contentId
+        ], ['type']);
+
+        if ($content && $studentView && in_array($content->type, [
+            LmsContent::FLASHCARD,
+            LmsContent::HANDWRITING,
+            LmsContent::PRONUNCIATION_ASSESSMENT
+        ])) {
+            $studentView->update([
+                'finish' => LmsStudentView::FINISH,
+                'reward_point' => 0,
+                'updated_at' => date('Y-m-d H:i:s')
+            ], [
+                'lmscontent_id' => $contentId,
+                'users_id' => $userId,
+            ]);
+        } else if ($studentView && $earnedPoints > 0) {
+            $user = $this->userService->findById($userId);
+            $this->userService->updatePointHistory([$pointHistoryType => $earnedPoints], $userId);
+            $user->update([
+                'reward_point' => $user->reward_point + $earnedPoints
+            ]);
+
+            $studentView->update([
+                'finish' => LmsStudentView::FINISH,
+                'reward_point' => $earnedPoints,
+                'updated_at' => date('Y-m-d H:i:s')
+            ], [
+                'lmscontent_id' => $contentId,
+                'users_id' => $userId,
+            ]);
+        }
     }
 }

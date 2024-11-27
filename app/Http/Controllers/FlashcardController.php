@@ -314,8 +314,12 @@ class FlashcardController extends Controller
                 $reader->noHeading();
             })->get()->toArray();
 			$path_upload = public_path() . '/uploads/flashcard/';
-            
+
 			foreach($datas as $data){
+                if (empty(trim($data[0])) || empty(trim($data[1]))) {
+                    flash('success', 'Cập nhật Flashcard từ file Excel thành công', 'success');
+                    return redirect('/lms/flashcard/');
+                }
                 //$nameTrans = time().'.mp3';
                 $record = new FlashcardDetail();
 				
@@ -359,10 +363,14 @@ class FlashcardController extends Controller
             $datas = Excel::selectSheetsByIndex(0)->load($path, function ($reader) {
                 $reader->noHeading();
             })->get()->toArray();
-            // dd($datas);
+
 			$path_upload = public_path() . '/uploads/flashcard/';
             
 			foreach($datas as $data){
+                if (empty(trim($data[0])) || empty(trim($data[1]))) {
+                    flash('success', 'Cập nhật Flashcard từ file Excel thành công', 'success');
+                    return redirect('/lms/flashcard/');
+                }
                 //$nameTrans = time().'.mp3';
                 $record = new FlashcardDetail();
                 $record->flashcard_id   = $record_f->id;
