@@ -111,7 +111,7 @@
                                 alt="" height="70">
                         </a>
                         <!-- Android Download Button -->
-                        <a href="{{ route('downloadApp', ['encoded' => Crypt::encrypt('apk')]) }}"
+                        <a href="https://play.google.com/store/apps/details?id=com.elearning_app"
                             class="download-button ajax-download android-img">
                              <img src="{{ asset('images/icons/android-dowload.png') }}" alt="">
                          </a>
