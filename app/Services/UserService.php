@@ -275,7 +275,13 @@ class UserService extends BaseService
     public function uploadImageFile(int $id, UploadedFile $file)
     {
         $imageSetting = new ImageSettings();
-        $filename = $id . '.' . $file->guessClientExtension();
+        $extension = $file->guessClientExtension();
+
+        if (empty($extension)) {
+            $extension = 'jpeg';
+        }
+
+        $filename = $id . '.' . $extension;
         $this->imageService->removeAllImagesWithTheSameName($id, $imageSetting->getUploadUserThumbnailPath());
         $this->imageService->save($file, $filename);
 

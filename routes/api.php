@@ -49,7 +49,6 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::get('', 'Api\LmsContentController@getContents');
             Route::get('in-progress', 'Api\LmsContentController@getInProgressContent');
             Route::get('{lessonId}', 'Api\LmsContentController@getContentById');
-            Route::post('start', 'Api\LmsContentController@startContent');
             Route::post('finish', 'Api\LmsContentController@finishContent');
 
         });
@@ -57,5 +56,15 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::prefix('test')
         ->group(function () {
             Route::post('/{lessonId}/evaluate-test', 'Api\LmsTestController@evaluateTest');
+        });
+
+    Route::prefix('v2')
+        ->group(function () {
+            Route::prefix('lesson')
+            ->group(function () {
+                Route::get('', 'Api\LmsContentController@getContentsV2');
+                Route::get('{lessonId}', 'Api\LmsContentController@getContentByIdV2');
+                Route::post('finish', 'Api\LmsContentController@finishContentV2');
+            });
         });
 });

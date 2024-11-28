@@ -9,6 +9,7 @@ use App\Services\ImageService;
 use App\Services\UserService;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -125,7 +126,7 @@ class UserController extends Controller
      *                 @SWG\Property(property="name", type="array", @SWG\Items(type="string"), example={"The name may not be greater than 100 characters."}),
      *                 @SWG\Property(property="phone", type="array", @SWG\Items(type="string"), example={"The phone format is invalid."}),
      *                 @SWG\Property(property="address", type="array", @SWG\Items(type="string"), example={"The address may not be greater than 255 characters."}),
-     *                 @SWG\Property(property="image", type="array", @SWG\Items(type="string"), example={"The image must be a file of type: png, jpg, jpeg.", "The image may not be greater than 1024 kilobytes."})
+     *                 @SWG\Property(property="image", type="array", @SWG\Items(type="string"), example={"The image must be a file of type: png, jpg, jpeg.", "The image may not be greater than 2048 kilobytes."})
      *             )
      *         )
      *     ),
@@ -155,7 +156,7 @@ class UserController extends Controller
             'name' => 'bail|nullable|string|max:100',
             'phone' => 'bail|nullable|regex:/^[0-9]{10,15}$/',
             'address' => 'bail|nullable|string|max:255',
-            'image' => 'bail|nullable|mimes:png,jpg,jpeg|max:1024',
+            'image' => 'bail|nullable|image|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -165,6 +166,7 @@ class UserController extends Controller
         $userId = auth()->guard('api')->user()->id;
 
         if (isset($user['image'])) {
+            Log::info("Update avatar image: ", ['image' => $user['image']]);
             $filename = $this->userService->uploadImageFile($userId, $user['image']);
             $user['image'] = $filename;
         }

@@ -74,39 +74,49 @@
                 }
 
                 .front {
-                    display: grid;
+                    display: flex;
+                    flex-direction: column;
                     padding: 4px;
                     background-color: #6ac4f4;
                     color: white;
-                    grid-template-rows: 3fr 1fr 1fr 2fr 2fr 1fr;
-                    justify-items: center;
+                    justify-content: space-between;
+                    align-items: center;
+                    height: 100%;
 
-                    .flashcard-word {
-                        grid-row: 1;
-                        font-size: 44px;
-                        font-weight: bold;
-                        color: #00185e;
-                        text-align: center;
+                    .flashcard-word-example {
+                        height: 90%;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        gap: 8px;
 
-                        @include mq(max-sp) {
-                            font-size: 32px;
+                        .flashcard-word {
+                            font-size: 44px;
+                            font-weight: bold;
+                            color: #00185e;
+                            text-align: center;
+
+                            @include mq(max-sp) {
+                                font-size: 32px;
+                            }
                         }
-                    }
 
-                    .flashcard-example {
-                        text-align: center;
-                        grid-row: 4;
-                        font-size: 20px;
-                        color: #00185e;
+                        .flashcard-example {
+                            text-align: center;
+                            font-size: 20px;
+                            color: #00185e;
 
-                        @include mq(max-sp) {
-                            font-size: 16px;
+                            @include mq(max-sp) {
+                                font-size: 16px;
+                            }
                         }
                     }
 
                     .flashcard-instruction {
                         grid-row: 6;
                         font-size: 10px;
+                        height: 10%;
                     }
                 }
 
@@ -119,9 +129,9 @@
                     grid-template-rows: 3fr 1fr 1fr 2fr 2fr 1fr;
                     justify-items: center;
 
-                    .flashcard-meaning {
+                    .flashcard-reading {
                         grid-row: 1;
-                        font-size: 44px;
+                        font-size: 36px;
                         font-weight: bold;
                         color: #3e2723;
                         text-align: center;
@@ -131,9 +141,9 @@
                         }
                     }
 
-                    .flashcard-reading {
+                    .flashcard-meaning {
                         grid-row: 2;
-                        font-size: 20px;
+                        font-size: 24px;
                         color: #6d4c41;
 
                         @include mq(max-sp) {
@@ -143,7 +153,7 @@
 
                     .flashcard-sino-vietnamese {
                         grid-row: 3;
-                        font-size: 16px;
+                        font-size: 20px;
                         color: #795548;
 
                         @include mq(max-sp) {

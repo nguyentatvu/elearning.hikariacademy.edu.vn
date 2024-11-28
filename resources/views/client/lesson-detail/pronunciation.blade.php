@@ -221,7 +221,7 @@
         let currentPage = 1;
         let recognizedTextLength = 0;
 
-        $(document).ready(function() {
+        $(document).ready(async function() {
             initializeAduioWaveform();
             $('#audio_waveform').css('display', 'none');
             handleArrowLeftEvent();
@@ -242,6 +242,10 @@
                     playSound(sampleAudio);
                 }
             });
+
+            @if ($isValidPayment && !$isFinishedContent)
+                await earnPointFinishContent('{{ $detailContent->id }}', 0, '');
+            @endif
         })
 
         function initializeAduioWaveform() {
@@ -632,18 +636,12 @@
          * Handle Arrow Event
          */
         function handleArrowRightEvent() {
-            arrowRight.on('click', async function() {
+            arrowRight.on('click', function() {
                 if (currentIndex < total) {
                     storePronunciationData(currentIndex);
                     currentIndex++;
                     checkPronunciationData(currentIndex);
                     updatePageNumber(currentIndex);
-
-                    if (currentIndex === total) {
-                        @if ($isValidPayment && !$isFinishedContent)
-                            await earnPointFinishContent('{{ $detailContent->id }}', 0, '');
-                        @endif
-                    }
                 }
             });
         }
