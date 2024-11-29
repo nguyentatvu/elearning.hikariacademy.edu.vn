@@ -155,14 +155,14 @@
                                                         </h4>
                                                     </a>
                                                     <span>Ngày mua:
-                                                        {{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</span>
+                                                        {{ \Carbon\Carbon::parse($item->responseTime)->format('d-m-Y') }}</span>
                                                     <?php
-                                                    $dr_time = [90, 180, 365];
-                                                    $dr_day = [0, 30, 90, 180, 365];
+                                                    $dr_time = [0 => 90, 1 => 180, 2 => 365];
+                                                    $dr_day = [0 => 0, 1 => 30, 3 => 90, 6 => 180, 12 => 365];
                                                     ?>
                                                     <br>
                                                     <span>Ngày hết hạn:
-                                                        {{ \Carbon\Carbon::parse($item->created_at)->addDays($dr_time[$item->time] + $dr_day[$item->month_extend])->format('d-m-Y') }}</span>
+                                                        {{ \Carbon\Carbon::parse($item->responseTime)->addDays($dr_time[$item->time] + $dr_day[$item->month_extend])->format('d-m-Y') }}</span>
                                                     <br>
                                                 </div>
                                             </div>
@@ -223,7 +223,7 @@
                                     </div>
                                 </td>
                                 <td class="text-center align-middle mw-100px w-100px">
-                                    <?php $dayEnd = \Carbon\Carbon::parse($item->created_at)
+                                    <?php $dayEnd = \Carbon\Carbon::parse($item->responseTime)
                                         ->addDays($dr_time[$item->time] + $dr_day[$item->month_extend])
                                         ->format('d-m-Y'); ?>
                                     @if ($item->status == 3)
