@@ -22,7 +22,20 @@ class PaymentMethodRepository extends BaseRepository
             ->where('status', 1)
             ->whereHas('lmsSeriesCombo', function ($query) {
                 $query->whereRaw(
-                    'DATE_ADD(responseTime, INTERVAL IF(time = 0, 90, IF(time = 1, 180, 365)) DAY) > NOW()'
+                    "DATE_ADD(
+                        responseTime,
+                        INTERVAL
+                        (IF(time = 0, 90, IF(time = 1, 180, 365)) +
+                        CASE
+                            WHEN month_extend = 0 THEN 0
+                            WHEN month_extend = 1 THEN 30
+                            WHEN month_extend = 3 THEN 90
+                            WHEN month_extend = 6 THEN 180
+                            WHEN month_extend = 12 THEN 365
+                            ELSE 0
+                        END)
+                        DAY
+                    ) > NOW()"
                 );
             })
             ->exists();
