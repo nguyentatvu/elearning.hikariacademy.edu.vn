@@ -113,7 +113,7 @@ class LmsContentService extends BaseService
      * @param int $id
      * @return any
      */
-    public function getContentById(int $userId, int $seriesComboId, int $id)
+    public function getContentById(int $userId, int $seriesComboId, int $id, $seriesId = null)
     {
         $isValid = $this->paymentMethodRepository->checkSerieValidity($userId, $seriesComboId);
         $lmsContent = $this->repository->getContentById($id);
@@ -123,7 +123,9 @@ class LmsContentService extends BaseService
             return null;
         }
 
-        if (!$isValid && $lmsContent->el_try != 1) {
+        if ($isValid && $seriesId) {
+            $this->startContent($userId, $seriesId, $id);
+        } else if ($isValid && $lmsContent->el_try != 1) {
             return null;
         }
 
@@ -168,7 +170,7 @@ class LmsContentService extends BaseService
             return null;
         }
 
-        $lmsContent = $this->lmsStudentViewService->getLastFinishedContentOfStudent($seriesId);
+        $lmsContent = $this->lmsStudentViewService->getLastFinishedContentOfStudentAPI($seriesId, $userId);
         $content = [];
 
         if (!$lmsContent) {
@@ -423,18 +425,19 @@ class LmsContentService extends BaseService
         return $this->repository->getChapterCountBySeries($seriesId);
     }
 
-    public function startContent(User $user, int $seriesId, int $contentId)
+    public function startContent(int $userId, int $seriesId, int $contentId)
     {
+        $user = $this->userService->findById($userId);
         $studentView = $this->lmsStudentViewService
             ->getByConditions([
                 'lmscontent_id' => $contentId,
-                'users_id' => $user->id,
+                'users_id' => $userId,
             ]);
 
         if (!$studentView) {
             $this->lmsStudentViewService->insert([
                 'lmscontent_id' => $contentId,
-                'users_id' => $user->id,
+                'users_id' => $userId,
                 'finish' => LmsStudentView::NOT_FINISHED,
                 'created_date' => date('Y-m-d H:i:s'),
             ]);

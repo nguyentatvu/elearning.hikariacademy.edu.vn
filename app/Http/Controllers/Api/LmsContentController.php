@@ -559,8 +559,7 @@ class LmsContentController extends Controller
         $seriesComboId = $request->seriesComboId;
         $seriesId = $request->seriesId;
         $user = auth()->guard('api')->user();
-        $content = $this->lmsSContentService->getContentById($user->id, $seriesComboId, $id);
-        $this->lmsSContentService->startContent($user, $seriesId, $id);
+        $content = $this->lmsSContentService->getContentById($user->id, $seriesComboId, $id, $seriesId);
 
         if (!$content) {
             return response()->json(['error' => 'Lesson not found'], Response::HTTP_NOT_FOUND);
