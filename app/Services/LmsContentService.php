@@ -74,6 +74,27 @@ class LmsContentService extends BaseService
     }
 
     /**
+     * Get contents
+     *
+     * @param int $userId
+     * @param int $seriesComboId
+     * @param int $seriesId
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getContentsV2(int $userId, int $seriesComboId, int $seriesId)
+    {
+        $seriesCombo = $this->lmsSeriesComboService->getBySeriesId($seriesComboId, $seriesId, ['id']);
+
+        if (!$seriesCombo) {
+            return null;
+        }
+
+        $isValid = $this->paymentMethodRepository->checkSerieValidity($userId, $seriesComboId);
+
+        return $this->repository->getContentsV2($userId, $seriesId, $isValid);
+    }
+
+    /**
      * Get contents by series id
      *
      * @param int $seriesId

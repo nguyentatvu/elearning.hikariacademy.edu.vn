@@ -169,11 +169,9 @@
             createCanvasByTab();
             showFirstTab();
 
-            if ({{ $handwriting->type }} == {{ \App\JapaneseWritingPractice::HIRAGANA }}) {
-                @if ($isValidPayment && !$isFinishedContent)
-                    await earnPointFinishContent('{{ $detailContent->id }}', 0, '');
-                @endif
-            }
+            @if ($isValidPayment && !$isFinishedContent)
+                await earnPointFinishContent('{{ $detailContent->id }}', 0, '');
+            @endif
         });
 
         /**
@@ -248,17 +246,11 @@
          * Handle Arrow Event
          */
         function handleArrowRightEvent() {
-            $('#arrow_right').on('click', async function() {
+            $('#arrow_right').on('click', function() {
                 if (currentIndex < total - 1) {
                     saveCurrentCanvasData(currentIndex + 1);
                     currentIndex++;
                     updateHandwriting(currentIndex);
-
-                    if (currentIndex === total - 1) {
-                        @if ($isValidPayment && !$isFinishedContent)
-                            await earnPointFinishContent('{{ $detailContent->id }}', 0, '');
-                        @endif
-                    }
                 }
             });
         }

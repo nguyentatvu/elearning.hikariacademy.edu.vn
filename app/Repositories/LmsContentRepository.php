@@ -39,10 +39,6 @@ class LmsContentRepository extends BaseRepository
     {
         $contents = $this->model::query()
             ->select('id', 'bai as title', 'type', 'el_try', 'parent_id')
-            ->with(['lmsStudentView' => function ($query) use ($userId) {
-                $query->select('finish', 'lmscontent_id')
-                    ->where('users_id', $userId);
-            }])
             ->where('lmsseries_id', $seriesId)
             ->where('parent_id', $parentId)
             ->where('delete_status', 0)
@@ -68,13 +64,11 @@ class LmsContentRepository extends BaseRepository
                 ])
             ) {
                 $content->is_locked = true;
-                $content->is_finished = false;
             } else {
                 $content->is_locked = false;
-                $content->is_finished = ($content->lmsStudentView->first() && $content->lmsStudentView->first()->finish == 1) ? true : false;
             }
 
-            $content->makeHidden(['el_try', 'lmsStudentView']);
+            $content->makeHidden(['el_try']);
             $content->children = $this->getChildContent($content->id, $seriesId, $isValid, $userId);
         }
 
@@ -283,5 +277,77 @@ class LmsContentRepository extends BaseRepository
             ->where('delete_status', LmsContent::ACTIVE)
             ->where('type', LmsContent::LESSON)
             ->count();
+    }
+
+    /**
+     * Get contents by series id
+     *
+     * @param int $seriesId
+     * @param bool $isValid
+     * @return \Illuminate\Support\Collection
+     */
+    public function getContentsV2(int $userId, int $seriesId, bool $isValid)
+    {
+        $series = LmsSeries::where('delete_status', 0)->find($seriesId);
+
+        if (!$series) {
+            return null;
+        }
+
+        return $this->getChildContentV2(null, $seriesId, $isValid, $userId);
+    }
+
+    /**
+     * Get contents recursively with children
+     *
+     * @param int|null $parentId
+     * @param int $seriesId
+     * @param bool $isValid
+     * @return \Illuminate\Support\Collection
+     */
+    private function getChildContentV2(?int $parentId, int $seriesId, bool $isValid, int $userId)
+    {
+        $contents = $this->model::query()
+            ->select('id', 'bai as title', 'type', 'el_try', 'parent_id')
+            ->with(['lmsStudentView' => function ($query) use ($userId) {
+                $query->select('finish', 'lmscontent_id')
+                    ->where('users_id', $userId);
+            }])
+            ->where('lmsseries_id', $seriesId)
+            ->where('parent_id', $parentId)
+            ->where('delete_status', 0)
+            ->orderBy('stt', 'asc')
+            ->get();
+
+        foreach ($contents as $content) {
+            if (
+                !$isValid &&
+                !$content->el_try &&
+                in_array($content->type, [
+                    LmsContent::VOCABULARY,
+                    LmsContent::STRUCTURE,
+                    LmsContent::PARTIAL_EXERCISE,
+                    LmsContent::SUMMARY_EXERCISE,
+                    LmsContent::TEST,
+                    LmsContent::KANJI,
+                    LmsContent::REVIEW_EXERCISE,
+                    LmsContent::SUMMARY_AND_INTRODUCTION,
+                    LmsContent::FLASHCARD,
+                    LmsContent::HANDWRITING,
+                    LmsContent::PRONUNCIATION_ASSESSMENT
+                ])
+            ) {
+                $content->is_locked = true;
+                $content->is_finished = false;
+            } else {
+                $content->is_locked = false;
+                $content->is_finished = ($content->lmsStudentView->first() && $content->lmsStudentView->first()->finish == 1) ? true : false;
+            }
+
+            $content->makeHidden(['el_try', 'lmsStudentView']);
+            $content->children = $this->getChildContentV2($content->id, $seriesId, $isValid, $userId);
+        }
+
+        return $contents;
     }
 }

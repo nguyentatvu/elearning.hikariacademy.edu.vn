@@ -25,14 +25,16 @@
                         @foreach ($flashcardDetail as $detail)
                             <div id="card{{ $loop->index + 1 }}" class="flashcard" data-card-id="{{ $loop->index + 1 }}">
                                 <div id="flashcard_front" class="flashcard-side front">
-                                    <span class="flashcard-word">{!! change_furigana($detail->m1tuvung, 'echo') !!}</span>
-                                    <span class="flashcard-example">{!! change_furigana($detail->m1vidu, 'echo') !!}</span>
+                                    <div class="flashcard-word-example">
+                                        <span class="flashcard-word">{!! change_furigana($detail->m1tuvung, 'echo') !!}</span>
+                                        <span class="flashcard-example">{!! change_furigana($detail->m1vidu, 'echo') !!}</span>
+                                    </div>
                                     <span class="flashcard-instruction">クリックして反転</span>
                                 </div>
                                 <div id="flashcard_back" class="flashcard-side back">
-                                    <span class="flashcard-meaning">{!! change_furigana($detail->m2ynghia, 'echo') !!}</span>
                                     <span class="flashcard-reading">{!! change_furigana($detail->m2cachdoc, 'echo') !!}</span>
                                     <span class="flashcard-sino-vietnamese">{!! change_furigana($detail->m2amhanviet, 'echo') !!}</span>
+                                    <span class="flashcard-meaning">{!! change_furigana($detail->m2ynghia, 'echo') !!}</span>
                                     <span class="flashcard-example">{!! change_furigana($detail->m2vidu, 'echo') !!}</span>
                                     <span class="flashcard-instruction">Click để lật mặt</span>
                                 </div>
@@ -82,11 +84,15 @@
         let flashcardData = @json($flashcardDetail);
         let shuffledOrder = [];
 
-        $(document).ready(function() {
+        $(document).ready(async function() {
             handleClickFlashcard();
             switchCard(1);
             handleClickArrowRight();
             handleClickArrowLeft();
+
+            @if($isValidPayment && !$isFinishedContent)
+                await earnPointFinishContent('{{ $detailContent->id }}', 0, '');
+            @endif
         });
 
         function handleClickFlashcard() {
@@ -99,14 +105,8 @@
          * Handle click arrow right
          */
         function handleClickArrowRight() {
-            $('#flashcard_arrow_right').on('click', async function() {
+            $('#flashcard_arrow_right').on('click', function() {
                 var currentCardId = $(".flashcard.active").data("card-id");
-
-                if (currentCardId == $('.flashcard-content > .flashcard').length - 1) {
-                    @if($isValidPayment && !$isFinishedContent)
-                            await earnPointFinishContent('{{ $detailContent->id }}', 0, '');
-                    @endif
-                }
 
                 if (currentCardId == $('.flashcard-content > .flashcard').length) {
                     return;
