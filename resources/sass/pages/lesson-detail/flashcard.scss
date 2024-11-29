@@ -141,23 +141,23 @@
                         }
                     }
 
-                    .flashcard-meaning {
-                        grid-row: 2;
-                        font-size: 24px;
-                        color: #6d4c41;
-
-                        @include mq(max-sp) {
-                            font-size: 18px;
-                        }
-                    }
-
                     .flashcard-sino-vietnamese {
-                        grid-row: 3;
+                        grid-row: 2;
                         font-size: 20px;
                         color: #795548;
 
                         @include mq(max-sp) {
                             font-size: 14px;
+                        }
+                    }
+
+                    .flashcard-meaning {
+                        grid-row: 3;
+                        font-size: 24px;
+                        color: #6d4c41;
+
+                        @include mq(max-sp) {
+                            font-size: 18px;
                         }
                     }
 
