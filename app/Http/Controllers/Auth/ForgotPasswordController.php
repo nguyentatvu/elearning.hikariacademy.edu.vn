@@ -18,12 +18,12 @@ class ForgotPasswordController extends Controller
     public function forgotPassword(Request $request)
     {
         $columns = array(
-            'email_forgot_password'    => 'bail|email|required',
+            'email_forgot_password'    => 'bail|email|required|exists:users,email',
         );
         $messsages = array(
             'email_forgot_password.required' => 'Hãy nhập email!',
             'email_forgot_password.email' => 'Email không hợp lệ',
-            'email_forgot_password.exists' => 'Email không tìm thấy!',
+            'email_forgot_password.exists' => 'Email không tồn tại trong hệ thống. Vui lòng kiểm tra lại',
         );
         $this->validate($request, $columns, $messsages);
 

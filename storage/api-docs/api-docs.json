@@ -1040,6 +1040,368 @@
                 ]
             }
         },
+        "/lesson/finish": {
+            "post": {
+                "tags": [
+                    "Lesson"
+                ],
+                "summary": "Finish lesson",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Lesson finish",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "lesson_id": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "score_percentage": {
+                                    "type": "number",
+                                    "example": 65.5
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "example": "Ho\u00e0n th\u00e0nh b\u00e0i h\u1ecdc"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "properties": {
+                                "error": {
+                                    "properties": {
+                                        "lesson_id": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "integer"
+                                            }
+                                        },
+                                        "score_percentage": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "integer"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "example": "Something went wrong."
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/v2/lesson": {
+            "get": {
+                "tags": [
+                    "Lesson"
+                ],
+                "summary": "List of Lessons",
+                "description": "Type of the content: 0=Lesson, 1=Vocabulary, 2=Structure, 3=Partial Exercise, 4=Summary Exercise, 5=Test, 6=Kanji, 7=Review Exercise, 8=Lesson Topic, 9=Summary and Introduction, 10=Flashcard",
+                "parameters": [
+                    {
+                        "name": "seriesComboId",
+                        "in": "query",
+                        "description": "Series combo Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 4
+                        },
+                        "type": "integer"
+                    },
+                    {
+                        "name": "seriesId",
+                        "in": "query",
+                        "description": "Series Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 43
+                        },
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "title": {
+                                    "type": "string",
+                                    "example": "Bai 1"
+                                },
+                                "type": {
+                                    "description": "Type of the content: 0=Lesson, 1=Vocabulary, 2=Structure, 3=Partial Exercise, 4=Summary Exercise, 5=Test, 6=Kanji, 7=Review Exercise, 8=Lesson Topic, 9=Summary and Introduction, 10=Flashcard",
+                                    "type": "integer",
+                                    "example": "5"
+                                },
+                                "parent_id": {
+                                    "type": "integer"
+                                },
+                                "is_locked": {
+                                    "type": "boolean",
+                                    "example": true
+                                },
+                                "children": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "title": {
+                                                "type": "string"
+                                            },
+                                            "type": {
+                                                "type": "integer"
+                                            },
+                                            "parent_id": {
+                                                "type": "integer"
+                                            },
+                                            "is_locked": {
+                                                "type": "boolean"
+                                            },
+                                            "children": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object"
+                                                }
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "example": [
+                                        {
+                                            "id": 2,
+                                            "title": "Tu vung bai 1",
+                                            "type": 1,
+                                            "parent_id": 1,
+                                            "is_locked": false,
+                                            "children": []
+                                        }
+                                    ]
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - User not authenticated",
+                        "schema": {
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "example": "Unauthenticated"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "404": {
+                        "description": "Series not found",
+                        "schema": {
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "example": "Series not found"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "example": "Something went wrong."
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/v2/lesson/{lessonId}": {
+            "get": {
+                "tags": [
+                    "Lesson"
+                ],
+                "summary": "Lesson detail",
+                "description": "B\u00e0i h\u1ecdc c\u00f3 video: (10268, 4) - B\u00e0i t\u1eadp: (15546, 6) - B\u00e0i ki\u1ec3m tra: (10389, 4) - Flashcard: (17217, 14)",
+                "parameters": [
+                    {
+                        "name": "lessonId",
+                        "in": "path",
+                        "description": "Lesson Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 15546
+                        },
+                        "type": "integer"
+                    },
+                    {
+                        "name": "seriesComboId",
+                        "in": "query",
+                        "description": "ID of the series combo",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 6
+                        },
+                        "type": "integer"
+                    },
+                    {
+                        "name": "seriesId",
+                        "in": "query",
+                        "description": "ID of the series",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 6
+                        },
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "title": {
+                                    "type": "string",
+                                    "example": "Bai 1"
+                                },
+                                "file_path": {
+                                    "type": "string",
+                                    "example": "Link video"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "example": "Description"
+                                },
+                                "type": {
+                                    "description": "Type of the content: 0=Lesson, 1=Vocabulary, 2=Structure, 3=Partial Exercise, 4=Summary Exercise, 5=Test, 6=Kanji, 7=Review Exercise, 8=Lesson Topic, 9=Summary and Introduction, 10=Flashcard",
+                                    "type": "integer",
+                                    "example": "5"
+                                },
+                                "is_trial": {
+                                    "description": "Is trial: 0=No, 1=Yes",
+                                    "type": "integer",
+                                    "example": "1"
+                                },
+                                "parent_id": {
+                                    "type": "integer"
+                                },
+                                "document": {
+                                    "type": "integer",
+                                    "example": "public/uploads/lms/download/1_N3\u6587\u5b57\u8a9e\u5f59_12\u56de\u76ee.pdf"
+                                },
+                                "content": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    },
+                                    "example": "[]"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - User not authenticated",
+                        "schema": {
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "example": "Unauthenticated"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "404": {
+                        "description": "Lesson not found",
+                        "schema": {
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "example": "Lesson not found"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "example": "Something went wrong."
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/series-combo": {
             "get": {
                 "tags": [
@@ -1834,7 +2196,7 @@
                                             },
                                             "example": [
                                                 "The image must be a file of type: png, jpg, jpeg.",
-                                                "The image may not be greater than 1024 kilobytes."
+                                                "The image may not be greater than 2048 kilobytes."
                                             ]
                                         }
                                     },
@@ -1895,113 +2257,56 @@
                     "200": {
                         "description": "List of my courses",
                         "schema": {
-                            "properties": {
-                                "data": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "series_combo_id": {
-                                                "type": "integer",
-                                                "example": "1"
-                                            },
-                                            "series_id": {
-                                                "type": "integer",
-                                                "example": "43"
-                                            },
-                                            "title": {
-                                                "type": "string",
-                                                "example": "Kh\u00f3a h\u1ecdc N5"
-                                            },
-                                            "purchase_date": {
-                                                "type": "datetime",
-                                                "example": "2024-08-08 12:31:04"
-                                            },
-                                            "expiry_date": {
-                                                "type": "datetime",
-                                                "example": "2025-03-08 12:31:04"
-                                            },
-                                            "is_active": {
-                                                "type": "boolean",
-                                                "example": "true"
-                                            },
-                                            "total_lessons": {
-                                                "type": "integer",
-                                                "example": "100"
-                                            },
-                                            "completed_lessons": {
-                                                "type": "integer",
-                                                "example": "5"
-                                            }
-                                        },
-                                        "type": "object"
+                            "type": "array",
+                            "items": {
+                                "properties": {
+                                    "series_combo_id": {
+                                        "type": "integer",
+                                        "example": "1"
                                     },
-                                    "example": [
-                                        {
-                                            "series_combo_id": 1,
-                                            "series_id": 43,
-                                            "title": "Kh\u00f3a h\u1ecdc N5",
-                                            "purchase_date": "2024-08-08 12:31:04",
-                                            "expiry_date": "2025-03-08 12:31:04",
-                                            "is_active": true,
-                                            "total_lessons": 100,
-                                            "completed_lessons": 5
-                                        }
-                                    ]
+                                    "series_id": {
+                                        "type": "integer",
+                                        "example": "43"
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Kh\u00f3a h\u1ecdc N5"
+                                    },
+                                    "purchase_date": {
+                                        "type": "datetime",
+                                        "example": "2024-08-08 12:31:04"
+                                    },
+                                    "expiry_date": {
+                                        "type": "datetime",
+                                        "example": "2025-03-08 12:31:04"
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "example": "true"
+                                    },
+                                    "total_lessons": {
+                                        "type": "integer",
+                                        "example": "100"
+                                    },
+                                    "completed_lessons": {
+                                        "type": "integer",
+                                        "example": "5"
+                                    }
                                 },
-                                "links": {
-                                    "properties": {
-                                        "first": {
-                                            "type": "string",
-                                            "example": "http://hikari.test:8091/api/user/my-courses?page=1"
-                                        },
-                                        "last": {
-                                            "type": "string",
-                                            "example": "http://hikari.test:8091/api/user/my-courses?page=1"
-                                        },
-                                        "prev": {
-                                            "type": "string"
-                                        },
-                                        "next": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                },
-                                "meta": {
-                                    "properties": {
-                                        "current_page": {
-                                            "type": "integer",
-                                            "example": 1
-                                        },
-                                        "from": {
-                                            "type": "integer",
-                                            "example": 1
-                                        },
-                                        "last_page": {
-                                            "type": "integer",
-                                            "example": 1
-                                        },
-                                        "path": {
-                                            "type": "string",
-                                            "example": "http://hikari.test:8091/api/user/my-courses"
-                                        },
-                                        "per_page": {
-                                            "type": "integer",
-                                            "example": 10
-                                        },
-                                        "to": {
-                                            "type": "integer",
-                                            "example": 8
-                                        },
-                                        "total": {
-                                            "type": "integer",
-                                            "example": 8
-                                        }
-                                    },
-                                    "type": "object"
-                                }
+                                "type": "object"
                             },
-                            "type": "object"
+                            "example": [
+                                {
+                                    "series_combo_id": 1,
+                                    "series_id": 43,
+                                    "title": "Kh\u00f3a h\u1ecdc N5",
+                                    "purchase_date": "2024-08-08 12:31:04",
+                                    "expiry_date": "2025-03-08 12:31:04",
+                                    "is_active": true,
+                                    "total_lessons": 100,
+                                    "completed_lessons": 5
+                                }
+                            ]
                         }
                     },
                     "401": {
