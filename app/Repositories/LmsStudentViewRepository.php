@@ -55,6 +55,23 @@ class LmsStudentViewRepository extends BaseRepository
     }
 
     /**
+     * Get the last finished content of the student
+     *
+     * @param int $seriesId
+     * @param int $userId
+     * @return mixed(LmsContent|null)
+     */
+    public function getLastFinishedContentOfStudentAPI(int $seriesId, int $userId)
+    {
+        return $this->model
+            ->join('lmscontents', 'lmscontents.id' , '=', 'lms_student_view.lmscontent_id')
+            ->where('lmscontents.lmsseries_id', $seriesId)
+            ->where('lms_student_view.users_id', $userId)
+            ->latest('lms_student_view.created_date')
+            ->first();
+    }
+
+    /**
      * Get the view count of a series
      *
      * @param string $seriesId
