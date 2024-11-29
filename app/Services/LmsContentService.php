@@ -125,7 +125,7 @@ class LmsContentService extends BaseService
 
         if ($isValid && $seriesId) {
             $this->startContent($userId, $seriesId, $id);
-        } else if ($isValid && $lmsContent->el_try != 1) {
+        } else if (!$isValid && $lmsContent->el_try != 1) {
             return null;
         }
 
