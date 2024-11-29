@@ -206,10 +206,11 @@ const submitForgotPassword = () => {
         error: function (error) {
             if (error?.responseJSON?.errors && error?.responseJSON?.errors['email_forgot_password']) {
                 $(".email-failed").removeClass("d-none");
-                $(".email-failed").text(error?.responseJSON?.errors['email_forgot_password'][0]);
+                //$(".email-failed").text(error?.responseJSON?.errors['email_forgot_password'][0]);
+                showErrorAlert(error?.responseJSON?.errors['email_forgot_password'][0], "Thông báo", null, 2500);
             }
             else if (error?.responseJSON?.message) {
-                showErrorAlert(error.responseJSON.message, "Thông báo");
+                showErrorAlert(error.responseJSON.message, "Thông báo", null, 2500);
             }
         },
         complete: function () {
