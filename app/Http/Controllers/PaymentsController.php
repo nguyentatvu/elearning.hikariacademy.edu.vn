@@ -2687,12 +2687,12 @@ class PaymentsController extends Controller
         $required_redeemed_point = $record->redeem_point;
         $required_redeemed_amount = $required_redeemed_point * 1000;
 
-        // if ($this->paymentMethodService->checkPendingSeriesTransferOrder() ||
-        //     $this->paymentMethodService->checkPendingSeriesPayment())
-        // {
-        //     flash('Thông báo', 'Hãy hoàn thành thanh toán trước đó, hoặc đợi 15 phút để hơn hàng hết hạn!', 'error');
-        //     return back();
-        // }
+        if ($this->paymentMethodService->checkPendingSeriesTransferOrder() ||
+            $this->paymentMethodService->checkPendingSeriesPayment())
+        {
+            flash('Thông báo', 'Hãy hoàn thành thanh toán trước đó, hoặc đợi 15 phút để hơn hàng hết hạn!', 'error');
+            return back();
+        }
 
         if($is_redeemed && $total_point < $required_redeemed_point) {
             flash('Thông báo', 'Không đủ HiCoin!', 'error');
