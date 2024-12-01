@@ -2687,12 +2687,12 @@ class PaymentsController extends Controller
         $required_redeemed_point = $record->redeem_point;
         $required_redeemed_amount = $required_redeemed_point * 1000;
 
-        if ($this->paymentMethodService->checkPendingSeriesTransferOrder() ||
-            $this->paymentMethodService->checkPendingSeriesPayment())
-        {
-            flash('Thông báo', 'Hãy hoàn thành thanh toán trước đó, hoặc đợi 15 phút để hơn hàng hết hạn!', 'error');
-            return back();
-        }
+        // if ($this->paymentMethodService->checkPendingSeriesTransferOrder() ||
+        //     $this->paymentMethodService->checkPendingSeriesPayment())
+        // {
+        //     flash('Thông báo', 'Hãy hoàn thành thanh toán trước đó, hoặc đợi 15 phút để hơn hàng hết hạn!', 'error');
+        //     return back();
+        // }
 
         if($is_redeemed && $total_point < $required_redeemed_point) {
             flash('Thông báo', 'Không đủ HiCoin!', 'error');
@@ -2904,11 +2904,19 @@ class PaymentsController extends Controller
 
 					if($amount == $paymentMethod->amount)
 					{
-						if(
-                            $paymentMethod->status == PaymentMethod::PAYMENT_SUCCESS &&
-                            ($inputData['vnp_ResponseCode'] == '00' || $inputData['vnp_TransactionStatus'] == '00') &&
-                            $this->checkVNPAYResponseTime($paymentMethod)
-                        ) {
+						if (
+							(
+								$inputData['vnp_ResponseCode'] == '00' ||
+								$inputData['vnp_TransactionStatus'] == '00' ||
+								$inputData['vnp_ResponseCode'] == '99' ||
+								$inputData['vnp_TransactionStatus'] == '99'
+							) &&
+							$paymentMethod->vnpay_response_time == null
+						) {
+                            $paymentMethod->update([
+                                'vnpay_response_time' => date('Y-m-d H:i:s')
+                            ]);
+
 							$returnData['RspCode'] = '00';
 							$returnData['Message'] = 'Confirm Success';
 							$log->putLog(json_encode($returnData));
@@ -2933,23 +2941,9 @@ class PaymentsController extends Controller
 			$returnData['Message'] = 'Unknow error';
 			$log->putLog(json_encode($returnData));
 		}
+
 		return json_encode($returnData);
 	}
-
-    /**
-     * Check if the response time of the VNPAY is within 3 seconds
-     *
-     * @param PaymentMethod $paymentMethod
-     * @return bool
-     */
-    private function checkVNPAYResponseTime($paymentMethod)
-    {
-        $responseTime = $paymentMethod->updated_at;
-        $currentDate = date('Y-m-d H:i:s');
-        $timeDifference = abs(strtotime($currentDate) - strtotime($responseTime));
-
-        return $timeDifference <= 3;
-    }
 
 	public function vnpayReturn(Request $request)
     {
