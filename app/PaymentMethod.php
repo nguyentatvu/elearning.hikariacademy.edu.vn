@@ -25,7 +25,8 @@ class PaymentMethod extends Model
         'responseTime',
         'status',
         'recharge_coin_amount',
-        'redeem_point'
+        'redeem_point',
+        'vnpay_response_time'
     ];
 
     public const PAYMENT_PENDING = 0;
