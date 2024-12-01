@@ -13,7 +13,7 @@ class AddVnpayResponseTimeFieldToPaymentMethodTable extends Migration
      */
     public function up()
     {
-        Schema::table('payment_methods', function (Blueprint $table) {
+        Schema::table('payment_method', function (Blueprint $table) {
             $table->dateTime('vnpay_response_time')->nullable();
         });
     }
@@ -25,7 +25,7 @@ class AddVnpayResponseTimeFieldToPaymentMethodTable extends Migration
      */
     public function down()
     {
-        Schema::table('payment_methods', function (Blueprint $table) {
+        Schema::table('payment_method', function (Blueprint $table) {
             $table->dropColumn('vnpay_response_time');
         });
     }
