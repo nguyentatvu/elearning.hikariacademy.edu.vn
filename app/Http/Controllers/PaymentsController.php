@@ -51,7 +51,7 @@ class PaymentsController extends Controller
         UserRoadmapService $userRoadmapService
     )
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except('vnPayIPN');
 
         $this->coinRechargeService = $coinRechargeService;
         $this->paymentMethodService = $paymentMethodService;
@@ -2687,12 +2687,12 @@ class PaymentsController extends Controller
         $required_redeemed_point = $record->redeem_point;
         $required_redeemed_amount = $required_redeemed_point * 1000;
 
-        if ($this->paymentMethodService->checkPendingSeriesTransferOrder() ||
-            $this->paymentMethodService->checkPendingSeriesPayment())
-        {
-            flash('Thông báo', 'Hãy hoàn thành thanh toán trước đó, hoặc đợi 15 phút để hơn hàng hết hạn!', 'error');
-            return back();
-        }
+        // if ($this->paymentMethodService->checkPendingSeriesTransferOrder() ||
+        //     $this->paymentMethodService->checkPendingSeriesPayment())
+        // {
+        //     flash('Thông báo', 'Hãy hoàn thành thanh toán trước đó, hoặc đợi 15 phút để hơn hàng hết hạn!', 'error');
+        //     return back();
+        // }
 
         if($is_redeemed && $total_point < $required_redeemed_point) {
             flash('Thông báo', 'Không đủ HiCoin!', 'error');
@@ -2858,8 +2858,105 @@ class PaymentsController extends Controller
 		return redirect($vnp_Url);
     }
 
+    public function vnPayIPN(Request $request)
+	{
+		$orderId        = $request->vnp_TxnRef;
+		$log = new Logger(env('VNPAY_LOG_PATH'));
+		$log->putLog('Response call back from api VNPAY, orderId: ' .$orderId);
+        $log->putLog('-----Response time IPN: ' . date('Y-m-d H:i:s'));
+		$inputData = array();
+		foreach ($_GET as $key => $value) {
+			if (substr($key, 0, 4) == "vnp_") {
+				$inputData[$key] = $value;
+			}
+		}
+		$vnp_SecureHash = $inputData['vnp_SecureHash'];
+		unset($inputData['vnp_SecureHash']);
+		ksort($inputData);
+		$i = 0;
+		$hashData = "";
+		foreach ($inputData as $key => $value) {
+			if ($i == 1) {
+				$hashData = $hashData . '&' . urlencode($key) . "=" . urlencode($value);
+			} else {
+				$hashData = $hashData . urlencode($key) . "=" . urlencode($value);
+				$i = 1;
+			}
+		}
+		// Check demo mode to set proper VNPAY credentials
+        $vnp_HashSecret = env('DEMO_MODE')
+            ? env('VNP_HASHSECRET_TEST')
+            : env('VNP_HASHSECRET', env('VNP_HASHSECRET_TEST'));
+		$secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
+		try
+		{
+			if ($secureHash == $vnp_SecureHash) {
+				// Get payment method
+				$paymentMethod = PaymentMethod::where('orderId', '=', $orderId)->first();
+				if ($paymentMethod == null) {
+					$returnData['RspCode'] = '01';
+					$returnData['Message'] = 'Order not found';
+					$log->putLog(json_encode($returnData));
+					return json_encode($returnData);
+				}
+				else {
+					$amount = (int) $_GET['vnp_Amount'] / 100;
+
+					if($amount == $paymentMethod->amount)
+					{
+						if(
+                            $paymentMethod->status == PaymentMethod::PAYMENT_SUCCESS &&
+                            ($inputData['vnp_ResponseCode'] == '00' || $inputData['vnp_TransactionStatus'] == '00') &&
+                            $this->checkVNPAYResponseTime($paymentMethod)
+                        ) {
+							$returnData['RspCode'] = '00';
+							$returnData['Message'] = 'Confirm Success';
+							$log->putLog(json_encode($returnData));
+						} else {
+							$returnData['RspCode'] = '02';
+							$returnData['Message'] = 'Order already confirmed';
+							$log->putLog(json_encode($returnData));
+						}
+					} else {
+						$returnData['RspCode'] = '04';
+						$returnData['Message'] = 'Invalid amount';
+						$log->putLog(json_encode($returnData));
+					}
+				}
+			} else {
+				$returnData['RspCode'] = '97';
+				$returnData['Message'] = 'Invalid Checksum';
+				$log->putLog(json_encode($returnData));
+			}
+		} catch (Exception $e) {
+			$returnData['RspCode'] = '99';
+			$returnData['Message'] = 'Unknow error';
+			$log->putLog(json_encode($returnData));
+		}
+		return json_encode($returnData);
+	}
+
+    /**
+     * Check if the response time of the VNPAY is within 3 seconds
+     *
+     * @param PaymentMethod $paymentMethod
+     * @return bool
+     */
+    private function checkVNPAYResponseTime($paymentMethod)
+    {
+        $responseTime = $paymentMethod->updated_at;
+        $currentDate = date('Y-m-d H:i:s');
+        $timeDifference = abs(strtotime($currentDate) - strtotime($responseTime));
+
+        return $timeDifference <= 3;
+    }
+
 	public function vnpayReturn(Request $request)
     {
+        $log = new Logger(env('VNPAY_LOG_PATH'));
+        $log->putLog('-----Response time VNPAY return url: ' . date('Y-m-d H:i:s'));
+        $log->putLog('-----VNPAY return URL: ' . $request->fullUrl());
+
         if (!empty($_GET)) {
             $vnp_SecureHash = $_GET['vnp_SecureHash'];
 			$inputData = array();
@@ -2891,6 +2988,22 @@ class PaymentsController extends Controller
 
             $orderId = $request->get('vnp_TxnRef');
             $payment_method = $this->paymentMethodService->getByCondition('orderId', $orderId);
+
+            if ($payment_method == null) {
+                flash('Lỗi!', 'Không tìm thấy đơn hàng', 'error');
+                return redirect('/home');
+            }
+
+            if ($payment_method->status == PaymentMethod::PAYMENT_SUCCESS) {
+                flash('Thông báo!', 'Đơn thanh toán đã được xử lý', 'error');
+                return redirect('/payments/lms/' . $slug . ($payment_method->redeem_point ? '?is_redeemed=1' : ''));
+            }
+
+            $amount = $request->get('vnp_Amount') / 100;
+            if ($amount != $payment_method->amount) {
+                flash('Lỗi!', 'Số tiền thanh toán không khớp', 'error');
+                return redirect('/home');
+            }
 
             if ($secureHash == $vnp_SecureHash) {
                 $seriesCombo = $this->lmsSeriesComboService->getSeriesComboBySlugWithSeries($slug);
@@ -3308,6 +3421,23 @@ class PaymentsController extends Controller
         $user = Auth::user();
         $orderId = $request->get('vnp_TxnRef');
         $unfinishedPaymentMethod = $this->paymentMethodService->getByCondition('orderId', $orderId);
+
+        if ($unfinishedPaymentMethod == null) {
+            flash('Lỗi!', 'Không tìm thấy đơn hàng', 'error');
+            return redirect('/home');
+        }
+
+        if ($unfinishedPaymentMethod->status == PaymentMethod::PAYMENT_SUCCESS) {
+            flash('Thông báo!', 'Đơn thanh toán đã được xử lý', 'error');
+            return redirect()->route('mypage.recharge-point');
+        }
+
+        $amount = $request->get('vnp_Amount') / 100;
+        if ($amount != $unfinishedPaymentMethod->amount) {
+            flash('Lỗi!', 'Số tiền thanh toán không khớp', 'error');
+            return redirect('/home');
+        }
+
         if ($secureHash == $vnp_SecureHash) {
             if ($request->get('vnp_ResponseCode') == '00') {
                 $unfinishedPaymentMethod->update(['status' => PaymentMethod::PAYMENT_SUCCESS]);

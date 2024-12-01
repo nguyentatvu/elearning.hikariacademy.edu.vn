@@ -172,7 +172,7 @@ Route::get('payments-test/lms/{slug}', 'PaymentsController@testPayments');
 // Thanh toán VNPAY
 Route::get('payments/vnpay/{slug}', 'PaymentsController@getVNPAY');
 Route::get('/payments/vnpayReturn/{slug}', 'PaymentsController@vnpayReturn');
-Route::get('payments/VnPayIPN', 'SiteController@vnPayIPN');
+Route::get('/payments/VnPayIPN', 'PaymentsController@vnPayIPN');
 
 // Recharging coin payments
 Route::prefix('payments/coin')
