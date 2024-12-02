@@ -501,7 +501,14 @@
   .learning-series-list .swiper-exam-series,
   .learning-series-list .swiper-learning-series, .exam-series-list .swiper-exam-series,
   .exam-series-list .swiper-learning-series {
-    width: 600px;
+    width: 700px;
+  }
+}
+@media screen and (min-width: 992px) and (max-width: 1023px) {
+  .learning-series-list .swiper-exam-series,
+  .learning-series-list .swiper-learning-series, .exam-series-list .swiper-exam-series,
+  .exam-series-list .swiper-learning-series {
+    width: 650px;
   }
 }
 @media screen and (max-width: 767px) {
@@ -511,7 +518,7 @@
     width: 350px;
   }
 }
-@media (max-width: 378px) {
+@media (max-width: 38px) {
   .learning-series-list .swiper-exam-series,
   .learning-series-list .swiper-learning-series, .exam-series-list .swiper-exam-series,
   .exam-series-list .swiper-learning-series {

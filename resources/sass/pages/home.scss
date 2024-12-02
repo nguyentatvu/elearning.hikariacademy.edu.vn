@@ -482,7 +482,11 @@ $border-color_1: #166ac9;
       }
 
       @include mq (max-tb) {
-          width: 600px;
+          width: 700px;
+      }
+
+      @include mq (tb-md) {
+          width: 650px;
       }
 
       @include mq (max-sp) {
