@@ -14,8 +14,13 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label text-primary" for="password"> Mật khẩu </label>
-                    <input class="form-control" id="password" placeholder="Mật khẩu" type="password" required />
-                    <div class="invalid-feedback"></div>
+                    <div class="password-field">
+                        <input class="form-control" name="password" id="password" placeholder="Mật khẩu" type="password" required />
+                        <span class="password-toggle-icon" id="password-icon" onclick="togglePasswordVisibility('password')">
+                            <i class="bi-eye-slash-fill"></i>
+                        </span>
+                    </div>
+                    <div class="invalid-feedback">Vui lòng nhập vào đây</div>
                 </div>
                 <div class="mb-3 captcha-field">
                     {!! NoCaptcha::renderJs() !!}
@@ -116,3 +121,21 @@
     </div>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
+
+<script>
+    // Function to toggle password visibility and icon class
+    function togglePasswordVisibility(inputId) {
+        var inputField = document.getElementById(inputId);
+        var icon = document.getElementById('password-icon').querySelector('i');
+
+        if (inputField.type === 'password') {
+            inputField.type = 'text'; // Show password
+            icon.classList.remove('bi-eye-slash-fill');
+            icon.classList.add('bi-eye-fill'); // Change icon to "eye-slash"
+        } else {
+            inputField.type = 'password'; // Hide password
+            icon.classList.remove('bi-eye-fill');
+            icon.classList.add('bi-eye-slash-fill'); // Change icon to "eye"
+        }
+    }
+</script>
