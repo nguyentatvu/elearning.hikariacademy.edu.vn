@@ -518,7 +518,7 @@
     width: 350px;
   }
 }
-@media (max-width: 38px) {
+@media (max-width: 385px) {
   .learning-series-list .swiper-exam-series,
   .learning-series-list .swiper-learning-series, .exam-series-list .swiper-exam-series,
   .exam-series-list .swiper-learning-series {
