@@ -250,3 +250,32 @@
 .modal-header {
     border: none;
 }
+
+/* Style the password field wrapper */
+.password-field {
+    position: relative;
+}
+
+.password-input {
+    width: 100%;
+    padding-right: 35px; /* Ensure space for the icon */
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.password-toggle-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px; /* Position the eye icon */
+    transform: translateY(-50%);
+    font-size: 1rem;
+    cursor: pointer;
+    color: hsl(211, 100%, 50%);
+}
+
+/* Change the color of the icon on hover */
+.password-toggle-icon:hover {
+    color: #0056b3;
+}

@@ -17,8 +17,12 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-primary" for="password"> Mật khẩu </label>
-                            <input class="form-control" name="password" id="password" placeholder="Mật khẩu"
-                                type="password" required />
+                            <div class="password-field">
+                                <input class="form-control" name="password" id="password" placeholder="Mật khẩu" type="password" required />
+                                <span class="password-toggle-icon" id="password-icon" onclick="togglePasswordVisibility('password')">
+                                    <i class="bi-eye-slash-fill"></i>
+                                </span>
+                            </div>
                             <div class="invalid-feedback">Vui lòng nhập vào đây</div>
                         </div>
                         <div class="mb-3 captcha-field">
@@ -28,7 +32,8 @@
                         <div class="login-failed text-danger d-none">Tên hoặc mật khẩu không đúng</div>
                         <div class="captcha-failed text-danger d-none">Hãy đánh dấu vào ô kiểm tra robot!</div>
                         <div class="forgot-password">
-                            <a href="javascript:void(0);" class="text-secondary" data-tab="#forgot_password_content"> Quên mật khẩu </a>
+                            <a href="javascript:void(0);" class="text-secondary" data-tab="#forgot_password_content">
+                                Quên mật khẩu </a>
                         </div>
                         <button class="btn btn-primary mt-2 submit-button" type="submit">Đăng nhập</button>
                         <div class="register">
@@ -106,16 +111,17 @@
                             <div class="invalid-feedback">Vui lòng nhập vào đây</div>
                             <span class="email-failed text-danger d-none"></span>
                         </div>
-                        <button id="forgot_password_btn" class="btn btn-primary mt-2 submit-button" type="submit">Gửi</button>
+                        <button id="forgot_password_btn" class="btn btn-primary mt-2 submit-button"
+                            type="submit">Gửi</button>
                         <div class="register">
                             Bạn chưa có tài khoản?
-                            <a href="javascript:void(0);" class="text-secondary"
-                                data-tab="#register_content">Đăng ký</a>
+                            <a href="javascript:void(0);" class="text-secondary" data-tab="#register_content">Đăng
+                                ký</a>
                         </div>
                         <div class="register">
                             Bạn đã có tài khoản?
-                            <a href="javascript:void(0);" class="text-secondary"
-                                data-tab="#login_content">Đăng nhập</a>
+                            <a href="javascript:void(0);" class="text-secondary" data-tab="#login_content">Đăng
+                                nhập</a>
                         </div>
                     </div>
                 </form>
@@ -146,3 +152,21 @@
         });
     </script>
 @endif
+
+<script>
+    // Function to toggle password visibility and icon class
+    function togglePasswordVisibility(inputId) {
+        var inputField = document.getElementById(inputId);
+        var icon = document.getElementById('password-icon').querySelector('i');
+
+        if (inputField.type === 'password') {
+            inputField.type = 'text'; // Show password
+            icon.classList.remove('bi-eye-slash-fill');
+            icon.classList.add('bi-eye-fill'); // Change icon to "eye-slash"
+        } else {
+            inputField.type = 'password'; // Hide password
+            icon.classList.remove('bi-eye-fill');
+            icon.classList.add('bi-eye-slash-fill'); // Change icon to "eye"
+        }
+    }
+</script>
