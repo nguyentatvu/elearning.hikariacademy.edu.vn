@@ -277,14 +277,16 @@
                 let flashcardHtml = `
                     <div id="card${newIndex}" class="flashcard animated slideInRight ${active}" data-card-id="${newIndex}">
                         <div id="flashcard_front" class="flashcard-side front">
-                            <span class="flashcard-word">${random.m1tuvung || ''}</span>
-                            <span class="flashcard-example">${random.m1vidu || ''}</span>
+                            <div class="flashcard-word-example">
+                                <span class="flashcard-word">${random.m1tuvung || ''}</span>
+                                <span class="flashcard-example">${random.m1vidu || ''}</span>
+                            </div>
                             <span class="flashcard-instruction">クリックして反転</span>
                         </div>
                         <div id="flashcard_back" class="flashcard-side back">
-                            <span class="flashcard-meaning">${random.m2ynghia || ''}</span>
                             <span class="flashcard-reading">${random.m2cachdoc || ''}</span>
                             <span class="flashcard-sino-vietnamese">${random.m2amhanviet || ''}</span>
+                            <span class="flashcard-meaning">${random.m2ynghia || ''}</span>
                             <span class="flashcard-example">${random.m2vidu || ''}</span>
                             <span class="flashcard-instruction">Click để lật mặt</span>
                         </div>
