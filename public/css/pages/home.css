@@ -511,6 +511,13 @@
     width: 650px;
   }
 }
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .learning-series-list .swiper-exam-series,
+  .learning-series-list .swiper-learning-series, .exam-series-list .swiper-exam-series,
+  .exam-series-list .swiper-learning-series {
+    width: 550px;
+  }
+}
 @media screen and (max-width: 767px) {
   .learning-series-list .swiper-exam-series,
   .learning-series-list .swiper-learning-series, .exam-series-list .swiper-exam-series,
