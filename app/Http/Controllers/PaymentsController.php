@@ -2860,6 +2860,15 @@ class PaymentsController extends Controller
 
     public function vnPayIPN(Request $request)
 	{
+        // Check if the IP is in the allowed list in production mode
+        if (env('DEMO_MODE') == false) {
+            $allowIPs = config('constant.vnpay.production_allow_call_ips');
+
+            if (!in_array($request->ip(), $allowIPs)) {
+                return response()->json(['message' => 'Unauthorized'], 401);
+            }
+        }
+
 		$orderId        = $request->vnp_TxnRef;
 		$log = new Logger(env('VNPAY_LOG_PATH'));
 		$log->putLog('Response call back from api VNPAY, orderId: ' .$orderId);
