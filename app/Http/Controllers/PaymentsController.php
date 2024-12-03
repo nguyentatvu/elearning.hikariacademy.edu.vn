@@ -51,7 +51,7 @@ class PaymentsController extends Controller
         UserRoadmapService $userRoadmapService
     )
     {
-        $this->middleware('auth')->except('vnPayIPN');
+        $this->middleware('auth')->except('vnPayIPN', 'handleVNPAYReturnSeriesCombo', 'handleVNPAYReturnCoin');
 
         $this->coinRechargeService = $coinRechargeService;
         $this->paymentMethodService = $paymentMethodService;
@@ -2864,6 +2864,14 @@ class PaymentsController extends Controller
 		$log = new Logger(env('VNPAY_LOG_PATH'));
 		$log->putLog('Response call back from api VNPAY, orderId: ' .$orderId);
         $log->putLog('-----Response time IPN: ' . date('Y-m-d H:i:s'));
+
+        $ip = $request->ip();
+        $path = request()->path();
+        $time = date('Y-m-d H:i:s');
+        $queryString = request()->getQueryString();
+        $method = $request->method();
+        $log->putLog($ip . ' [' . $time . '] Method: ' . $method . ' "' . $path . '?' . $queryString . '"');
+
 		$inputData = array();
 		foreach ($_GET as $key => $value) {
 			if (substr($key, 0, 4) == "vnp_") {
@@ -2892,7 +2900,9 @@ class PaymentsController extends Controller
 		{
 			if ($secureHash == $vnp_SecureHash) {
 				// Get payment method
-				$paymentMethod = PaymentMethod::where('orderId', '=', $orderId)->first();
+				$paymentMethod = PaymentMethod::where('orderId', '=', $orderId)
+                    ->with('lmsSeriesCombo')
+                    ->first();
 				if ($paymentMethod == null) {
 					$returnData['RspCode'] = '01';
 					$returnData['Message'] = 'Order not found';
@@ -2904,22 +2914,16 @@ class PaymentsController extends Controller
 
 					if($amount == $paymentMethod->amount)
 					{
-						if (
-							(
-								$inputData['vnp_ResponseCode'] == '00' ||
-								$inputData['vnp_TransactionStatus'] == '00' ||
-								$inputData['vnp_ResponseCode'] == '99' ||
-								$inputData['vnp_TransactionStatus'] == '99'
-							) &&
-							$paymentMethod->vnpay_response_time == null
-						) {
+						if ($paymentMethod->vnpay_response_time == null) {
                             $paymentMethod->update([
                                 'vnpay_response_time' => date('Y-m-d H:i:s')
                             ]);
 
-							$returnData['RspCode'] = '00';
-							$returnData['Message'] = 'Confirm Success';
-							$log->putLog(json_encode($returnData));
+                            if ($paymentMethod->recharge_coin_amount != null) {
+                                $returnData = $this->handleVNPAYReturnCoin($_GET, $paymentMethod);
+                            } else {
+                                $returnData = $this->handleVNPAYReturnSeriesCombo($_GET, $paymentMethod);
+                            }
 						} else {
 							$returnData['RspCode'] = '02';
 							$returnData['Message'] = 'Order already confirmed';
@@ -2941,6 +2945,7 @@ class PaymentsController extends Controller
 			$returnData['Message'] = 'Unknow error';
 			$log->putLog(json_encode($returnData));
 		}
+        $log->putLog('');
 
 		return json_encode($returnData);
 	}
@@ -2949,7 +2954,6 @@ class PaymentsController extends Controller
     {
         $log = new Logger(env('VNPAY_LOG_PATH'));
         $log->putLog('-----Response time VNPAY return url: ' . date('Y-m-d H:i:s'));
-        $log->putLog('-----VNPAY return URL: ' . $request->fullUrl());
 
         if (!empty($_GET)) {
             $vnp_SecureHash = $_GET['vnp_SecureHash'];
@@ -2988,11 +2992,6 @@ class PaymentsController extends Controller
                 return redirect('/home');
             }
 
-            if ($payment_method->status == PaymentMethod::PAYMENT_SUCCESS) {
-                flash('Thông báo!', 'Đơn thanh toán đã được xử lý', 'error');
-                return redirect('/payments/lms/' . $slug . ($payment_method->redeem_point ? '?is_redeemed=1' : ''));
-            }
-
             $amount = $request->get('vnp_Amount') / 100;
             if ($amount != $payment_method->amount) {
                 flash('Lỗi!', 'Số tiền thanh toán không khớp', 'error');
@@ -3001,36 +3000,7 @@ class PaymentsController extends Controller
 
             if ($secureHash == $vnp_SecureHash) {
                 $seriesCombo = $this->lmsSeriesComboService->getSeriesComboBySlugWithSeries($slug);
-                $purchasedSeriesList = $this->lmsSeriesService->getSeriesListOfSeriesComboSlug($slug);
                 if ($_GET['vnp_ResponseCode'] == '00') {
-                    $payment_method->update(
-                        ['status' => PaymentMethod::PAYMENT_SUCCESS]
-                    );
-
-                    // Reseting the redeemed points and the time when the series order was created
-                    // if transaction is successful
-                    Auth::user()->update([
-                        'redeemed_points' => null,
-                        'series_order_created_at' => null
-                    ]);
-
-                    $this->userService->updatePointHistory(['used' => $payment_method->redeem_point ?? 0]);
-
-                    foreach ($purchasedSeriesList as $series) {
-                        $this->userRoadmapService->updateOrCreate([
-                            'user_id' => Auth::id(),
-                            'lmsseries_id' => $series->id,
-                        ]);
-                    }
-
-                    $this->userService->updateSeriesViewsHistory(
-                        Auth::user()->series_views_history ?? [],
-                        $purchasedSeriesList->pluck('id')->toArray()
-                    );
-
-                    $message_success = "Bạn đã mua {$seriesCombo->title} thành công";
-					flash('Mua khoá học thành công!', $message_success, 'success');
-
                     if (count($seriesCombo->seriesList) > 1) {
                         $redirect_url = route('series.introduction-detail-combo', ['combo_slug' => $slug]);
                     } else {
@@ -3040,22 +3010,11 @@ class PaymentsController extends Controller
                         ]);
                     }
 
+                    $message_success = "Bạn đã mua {$seriesCombo->title} thành công";
+					flash('Mua khoá học thành công!', $message_success, 'success');
+
 					return redirect($redirect_url ?? '/home');
 				} else {
-                    // Returning the redeemed points to reward points if transaction is failed
-                    $payment_method->update(
-                        ['status' => PaymentMethod::PAYMENT_FAILED]
-                    );
-                    $user = Auth::user();
-                    $restored_reward_point = $user->redeemed_points['reward_point'] + $user->reward_point;
-                    $restored_recharge_point = $user->redeemed_points['recharge_point'] + $user->recharge_point;
-                    $user->update([
-                        'redeemed_points' => null,
-                        'series_order_created_at' => null,
-                        'reward_point' => $restored_reward_point,
-                        'recharge_point' => $restored_recharge_point
-                    ]);
-
                     flash('Thông báo!', 'Đơn thanh toán đã bị huỷ!', 'error');
                     return redirect('/payments/lms/' . $slug . ($payment_method->redeem_point ? '?is_redeemed=1' : ''));
 				}
@@ -3064,6 +3023,67 @@ class PaymentsController extends Controller
 				return redirect('/payments/lms/' . $slug);
             }
         }
+    }
+
+    /**
+     * Handle VNPAY return code
+     *
+     * @param array $inputData
+     * @param PaymentMethod $payment_method
+     * @return array
+     */
+    private function handleVNPAYReturnSeriesCombo(array $inputData, PaymentMethod $payment_method) {
+        $purchasedSeriesList = $this->lmsSeriesService->getSeriesListOfSeriesComboSlug($payment_method->lmsSeriesCombo->slug);
+        $user = $this->userService->findById($payment_method->user_id);
+        $log = new Logger(env('VNPAY_LOG_PATH'));
+        if ($inputData['vnp_ResponseCode'] == '00' || $inputData['vnp_TransactionStatus'] == '00') {
+            $payment_method->update(
+                ['status' => PaymentMethod::PAYMENT_SUCCESS]
+            );
+
+            // Reseting the redeemed points and the time when the series order was created
+            // if transaction is successful
+            $user->update([
+                'redeemed_points' => null,
+                'series_order_created_at' => null
+            ]);
+
+            $this->userService->updatePointHistory(['used' => $payment_method->redeem_point ?? 0], $user->id);
+
+            foreach ($purchasedSeriesList as $series) {
+                $this->userRoadmapService->updateOrCreate([
+                    'user_id' => $user->id,
+                    'lmsseries_id' => $series->id,
+                ]);
+            }
+
+            $this->userService->updateSeriesViewsHistory(
+                $user->series_views_history ?? [],
+                $purchasedSeriesList->pluck('id')->toArray(),
+                $user->id
+            );
+        } else {
+            // Returning the redeemed points to reward points if transaction is failed
+            $payment_method->update(
+                ['status' => PaymentMethod::PAYMENT_FAILED]
+            );
+            $restored_reward_point = $user->redeemed_points['reward_point'] + $user->reward_point;
+            $restored_recharge_point = $user->redeemed_points['recharge_point'] + $user->recharge_point;
+            $user->update([
+                'redeemed_points' => null,
+                'series_order_created_at' => null,
+                'reward_point' => $restored_reward_point,
+                'recharge_point' => $restored_recharge_point
+            ]);
+        }
+
+        $returnData = [
+            'RspCode' => '00',
+            'Message' => 'Confirm Success'
+        ];
+        $log->putLog(json_encode($returnData));
+
+        return $returnData;
     }
 
     /**
@@ -3421,11 +3441,6 @@ class PaymentsController extends Controller
             return redirect('/home');
         }
 
-        if ($unfinishedPaymentMethod->status == PaymentMethod::PAYMENT_SUCCESS) {
-            flash('Thông báo!', 'Đơn thanh toán đã được xử lý', 'error');
-            return redirect()->route('mypage.recharge-point');
-        }
-
         $amount = $request->get('vnp_Amount') / 100;
         if ($amount != $unfinishedPaymentMethod->amount) {
             flash('Lỗi!', 'Số tiền thanh toán không khớp', 'error');
@@ -3434,18 +3449,10 @@ class PaymentsController extends Controller
 
         if ($secureHash == $vnp_SecureHash) {
             if ($request->get('vnp_ResponseCode') == '00') {
-                $unfinishedPaymentMethod->update(['status' => PaymentMethod::PAYMENT_SUCCESS]);
-                $this->userService->updatePointHistory(['recharge' => $unfinishedPaymentMethod->recharge_coin_amount]);
-                $user->update([
-                    'recharge_point' => $user->recharge_point + $unfinishedPaymentMethod->recharge_coin_amount
-                ]);
-
                 $formattedCoinAmount = formatNumber($unfinishedPaymentMethod->recharge_coin_amount);
                 flash('Thông báo!', "Bạn đã nạp $formattedCoinAmount HiCoins thành công!", 'success');
                 return redirect()->route('mypage.recharge-point');
             } else {
-                $unfinishedPaymentMethod->update(['status' => PaymentMethod::PAYMENT_FAILED]);
-
                 flash('Thông báo!', 'Bạn đã huỷ đơn hàng thành toán!', 'error');
                 return redirect()->route('mypage.recharge-point');
             }
@@ -3453,6 +3460,40 @@ class PaymentsController extends Controller
             flash('error', 'Chữ ký không hợp lệ', 'error');
             return redirect('/home');
         }
+    }
+
+    /**
+     * Handle VNPAY return code for coin recharge
+     *
+     * @param array $inputData
+     * @param PaymentMethod $payment_method
+     * @return array
+     */
+    private function handleVNPAYReturnCoin(array $inputData, PaymentMethod $payment_method) {
+        if ($inputData['vnp_ResponseCode'] == '00' || $inputData['vnp_TransactionStatus'] == '00') {
+            $payment_method->update(['status' => PaymentMethod::PAYMENT_SUCCESS]);
+            $this->userService->updatePointHistory(
+                ['recharge' => $payment_method->recharge_coin_amount],
+                $payment_method->user_id
+            );
+
+            $user = $this->userService->findById($payment_method->user_id);
+            $user->update([
+                'recharge_point' => $user->recharge_point + $payment_method->recharge_coin_amount
+            ]);
+        } else {
+            $payment_method->update(['status' => PaymentMethod::PAYMENT_FAILED]);
+        }
+
+        $returnData = [
+            'RspCode' => '00',
+            'Message' => 'Confirm Success'
+        ];
+
+        $log = new Logger(env('VNPAY_LOG_PATH'));
+        $log->putLog(json_encode($returnData));
+
+        return $returnData;
     }
 
     /**
