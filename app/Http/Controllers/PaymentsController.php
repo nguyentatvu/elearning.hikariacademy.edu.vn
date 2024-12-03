@@ -3143,7 +3143,7 @@ class PaymentsController extends Controller
         }
 
         $totalCoin = $coin_package->coin + (int) ($coin_package->coin * ($coin_package->bonus_percentage / 100));
-        $orderId = 'HIK-COIN' . time();
+        $orderId = 'HIK_COIN' . time();
         $orderInfo = "Nạp {$totalCoin} Hi Coins";
         $user_id = Auth::user()->id;
         $requestId = sprintf('%s_coin_%s', $user_id, $coin_package->price);
@@ -3305,7 +3305,7 @@ class PaymentsController extends Controller
         }
 
         $totalCoin = $coin_package->coin + (int) ($coin_package->coin * ($coin_package->bonus_percentage / 100));
-        $orderId = 'HIK-COIN' . time();
+        $orderId = 'HIK_COIN' . time();
         $orderInfo = "Nạp {$totalCoin} Hi Coins";
         $user_id = Auth::user()->id;
         $requestId = sprintf('%s_coin_%s', $user_id, $coin_package->price);
@@ -3530,7 +3530,7 @@ class PaymentsController extends Controller
         }
 
         $totalCoin = $coin_package->coin + (int) ($coin_package->coin * ($coin_package->bonus_percentage / 100));
-        $orderId = 'HIK-COIN' . time();
+        $orderId = 'HIK_COIN' . time();
         $orderInfo = "Nạp {$totalCoin} Hi Coins";
         $requestId = sprintf('%s_coin_%s', Auth::user()->id, $coin_package->price);
 
