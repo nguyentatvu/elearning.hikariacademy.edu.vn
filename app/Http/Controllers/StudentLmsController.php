@@ -894,14 +894,9 @@ class StudentLmsController extends Controller
                         }
                     }
 
-                    $rewardedPoint = 0;
-                    if (isset($rewardedPoint) && $rewardedPoint > 0) {
+                    if ($rewardedPoint > 0) {
                         $this->userService->updatePointHistory(['exercise_test' => $rewardedPoint], Auth::id());
                         Auth::user()->update(['reward_point' => Auth::user()->reward_point + $rewardedPoint]);
-                    }
-
-                    if ($rewardedPoint > 0) {
-                        $this->userService->updatePoint($rewardedPoint, $content_id, Auth::id());
                     }
 
                     if (Auth::check()) {
