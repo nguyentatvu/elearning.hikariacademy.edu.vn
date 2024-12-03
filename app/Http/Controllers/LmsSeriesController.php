@@ -616,6 +616,7 @@ class LmsSeriesController extends Controller
 				'payment_method.created_at',
 				'payment_method.status',
 				'payment_method.month_extend',
+				'payment_method.responseTime',
 				DB::raw("(SELECT COUNT(lmscontents.id)  FROM lmscontents
         WHERE lmscontents.delete_status = 0 AND lmscontents.type NOT IN(0,8) AND
             lmscontents.lmsseries_id IN (lmsseries_combo.n1,lmsseries_combo.n2,lmsseries_combo.n3,lmsseries_combo.n4,lmsseries_combo.n5) ) as total_course"),
