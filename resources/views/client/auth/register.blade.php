@@ -27,7 +27,7 @@
             <button class="btn btn-primary mt-2 submit-button" type="submit">Đăng ký</button>
             <div class="login">
                 Bạn đã có tài khoản?
-                <a href="{{ route('login') }}" class="text-secondary">Đăng nhập ngay</a>
+                <a href="{{ route('login') }}" class="text-primary">Đăng nhập ngay</a>
             </div>
         </form>
     </div>

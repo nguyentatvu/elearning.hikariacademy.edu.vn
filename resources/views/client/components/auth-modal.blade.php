@@ -32,13 +32,13 @@
                         <div class="login-failed text-danger d-none">Tên hoặc mật khẩu không đúng</div>
                         <div class="captcha-failed text-danger d-none">Hãy đánh dấu vào ô kiểm tra robot!</div>
                         <div class="forgot-password">
-                            <a href="javascript:void(0);" class="text-secondary" data-tab="#forgot_password_content">
+                            <a href="javascript:void(0);" class="text-primary" data-tab="#forgot_password_content">
                                 Quên mật khẩu </a>
                         </div>
                         <button class="btn btn-primary mt-2 submit-button" type="submit">Đăng nhập</button>
                         <div class="register">
                             Bạn chưa có tài khoản?
-                            <a href="javascript:void(0);" class="text-secondary" data-tab="#register_content">Đăng ký
+                            <a href="javascript:void(0);" class="text-primary" data-tab="#register_content">Đăng ký
                                 ngay</a>
                         </div>
                     </div>
@@ -84,7 +84,7 @@
                         <button class="btn btn-primary mt-2 submit-button" type="submit">Đăng ký</button>
                         <div class="login">
                             Bạn đã có tài khoản?
-                            <a href="javascript:void(0);" class="text-secondary" data-tab="#login_content">Đăng nhập
+                            <a href="javascript:void(0);" class="text-primary" data-tab="#login_content">Đăng nhập
                                 ngay</a>
                         </div>
                     </div>
@@ -115,12 +115,12 @@
                             type="submit">Gửi</button>
                         <div class="register">
                             Bạn chưa có tài khoản?
-                            <a href="javascript:void(0);" class="text-secondary" data-tab="#register_content">Đăng
+                            <a href="javascript:void(0);" class="text-primary" data-tab="#register_content">Đăng
                                 ký</a>
                         </div>
                         <div class="register">
                             Bạn đã có tài khoản?
-                            <a href="javascript:void(0);" class="text-secondary" data-tab="#login_content">Đăng
+                            <a href="javascript:void(0);" class="text-primary" data-tab="#login_content">Đăng
                                 nhập</a>
                         </div>
                     </div>
