@@ -154,10 +154,10 @@
                                         <p>Thời điểm gần nhất học viên tiến hành làm kiểm tra: <span
                                                 class="text-primary">{{ $audit }}</span></p>
                                         @php
-                                            $lastExam = $mock_exam_results->first();
+                                            $lastExam = $mock_exam_results ? $mock_exam_results->first()->created_at : "Chưa tham gia";
                                         @endphp
                                         <p>Thời điểm gần nhất học viên tiến hành thi: <span
-                                                class="text-primary">{{ $lastExam->created_at }}</span>
+                                                class="text-primary">{{ $lastExam }}</span>
                                         </p>
                                     </div>
                                 </div>
