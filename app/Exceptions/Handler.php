@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -56,18 +57,38 @@ class Handler extends ExceptionHandler
     {
         if ($request->is('api/*')) {
             if ($exception instanceof AuthenticationException) {
+                Log::error($exception->getMessage(), [
+                    'http_status' => 401,
+                    'url' => $request->fullUrl(),
+                    'method' => $request->method()
+                ]);
                 return response()->json(['error' => 'Unauthenticated'], 401);
             }
 
             if ($exception instanceof \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException) {
+                Log::error($exception->getMessage(), [
+                    'http_status' => 401,
+                    'url' => $request->fullUrl(),
+                    'method' => $request->method()
+                ]);
                 return response()->json(['error' => $exception->getMessage()], 401);
             }
 
             if ($exception instanceof NotFoundHttpException) {
+                Log::error($exception->getMessage(), [
+                    'http_status' => 404,
+                    'url' => $request->fullUrl(),
+                    'method' => $request->method()
+                ]);
                 return response()->json(['error' => 'Not found'], 404);
             }
 
             if ($exception instanceof MethodNotAllowedHttpException) {
+                Log::error($exception->getMessage(), [
+                    'http_status' => 405,
+                    'url' => $request->fullUrl(),
+                    'method' => $request->method()
+                ]);
                 return response()->json(['error' => 'Method not allowed'], 405);
             }
 
