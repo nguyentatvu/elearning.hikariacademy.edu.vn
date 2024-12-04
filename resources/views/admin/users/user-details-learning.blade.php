@@ -153,8 +153,11 @@
                                                 class="text-primary">{{ $exercises }}</span></p>
                                         <p>Thời điểm gần nhất học viên tiến hành làm kiểm tra: <span
                                                 class="text-primary">{{ $audit }}</span></p>
+                                        @php
+                                            $lastExam = $mock_exam_results->first();
+                                        @endphp
                                         <p>Thời điểm gần nhất học viên tiến hành thi: <span
-                                                class="text-primary">{{ $exams }}</span>
+                                                class="text-primary">{{ $lastExam->created_at }}</span>
                                         </p>
                                     </div>
                                 </div>
@@ -232,47 +235,47 @@
                             </div>
                         </div>
                         <!-- <div class="row">
-           <div class="col-md-6">
-            <div class="panel panel-primary dsPanel">
-             <div class="panel-heading">
-              <i class="fa fa-bar-chart-o"></i>
-              Tổng số khóa học học viên đang tham gia
-             </div>
-             <div class="panel-body">
-              <?php $ids = []; ?>
-              @for ($i = 0; $i < count($number_of_courses); $i++)
+               <div class="col-md-6">
+                <div class="panel panel-primary dsPanel">
+                 <div class="panel-heading">
+                  <i class="fa fa-bar-chart-o"></i>
+                  Tổng số khóa học học viên đang tham gia
+                 </div>
+                 <div class="panel-body">
+                  <?php $ids = []; ?>
+                  @for ($i = 0; $i < count($number_of_courses); $i++)
     <div class="panel-body">
-                <div class="row">
-                 <div class="col-md-12">
-                  <canvas id="number_of_courses" width="100" height="110"></canvas>
+                    <div class="row">
+                     <div class="col-md-12">
+                      <canvas id="number_of_courses" width="100" height="110"></canvas>
+                     </div>
+                    </div>
+                   </div>
+    @endfor
                  </div>
                 </div>
                </div>
-    @endfor
-             </div>
-            </div>
-           </div>
-           <div class="col-md-6">
-            <div class="panel panel-primary dsPanel">
-             <div class="panel-heading">
-              <i class="fa fa-bar-chart-o"></i>
-              Tỉ lệ % hoàn thành khóa học
-             </div>
-             <div class="panel-body">
-              <?php $ids = []; ?>
-              @for ($i = 0; $i < count($percentage_of_course); $i++)
+               <div class="col-md-6">
+                <div class="panel panel-primary dsPanel">
+                 <div class="panel-heading">
+                  <i class="fa fa-bar-chart-o"></i>
+                  Tỉ lệ % hoàn thành khóa học
+                 </div>
+                 <div class="panel-body">
+                  <?php $ids = []; ?>
+                  @for ($i = 0; $i < count($percentage_of_course); $i++)
     <div class="panel-body">
-                <div class="row">
-                 <div class="col-md-12">
-                  <canvas id="percentage_of_course" width="100" height="110"></canvas>
+                    <div class="row">
+                     <div class="col-md-12">
+                      <canvas id="percentage_of_course" width="100" height="110"></canvas>
+                     </div>
+                    </div>
+                   </div>
+    @endfor
                  </div>
                 </div>
                </div>
-    @endfor
-             </div>
-            </div>
-           </div>
-          </div> -->
+              </div> -->
                     </div>
                 </div>
 

@@ -23,6 +23,7 @@ class PaymentRepository extends BaseRepository
             ->whereHas('paymentMethod', function ($query) {
                 $query->where('status', PaymentMethod::PAYMENT_SUCCESS);
             })
+            ->whereHas('series')
             ->select('id', 'user_id', 'item_id', 'payments_method_id', 'time', 'created_at')
             ->orderBy('created_at', 'desc')
             ->groupBy('payments.item_id')
