@@ -63,6 +63,14 @@
     }
 
     /* Media Queries for Responsiveness */
+    @media (min-width: 768px) {
+        .momo-img {
+            width: 70%;
+            margin: 10px auto;
+            display: block;
+        }
+    }
+
     @media (max-width: 768px) {
         .momo-step-title {
             font-size: 18px;
@@ -78,6 +86,10 @@
 
         .momo-list {
             padding-left: 15px;
+        }
+
+        .momo-img {
+            width: 100%; /* 100% width for smaller screens */
         }
     }
 
@@ -97,15 +109,21 @@
         .momo-list-item {
             font-size: 12px;
         }
+
+        .momo-img {
+            width: 100%; /* 100% width for mobile screens */
+        }
     }
 </style>
 
 <div class="momo-container">
-    <p class="momo-text">Dưới đây là các bước chi tiết để thực hiện thanh toán khóa học trên Hikari E-learning bằng phương thức quét mã QR:</p>
+    <p class="momo-text">Dưới đây là các bước chi tiết để thực hiện thanh toán khóa học trên Hikari E-learning bằng
+        phương thức quét mã QR:</p>
 
     <div class="momo-step">
         <h2 class="momo-step-title">Bước 1: Chọn Phương Thức Thanh Toán Bằng Ví MoMo</h2>
-        <p class="momo-text">Chọn mua khóa học và chuyển đến trang thanh toán trên website của Hikari E-learning. Sau đó, chọn phương thức thanh toán bằng Ví MoMo.</p>
+        <p class="momo-text">Chọn mua khóa học và chuyển đến trang thanh toán trên website của Hikari E-learning. Sau đó,
+            chọn phương thức thanh toán bằng Ví MoMo.</p>
         <p class="momo-text">Hệ thống sẽ hiển thị mã QR chứa thông tin thanh toán, bao gồm:</p>
         <ul class="momo-list">
             <li class="momo-list-item">Tên nhà cung cấp: Công ty TNHH Tư Vấn - Dịch Vụ Quang Việt</li>
@@ -125,7 +143,8 @@
 
     <div class="momo-step">
         <h2 class="momo-step-title">Bước 3: Quét Mã QR</h2>
-        <p class="momo-text">Sử dụng camera của ứng dụng MoMo để quét mã QR hiển thị trên màn hình thanh toán của website.</p>
+        <p class="momo-text">Sử dụng camera của ứng dụng MoMo để quét mã QR hiển thị trên màn hình thanh toán của
+            website.</p>
         <p class="momo-note">Lưu ý: Mã QR có hiệu lực trong vòng 10 phút.</p>
     </div>
 
@@ -142,7 +161,8 @@
     <div class="momo-step">
         <h2 class="momo-step-title">Bước 5: Xác Thực Giao Dịch</h2>
         <p class="momo-text">Sau khi kiểm tra thông tin, nhấn nút "Xác Nhận" trong ứng dụng MoMo.</p>
-        <p class="momo-text">Hoàn tất xác thực giao dịch bằng cách nhập mã PIN hoặc sử dụng các phương thức xác thực sinh trắc học (vân tay hoặc nhận diện khuôn mặt, nếu đã thiết lập).</p>
+        <p class="momo-text">Hoàn tất xác thực giao dịch bằng cách nhập mã PIN hoặc sử dụng các phương thức xác thực
+            sinh trắc học (vân tay hoặc nhận diện khuôn mặt, nếu đã thiết lập).</p>
         <p class="momo-text">Hệ thống sẽ xử lý và hiển thị thông báo "Thanh Toán Thành Công".</p>
         <img class="momo-img" src="{{ asset('images/upload/momo/payment-momo-qr.png') }}" alt="">
     </div>
@@ -150,7 +170,8 @@
     <div class="momo-step">
         <h2 class="momo-step-title">Lưu Ý:</h2>
         <ul class="momo-list">
-            <li class="momo-list-item">Hệ thống sẽ tự động quay lại website Hikari E-learning sau khi thanh toán thành công.</li>
+            <li class="momo-list-item">Hệ thống sẽ tự động quay lại website Hikari E-learning sau khi thanh toán thành
+                công.</li>
             <li class="momo-list-item">Nếu gặp sự cố, vui lòng liên hệ bộ phận hỗ trợ của Hikari E-learning.</li>
         </ul>
     </div>

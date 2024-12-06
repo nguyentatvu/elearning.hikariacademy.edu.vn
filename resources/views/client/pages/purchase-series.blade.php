@@ -109,10 +109,10 @@
                                 </li>
                             </ul>
                             <div>
-                                Hướng dẫn thanh toán VNPAY
+                                <i class="bi bi-info-circle"></i> Hướng dẫn thanh toán VNPAY
 
-                                <a class="text-primary text-decoration-line" href="{{ route('site_pages', 'payment-instructions-vnpay') }}">
-                                    Xem hướng dẫn chi tiết tại đây
+                                <a target="_blank" class="text-primary text-decoration-underline" href="{{ route('site_pages', 'payment-instructions-vnpay') }}">
+                                    tại đây
                                 </a>
                             </div>
                         </div>
@@ -144,10 +144,10 @@
                                 </li>
                             </ul>
                             <div>
-                                Hướng dẫn thanh toán MoMo
+                                <i class="bi bi-info-circle"></i> Hướng dẫn thanh toán MoMo
 
-                                <a class="text-primary text-decoration-line" href="{{ route('site_pages', 'payment-instructions-momo') }}">
-                                    Xem hướng dẫn chi tiết tại đây
+                                <a target="_blank" class="text-primary text-decoration-underline" href="{{ route('site_pages', 'payment-instructions-momo') }}">
+                                    tại đây
                                 </a>
                             </div>
                         </div>
