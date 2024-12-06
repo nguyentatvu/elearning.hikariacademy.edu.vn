@@ -122,9 +122,9 @@
 
     <div class="momo-step">
         <h2 class="momo-step-title">Bước 1: Chọn Phương Thức Thanh Toán Bằng Ví MoMo</h2>
-        <p class="momo-text">Chọn mua khóa học và chuyển đến trang thanh toán trên website của Hikari E-learning. Sau đó,
+        <p class="momo-text">- Chọn mua khóa học và chuyển đến trang thanh toán trên website của Hikari E-learning. Sau đó,
             chọn phương thức thanh toán bằng Ví MoMo.</p>
-        <p class="momo-text">Hệ thống sẽ hiển thị mã QR chứa thông tin thanh toán, bao gồm:</p>
+        <p class="momo-text">- Hệ thống sẽ hiển thị mã QR chứa thông tin thanh toán, bao gồm:</p>
         <ul class="momo-list">
             <li class="momo-list-item">Tên nhà cung cấp: Công ty TNHH Tư Vấn - Dịch Vụ Quang Việt</li>
             <li class="momo-list-item">Mã đơn hàng</li>
@@ -136,21 +136,21 @@
 
     <div class="momo-step">
         <h2 class="momo-step-title">Bước 2: Mở Ứng Dụng Ví MoMo</h2>
-        <p class="momo-text">Truy cập ứng dụng Ví MoMo trên điện thoại và đăng nhập vào tài khoản.</p>
-        <p class="momo-text">Tại màn hình chính của ứng dụng, chọn mục "Quét Mã".</p>
-        <img class="momo-img" src="{{ asset('images/upload/momo/payment-momo-qr.png') }}" alt="">
+        <p class="momo-text">- Truy cập ứng dụng Ví MoMo trên điện thoại và đăng nhập vào tài khoản.</p>
+        <p class="momo-text">- Tại màn hình chính của ứng dụng, chọn mục "Quét Mã".</p>
+        <img class="momo-img" src="{{ asset('images/upload/momo/payment-momo.png') }}" alt="">
     </div>
 
     <div class="momo-step">
         <h2 class="momo-step-title">Bước 3: Quét Mã QR</h2>
-        <p class="momo-text">Sử dụng camera của ứng dụng MoMo để quét mã QR hiển thị trên màn hình thanh toán của
+        <p class="momo-text">- Sử dụng camera của ứng dụng MoMo để quét mã QR hiển thị trên màn hình thanh toán của
             website.</p>
         <p class="momo-note">Lưu ý: Mã QR có hiệu lực trong vòng 10 phút.</p>
     </div>
 
     <div class="momo-step">
         <h2 class="momo-step-title">Bước 4: Kiểm Tra Thông Tin Giao Dịch</h2>
-        <p class="momo-text">Trước khi xác nhận, kiểm tra các thông tin hiển thị trong ứng dụng MoMo, bao gồm:</p>
+        <p class="momo-text">- Trước khi xác nhận, kiểm tra các thông tin hiển thị trong ứng dụng MoMo, bao gồm:</p>
         <ul class="momo-list">
             <li class="momo-list-item">Tên nhà cung cấp</li>
             <li class="momo-list-item">Số tiền</li>
@@ -160,11 +160,11 @@
 
     <div class="momo-step">
         <h2 class="momo-step-title">Bước 5: Xác Thực Giao Dịch</h2>
-        <p class="momo-text">Sau khi kiểm tra thông tin, nhấn nút "Xác Nhận" trong ứng dụng MoMo.</p>
-        <p class="momo-text">Hoàn tất xác thực giao dịch bằng cách nhập mã PIN hoặc sử dụng các phương thức xác thực
+        <p class="momo-text">- Sau khi kiểm tra thông tin, nhấn nút "Xác Nhận" trong ứng dụng MoMo.</p>
+        <p class="momo-text">- Hoàn tất xác thực giao dịch bằng cách nhập mã PIN hoặc sử dụng các phương thức xác thực
             sinh trắc học (vân tay hoặc nhận diện khuôn mặt, nếu đã thiết lập).</p>
-        <p class="momo-text">Hệ thống sẽ xử lý và hiển thị thông báo "Thanh Toán Thành Công".</p>
-        <img class="momo-img" src="{{ asset('images/upload/momo/payment-momo-qr.png') }}" alt="">
+        <p class="momo-text">- Hệ thống sẽ xử lý và hiển thị thông báo "Thanh Toán Thành Công".</p>
+        <img class="momo-img" src="{{ asset('images/upload/momo/payment-momo-success.png') }}" alt="">
     </div>
 
     <div class="momo-step">
