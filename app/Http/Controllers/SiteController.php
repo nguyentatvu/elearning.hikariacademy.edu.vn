@@ -500,7 +500,13 @@ class SiteController extends Controller
     */
     public function sitePages($key = 'privacy-policy')
     {
-        $available_pages = ['privacy-policy', 'terms-conditions', 'payment-instructions'];
+        $available_pages = [
+            'privacy-policy',
+            'terms-conditions',
+            'payment-instructions-vnpay',
+            'payment-instructions-momo'
+        ];
+
         if (!in_array($key, $available_pages)) {
             pageNotFound();
             return back();
@@ -515,8 +521,11 @@ class SiteController extends Controller
             case 'terms-conditions':
                 $data['title'] = 'Chính sách hoàn phí';
                 break;
-            case 'payment-instructions':
-                $data['title'] = 'Hướng dẫn thanh toán';
+            case 'payment-instructions-vnpay':
+                $data['title'] = 'Hướng dẫn thanh toán VNPAY';
+                break;
+            case 'payment-instructions-momo':
+                $data['title'] = 'Hướng dẫn thanh toán MoMo bằng Phương Thức Quét Mã QR';
                 break;
             default:
                 break;

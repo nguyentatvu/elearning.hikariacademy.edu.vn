@@ -11,8 +11,11 @@
                 @case('terms-conditions')
                     @include('admin.site.termsconditions')
                 @break;
-                @case('payment-instructions')
-                    @include('admin.site.payment_instructions')
+                @case('payment-instructions-vnpay')
+                    @include('admin.site.payment-instructions-vnpay')
+                @break;
+                @case('payment-instructions-momo')
+                    @include('admin.site.payment-instructions-momo')
                 @break;
             @endswitch
         </div>

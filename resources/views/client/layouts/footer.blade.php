@@ -34,14 +34,21 @@
                         <div class="py-2">
                             <div>
                                 <a class="text-light text-decoration-none"
-                                    href="{{ route('site_pages', 'payment-instructions') }}">Hướng
-                                    dẫn thanh toán
+                                    href="{{ route('site_pages', 'payment-instructions-vnpay') }}">
+                                    Hướng dẫn thanh toán VNPAY
                                 </a>
                             </div>
+
                             <div>
-                                <a class="text-light text-decoration-none"
-                                    href="{{ route('site_pages', 'terms-conditions') }}">Chính sách hoàn
-                                    tiền</a>
+                                <a class="text-light text-decoration-none" href="{{ route('site_pages', 'payment-instructions-momo') }}">
+                                    Hướng dẫn thanh toán MoMo
+                                </a>
+                            </div>
+
+                            <div>
+                                <a class="text-light text-decoration-none" href="{{ route('site_pages', 'terms-conditions') }}">
+                                    Chính sách hoàn tiền
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -105,7 +112,8 @@
                         dục và Đào tạo TP.Hồ Chí Minh cấp ngày 28/08/2020</div>
                 </div>
                 <div class="col-12 col-sm-6 footer-social d-flex">
-                    <div class="col-lg-12 d-flex flex-column flex-lg-row align-items-start align-items-lg-center gap-3 gap-lg-0 justify-content-center">
+                    <div
+                        class="col-lg-12 d-flex flex-column flex-lg-row align-items-start align-items-lg-center gap-3 gap-lg-0 justify-content-center">
                         <a href="http://online.gov.vn/Home/WebDetails/63991" class="me-2" target="_blank">
                             <img class="logo-bocongthuong ms-2 mt-2" src="{{ asset('images/bocongthuong.png') }}"
                                 alt="" height="70">
@@ -113,8 +121,8 @@
                         <!-- Android Download Button -->
                         <a href="https://play.google.com/store/apps/details?id=com.elearning_app"
                             class="download-button ajax-download android-img">
-                             <img src="{{ asset('images/icons/android-dowload.png') }}" alt="">
-                         </a>
+                            <img src="{{ asset('images/icons/android-dowload.png') }}" alt="">
+                        </a>
 
                         <!-- iOS Download Button -->
                         <a href="{{ route('downloadApp', ['encoded' => Crypt::encrypt('ipa')]) }}"

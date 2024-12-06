@@ -106,6 +106,13 @@
                                     nhận”
                                 </li>
                             </ul>
+                            <div>
+                                Hướng dẫn thanh toán MoMo
+
+                                <a class="text-primary text-decoration-line" href="{{ route('site_pages', 'payment-instructions-momo') }}">
+                                    Xem hướng dẫn chi tiết tại đây
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div id="instruction_vnpay" class="transaction-instruction mt-3 ml-3 d-none">
@@ -135,6 +142,13 @@
                                 OTP xác thực giao dịch.
                             </li>
                         </ul>
+                        <div>
+                            Hướng dẫn thanh toán VNPAY
+
+                            <a class="text-primary text-decoration-line" href="{{ route('site_pages', 'payment-instructions-vnpay') }}">
+                                Xem hướng dẫn chi tiết tại đây
+                            </a>
+                        </div>
                     </div>
                     <div id="instruction_bank_transfer" class="transaction-instruction mt-3 ml-3 d-none">
                         <div class="col-12">

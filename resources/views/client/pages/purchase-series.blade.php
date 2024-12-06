@@ -108,6 +108,13 @@
                                     OTP xác thực giao dịch.
                                 </li>
                             </ul>
+                            <div>
+                                Hướng dẫn thanh toán VNPAY
+
+                                <a class="text-primary text-decoration-line" href="{{ route('site_pages', 'payment-instructions-vnpay') }}">
+                                    Xem hướng dẫn chi tiết tại đây
+                                </a>
+                            </div>
                         </div>
                         <div class="series-submit" id="vnpay_submit">
                             <form action="/payments/vnpay/{{ $series_combo->slug }}" method="get">
@@ -136,6 +143,13 @@
                                     nhận”
                                 </li>
                             </ul>
+                            <div>
+                                Hướng dẫn thanh toán MoMo
+
+                                <a class="text-primary text-decoration-line" href="{{ route('site_pages', 'payment-instructions-momo') }}">
+                                    Xem hướng dẫn chi tiết tại đây
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div class="series-submit" id="momo_submit">
