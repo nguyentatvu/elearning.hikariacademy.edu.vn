@@ -516,7 +516,7 @@ class SiteController extends Controller
 
         switch ($key) {
             case 'privacy-policy':
-                $data['title'] = 'Bảo mật thông tin';
+                $data['title'] = 'Chính sách bảo mật thông tin';
                 break;
             case 'terms-conditions':
                 $data['title'] = 'Chính sách hoàn phí';

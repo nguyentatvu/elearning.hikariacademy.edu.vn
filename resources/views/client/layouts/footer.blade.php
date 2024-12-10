@@ -13,14 +13,14 @@
                             <h5>Về HIKARI</h5>
                         </div>
                         <div class="row">
-                            <div class="col-lg-6 py-2">
+                            <div class="py-2">
                                 <div>
                                     <a class="text-light text-decoration-none" href="https://hikariacademy.edu.vn">HIKARI
                                         ACADEMY</a>
                                 </div>
                                 <div>
                                     <a class="text-light text-decoration-none"
-                                        href="{{ route('site_pages', 'privacy-policy') }}">Bảo mật thông tin</a>
+                                        href="{{ route('site_pages', 'privacy-policy') }}">Chính sách bảo mật thông tin</a>
                                 </div>
                             </div>
                         </div>
