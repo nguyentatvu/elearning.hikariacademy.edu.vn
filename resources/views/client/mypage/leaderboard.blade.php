@@ -203,15 +203,15 @@
         <div class="leaderboard-wrapper p-3">
             <div class="leaderboard-wrapper__top-3">
                 @php
-                    $userTop1 = $leaderboard[0]->user ?? null;
-                    $userTop2 = $leaderboard[1]->user ?? null;
-                    $userTop3 = $leaderboard[2]->user ?? null;
+                    $userTop1 = $leaderboard[0] ?? null;
+                    $userTop2 = $leaderboard[1] ?? null;
+                    $userTop3 = $leaderboard[2] ?? null;
                 @endphp
                 <div class="leaderboard-wrapper__top py-4">
                     <div class="leaderboard-wrapper__top--avatar">
-                        <img src="{{ $userTop2 && $userTop2->image ? getFullUserImage($userTop2->image) : asset('images/no-avatar.png') }}"
+                        <img src="{{ $userTop2 && $userTop2->user->image ? getFullUserImage($userTop2->user->image) : asset('images/no-avatar.png') }}"
                             alt="student avatar" />
-                        <span class="line-clamp-2">{{ $userTop2 ? $userTop2->name : '?' }}</span>
+                        <span class="line-clamp-2">{{ $userTop2 ? $userTop2->user->name : '?' }}</span>
                     </div>
                     <div class="leaderboard-wrapper__top--point">
                         <img src="{{ asset('images/mypage/top-2.png') }}" alt="top 2">
@@ -223,9 +223,9 @@
                 </div>
                 <div class="leaderboard-wrapper__top">
                     <div class="leaderboard-wrapper__top--avatar">
-                        <img src="{{ $userTop1 && $userTop1->image ? getFullUserImage($userTop1->image) : asset('images/no-avatar.png') }}"
+                        <img src="{{ $userTop1 && $userTop1->user->image ? getFullUserImage($userTop1->user->image) : asset('images/no-avatar.png') }}"
                             alt="student avatar" />
-                        <span class="line-clamp-2">{{ $userTop1 ? $userTop1->name : '?' }}</span>
+                        <span class="line-clamp-2">{{ $userTop1 ? $userTop1->user->name : '?' }}</span>
                     </div>
                     <div class="leaderboard-wrapper__top--point first-place">
                         <img src="{{ asset('images/mypage/top-1.png') }}" alt="top 1">
@@ -237,9 +237,9 @@
                 </div>
                 <div class="leaderboard-wrapper__top py-4">
                     <div class="leaderboard-wrapper__top--avatar">
-                        <img src="{{ $userTop3 && $userTop3->image ? getFullUserImage($userTop3->image) : asset('images/no-avatar.png') }}"
+                        <img src="{{ $userTop3 && $userTop3->user->image ? getFullUserImage($userTop3->user->image) : asset('images/no-avatar.png') }}"
                             alt="student avatar" />
-                        <span class="line-clamp-2">{{ $userTop3 ? $userTop3->name : '?' }}</span>
+                        <span class="line-clamp-2">{{ $userTop3 ? $userTop3->user->name : '?' }}</span>
                     </div>
                     <div class="leaderboard-wrapper__top--point">
                         <img src="{{ asset('images/mypage/top-3.png') }}" alt="top 3">
