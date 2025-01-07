@@ -1,5 +1,5 @@
 @foreach($contents as $content_index => $content)
-    @if ($content->el_try == App\LmsContent::TRIAL_TYPE)
+    @if ($content->el_try == App\LmsContent::TRIAL_TYPE || $is_valid_payment)
         <li class="list-group-item px-5 {{ $content->css_class }}">
             <a href="{{ $content->url }}" class="text-dark">
                 <i class="bi bi-file-earmark-text text-primary fs-5"></i>

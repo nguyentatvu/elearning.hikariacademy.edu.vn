@@ -188,6 +188,7 @@
                             @include('client.components.series-introduction-dropdown', [
                                 'contents' => $contents,
                                 'is_roadmap_chosen' => $roadmap_chosen_list[$series->id],
+                                'is_valid_payment' => $isValidPayment,
                             ])
                         </div>
                     </div>
