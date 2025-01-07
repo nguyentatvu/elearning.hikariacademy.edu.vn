@@ -1211,6 +1211,9 @@ class LmsSeriesController extends Controller
 
         $data['latest_purchased_time'] = $this->paymentMethodService->getLatestPurchasedSeriesTime($userId, $this->prepContent['series_combo']->id);
 
+		$data['seriesCombo'] = $this->lmsSeriesComboService->getSeriesComboBySlugWithSeries($combo_slug);
+		$data['isValidPayment'] = $this->paymentMethodService->checkSerieValidity($userId, $data['seriesCombo']->id);
+
         return view('client.pages.series-introduction', array_merge(
             $this->getPreparedContentVariables(),
             $data
