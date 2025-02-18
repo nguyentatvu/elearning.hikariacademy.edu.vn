@@ -165,7 +165,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Milon\Barcode\BarcodeServiceProvider::class,
         Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
-        Shipu\Themevel\Providers\ThemevelServiceProvider::class,
+        // Shipu\Themevel\Providers\ThemevelServiceProvider::class,
         Fideloper\Proxy\TrustedProxyServiceProvider::class,
         Laravel\Tinker\TinkerServiceProvider::class,
 

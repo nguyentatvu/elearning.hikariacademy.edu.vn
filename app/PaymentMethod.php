@@ -26,7 +26,8 @@ class PaymentMethod extends Model
         'status',
         'recharge_coin_amount',
         'redeem_point',
-        'vnpay_response_time'
+        'vnpay_response_time',
+        'apple_transaction_id'
     ];
 
     public const PAYMENT_PENDING = 0;

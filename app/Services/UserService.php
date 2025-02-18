@@ -429,6 +429,8 @@ class UserService extends BaseService
 
                 return false;
             }
+        } else {
+            return null;
         }
     }
 

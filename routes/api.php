@@ -67,4 +67,9 @@ Route::group(['middleware' => 'auth:api'], function () {
                 Route::post('finish', 'Api\LmsContentController@finishContentV2');
             });
         });
+
+    Route::prefix('payment')
+        ->group(function () {
+            Route::post('verify-apple-receipt', 'Api\PaymentController@verifyAppleReceipt');
+        });
 });

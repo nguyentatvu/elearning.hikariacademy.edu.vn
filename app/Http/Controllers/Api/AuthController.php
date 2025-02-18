@@ -401,6 +401,14 @@ class AuthController extends Controller
      *         )
      *     ),
      *     @SWG\Response(
+     *         response=400,
+     *         description="Bad Request - Email not found",
+     *         @SWG\Schema(
+     *             type="object",
+     *             @SWG\Property(property="message", type="string", example="This email address is not registered!"),
+     *         )
+     *     ),
+     *     @SWG\Response(
      *         response=422,
      *         description="Unprocessable Entity",
      *         @SWG\Schema(
@@ -439,10 +447,15 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'Mật khẩu mới đã được gửi đến địa chỉ ' . $data['email'] . '. (Vui lòng kiểm tra hộp thư rác).',
             ], Response::HTTP_OK);
-        } else {
+        } else if ($result === null) {
+            return response()->json([
+                'message' => 'Địa chỉ mail này: ' . $data['email'] . ' chưa được dùng đăng ký tài khoản!',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+        else {
             return response()->json([
                 'error' => 'Có lỗi xảy ra, vui lòng liên hệ với quản trị viên để khắc phục!',
-            ]);
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

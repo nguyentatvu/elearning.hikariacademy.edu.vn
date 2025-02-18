@@ -17,3 +17,6 @@ public/css/app.css
 public/js/app.js
 /public/css/pages/
 /storage/debugbar/*
+nginx/*
+Dockerfile
+docker-compose.yml
