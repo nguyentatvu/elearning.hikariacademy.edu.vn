@@ -124,7 +124,6 @@ class AuthController extends Controller
      *         @SWG\Schema(
      *             @SWG\Property(property="name", type="string", example="Nguyễn Văn A"),
      *             @SWG\Property(property="email", type="string", example="nguyenvana@gmail.com"),
-     *             @SWG\Property(property="phone", type="string", example="0789876543"),
      *         ),
      *     ),
      *     @SWG\Response(
@@ -136,7 +135,6 @@ class AuthController extends Controller
      *             @SWG\Property(property="name", type="string", example="John Doe"),
      *             @SWG\Property(property="username", type="string", example="johndoe"),
      *             @SWG\Property(property="email", type="string", example="john.doe@example.com"),
-     *             @SWG\Property(property="phone", type="string", example="0123456789"),
      *             @SWG\Property(property="image", type="string", example="Link image"),
      *             @SWG\Property(property="address", type="string", example="Ho Chi Minh"),
      *             @SWG\Property(property="reward_point", type="integer", example=100),
@@ -150,7 +148,6 @@ class AuthController extends Controller
      *             @SWG\Property(property="error", type="object",
      *                 @SWG\Property(property="name", type="array", @SWG\Items(type="string"), example={"The name field is required.", "The name may not be greater than 100 characters."}),
      *                 @SWG\Property(property="email", type="array", @SWG\Items(type="string"), example={"The email field is required.", "The email must be a valid email address.", "The email has already been taken."}),
-     *                 @SWG\Property(property="phone", type="array", @SWG\Items(type="string"), example={"The phone field is required.", "The phone has already been taken."})
      *             )
      *         )
      *     ),
@@ -171,16 +168,13 @@ class AuthController extends Controller
         $validator = Validator::make($data, [
             'name' => 'bail|required|max:100',
             'email' => 'bail|email|required|unique:users,email',
-            'phone' => 'bail|required|regex:/^[0-9]{10,15}$/|unique:users,phone',
-        ], [
-            'phone.regex' => 'Số điện thoại không đúng định dạng!',
-            'phone.unique' => 'Số điện thoại đã được đăng ký!',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+        $data['phone'] = null;
         $user = $this->userService->register($data);
 
         if (!$user) {

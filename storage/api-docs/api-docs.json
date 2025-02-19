@@ -1136,10 +1136,6 @@
                                 "email": {
                                     "type": "string",
                                     "example": "nguyenvana@gmail.com"
-                                },
-                                "phone": {
-                                    "type": "string",
-                                    "example": "0789876543"
                                 }
                             }
                         }
@@ -1165,10 +1161,6 @@
                                 "email": {
                                     "type": "string",
                                     "example": "john.doe@example.com"
-                                },
-                                "phone": {
-                                    "type": "string",
-                                    "example": "0123456789"
                                 },
                                 "image": {
                                     "type": "string",
@@ -1211,16 +1203,6 @@
                                                 "The email field is required.",
                                                 "The email must be a valid email address.",
                                                 "The email has already been taken."
-                                            ]
-                                        },
-                                        "phone": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string"
-                                            },
-                                            "example": [
-                                                "The phone field is required.",
-                                                "The phone has already been taken."
                                             ]
                                         }
                                     },

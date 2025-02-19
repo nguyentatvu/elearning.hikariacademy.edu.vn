@@ -28,7 +28,6 @@ class UserResource extends Resource
             'name' => $this->name,
             'username' => $this->username,
             'email' => $this->email,
-            'phone' => $this->phone,
             'image' => $image . '?t=' . $timestamp,
             'address' => $this->address,
             'reward_point' => $this->reward_point,
