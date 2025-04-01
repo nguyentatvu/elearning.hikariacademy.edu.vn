@@ -1580,7 +1580,7 @@ class LmsContentController extends Controller
                         // If you have a new data processing, otherwise continue
                         // r[2] is lesson name
                         // r[4] ís type lession
-                        if($r[2] != null && $r[4] != null)
+                        if($r[2] != null && $r[4] !== null)
                         {
                             if ($r[0] != null) {
                                 $type = '0';
