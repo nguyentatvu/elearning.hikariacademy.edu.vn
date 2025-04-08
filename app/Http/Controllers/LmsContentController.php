@@ -1545,6 +1545,7 @@ class LmsContentController extends Controller
         flash('success', 'record_import_successfully', 'success');
         return back();
     }
+
 	//Import Mucluc Khóa học/Khóa luyện thi từ file Excel
     public function importMucLuc(Request $request)
     {
@@ -1554,8 +1555,8 @@ class LmsContentController extends Controller
             $data = Excel::selectSheetsByIndex(0)->load($path, function ($reader) {
                 $reader->noHeading();
             })->get();
-            // dd($data);
-            // DB::beginTransaction();
+
+            DB::beginTransaction();
             if (!empty($data) && $data->count()) {
                 $series_id = DB::table('lmsseries')
                     ->select(['lmsseries.id'])
@@ -1582,13 +1583,8 @@ class LmsContentController extends Controller
                         // r[4] ís type lession
                         if($r[2] != null && $r[4] !== null)
                         {
-                            if ($r[0] != null) {
-                                $type = '0';
-                            } elseif ($r[1] != null) {
-                                $type = '8';
-                            } else {
-                                $type = $r[4];
-                            }
+                            $type = $r[4];
+
                             $parent_id  = (isset($parent_id) && $type != '0') ? $parent_id : null;
                             $parent_id  = ($type == '0') ? null : $parent_id;
                             $sub_parent = (isset($sub_parent) && $type != '8') ? $sub_parent : null;
@@ -1616,26 +1612,22 @@ class LmsContentController extends Controller
                                 $sub_parent = $check;
                             }
                             $stt++;
-                            // $x= '' ;
-                            // if($type == '8'){
-                            //   $x = '--- ';
-                            // }
-                            // if(in_array($type, ['1','2','3','4','6','7'])){
-                            //   $x = '------- ';
-                            // }
-                            // echo $x . $r[0].$r[1].$r[2]." - [ $stt ]<br>";
-                            // echo "$check - $insert_parent <br>";
+                        } else {
+                            throw new \Exception();
                         }
                     }
+
+                    DB::commit();
+                    flash('Thành công', 'Import mục lục thành công', 'success');
                 } catch (Exception $e) {
-                    // DB::rollBack();
-                    dd($e);
+                    DB::rollBack();
+                    flashErrorInstruction('Lỗi', 'Format file excel bị sai!', 'import-menu-contents');
                 }
-                // DB::commit();
-                // dd($data);
             }
+        } else {
+            flash('Lỗi', 'Vui lòng nhập file excel để import!', 'error');
         }
-        flash('success', 'record_import_successfully', 'success');
+
         return back();
     }
     public function importMucLuc_old(Request $request)

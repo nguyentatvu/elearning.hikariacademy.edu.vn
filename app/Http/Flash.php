@@ -49,6 +49,22 @@ class Flash
     }
 
     /**
+     * Create an error flash message
+     * @param  string   $title
+     * @param  string   $text
+     * @return void
+     */
+    public function error_instruction($title, $text, $instruction_type)
+    {
+        session()->flash('flash_message', [
+            'title'             => $title,
+            'text'              => $text,
+            'type'              => 'error_instruction',
+            'instruction_type'  => $instruction_type
+        ]);
+    }
+
+    /**
      * Create a warning flash message
      * @param string $title
      * @param string $text

@@ -125,7 +125,7 @@
                         </a>
 
                         <!-- iOS Download Button -->
-                        <a href="{{ route('downloadApp', ['encoded' => Crypt::encrypt('ipa')]) }}"
+                        <a href="https://apps.apple.com/vn/app/hikari-e-learning/id6740312640?l=vi"
                             class="download-button ajax-download">
                             <img src="{{ asset('images/icons/ios-dowload.svg') }}" alt="">
                         </a>

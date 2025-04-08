@@ -42,6 +42,18 @@ function flash($title = null, $text = null, $type = 'info')
 }
 
 /**
+ * Flash error alert with instruction
+ * @param  string  $title
+ * @param  string  $text
+ * @param  string  $instruction_type
+ * @return void
+ */
+function flashErrorInstruction($title, $text, $instruction_type)
+{
+    return app('App\Http\Flash')->error_instruction($title, $text, $instruction_type);
+}
+
+/**
  * Flash Helper for sweet alert 2
  * @param  string|null  $title
  * @param  string|null  $text

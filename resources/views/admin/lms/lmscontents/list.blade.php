@@ -9,6 +9,10 @@
         justify-content: center;
         gap: 4px;
     }
+
+    .fa.fa-info-circle::before {
+        font-size: 16px;
+    }
 </style>
 @stop
 @section('content')
@@ -89,7 +93,10 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel-2">Import exams excel</h5>
+				<h5 class="modal-title" style="cursor: pointer;" id="exampleModalLabel-2" onclick="showErrorInstruction()">
+                    Format Excel import
+                    <i class="fa fa-info-circle"></i>
+                </h5>
 			</div>
 			<form action="{{$URL_IMPORT_MUCLUC}}" class="forms-sample" method="post" enctype="multipart/form-data">
 				{{ csrf_field() }}
@@ -141,6 +148,10 @@
             </div>
         </div>
     </div>
+
+    {{-- Instruction modal --}}
+    @component('admin.errors.instructions.import-menu-contents')
+    @endcomponent
 @endsection
 @section('footer_scripts')
     @php
@@ -312,5 +323,10 @@
        dropdownAutoWidth : true,
        width: '100%'
     });
+    </script>
+    <script>
+        function showErrorInstruction () {
+            $('#errorInstructionModal').modal("show");
+        }
     </script>
 @stop
