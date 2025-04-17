@@ -44,6 +44,15 @@
             right: 0;
         }
 
+        .scroll-hidden {
+            overflow: auto; /* vẫn cho phép scroll */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE/Edge */
+        }
+
+        .scroll-hidden::-webkit-scrollbar {
+            display: none; /* Chrome, Safari */
+        }
     </style>
 </head>
 

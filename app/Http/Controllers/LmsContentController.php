@@ -17,6 +17,7 @@ use App\Services\ImageService;
 use App\Services\LmsContentService;
 use App\Services\LmsFlashcardService;
 use App\Services\PronunciationService;
+use App\TrafficRuleTestQuestion;
 
 class LmsContentController extends Controller
 {
@@ -187,7 +188,7 @@ class LmsContentController extends Controller
                 // (in_array($records->type,['8']) ?($records->import == 1 ? '<span class="label label-success">Đã import bài tâp</span> ' : '<span class="label label-warning">Chưa import bài tâp</span>') : null);
             })
             ->editColumn('type', function ($records) {
-                $dr_loai = ['0' => 'Menu', '1' => 'Từ vựng', '2' => 'Bài học', '3' => 'Bài tập', '4' => 'Bài tập toàn bài', '5' => 'Bài test', '6' => 'Hán tự', '7' => 'Bài ôn tập', '8' => 'Sub menu', '9' => 'Giới thiệu', '10' => 'Flashcard', '11' => 'Luyện viết', '12' => 'Luyện phát âm'];
+                $dr_loai = ['0' => 'Menu', '1' => 'Từ vựng', '2' => 'Bài học', '3' => 'Bài tập', '4' => 'Bài tập toàn bài', '5' => 'Bài test', '6' => 'Hán tự', '7' => 'Bài ôn tập', '8' => 'Sub menu', '9' => 'Giới thiệu', '10' => 'Flashcard', '11' => 'Luyện viết', '12' => 'Luyện phát âm', '13' => 'Bài kiểm tra luật lệ giao thông'];
                 return $dr_loai[$records->type];
             })
             ->editColumn('image', function ($records) {
@@ -1081,17 +1082,86 @@ class LmsContentController extends Controller
                 $record->pronunciation_id = $request->pronunciation;
                 $record->save();
             }
+
+            // Update traffic rule test with imported excel file
+            if ((int) $request->loai == LmsContent::TEST_TRAFFIC_RULE) {
+                if (!$request->hasFile('lms_test_traffic_rule')) {
+                    throw new Exception("Thiếu file import bài kiểm tra giao thông.");
+                }
+
+                $extension = strtolower($request->file('lms_test_traffic_rule')->getClientOriginalExtension());
+                if (!in_array($extension, ['xlsx', 'xls'])) {
+                    throw new Exception('File phải là 1 file excel.');
+                }
+
+                $path = $request->file('lms_test_traffic_rule')->getRealPath();
+                config(['excel.import.startRow' => 2]);
+                $data = Excel::selectSheetsByIndex(0)->load($path, function ($reader) {
+                    $reader->noHeading();
+                })->get();
+
+                if (!empty($data) && $data->count()) {
+                    TrafficRuleTestQuestion::query()
+                        ->where('lms_content_id', $record->id)
+                        ->update(['is_deleted' => 1]);
+
+                    $parent_question_id = null;
+                    foreach ($data as $column_index => $r) {
+                        $question_order = $r[0];
+                        $content = $r[1];
+                        $child_content = $r[2];
+                        $image_url = $r[3];
+                        $option_1 = $r[4];
+                        $option_2 = $r[5];
+                        $answer = $r[6];
+
+                        $is_single_question = $question_order && $content && !$child_content && $option_1 && $option_2 && $answer;
+                        $is_parent_question = $question_order && $content && !$child_content && !$option_1 && !$option_2 && !$answer;
+                        $is_child_question = !$question_order && !$content && $child_content && $option_1 && $option_2 && $answer;
+
+                        $is_empty_row = !$question_order && !$content && !$child_content && !$image_url && !$option_1 && !$option_2 && !$answer;
+                        if ($is_empty_row) {
+                            continue;
+                        }
+
+                        $point = $is_parent_question ? 2 : 1;
+                        $parent_question_id = $is_parent_question ? null : $parent_question_id;
+
+                        if ($is_single_question || $is_parent_question || $is_child_question) {
+                            $question = TrafficRuleTestQuestion::create([
+                                'lms_content_id'     => $record->id,
+                                'parent_question_id' => $parent_question_id,
+                                'question_order'     => $question_order,
+                                'content'            => $is_child_question ? $child_content : $content,
+                                'point'              => $point,
+                                'image_url'          => $image_url,
+                                'option_1'           => $option_1,
+                                'option_2'           => $option_2,
+                                'answer'             => $answer,
+                            ]);
+
+                            $parent_question_id = $is_parent_question ? $question->id : (
+                                $is_child_question ? $parent_question_id : null
+                            );
+                        } else {
+                            $excel_column_index = $column_index + 2;
+                            throw new Exception("Lỗi format dòng $excel_column_index.");
+                        }
+                    }
+                    $record->save();
+                }
+            }
             # end import bai tap loai 4
             DB::commit();
             flash('success', 'Chỉnh sửa thành công', 'success');
         } catch (Exception $e) {
             // dd($e);
             DB::rollBack();
-            if (getSetting('show_foreign_key_constraint', 'module')) {
-                flash('oops...!', $e->errorInfo, 'error');
-            } else {
-                flash('oops...!', 'improper_data_file_submitted', 'error');
-            }
+            flash('oops...!', $e->getMessage(), 'error');
+            // if (getSetting('show_foreign_key_constraint', 'module')) {
+            // } else {
+            //     flash('oops...!', 'improper_data_file_submitted', 'error');
+            // }
         }
         // die;
         return redirect(PREFIX . "lms/" . $request->series . '/content');

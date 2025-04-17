@@ -46,6 +46,7 @@ return [
             'title' => [0, 8],
             'handwriting' => [11],
             'pronunciation-assessment' => [12],
+            'test-traffic' => [13],
         ],
         'topic_icons' => [
             0 => 'vocab.png',
@@ -62,6 +63,7 @@ return [
         ],
         'chapter_icons' => [
             5 => 'score.png',
+            13 => 'score.png',
             9 => 'video-streaming.png',
             10 => 'flashcard.png',
             0 => 'lesson.png',
@@ -81,7 +83,8 @@ return [
             'audit' => 'learning-management.lesson.audit',
             'flashcard' => 'learning-management.lesson.flashcard',
             'handwriting' => 'learning-management.lesson.handwriting',
-            'pronunciation-assessment' => 'learning-management.lesson.pronunciation-assessment'
+            'pronunciation-assessment' => 'learning-management.lesson.pronunciation-assessment',
+            'test-traffic' => 'learning-management.lesson.test-traffic',
         ],
     ],
     'redeemed_coin' => [

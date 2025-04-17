@@ -82,6 +82,12 @@ Route::prefix('learning-management')->name('learning-management.')->group(functi
     Route::post('lesson/audit/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@storeResuttest')
         ->name('lesson.audit.store');
 
+    Route::get('lesson/test-traffic/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showTestTraffic')
+        ->name('lesson.test-traffic');
+
+    Route::post('lesson/test-traffic/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@storeTestTraffic')
+        ->name('lesson.test-traffic.store');
+
     Route::get('lesson/flashcard/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showFlashcard')
         ->name('lesson.flashcard');
 

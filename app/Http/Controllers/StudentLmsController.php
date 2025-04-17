@@ -23,6 +23,7 @@ use App\Services\LmsStudentViewService;
 use App\Services\PaymentMethodService;
 use App\Services\UserRoadmapService;
 use App\Services\UserService;
+use App\TrafficRuleTestQuestion;
 use Carbon\Carbon;
 use Exception;
 use PhpParser\Node\Stmt\If_;
@@ -487,25 +488,6 @@ class StudentLmsController extends Controller
     }
 
     /**
-     * Show audit
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function showAudit(string $combo_slug = '', string $slug = '', string $stt = '')
-    {
-        $this->processLessonContent($combo_slug, $slug, $stt);
-
-        $detail = $this->getPreparedContentVariables();
-
-        return view('client.lesson-detail.audit', array_merge(
-            $this->getPreparedContentVariables(),
-            [
-                'type' => 'audit',
-            ]
-        ));
-    }
-
-    /**
      * Show flashcard
      *
      * @return \Illuminate\Http\Response
@@ -763,6 +745,157 @@ class StudentLmsController extends Controller
         }
 
         return redirect('home');
+    }
+
+    public function showTestTraffic(Request $request, $combo_slug = '', $slug = '', $stt = '') {
+        $this->processLessonContent($combo_slug, $slug, $stt);
+
+        if (Auth::check()) {
+            $view_name = 'client.lesson-detail.test-traffic';
+            $data = [];
+
+            $data['combo_slug'] = $combo_slug;
+            $data['slug'] = $slug;
+            $data['stt'] = $stt;
+            $data['records'] = $this->getTrafficTestQuestionList($stt);
+
+            return view($view_name, array_merge(
+                $this->getPreparedContentVariables(),
+                $data
+            ));
+        }
+
+        return redirect('home');
+    }
+
+    public function storeTestTraffic(Request $request, $combo_slug = '', $slug = '', $stt = '') {
+        if (!Auth::check()) {
+            return redirect('home');
+        }
+
+        $this->processLessonContent($combo_slug, $slug, $stt);
+
+        $time = $request->time;
+        $max_score = 50;
+        $passing_score = 45;
+        $data_quest = $request->all();
+
+        unset($data_quest['_token']);
+        unset($data_quest['content_id']);
+        unset($data_quest['time']);
+
+        $acc_score = 0;
+        $result_list = $this->getTrafficTestQuestionList($stt, true);
+        $result_list->each(function ($question_result) use ($data_quest, &$acc_score) {
+            $question_id = $question_result->id;
+            $correct_answer = $question_result->answer;
+            $student_answer = $data_quest["quest_$question_id"] ?? null;
+
+            $is_correct_answer = false;
+
+            // Check child questions of parent question
+            if ($question_result->childQuestions->isNotEmpty()) {
+                $every_question_correct = $question_result->childQuestions->every(function ($child_question_result) use ($data_quest){
+                    $question_id = $child_question_result->id;
+                    $correct_answer = $child_question_result->answer;
+                    $student_answer = $data_quest["quest_$question_id"] ?? null;
+
+                    return $correct_answer == $student_answer;
+                });
+
+                if ($every_question_correct) {
+                    $acc_score += (int) $question_result->point;
+                }
+
+                $is_correct_answer = $every_question_correct;
+            }
+            // Check single question
+            else if ($correct_answer == $student_answer) {
+                if (!$question_result->is_child_question) {
+                    $acc_score += (int) $question_result->point;
+                }
+
+                $is_correct_answer = true;
+            }
+
+            $question_result->check = $student_answer;
+            $question_result->correct = $is_correct_answer;
+        });
+
+        // GET NEXT CONTENT URL
+        $record = DB::table('lmscontents')
+            ->where('id', (int) $stt)
+            ->select('stt', 'lmsseries_id')
+            ->get();
+
+        $recordurl = DB::table('lmscontents')
+            ->where('stt', '>=', ((int) $record[0]->stt + 1))
+            ->where('lmsseries_id', $record[0]->lmsseries_id)
+            ->whereNotIn('type', [0, 8])
+            ->select('id', 'type')
+            ->first();
+
+        if (!empty($recordurl)) {
+            switch ($recordurl->type) {
+                case 1:
+                case 2:
+                case 6:
+                    $sendUrl = PREFIX . 'learning-management/lesson/show/' . $combo_slug . '/' . $slug . '/' . $recordurl->id;
+                    break;
+                case 3:
+                case 4:
+                    $sendUrl = PREFIX . 'learning-management/lesson/exercise/' . $combo_slug . '/' . $slug . '/' . $recordurl->id;
+                    break;
+                case 5:
+                    $sendUrl = PREFIX . 'learning-management/lesson/audit/' . $combo_slug . '/' . $slug . '/' . $recordurl->id;
+                    break;
+                default:
+                    $sendUrl = null;
+                    break;
+            }
+        } else {
+            $sendUrl = null;
+        }
+
+        $view_name = 'client.lesson-detail.test-traffic';
+        $data = [];
+
+        $data['combo_slug'] = $combo_slug;
+        $data['slug'] = $slug;
+        $data['stt'] = $stt;
+        $data['records'] = $result_list;
+        $data['acc_score'] = $acc_score;
+        $data['max_score'] = $max_score;
+        $data['passed'] = $acc_score >= $passing_score;
+        $data['sendUrl'] = $sendUrl;
+
+        return view($view_name, array_merge(
+            $this->getPreparedContentVariables(),
+            $data
+        ));
+    }
+
+    private function getTrafficTestQuestionList($stt, $shows_result = false) {
+        $result = TrafficRuleTestQuestion::query()
+            ->when($shows_result, function ($query) {
+                return $query->with('childQuestions');
+            })
+            ->where('is_deleted', 0)
+            ->where('lms_content_id', $stt)
+            ->get()
+            ->map(function ($question) use ($shows_result) {
+                $question->options = [
+                    1 => $question->option_1,
+                    2 => $question->option_2
+                ];
+                $question->is_single_question = $question->answer !== null && $question->parent_question_id === null;
+                $question->is_parent_question = $question->answer === null;
+                $question->is_child_question = !$question->is_single_question && !$question->is_parent_question;
+
+                return $question;
+            });
+
+        return $result;
     }
 
     /**

@@ -8,7 +8,7 @@
 
 @section('content')
     <div class="row study-main-section">
-        <div class="col-lg-9 col-12 study-main-content">
+        <div class="col-lg-9 col-12 study-main-content scroll-hidden">
             <div class="study-content">
                 @yield('lesson-detail-content')
             </div>

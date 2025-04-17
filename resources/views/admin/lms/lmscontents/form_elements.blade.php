@@ -1,7 +1,7 @@
 <?php $settings = getSettings('lms');?>
 <input type="hidden" name="series_slug" value="{{$series_slug}}">
 <?php
-  $dr_loai = ['0'=>'Menu', '8'=>'Sub menu', '1'=>'Từ vựng','2'=>'Bài học','3'=>'Bài tập','4'=>'Bài tập toàn bài','5'=>'Bài test','6'=>'Hán tự','7'=>'Bài ôn tập', '9'=>'Giới thiệu', 10=>'Flashcard', 11 => 'Luyện viết', 12 => 'Luyện phát âm'];
+  $dr_loai = ['0'=>'Menu', '8'=>'Sub menu', '1'=>'Từ vựng','2'=>'Bài học','3'=>'Bài tập','4'=>'Bài tập toàn bài','5'=>'Bài test','6'=>'Hán tự','7'=>'Bài ôn tập', '9'=>'Giới thiệu', 10=>'Flashcard', 11 => 'Luyện viết', 12 => 'Luyện phát âm', 13 => 'Bài kiểm tra luật lệ giao thông'];
   $loai_selected = (isset($record->type)) ? $record->type : null;
 ?>
 <div class="row">
@@ -48,18 +48,6 @@
   </fieldset>
 </div>
 <div class="row">
-  {{-- <fieldset class="form-group col-md-6" >
-    {{ Form::label('stt', getphrase('Số thứ tự')) }}
-    <span class="text-red">*</span>
-    {{ Form::number('stt', $value = null , $attributes = array('class'=>'form-control',
-    'ng-model'=>'stt',
-    'required'=> 'true',
-    'ng-class'=>'{"has-error": formLms.stt.$touched && formLms.stt.$invalid}',
-    )) }}
-    <div class="validation-error" ng-messages="formLms.stt.$error" >
-      {!! getValidationMessage()!!}
-    </div>
-  </fieldset> --}}
   <fieldset class="form-group col-md-6" ng-if="loai=='3' || loai=='5' || loai=='7'">
     {{ Form::label('maucau', getphrase('Mẫu câu số')) }}
     <span class="text-red"></span>
@@ -80,14 +68,6 @@
     class="form-control"
     name="lms_file" accept=".mp4" >
   </fieldset>
-  {{-- <fieldset class="form-group col-md-6" ng-if="loai=='1' || loai=='2' || loai=='6' || loai=='9'">
-    {{ Form::label('video_duration', getphrase('Thời gian')) }}
-    <span class="text-red">*</span>
-    {{ Form::text('video_duration', $value = null , $attributes = array('class'=>'form-control', 'placeholder' => '',
-    'ng-model'=>'video_duration',
-    'ng-class'=>'{"has-error": formLms.video_duration.$touched && formLms.video_duration.$invalid}',
-    )) }}
-  </fieldset> --}}
   <fieldset class="form-group col-md-6" ng-if="loai=='8' || loai == '3'">
     {{ Form::label('lms_excel', getphrase('File Import bài tập ( excel )')) }}
     <span class="text-red">*</span>
@@ -165,12 +145,17 @@
         {!! getValidationMessage()!!}
     </div>
   </fieldset>
-  @if($record)
-  @if($record->download_doc!='')
-  <fieldset class="form-group col-md-6">
-    {{link_to_asset($record->download_doc, getPhrase('download '.  basename($record->download_doc)), $attributes = array('target' => '_blank'))}}
+  <fieldset class="form-group col-md-6" ng-if="loai=='13'">
+    {{ Form::label('lms_test_traffic_rule', getphrase('File Import bài kiểm tra luật lệ giao thông ( excel )')) }}
+    <span class="text-red">*</span>
+    <input type="file"
+    class="form-control"
+    name="lms_test_traffic_rule" accept=".xls,.xlsx" >
   </fieldset>
-  @endif
+  @if($record && $record->download_doc!='')
+    <fieldset class="form-group col-md-6">
+      {{link_to_asset($record->download_doc, getPhrase('download '.  basename($record->download_doc)), $attributes = array('target' => '_blank'))}}
+    </fieldset>
   @endif
 </div>
 <fieldset class="form-group">

@@ -22,6 +22,7 @@ class LmsContent extends Model
     public const FLASHCARD = 10;
     public const HANDWRITING = 11;
     public const PRONUNCIATION_ASSESSMENT = 12;
+    public const TEST_TRAFFIC_RULE = 13;
 
     public const TRIAL_TYPE = 1;
     public const PURCHASE_TYPE = 0;

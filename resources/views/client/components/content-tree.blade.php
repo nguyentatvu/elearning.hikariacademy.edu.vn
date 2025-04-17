@@ -10,8 +10,7 @@
                         <img src="{{ (isset($content->image) && !empty($content->image)) ? asset($content->image) : asset('images/icons/lesson.png') }}" alt="image" class="chapter-image me-1">
                         <span>{{ $content->bai }}</span>
                         @if (!empty($content->download_doc))
-                            <a href="{{ asset($content->download_doc) }}" class="btn p-0 download-link" target="_blank"
-                                download>
+                            <a href="{{ asset($content->download_doc) }}" class="btn p-0 download-link" target="_blank" download>
                                 <i class="bi bi-file-earmark-arrow-down download-icon"></i>
                             </a>
                         @endif
