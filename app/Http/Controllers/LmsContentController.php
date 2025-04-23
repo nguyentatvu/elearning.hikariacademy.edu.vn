@@ -105,7 +105,7 @@ class LmsContentController extends Controller
         }
         $records = DB::table('lmscontents')
             ->select(['lmscontents.stt', 'lmscontents.bai', 'lmscontents.title', 'lmscontents.image',
-                'lmscontents.id', 'lmscontents.type', 'lmscontents.import', 'lmscontents.file_path', 'lmscontents.el_try', 'lmscontents.type'])
+                'lmscontents.id', 'lmscontents.type', 'lmscontents.import', 'lmscontents.file_path', 'lmscontents.el_try', 'lmscontents.type', 'lmscontents.japanese_writing_practice_id'])
             ->join('lmsseries', 'lmsseries.id', '=', 'lmscontents.lmsseries_id')
             ->where([
                 ['lmsseries.slug', $slug],
@@ -181,6 +181,17 @@ class LmsContentController extends Controller
                         ->where('content_id', $records->id)
                         ->get();
                     return (!$check->isEmpty()) ? '<span class="label label-success">Đã có bài test</span> ' : '<span class="label label-warning">Chưa có bài test</span>';
+                }
+                if (in_array($records->type, ['13'])) {
+                    $check = DB::table('traffic_rule_test_question')
+                        ->select('id')
+                        ->where('lms_content_id', $records->id)
+                        ->get();
+                    return (!$check->isEmpty()) ? '<span class="label label-success">Đã có bài kiểm tra</span> ' : '<span class="label label-warning">Chưa có bài kiểm tra</span>';
+                }
+                if (in_array($records->type, ['11'])) {
+                    $japanese_writing_practice_id = optional($records)->japanese_writing_practice_id;
+                    return ($japanese_writing_practice_id !== null) ? '<span class="label label-success">Có bài luyện viết</span> ' : '<span class="label label-warning">Chưa có bài luyện viết</span>';
                 }
                 return null;
                 // if(in_array($records->type,['8']))
@@ -1648,6 +1659,11 @@ class LmsContentController extends Controller
                 try {
                     $stt = 1;
                     foreach ($data as $r) {
+                        $is_empty_row = collect($r)->every(function ($item) {
+                            return $item == null;
+                        });
+                        if ($is_empty_row) continue;
+
                         // If you have a new data processing, otherwise continue
                         // r[2] is lesson name
                         // r[4] ís type lession

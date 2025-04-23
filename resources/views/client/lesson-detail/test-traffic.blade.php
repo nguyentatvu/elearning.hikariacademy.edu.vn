@@ -3,6 +3,8 @@
 @section('styles-content')
 <link href="{{ asset('css/pages/lesson-detail/audit.css') }}" rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('assets/admin/css/exercise/audit.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/admin/css/noto_sans_jp_font.css') }}">
+
 <style>
     .form-check {
         display: flex;
@@ -180,12 +182,12 @@
                                     @php ++$child_question_order @endphp
                                 @else
                                     <div class="text-question-les" style="text-align: left; margin-bottom: 0;">
-                                        <p class="text-primary"><strong>{!! $record->content !!}</strong></p>
+                                        <p class="text-primary noto-san-jp-font"><strong>{!! $record->content !!}</strong></p>
                                     </div>
                                 @endif
 
                                 {{-- Question options --}}
-                                <div class="d-flex content-image-question" style="justify-content: space-between; align-items: center;">
+                                <div class="d-flex content-image-question noto-san-jp-font" style="justify-content: space-between; align-items: center;">
                                     <div class="list-select-les align-self-start-md" style="">
                                         @foreach ($record->options as $key_option => $option)
                                             @php if ($record->is_parent_question) continue; @endphp

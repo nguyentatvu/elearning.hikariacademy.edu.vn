@@ -1,0 +1,10 @@
+@font-face {
+    font-family: 'gf_Noto_Sans_JP';
+    src: url('../../../../public/fonts/Noto_Sans_JP/NotoSansJP-VariableFont_wght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.noto-san-jp-font {
+    font-family: 'gf_Noto_Sans_JP', "MS Gothic", sans-serif;
+}
