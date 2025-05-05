@@ -3,6 +3,11 @@
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/pages/series-introduction.css') }}">
     <link rel="stylesheet" href="{{ asset('css/plugins/swiperjs/swiper-bundle.min.css') }}">
+    <style>
+        .pl-32 {
+            padding-left: 32px !important;
+        }
+    </style>
 @endSection
 
 @section('content')

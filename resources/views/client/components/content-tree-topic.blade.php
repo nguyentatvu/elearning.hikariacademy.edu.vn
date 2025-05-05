@@ -1,4 +1,12 @@
 @foreach($contents as $content_index => $content)
+@if(in_array($content->type, [App\LmsContent::TEST_TRAFFIC_RULE, App\LmsContent::STRUCTURE]))
+    <a href="{{ $is_valid_payment || $content->type === App\LmsContent::SUMMARY_AND_INTRODUCTION ? $content->url : 'javascript:void(0)' }}"
+        class="topic-content-link {{ in_array($content->type, [App\LmsContent::STRUCTURE, App\LmsContent::TEST_TRAFFIC_RULE]) ? 'pl-32' : ''}} {{ $content->css_class }}">
+        <img src="{{ (isset($content->image) && !empty($content->image)) ? asset($content->image) : asset('images/icons/' . config('constant.series.chapter_icons')[$content->type]) }}"
+            alt="image" class="chapter-image">
+        <span>{{ $content->bai }}</span>
+    </a>
+@else
     <div class="accordion-item">
         <h2 class="accordion-header" id="flush-heading{{ $chapter_index }}_{{ $content_index }}">
             <button class="d-flex align-items-center accordion-button {{ $content->css_class === 'active-content' ? 'active-content' : 'collapsed' }}"
@@ -10,7 +18,7 @@
                 @elseif ($seriesType == App\LmsSeriesCombo::EXAM_TYPE)
                     <img src="{{ (isset($content->image) && !empty($content->image)) ? asset($content->image) : asset('images/icons/score.png') }}" class="ms-3 me-1 size-20 object-fit-cover">
                 @else
-                    <img src="{{ (isset($content->image) && !empty($content->image)) ? asset($content->image) : asset('images/icons/' . config('constant.series.topic_icons')[$content_index]) ?? 'lesson.png' }}"
+                    <img src="{{ (isset($content->image) && !empty($content->image)) ? asset($content->image) : asset('images/icons/' . config('constant.series.topic_icons')[min($content_index, 10)]) ?? 'lesson.png' }}"
                         class="ms-3 me-1 size-20 object-fit-cover">
                 @endif
                 <span>{{ $content->bai }}</span>
@@ -36,4 +44,5 @@
             </div>
         </div>
     </div>
+@endif
 @endforeach

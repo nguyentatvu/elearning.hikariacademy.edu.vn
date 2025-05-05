@@ -274,8 +274,8 @@ class LmsContentService extends BaseService
 
         return [
             $content->id,
-            $content->parentContent->id,
-            $content->parentContent->parentContent->id
+            optional($content->parentContent)->id,
+            optional(optional($content->parentContent)->parentContent)->id
         ];
     }
 

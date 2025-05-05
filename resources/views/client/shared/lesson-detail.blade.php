@@ -4,6 +4,15 @@
     <link href="{{ asset('css/pages/lesson-detail/app-course.css') }}" rel="stylesheet">
     @yield('styles-content')
     @yield('lesson-detail-styles')
+    <style>
+        .topic-content-link.active-content {
+            background-color: #166AC9 !important;
+            color: white !important;
+        }
+        .pl-32 {
+            padding-left: 32px !important;
+        }
+    </style>
 @endsection
 
 @section('content')

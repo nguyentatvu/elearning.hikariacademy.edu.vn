@@ -68,7 +68,7 @@ return [
             10 => 'flashcard.png',
             0 => 'lesson.png',
             1 => 'lesson.png',
-            2 => 'lesson.png',
+            2 => 'video-streaming.png',
             3 => 'lesson.png',
             4 => 'lesson.png',
             6 => 'lesson.png',
