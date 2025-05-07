@@ -1,6 +1,7 @@
 @extends($layout)
 
 @section('content')
+<link href="{{CSS}}ajax-datatables.css" rel="stylesheet">
 <style>
 .bd-example-modal-lg .modal-dialog{
   display: table;
@@ -76,6 +77,10 @@
       </div>
     </div>
   </div>
+
+  {{-- Modal for update question --}}
+  @include('admin.lms.lmscontents.modal-update-test-traffic')
+
   <!-- /#page-wrapper -->
   @stop
   @section('footer_scripts')
@@ -83,10 +88,16 @@
   @include('admin.common.validations', array('isLoaded'=>'1'));
   @include('admin.common.editor');
   @include('admin.common.alertify')
+  @php
+  // MAKE DEFAULT VALUE COLUMN
+  $defaultColumns = [ 'question_order', 'content', 'option_1', 'option_2', 'answer', 'image', 'update_button' ];
+  @endphp
+  @include('admin.common.datatables', array('route'=> $datatable_url, 'route_as_url' => true, 'table_columns' => $defaultColumns))
+  @include('admin.common.deletescript', array('route'=> URL_LMS_CONTENT_DELETE))
   <script>
   $('#submitForm').click(function(){
     $('#submitForm').css('display','none');
-    $('.modal').modal('show');
+    $('.modal.fade.bd-example-modal-lg').modal('show');
   })
   </script>
   <script>
@@ -131,7 +142,7 @@
         }
       }
 
-      // Call ajax 
+      // Call ajax
       $.ajax({
             headers: {
               'X-CSRF-TOKEN': '{{csrf_token()}}'
@@ -157,7 +168,7 @@
             success: function(data) {
               if(data.error == 1)
               {
-                swal({  
+                swal({
                   title: 'Đã có file cùng tên tồn tại, tiếp tục upload không?',
                   text: "",
                   type: "warning",
@@ -184,6 +195,6 @@
             }
          });
     });
-  
+
 </script>
   @stop

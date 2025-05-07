@@ -240,6 +240,100 @@ class LmsContentController extends Controller
             // })
             ->make();
     }
+
+    public function getTestTrafficDataTable($lms_content_id) {
+        if (!checkRole(getUserGrade(2))) {
+            prepareBlockUserMessage();
+            return back();
+        }
+
+        $test_questions = TrafficRuleTestQuestion::query()
+            ->with('childQuestions')
+            ->select(['id', 'question_order', 'parent_question_id', 'content', 'point', 'option_1', 'option_2', 'answer', 'image_url'])
+            ->where('lms_content_id', $lms_content_id)
+            ->where('is_deleted', 0)
+            ->get();
+
+        $return = DataTables::of($test_questions)
+            ->addColumn('question_order', function ($question) {
+                $isParentQuestion = $question->childQuestions->count() > 0 ? 1 : 0;
+                return '<span data-question-order="' . $question->question_order . '" data-parent-question="' . $isParentQuestion .'"' . '>' . $question->question_order . '</span>';
+            })
+            ->addColumn('content', function ($question) {
+                return '<span data-content="' . $question->content . '">' . $question->content . '</span>';
+            })
+            ->addColumn('option_1', function ($question) {
+                return '<span data-option-1="' . $question->option_1 . '">' . $question->option_1 . '</span>';
+            })
+            ->addColumn('option_2', function ($question) {
+                return '<span data-option-2="' . $question->option_2 . '">' . $question->option_2 . '</span>';
+            })
+            ->addColumn('answer', function ($question) {
+                return '<span data-answer="' . $question->answer . '">' . $question->answer . '</span>';
+            })
+            ->addColumn('image', function ($question) {
+                if ($question->image_url) {
+                    return '<img src="' . $question->image_url . '" alt="Image" style="width: 100px; height: 100px;">';
+                }
+                return '';
+            })
+            ->addColumn('update_button', function ($question) {
+                return '<button type="button" class="btn btn-primary btn-sm" onclick="openUpdateQuestionModal(event, ' . $question->id . ')"><i class="fa fa-pencil"></i></button>';
+            })
+            ->rawColumns(['image', 'update_button', 'question_order', 'content', 'option_1', 'option_2', 'answer'])
+            ->make(true);
+
+        return $return;
+    }
+
+    public function updateQuestion(Request $request, $questionId) {
+        if (!checkRole(getUserGrade(2))) {
+            prepareBlockUserMessage();
+            return back();
+        }
+
+        $question = TrafficRuleTestQuestion::find($questionId);
+        if (!$question) {
+            return response()->json(['message' => 'Không tìm thấy câu hỏi'], 404);
+        }
+
+        $question->content = $request->traffic_content;
+        $question->option_1 = $request->traffic_option_1;
+        $question->option_2 = $request->traffic_option_2;
+        $question->answer = $request->traffic_answer;
+
+        // Handle image deletion
+        if ($request->delete_image == '1') {
+            if ($question->image_url) {
+                $oldImagePath = public_path(ltrim($question->image_url, '/'));
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+                $question->image_url = null;
+            }
+        }
+
+        if ($request->hasFile('traffic_image')) {
+            // Delete old image if exists
+            if ($question->image_url) {
+                $oldImagePath = public_path(ltrim($question->image_url, '/'));
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+            }
+
+            // Upload new image
+            $file = $request->file('traffic_image');
+            $fileName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/traffic_images'), $fileName);
+            $question->image_url = '/uploads/traffic_images/' . $fileName;
+        }
+
+        $question->save();
+
+        return response()->json(['message' => 'Cập nhật thành công']);
+    }
+
     /**
      * This method loads the create view
      * @return void
@@ -682,15 +776,16 @@ class LmsContentController extends Controller
         $data['URL_LMS_CONTENT']      = PREFIX . "lms/$series/content";
         $data['series_slug']          = $series;
         $data['record']               = $record;
-        $data['flashcard'] = array(''=>'-- Chọn Flashcard --') + $flashcard;
-        $data['handwriting'] = array(''=>'-- Chọn bài luyện viết --') + $handwriting;
-        $data['handwriting_type'] = $handwritingType;
-        $data['pronunciation'] = array('' => '-- Chọn bài luyện phát âm --') + $pronunciation;
+        $data['flashcard']            = array(''=>'-- Chọn Flashcard --') + $flashcard;
+        $data['handwriting']          = array(''=>'-- Chọn bài luyện viết --') + $handwriting;
+        $data['handwriting_type']     = $handwritingType;
+        $data['pronunciation']        = array('' => '-- Chọn bài luyện phát âm --') + $pronunciation;
         $data['title']                = 'Cập nhật ' . $record->bai;
         $data['active_class']         = 'lms';
         $data['settings']             = json_encode($record);
         $data['layout']               = getLayout();
-        // return view('lms.lmscontents.add-edit', $data);
+        $data['datatable_url']        = PREFIX . "test-traffic/$slug/getList";
+
         $view_name = 'admin.lms.lmscontents.add-edit';
         return view($view_name, $data);
     }
@@ -1095,11 +1190,7 @@ class LmsContentController extends Controller
             }
 
             // Update traffic rule test with imported excel file
-            if ((int) $request->loai == LmsContent::TEST_TRAFFIC_RULE) {
-                if (!$request->hasFile('lms_test_traffic_rule')) {
-                    throw new Exception("Thiếu file import bài kiểm tra giao thông.");
-                }
-
+            if ((int) $request->loai == LmsContent::TEST_TRAFFIC_RULE && $request->hasFile('lms_test_traffic_rule')) {
                 $extension = strtolower($request->file('lms_test_traffic_rule')->getClientOriginalExtension());
                 if (!in_array($extension, ['xlsx', 'xls'])) {
                     throw new Exception('File phải là 1 file excel.');

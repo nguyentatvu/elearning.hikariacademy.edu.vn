@@ -100,6 +100,8 @@ Route::prefix('learning-management')->name('learning-management.')->group(functi
     Route::post('daily-streak', 'UsersController@dailyStreak')
         ->name('lesson.daily-streak');
 });
+Route::get('test-traffic/{content}/getList', 'LmsContentController@getTestTrafficDataTable');
+Route::post('test-traffic/updateQuestion/{questionId}', 'LmsContentController@updateQuestion');
 
 Route::get('/roadmap/{comboSlug}/{slug}', 'StudentLmsController@roadmap')->name('home.roadmap');
 Route::post('/roadmap/{comboSlug}/{slug}', 'StudentLmsController@loadRoadMapDetail')->name('home.load-roadmap');
@@ -1273,13 +1275,13 @@ Route::post('lms/content/add/after', 'LmsContentController@storeAfter');
 
 
 
-Route::get('lms/{series}/content/edit/{slug}', 'LmsContentController@edit');
+Route::get('lms/{series}/content/edit/{slug}', 'LmsContentController@edit'); 
 
 Route::patch('lms/{series}/content/edit/{slug}', 'LmsContentController@update');
 
 Route::delete('lms/{series}/content/delete/{slug}', 'LmsContentController@delete');
 
-Route::get('lms/{series}/content/getList', 'LmsContentController@getDatatable');
+Route::get('lms/{series}/content/getList', 'LmsContentController@getDatatable'); 
 
 Route::post('lms/{series_slug}/content/import-exams', 'LmsContentController@importExams');
 

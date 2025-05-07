@@ -888,9 +888,9 @@ class StudentLmsController extends Controller
                     1 => $question->option_1,
                     2 => $question->option_2
                 ];
-                $question->is_single_question = $question->answer !== null && $question->parent_question_id === null;
-                $question->is_parent_question = $question->answer === null;
-                $question->is_child_question = !$question->is_single_question && !$question->is_parent_question;
+                $question->is_single_question = $question->childQuestions->isEmpty();
+                $question->is_parent_question = $question->childQuestions->count() > 0;
+                $question->is_child_question = !!$question->parent_question_id;
 
                 return $question;
             });

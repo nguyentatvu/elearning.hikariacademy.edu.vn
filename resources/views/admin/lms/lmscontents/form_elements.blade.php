@@ -158,6 +158,23 @@
     </fieldset>
   @endif
 </div>
+<div class="panel-body packages" ng-if="loai=='13'">
+  <div>
+    <table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Nội dung</th>
+          <th>Lựa chọn 1</th>
+          <th>Lựa chọn 2</th>
+          <th>Đáp án</th>
+          <th>Hình ảnh</th>
+          <th>Cập nhật</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+</div>
 <fieldset class="form-group">
   {{ Form::label('Mô tả') }}
   {{ Form::textarea('description', $value = null , $attributes = array('class'=>'form-control ckeditor', 'rows'=>'5', 'placeholder' => '')) }}
