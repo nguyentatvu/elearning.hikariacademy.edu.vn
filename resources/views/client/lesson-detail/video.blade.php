@@ -59,7 +59,11 @@
                 playbackRates: [0.5, 1, 1.5, 2],
                 html5: {
                     vhs: {
-                        overrideNative: true
+                        overrideNative: true,
+                        enableLowInitialPlaylist: false,
+                        useDevicePixelRatio: false,
+                        maxBitrate: 0,
+                        enableAdaptiveBitrate: false
                     }
                 }
             };
@@ -71,106 +75,32 @@
             let tsSegmentRetries = 0;
             const MAX_TS_RETRIES = 100;
 
-            function initializePlayer() {
-                if (initAttempts >= MAX_ATTEMPTS) {
-                    console.error('Failed to initialize video player after', MAX_ATTEMPTS, 'attempts');
+            // Function to disable adaptive bitrate completely
+            function disableABR(player) {
+                if (player.tech_ && player.tech_.vhs) {
+                    const vhs = player.tech_.vhs;
+                    if (vhs.playlists && vhs.playlists.master) {
+                        // Disable ABR functionality
+                        vhs.masterPlaylistController_.useQualityLevels_ = false;
+                        vhs.masterPlaylistController_.fastQualityChange_ = false;
 
-                    // $('#my-video').hide();
-                    // $('.video-placeholder').show();
-                    return;
-                }
-                initAttempts++;
+                        // Force manual selection only
+                        vhs.masterPlaylistController_.mediaSource.autoUpdateEnd = false;
 
-                // Make sure the video element exists before initializing
-                const videoElement = document.getElementById('my-video');
-                if (!videoElement) {
-                    console.warn(`Video element not found, retrying in 100ms (attempt ${initAttempts}/${MAX_ATTEMPTS})`);
-                    setTimeout(initializePlayer, 100);
-                    return;
-                }
-
-                // Dispose existing players
-                const existingPlayers = videojs.getPlayers();
-                for (const playerId in existingPlayers) {
-                    if (existingPlayers[playerId]) {
-                        existingPlayers[playerId].dispose();
-                    }
-                }
-
-                try {
-                    // Initialize new player
-                    const player = videojs('my-video', getVideoConfig());
-
-                    if (!player) {
-                        throw new Error('Failed to initialize video player');
-                    }
-
-                    player.httpSourceSelector();
-
-                    // Add error handling
-                    player.on('error', function(e) {
-                        console.log('Error: ', e);
-                        handlePlayerError(player, e);
-                        // player.error(4);
-                    });
-
-                    player.src({
-                        src: '{{ $video_url }}',
-                        type: 'application/x-mpegURL'
-                    });
-
-                    // Wait for the player to be ready before accessing menus
-                    player.ready(function() {
-                        try {
-                            addSkipButton(player);
-                            allowQualitySelect(player);
-                            earnPointsOnVideoEnded(player);
-                        } catch (error) {
-                            console.error('Error in player ready callback:', error);
+                        // Disable automatic quality selection
+                        const qualityLevels = player.qualityLevels();
+                        console.log(qualityLevels);
+                        for (let i = 0; i < qualityLevels.length; i++) {
+                            qualityLevels[i].enabled = false;
                         }
-                    });
-                } catch (error) {
-                    console.error(`Error initializing video player (attempt ${initAttempts}/${MAX_ATTEMPTS}):`, error);
-                    // Retry after a delay
-                    if (initAttempts < MAX_ATTEMPTS) {
-                        setTimeout(initializePlayer, 500);
                     }
-                }
-            }
-
-            function handlePlayerError(player, e) {
-                const error = player.error();
-
-                // Handle HLS playlist request error
-                if (
-                    (error.code === 2 || error.status === 404 || error.message.includes('HLS playlist request error')) ||
-                    error.code === 4
-                ) {
-                    // console.error(`HLS playlist request failed (attempt ${initAttempts}/${MAX_ATTEMPTS}):`, error.message);
-                    retryInitialization(player);
-                    return;
-                }
-
-                // Log other errors
-                console.error('Video player error:', error);
-            }
-
-            function retryInitialization(player) {
-                // Clear the error
-                player.error(null);
-
-                // Retry initialization after a delay
-                if (initAttempts < MAX_ATTEMPTS) {
-                    setTimeout(function() {
-                        player.dispose();
-                        initializePlayer();
-                    }, 500);
                 }
             }
 
             const player = videojs('my-video', getVideoConfig());
 
-            player.httpSourceSelector();
+            // Disable ABR after source selector is initialized
+            disableABR(player);
             player.src({
                 src: '{{ $video_url }}',
                 type: 'application/x-mpegURL'
@@ -178,6 +108,13 @@
 
             // Wait for the player to be ready before accessing menus
             player.ready(function() {
+                player.httpSourceSelector();
+
+                player.qualityLevels().on('addqualitylevel', function(event) {
+                    var qualityLevel = event.qualityLevel;
+                    qualityLevel.enabled = false;
+                });
+
                 addSkipButton(player);
                 allowQualitySelect(player);
                 earnPointsOnVideoEnded(player);
@@ -206,6 +143,7 @@
         const allowQualitySelect = (player) => {
             // Ensure HTTP Source Selector is fully initialized
             player.on('sourceselectioninitialized', function() {
+                console.log('tset');
                 try {
                     // Get the quality selector button
                     const qualitySelector = player.controlBar.getChild('VideoJsButtonClass');
