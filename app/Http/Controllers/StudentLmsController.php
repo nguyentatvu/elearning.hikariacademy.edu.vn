@@ -892,6 +892,10 @@ class StudentLmsController extends Controller
                 $question->is_parent_question = $question->childQuestions->count() > 0;
                 $question->is_child_question = !!$question->parent_question_id;
 
+                $question->content = change_furigana(trim($question->content), 'return');
+                $question->option_1 = change_furigana($question->option_1, 'return');
+                $question->option_2 = change_furigana($question->option_2, 'return');
+
                 return $question;
             });
 
