@@ -892,7 +892,7 @@ class LmsContentController extends Controller
                       CURLOPT_HTTPHEADER => array('Content-Type: multipart/form-data'),
                       CURLOPT_POSTFIELDS => $data,
                       CURLOPT_CONNECTTIMEOUT => 30,
-                      CURLOPT_TIMEOUT => 600,
+                      CURLOPT_TIMEOUT => 1200,
                       CURLOPT_SSL_VERIFYHOST => false,
                       CURLOPT_SSL_VERIFYPEER => false,
                   ));

@@ -21,6 +21,7 @@ use Razorpay\Api\Api;
 use Softon\Indipay\Facades\Indipay;
 use Yajra\DataTables\DataTables;
 use \App;
+use App\LmsContent;
 use Illuminate\Support\Facades\Log;
 
 class CommentController extends Controller
@@ -37,13 +38,19 @@ class CommentController extends Controller
         try {
             DB::beginTransaction();
             $lmsseries_id = DB::table('lmsseries')
-                ->select('id')
+                ->select('id', 'title')
                 ->where('slug' ,$request->lmsseries_slug)
                 ->first();
             $lmscombo_id = DB::table('lmsseries_combo')
                 ->select('id')
                 ->where('slug' ,$request->lmscombo_slug)
                 ->first();
+            $lmscontent_name = LmsContent::query()
+                ->select('bai')
+                ->where('id', $request->lmscontent_id)
+                ->first()
+                ->bai ?? '';
+
             $record->user_id                  =  $request->user_id;
             $record->user_name                =  Auth::user()->name;
             $record->body                     =  $request->body;
@@ -64,8 +71,21 @@ class CommentController extends Controller
             }
             DB::commit();
             $data = array('error'=>1,'message' =>'Đặt câu hỏi thành công');
-            //$data = array('error'=>1,'message' =>$record);
-            $email = sendEmail('thongbaocomment', array('name'=>'', 'to_email' => env('TO_NOTIFY_EMAIL')));
+
+            \sendMailFromTemplate(
+                [
+                    'student_name' => Auth::user()->name,
+                    'course_name' => $lmsseries_id->title,
+                    'lesson_name' => $lmscontent_name,
+                    'lesson_link' => $request->url,
+                    'comment' => $request->body
+                ],
+                [
+                    'template' => 'emails.new_comment_template',
+                    'subject' => 'Thông báo có comment từ học viên - Hikari Academy',
+                ]
+            );
+
             return json_encode($record);
         }catch(Exception $e){
             DB::rollBack();

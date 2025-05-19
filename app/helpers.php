@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -1427,6 +1428,49 @@ function createSlug($name)
 function sendEmail($template, $data)
 {
     return (new App\EmailTemplate())->sendEmail($template, $data);
+}
+
+function sendMailFromTemplate(array $data = [], array $options = [])
+{
+    // Check if the template is not set
+    if (!$options['template']) {
+        return;
+    }
+
+    // Get the template
+    $template = $options['template'];
+    $subject = $options['subject'] ?? 'No Subject';
+    $to      = $options['to'] ?? env('TO_NOTIFY_EMAIL');
+    $from_email = $options['from_email'] ?? 'elearning@hikariacademy.edu.vn';
+    $from_name = $options['from_name'] ?? 'Trung tâm Nhật ngữ Hikari Academy';
+
+    $cc = array_filter([
+        env('TO_EMAIL_CC', null),
+        env('TO_EMAIL_CC_2', null),
+        $options['cc'] ?? null
+    ]);
+
+    // Check if the recipient email is not set
+    if (!$to) {
+        throw new \Exception('Missing recipient email (to)');
+    }
+
+    Mail::send($template, ['data' => $data], function ($message) use ($options, $subject, $to, $from_email, $from_name, $cc) {
+        $message->from($from_email, $from_name);
+        $message->to($to);
+
+        $message->cc($cc);
+
+        if (!empty($options['bcc'])) {
+            $message->bcc($options['bcc']);
+        }
+
+        if (!empty($options['from'])) {
+            $message->from($options['from']);
+        }
+
+        $message->subject($subject);
+    });
 }
 
 /**

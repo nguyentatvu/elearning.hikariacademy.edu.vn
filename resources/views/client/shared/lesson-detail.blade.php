@@ -385,6 +385,7 @@
             data.lmscontent_id = lmscontent_id;
             data.user_id = userId;
             data.parent_id = parentId;
+            data.url = window.location.href;
 
             return new Promise((resolve, reject) => {
                 $.ajax({
