@@ -857,6 +857,17 @@ class StudentLmsController extends Controller
             $sendUrl = null;
         }
 
+        DB::table('lms_test_result')->insert([
+            'lmscontent_id' => $stt,
+            'combo_slug' => $combo_slug,
+            'finish' => 1,
+            'total_point' => $max_score,
+            'users_id' => Auth::id(),
+            'point' => $acc_score,
+            'time_result' => $time,
+            'created_by' => Auth::id(),
+        ]);
+
         $view_name = 'client.lesson-detail.test-traffic';
         $data = [];
 

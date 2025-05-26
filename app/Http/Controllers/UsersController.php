@@ -1595,7 +1595,9 @@ class UsersController extends Controller
         // Average test score for the current month
         $testResultOnMonth = $testResultsQuery
             ->whereMonth('created_at', Carbon::now()->month)
-            ->avg('point');
+            ->selectRaw('(point / total_point) * 100 as point_percentage')
+            ->get()
+            ->avg('point_percentage');
 
         // Fetch all relevant results in one query
         $results = DB::table('lms_test_result')
@@ -1605,23 +1607,24 @@ class UsersController extends Controller
             ->select(
                 'lmsseries.id as series_id',
                 'lmsseries.title as series_title',
-                'lmscontents.title as content_title',
-                'lms_test_result.point as test_point'
+                'lmscontents.title as content_title'
             )
+            ->selectRaw('(lms_test_result.point / lms_test_result.total_point) * 100 as point_percentage')
             ->get()
             ->groupBy('series_title');
 
-        // Calculate average points per series
-        $averagePointsSeries = [];
-        foreach ($results as $seriesTitle => $items) {
-            $averagePointsSeries[$seriesTitle] = intval(round($items->avg('test_point')));
-        }
         $roundedAverage = 0;
         // Round the average test score for the current month
         if ($testResultOnMonth) {
             $roundedAverage = intval(round($testResultOnMonth));
         } else {
             $roundedAverage = null;
+        }
+
+        // Calculate average points per series
+        $averagePointsSeries = [];
+        foreach ($results as $seriesTitle => $items) {
+            $averagePointsSeries[$seriesTitle] = intval(round($items->avg('point_percentage')));
         }
 
         $data['avg_point_month'] = $roundedAverage;
@@ -1702,38 +1705,27 @@ class UsersController extends Controller
             foreach ($examResults as $record) {
                 $totalMark = 0;
                 if ($record->category_id <= 3) {
-                    $style1 = ($this->checkKijunTen($record->category_id, 1, $record->quiz_1_total)) ? "info" : "danger";
-                    $style2 = ($this->checkKijunTen($record->category_id, 2, $record->quiz_2_total)) ? "info" : "danger";
-                    $style3 = ($this->checkKijunTen($record->category_id, 3, $record->quiz_3_total)) ? "info" : "danger";
-                    $detail = '言語知識（文字・語彙・文法）: <span class="badge bg-' . $style1 . '">' . $record->quiz_1_total . '/60</span><br><br>読解: <span class="badge bg-' . $style2 . '">' . $record->quiz_2_total . '/60</span><br><br>聴解: <span class="badge bg-' . $style3 . '">' . $record->quiz_3_total . '/60</span>';
                     $totalMark = $record->quiz_1_total + $record->quiz_2_total + $record->quiz_3_total;
                 } else {
-                    $style1 = ($this->checkKijunTen($record->category_id, 1, $record->quiz_1_total)) ? "info" : "danger";
-                    $style3 = ($this->checkKijunTen($record->category_id, 2, $record->quiz_3_total)) ? "info" : "danger";
-                    $detail = '言語知識（文字・語彙・文法）: <span class="badge bg-' . $style1 . '">' . $record->quiz_1_total . '/120</span><br><br>聴解: <span class="badge bg-' . $style3 . '">' . $record->quiz_3_total . '/60</span>';
                     $totalMark = $record->quiz_1_total + $record->quiz_3_total;
                 }
 
-                $record->detail = $detail;
                 $totalMarkSpan = '';
                 if ($record->finish == 3) {
                     if ($this->checkPassingscore($record->category_id, $record->total_marks) && $this->checkKijunTenAnyKubun($record->category_id, $record->quiz_1_total, $record->quiz_2_total, $record->quiz_3_total)) {
-                        $ketqua = '<span class="badge bg-success">Đạt</span>';
                         $totalMarkSpan = '<span class="label label-success">' . $totalMark . '/180</span>';
                     } else {
-                        $ketqua = '<span class="badge bg-warning">Chưa đạt</span>';
                         $totalMarkSpan = '<span class="label label-warning">' . $totalMark . '/180</span>';
                     }
 
                 } else {
-                    $ketqua = '<span class="badge bg-danger">Chưa hoàn thành</span>';
                     $totalMarkSpan = '<span class="label label-danger">' . $totalMark . '/180</span>';
 
                 }
                 $record->totalMark = $totalMarkSpan;
-                $record->ketqua = $ketqua;
             }
         }
+
         return $examResults;
     }
 
@@ -1923,13 +1915,11 @@ class UsersController extends Controller
             })
             ->orderBy('created_date', 'desc');
 
-        // dd($exercises->first()->created_date);
-
-        // Audit (test)
+        // Audit (test) and test traffic
         $audit = LmsStudentView::with('lmsContent')
             ->where('users_id', $userId)
             ->whereHas('lmsContent', function ($query) {
-                $query->where('type', LmsContent::TEST);
+                $query->whereIn('type', [LmsContent::TEST, LmsContent::TEST_TRAFFIC_RULE]);
             })
             ->orderBy('created_date', 'desc');
 
