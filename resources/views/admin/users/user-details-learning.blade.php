@@ -120,32 +120,6 @@
                                 </div>
                                 <div class="media state-media box-ws">
                                     <div class="media-body">
-                                        <p>Điểm trung bình các bài kiểm tra đã thực hiện</p>
-                                        <p>Trong tháng hiện tại:
-                                            <span class="text-primary">
-                                                @if ($avg_point_month)
-                                                    {{ $avg_point_month }}/100
-                                                @else
-                                                    Học viên chưa làm bài kiểm tra
-                                                @endif
-                                            </span>
-                                        </p>
-                                        <p>Trong từng khóa học:
-                                            @if (!empty($avg_point_series))
-                                                <ol>
-                                                    @foreach ($avg_point_series as $serie => $point)
-                                                        <li>{{ $serie }}: <span
-                                                                class="text-primary">{{ $point }}/100</span></li>
-                                                    @endforeach
-                                                </ol>
-                                            @else
-                                                <span class="text-info"> Học viên chưa làm bài kiểm tra</span>
-                                            @endif
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="media state-media box-ws">
-                                    <div class="media-body">
                                         <p>Thời điểm gần nhất học viên tiến hành học: <span
                                                 class="text-primary">{{ $study }}</span>
                                         </p>
@@ -163,8 +137,32 @@
                                 </div>
                                 <div class="media state-media box-ws">
                                     <div class="media-body">
-                                        <p>Clip học viên đã xem/tháng hiện tại: <span
-                                                class="text-primary">{{ $course_viewed_month }}</span></p>
+                                        <p>Clip học viên đã xem/tháng hiện tại: <span class="text-primary">{{ $course_viewed_month }}</span></p>
+                                    </div>
+                                </div>
+                                <div class="media state-media box-ws">
+                                    <div class="media-body">
+                                        <p>Số clip đã xem: <span class="text-primary">{{ $course_viewed }}</span></p>
+                                    </div>
+                                </div>
+                                <div class="media state-media box-ws">
+                                    <div class="media-body">
+                                        <p>Lộ trình học học viên đang chọn</p>
+                                        <div>
+                                            @if (isset($data_roadmap_user) && !empty($data_roadmap_user))
+                                                @foreach ($data_roadmap_user as $roadmap)
+                                                    <div class="text-primary">{{ $roadmap->lmsseries->title }} -
+                                                        {{ $roadmap->duration_months != 0 ? 'Lộ trình ' . $roadmap->duration_months . ' tháng' : 'Lộ trình tự do' }}
+                                                    </div>
+                                                @endforeach
+                                            @else
+                                                <div class="text-primary">
+                                                    <div>Học viên chưa chọn lộ trình học cho các khóa học.</div>
+                                                    <div>Vui lòng lựa chọn lộ trình phù hợp để bắt đầu hành trình học tập
+                                                        hiệu quả.</div>
+                                                </div>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -201,61 +199,59 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="media state-media box-ws">
-                                    <div class="media-body">
-                                        <p>Số clip đã xem: <span class="text-primary">{{ $course_viewed }}</span></p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="media state-media box-ws">
-                                    <div class="media-body">
-                                        <p>Lộ trình học học viên đang chọn</p>
-                                        <div>
-                                            @if (isset($data_roadmap_user) && !empty($data_roadmap_user))
-                                                @foreach ($data_roadmap_user as $roadmap)
-                                                    <div class="text-primary">{{ $roadmap->lmsseries->title }} -
-                                                        {{ $roadmap->duration_months != 0 ? 'Lộ trình ' . $roadmap->duration_months . ' tháng' : 'Lộ trình tự do' }}
+                                @foreach ($test_results_by_lmsseries as $test_results)
+                                    <div class="media state-media box-ws">
+                                        <div class="media-body">
+                                            <p>
+                                                <span>Danh sách điểm các bài thi khoá học</span>
+                                                <a href="{{ $test_results->course_link }}" target="_blank"><strong>{{ $test_results->course_name }}</strong></a>
+                                                <span>:</span>
+                                            </p>
+                                            <div class="panel-body" style="padding-top: 2px;">
+                                                @if ($test_results->test_results->count() > 0)
+                                                    <div class="table-scroll-body">
+                                                        <table class="table table-hover table-fixed-header"
+                                                            style="margin-bottom: 0px;">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th style="width: 25%;">Thời gian</th>
+                                                                    <th>Tên bộ đề thi</th>
+                                                                    <th style="width: 20%;">Tổng điểm</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach ($test_results->test_results as $result)
+                                                                    <tr>
+                                                                        <td>{{ $result->time }}</td>
+                                                                        <td>{{ $result->test_name }}</td>
+                                                                        <td>{!! $result->total_point_span !!}</td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
                                                     </div>
-                                                @endforeach
-                                            @else
-                                                <div class="text-primary">
-                                                    <div>Học viên chưa chọn lộ trình học cho các khóa học.</div>
-                                                    <div>Vui lòng lựa chọn lộ trình phù hợp để bắt đầu hành trình học tập
-                                                        hiệu quả.</div>
-                                                </div>
-                                            @endif
+                                                @else
+                                                    <span class="text-info">Học viên chưa làm bài thi thử nào!</span>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endforeach
                             </div>
                         </div>
-                        <!-- <div class="row">
-               <div class="col-md-6">
-                <div class="panel panel-primary dsPanel">
-                 <div class="panel-heading">
-                  <i class="fa fa-bar-chart-o"></i>
-                  Tổng số khóa học học viên đang tham gia
-                 </div>
-                 <div class="panel-body">
                   <?php $ids = []; ?>
-                  @for ($i = 0; $i < count($number_of_courses); $i++)
-    <div class="panel-body">
+                    {{-- @for ($i = 0; $i < count($number_of_courses); $i++) <div class="panel-body">
                     <div class="row">
-                     <div class="col-md-12">
-                      <canvas id="number_of_courses" width="100" height="110"></canvas>
-                     </div>
+                        <div class="col-md-12">
+                            <canvas id="number_of_courses" width="100" height="110"></canvas>
+                        </div>
                     </div>
-                   </div>
-    @endfor
+                    </div>
+                    @endfor --}}
                  </div>
                 </div>
                </div>
-               <div class="col-md-6">
+               <div class="col-md-6" style="display: none;">
                 <div class="panel panel-primary dsPanel">
                  <div class="panel-heading">
                   <i class="fa fa-bar-chart-o"></i>
@@ -264,18 +260,18 @@
                  <div class="panel-body">
                   <?php $ids = []; ?>
                   @for ($i = 0; $i < count($percentage_of_course); $i++)
-    <div class="panel-body">
+                    <div class="panel-body">
                     <div class="row">
                      <div class="col-md-12">
                       <canvas id="percentage_of_course" width="100" height="110"></canvas>
                      </div>
                     </div>
                    </div>
-    @endfor
+                    @endfor
                  </div>
                 </div>
                </div>
-              </div> -->
+              </div>
                     </div>
                 </div>
 
@@ -332,7 +328,7 @@
 
 @section('footer_scripts')
 
-    @include('admin.common.charts', [
+    {{-- @include('admin.common.charts', [
         'chart_data' => $number_of_courses,
         'ids' => ['number_of_courses'],
         'scale' => true,
@@ -341,6 +337,6 @@
         'chart_data' => $percentage_of_course,
         'ids' => ['percentage_of_course'],
         'scale' => true,
-    ])
+    ]) --}}
 
 @stop

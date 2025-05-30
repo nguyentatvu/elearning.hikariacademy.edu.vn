@@ -22,6 +22,7 @@ use App\LmsSeries;
 use App\LmsSeriesCombo;
 use App\LmsStudentView;
 use App\LmsTest;
+use App\LmsTestResult;
 use App\Payment;
 use App\QuizResultfinish;
 use App\Role;
@@ -1685,6 +1686,10 @@ class UsersController extends Controller
         // Get data for mock exam
         $data['mock_exam_results'] = $this->getDataForMockExam($userId);
 
+        // Get Test results by courses
+        $data['test_results_by_lmsseries'] = $this->getTestResultsByCourse($userId);
+        // dd($data['test_results_by_lmsseries']);
+
         // Get series
         $data['series'] = $this->userService->getCurrentCoursesForStudent($userId);
 
@@ -1727,6 +1732,64 @@ class UsersController extends Controller
         }
 
         return $examResults;
+    }
+
+    /**
+     * Get test results by course
+     *
+     * @param int $userId
+     * @return array
+     */
+    private function getTestResultsByCourse($userId) {
+        return LmsTestResult::query()
+            ->join('lmscontents', 'lmscontents.id', '=', 'lms_test_result.lmscontent_id')
+            ->join('lmsseries', 'lmsseries.id', '=', 'lmscontents.lmsseries_id')
+            ->select([
+                'lms_test_result.users_id', 'lms_test_result.point', 'lms_test_result.total_point',
+                'lmscontents.lmsseries_id'
+            ])
+            ->selectRaw('lms_test_result.created_at as time')
+            ->selectRaw('lmscontents.bai as test_name')
+            ->selectRaw('lmsseries.title as course_name')
+            ->selectRaw('lmsseries.slug as series_slug')
+            ->where('lms_test_result.users_id', $userId)
+            ->get()
+            ->map(function ($test_result) {
+                $total_point = $test_result->total_point;
+                $point = $test_result->point;
+
+                if ($total_point === 100) { // The test traffic test
+                    $css_class = $point >= 80 ? 'label-success' : 'label-warning';
+                } else { // The test traffic test
+                    $css_class = $point >= 45 ? 'label-success' : 'label-warning';
+                }
+
+                $test_result->total_point_span = "<span class=\"label " . $css_class . "\">" . $point . "/" . $total_point . "</span>";
+                return $test_result;
+            })
+            ->groupBy('lmsseries_id')
+            ->map(function ($test_results_by_course) {
+                $course_name = $test_results_by_course->first()->course_name ?? '';
+                $test_results = $test_results_by_course;
+
+                $lmsseries_id = $test_results_by_course->first()->lmsseries_id ?? '';
+                $combo_series = $this->lmsSeriesComboService->getSingleSeriesComboBySeriesId($lmsseries_id);
+                $combo_slug = $combo_series->slug ?? '';
+                $course_slug = $test_results_by_course->first()->series_slug ?? '';
+
+
+                if ($combo_slug && $course_slug) {
+                    $course_link = "/series/introduction-detail/$combo_slug/$course_slug/";
+                } else {
+                    $course_link = "#";
+                }
+
+                return (object) [
+                    'course_name' => $course_name,
+                    'course_link' => $course_link,
+                    'test_results' => $test_results,
+                ];
+            });
     }
 
     /**

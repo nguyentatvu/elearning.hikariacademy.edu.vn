@@ -100,6 +100,16 @@ class LmsContent extends Model
     }
 
     /**
+     * Relationship with LmsTestResult
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function lmsTestResult()
+    {
+        return $this->hasMany(LmsTestResult::class, 'lmscontent_id', 'id');
+    }
+
+    /**
      * Relationship with LmsStudentView of current user (return null if guest)
      */
     public function currentLmsStudentView() {
