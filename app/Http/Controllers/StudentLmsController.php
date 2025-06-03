@@ -168,6 +168,7 @@ class StudentLmsController extends Controller
     {
         // Both a guest user and a student who hasn't purchased the series have the same trial access.
         // A student who has purchased the series is granted full access to all content in the series.
+        $user = Auth::user();
         $userId = auth()->id() ?? -1;
         $seriesId = $this->prepContent['series_id'];
         $seriesComboId = $this->prepContent['series_combo_id'];
@@ -176,8 +177,8 @@ class StudentLmsController extends Controller
             = $this->paymentMethodService->checkSerieValidity($userId, $seriesComboId);
 
         if (
-            $this->prepContent['series_combo']
-            && $this->prepContent['series_combo']->cost == 0
+            ($this->prepContent['series_combo'] && $this->prepContent['series_combo']->cost == 0) ||
+            ($user->role_id ?? null) == 1
         ) {
             $this->prepContent['is_free_series'] = true;
             $this->prepContent['is_valid_payment'] = true;
@@ -1029,6 +1030,7 @@ class StudentLmsController extends Controller
                     'point' => $totalValue,
                     'time_result' => $time,
                     'created_by' => Auth::id(),
+                    'created_at' => now()
                 ]);
 
                 if ($passed >= 0.65) {
@@ -1120,12 +1122,12 @@ class StudentLmsController extends Controller
                         ->where('delete_status', 0)
                         ->first();
 
-                    $data['checkpay'] = DB::table('payment_method')
-                        ->select(DB::raw("(SELECT COUNT(id) FROM payment_method WHERE payment_method.item_id = " . $data['hi_combo']->id . " AND payment_method.user_id = " . Auth::id() . " AND DATE_ADD(responseTime, INTERVAL IF(" . $data['hi_combo']->time . " = 0,90,IF(" . $data['hi_combo']->time . " = 1,180,365)) DAY) > NOW()) as payment"))
-                        ->first();
-                    if ($data['checkpay']->payment == 0) {
-                        return redirect('home');
-                    }
+                    // $data['checkpay'] = DB::table('payment_method')
+                    //     ->select(DB::raw("(SELECT COUNT(id) FROM payment_method WHERE payment_method.item_id = " . $data['hi_combo']->id . " AND payment_method.user_id = " . Auth::id() . " AND DATE_ADD(responseTime, INTERVAL IF(" . $data['hi_combo']->time . " = 0,90,IF(" . $data['hi_combo']->time . " = 1,180,365)) DAY) > NOW()) as payment"))
+                    //     ->first();
+                    // if ($data['checkpay']->payment == 0) {
+                    //     return redirect('home');
+                    // }
                 }
 
                 if (Auth::check()) {
