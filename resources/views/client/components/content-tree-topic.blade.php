@@ -1,8 +1,8 @@
 @foreach($contents as $content_index => $content)
-@if(in_array($content->type, [App\LmsContent::TEST_TRAFFIC_RULE, App\LmsContent::STRUCTURE]))
+@if(in_array($content->type, [App\LmsContent::TEST_TRAFFIC_RULE, App\LmsContent::STRUCTURE]) || in_array($content->type, App\LmsContent::TEST_TOKUTEI_LIST))
     @if($is_valid_payment || $content->el_try == App\LmsContent::TRIAL_TYPE)
         <a href="{{ $is_valid_payment || $content->type === App\LmsContent::SUMMARY_AND_INTRODUCTION ? $content->url : 'javascript:void(0)' }}"
-            class="topic-content-link {{ in_array($content->type, [App\LmsContent::STRUCTURE, App\LmsContent::TEST_TRAFFIC_RULE]) ? 'pl-32' : ''}} {{ $content->css_class }}">
+            class="topic-content-link {{ in_array($content->type, [App\LmsContent::STRUCTURE, App\LmsContent::TEST_TRAFFIC_RULE]) || in_array($content->type, App\LmsContent::TEST_TOKUTEI_LIST) ? 'pl-32' : ''}} {{ $content->css_class }}">
             <img src="{{ (isset($content->image) && !empty($content->image)) ? asset($content->image) : asset('images/icons/' . config('constant.series.chapter_icons')[$content->type]) }}"
                 alt="image" class="chapter-image">
             <span>{{ $content->bai }}</span>

@@ -79,7 +79,11 @@
   </div>
 
   {{-- Modal for update question --}}
-  @include('admin.lms.lmscontents.modal-update-test-traffic')
+  @if($record->type == App\LmsContent::TEST_TRAFFIC_RULE)
+    @include('admin.lms.lmscontents.modal-update-test-traffic')
+  @elseif(in_array($record->type, App\LmsContent::TEST_TOKUTEI_LIST))
+    @include('admin.lms.lmscontents.modal-update-test-tokutei')
+  @endif
 
   <!-- /#page-wrapper -->
   @stop
@@ -90,7 +94,16 @@
   @include('admin.common.alertify')
   @php
   // MAKE DEFAULT VALUE COLUMN
-  $defaultColumns = [ 'question_order', 'content', 'option_1', 'option_2', 'answer', 'image', 'update_button' ];
+  if ($record->type == App\LmsContent::TEST_TRAFFIC_RULE) {
+    $defaultColumns = [ 'question_order', 'content', 'option_1', 'option_2', 'answer', 'image', 'update_button' ];
+    $datatable_url = $datatable_url_test_traffic;
+  } else if (in_array($record->type, App\LmsContent::TEST_TOKUTEI_LIST)) {
+    $defaultColumns = [ 'question_order', 'content', 'options', 'answer', 'section', 'category', 'image', 'update_button' ];
+    $datatable_url = $datatable_url_test_tokutei;
+  } else {
+    $defaultColumns = [];
+    $datatable_url = '';
+  }
   @endphp
   @include('admin.common.datatables', array('route'=> $datatable_url, 'route_as_url' => true, 'table_columns' => $defaultColumns))
   @include('admin.common.deletescript', array('route'=> URL_LMS_CONTENT_DELETE))

@@ -1,7 +1,16 @@
 <?php $settings = getSettings('lms');?>
 <input type="hidden" name="series_slug" value="{{$series_slug}}">
 <?php
-  $dr_loai = ['0'=>'Menu', '8'=>'Sub menu', '1'=>'Từ vựng','2'=>'Bài học','3'=>'Bài tập','4'=>'Bài tập toàn bài','5'=>'Bài test','6'=>'Hán tự','7'=>'Bài ôn tập', '9'=>'Giới thiệu', 10=>'Flashcard', 11 => 'Luyện viết', 12 => 'Luyện phát âm', 13 => 'Bài kiểm tra luật lệ giao thông'];
+  $dr_loai = [
+  '0' => 'Menu', '1' => 'Từ vựng', '2' => 'Bài học', '3' => 'Bài tập',
+  '4' => 'Bài tập toàn bài', '5' => 'Bài test', '6' => 'Hán tự',
+  '7' => 'Bài ôn tập', '8' => 'Sub menu', '9' => 'Giới thiệu',
+  '10' => 'Flashcard', '11' => 'Luyện viết', '12' => 'Luyện phát âm',
+  '13' => 'Bài kiểm tra luật lệ giao thông',
+  '14' => 'Bài thi Tokutei - Ngành sản xuất thực phẩm và đồ uống',
+  '15' => 'Bài thi Tokutei - Ngành nhà hàng',
+  '16' => 'Bài thi Tokutei - Ngành Kaigo',
+];
   $loai_selected = (isset($record->type)) ? $record->type : null;
 ?>
 <div class="row">
@@ -152,6 +161,24 @@
     class="form-control"
     name="lms_test_traffic_rule" accept=".xls,.xlsx" >
   </fieldset>
+  <fieldset class="form-group col-md-6" ng-if="loai == '14' || loai == '15' || loai == '16'">
+    <div ng-if="loai=='14'">
+      {{ Form::label('lms_test_tokutei_food_beverage', getphrase('File Import Bài thi Tokutei - Ngành thực phẩm và đồ uống (excel)')) }}
+      <span class="text-red">*</span>
+    </div>
+    <div ng-if="loai=='15'">
+      {{ Form::label('lms_test_tokutei_restaurant', getphrase('File Import Bài thi Tokutei - Ngành nhà hàng (excel)')) }}
+      <span class="text-red">*</span>
+    </div>
+    <div ng-if="loai=='16'">
+      {{ Form::label('lms_test_caregiver', getphrase('File Import Tokutei - Ngành Kaigo (excel)')) }}
+      <span class="text-red">*</span>
+    </div>
+    <input type="file"
+      class="form-control"
+      name="lms_test_tokutei" accept=".xls,.xlsx"
+    >
+  </fieldset>
   @if($record && $record->download_doc!='')
     <fieldset class="form-group col-md-6">
       {{link_to_asset($record->download_doc, getPhrase('download '.  basename($record->download_doc)), $attributes = array('target' => '_blank'))}}
@@ -168,6 +195,24 @@
           <th>Lựa chọn 1</th>
           <th>Lựa chọn 2</th>
           <th>Đáp án</th>
+          <th>Hình ảnh</th>
+          <th>Cập nhật</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+</div>
+<div class="panel-body packages" ng-if="loai=='14' || loai=='15' || loai=='16'">
+  <div>
+    <table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Nội dung</th>
+          <th>Các lựa chọn</th>
+          <th>Đáp án</th>
+          <th>Phần thi</th>
+          <th>Hạng mục</th>
           <th>Hình ảnh</th>
           <th>Cập nhật</th>
         </tr>

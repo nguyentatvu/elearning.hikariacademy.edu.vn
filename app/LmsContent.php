@@ -23,6 +23,15 @@ class LmsContent extends Model
     public const HANDWRITING = 11;
     public const PRONUNCIATION_ASSESSMENT = 12;
     public const TEST_TRAFFIC_RULE = 13;
+    public const TEST_TOKUTEI_FOOD_BERVERAGE = 14;
+    public const TEST_TOKUTEI_RESTAURANT = 15;
+    public const TEST_TOKUTEI_CAREGIVER = 16;
+
+    const TEST_TOKUTEI_LIST = [
+        self::TEST_TOKUTEI_FOOD_BERVERAGE,
+        self::TEST_TOKUTEI_RESTAURANT,
+        self::TEST_TOKUTEI_CAREGIVER,
+    ];
 
     public const TRIAL_TYPE = 1;
     public const PURCHASE_TYPE = 0;

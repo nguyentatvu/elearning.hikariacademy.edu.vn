@@ -88,6 +88,12 @@ Route::prefix('learning-management')->name('learning-management.')->group(functi
     Route::post('lesson/test-traffic/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@storeTestTraffic')
         ->name('lesson.test-traffic.store');
 
+    Route::get('lesson/test-tokutei/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showTestTokutei')
+        ->name('lesson.test-tokutei');
+
+    Route::post('lesson/test-tokutei/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@storeTestTokutei')
+        ->name('lesson.test-tokutei.store');
+
     Route::get('lesson/flashcard/{combo_slug}/{slug?}/{stt?}', 'StudentLmsController@showFlashcard')
         ->name('lesson.flashcard');
 
@@ -100,8 +106,12 @@ Route::prefix('learning-management')->name('learning-management.')->group(functi
     Route::post('daily-streak', 'UsersController@dailyStreak')
         ->name('lesson.daily-streak');
 });
+
 Route::get('test-traffic/{content}/getList', 'LmsContentController@getTestTrafficDataTable');
 Route::post('test-traffic/updateQuestion/{questionId}', 'LmsContentController@updateQuestion');
+
+Route::get('test-tokutei/{content}/getList', 'LmsContentController@getTestTokuteiDataTable');
+Route::post('test-tokutei/updateQuestion/{questionId}', 'LmsContentController@updateQuestionTokuteiTest');
 
 Route::get('/roadmap/{comboSlug}/{slug}', 'StudentLmsController@roadmap')->name('home.roadmap');
 Route::post('/roadmap/{comboSlug}/{slug}', 'StudentLmsController@loadRoadMapDetail')->name('home.load-roadmap');
@@ -1275,13 +1285,13 @@ Route::post('lms/content/add/after', 'LmsContentController@storeAfter');
 
 
 
-Route::get('lms/{series}/content/edit/{slug}', 'LmsContentController@edit'); 
+Route::get('lms/{series}/content/edit/{slug}', 'LmsContentController@edit');
 
 Route::patch('lms/{series}/content/edit/{slug}', 'LmsContentController@update');
 
 Route::delete('lms/{series}/content/delete/{slug}', 'LmsContentController@delete');
 
-Route::get('lms/{series}/content/getList', 'LmsContentController@getDatatable'); 
+Route::get('lms/{series}/content/getList', 'LmsContentController@getDatatable');
 
 Route::post('lms/{series_slug}/content/import-exams', 'LmsContentController@importExams');
 

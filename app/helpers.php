@@ -2,6 +2,7 @@
 
 use App\PointRule;
 use App\Services\Logger;
+use App\TokuteiTestQuestion;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -1768,4 +1769,20 @@ function getRewardPointRule($type = null) {
     }
 
     return (isset($rules[$type]) || !is_null($type)) ? $rules[$type] : $rules;
+}
+
+function getTokuteitestStructure ($stt) {
+    $question = TokuteiTestQuestion::query()
+        ->where('is_deleted', 0)
+        ->where('lms_content_id', $stt)
+        ->first();
+    $tokutei_test_type = optional($question)->tokutei_test_type ?? null;
+
+    $test_stucture_constant_key = implode('.', [
+        'constant',
+        'tokutei_test_structure',
+        $tokutei_test_type
+    ]);
+
+    return config($test_stucture_constant_key);
 }
