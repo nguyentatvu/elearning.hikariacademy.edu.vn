@@ -1,5 +1,7 @@
 <?php
 
+use App\LmsContent;
+
 $pronunciationUrl = env('PRONUNCIATION_ASSESSMENT_URL');
 
 return [
@@ -47,6 +49,7 @@ return [
             'handwriting' => [11],
             'pronunciation-assessment' => [12],
             'test-traffic' => [13],
+            'test-tokutei' => [14, 15, 16],
         ],
         'topic_icons' => [
             0 => 'vocab.png',
@@ -76,6 +79,10 @@ return [
             8 => 'lesson.png',
             11 => 'lesson.png',
             12 => 'lesson.png',
+            13 => 'lesson.png',
+            14 => 'lesson.png',
+            15 => 'lesson.png',
+            16 => 'lesson.png',
         ],
         'routes' => [
             'video' => 'learning-management.lesson.show',
@@ -85,6 +92,7 @@ return [
             'handwriting' => 'learning-management.lesson.handwriting',
             'pronunciation-assessment' => 'learning-management.lesson.pronunciation-assessment',
             'test-traffic' => 'learning-management.lesson.test-traffic',
+            'test-tokutei' => 'learning-management.lesson.test-tokutei',
         ],
     ],
     'redeemed_coin' => [
@@ -222,5 +230,159 @@ return [
             '103.220.86.10',
             '103.220.87.10',
         ]
+    ],
+    'tokutei_test_structure' => [
+        LmsContent::TEST_TOKUTEI_FOOD_BERVERAGE => [
+            'section' => [
+                '1' => [
+                    'label' => 'LÝ THUYẾT',
+                    'categories' => [
+                        1 => [
+                            'label' => 'Kiến thức cơ bản về an toàn thực phẩm và kiểm soát chất lượng',
+                            'point' => 3
+                        ],
+                        2 => [
+                            'label' => 'Kiến thức cơ bản về quản lý vệ sinh chung',
+                            'point' => 3
+                        ],
+                        3 => [
+                            'label' => 'Kiến thức cơ bản về quản lý quy trình sản xuất',
+                            'point' => 3
+                        ],
+                        4 => [
+                            'label' => 'Quản lý vệ sinh theo tiêu chuẩn HACCP',
+                            'point' => 3
+                        ],
+                        5 => [
+                            'label' => 'Kiến thức về vệ sinh an toàn lao động',
+                            'point' => 5
+                        ],
+                    ],
+                    'passingScore' => 65,
+                    'maxScore' => 100,
+                ],
+                '2' => [
+                    'label' => 'THỰC HÀNH',
+                    'categories' => [
+                        1 => [
+                            'label' => 'Kiến thức cơ bản về an toàn thực phẩm và kiểm soát chất lượng',
+                            'point' => 5
+                        ],
+                        2 => [
+                            'label' => 'Kiến thức cơ bản về quản lý vệ sinh chung',
+                            'point' => 5
+                        ],
+                        3 => [
+                            'label' => 'Kiến thức cơ bản về quản lý quy trình sản xuất',
+                            'point' => 5
+                        ],
+                        4 => [
+                            'label' => 'Quản lý vệ sinh theo tiêu chuẩn HACCP',
+                            'point' => 5
+                        ],
+                        5 => [
+                            'label' => 'Kiến thức về vệ sinh an toàn lao động 2',
+                            'point' => 5
+                        ],
+                    ],
+                    'passingScore' => 35,
+                    'maxScore' => 50,
+                ],
+            ],
+            'testDurationMinutes' => 70,
+            'maxScore' => 150.
+        ],
+        LmsContent::TEST_TOKUTEI_RESTAURANT => [
+            'section' => [
+                '1' => [
+                    'label' => 'LÝ THUYẾT',
+                    'categories' => [
+                        1 => [
+                            'label' => 'Chế biến đồ ăn uống',
+                            'point' => 3
+                        ],
+                        2 => [
+                            'label' => 'Phục vụ khách hàng nói chung',
+                            'point' => 3
+                        ],
+                        3 => [
+                            'label' => 'Quản lý vệ sinh',
+                            'point' => 4
+                        ],
+                    ],
+                    'passingScore' => 65,
+                    'maxScore' => 100,
+                ],
+                '2' => [
+                    'label' => 'THỰC HÀNH',
+                    'categories' => [
+                        1 => [
+                            'label' => 'Chế biến đồ ăn uống',
+                            'point' => 6
+                        ],
+                        2 => [
+                            'label' => 'Phục vụ khách hàng nói chung',
+                            'point' => 6
+                        ],
+                        3 => [
+                            'label' => 'Quản lý vệ sinh',
+                            'point' => 8
+                        ],
+                    ],
+                    'passingScore' => 65,
+                    'maxScore' => 100,
+                ],
+            ],
+            'testDurationMinutes' => 80,
+            'maxScore' => 200,
+        ],
+        LmsContent::TEST_TOKUTEI_CAREGIVER => [
+            'section' => [
+                '1' => [
+                    'label' => 'LÝ THUYẾT',
+                    'categories' => [
+                        1 => [
+                            'label' => 'Kiến thức căn bản',
+                            'point' => 1
+                        ],
+                        2 => [
+                            'label' => 'Cơ chế của tâm trí và cơ thể',
+                            'point' => 1
+                        ],
+                        3 => [
+                            'label' => 'Kỹ năng giao tiếp',
+                            'point' => 1
+                        ],
+                        4 => [
+                            'label' => 'Hỗ trợ cuộc sống',
+                            'point' => 1
+                        ],
+                    ],
+                    'passingScore' => 26,
+                    'maxScore' => 45,
+                ],
+                '2' => [
+                    'label' => 'THỰC HÀNH',
+                    'categories' => [
+                        1 => [
+                            'label' => 'Từ vựng chuyên ngành Kaigo',
+                            'point' => 1
+                        ],
+                        2 => [
+                            'label' => 'Hội thoại giao tiếp',
+                            'point' => 1
+                        ],
+                        3 => [
+                            'label' => 'Đọc hiểu đoạn văn ngắn',
+                            'point' => 1
+                        ],
+                    ],
+                    'passingScore' => 8,
+                    'maxScore' => 15,
+                ],
+            ],
+            'testDurationMinutes' => 90,
+            'maxScore' => 60,
+        ],
     ]
 ];

@@ -32,10 +32,6 @@
     }
 </style>
 <div class="category">
-    <div class="category-header">
-        <span>{{ $category_key }}.</span>
-        <span>{{ $test_structure['section'][$section_key]['categories'][$category_key]['label'] }}</span>
-    </div>
     @foreach ($category_questions as $question)
         <div class="question">
             @component('client.components.tokutei-test.question',

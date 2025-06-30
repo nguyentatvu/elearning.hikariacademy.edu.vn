@@ -88,6 +88,269 @@
         top: 49px;
     }
 
+    .demo-container {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .demo-button {
+        background: #4CAF50;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+    }
+
+    .demo-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+    }
+
+    .demo-button.fail {
+        background: #f44336;
+        box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+    }
+
+    .demo-button.fail:hover {
+        box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+    }
+
+    .modal.show {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 20px;
+        padding: 0;
+        max-width: 460px;
+        width: 90vw;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: modalSlideIn 0.4s ease-out;
+        overflow: hidden;
+    }
+
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-50px) scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .result-modal .modal-header {
+        background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+        color: white;
+        padding: 25px 30px 20px;
+        text-align: center;
+        position: relative;
+        display: block !important;
+    }
+
+    .modal-header.fail {
+        background: linear-gradient(135deg, #ea4335 0%, #fbbc05 100%);
+    }
+
+    .close {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .close:hover {
+        color: white;
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .result-title {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .result-score {
+        font-size: 18px;
+        opacity: 0.9;
+    }
+
+    .modal-body {
+        padding: 30px;
+        text-align: center;
+    }
+
+    .section-results {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .section-item {
+        flex: 1;
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 20px 15px;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .section-item.pass {
+        border-color: #28a745;
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    }
+
+    .section-item.fail {
+        border-color: #dc3545;
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    }
+
+    .section-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #6c757d;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .section-score {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .section-item.pass .section-score {
+        color: #155724;
+    }
+
+    .section-item.fail .section-score {
+        color: #721c24;
+    }
+
+    .section-status {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 8px;
+        border-radius: 20px;
+        display: inline-block;
+    }
+
+    .section-item.pass .section-status {
+        background: #28a745;
+        color: white;
+    }
+
+    .section-item.fail .section-status {
+        background: #dc3545;
+        color: white;
+    }
+
+    .overall-message {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #495057;
+        margin-bottom: 25px;
+    }
+
+    .overall-message.success {
+        color: #155724;
+    }
+
+    .overall-message.fail {
+        color: #721c24;
+    }
+
+    .action-button {
+        background: linear-gradient(135deg, #56c8f5 0%, #4285f4 100%);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);
+    }
+
+    .action-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
+    }
+
+    .action-button.retry {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    }
+
+    .action-button.retry:hover {
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+    }
+
+    .stars {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 20px;
+    }
+
+    .star {
+        width: 24px;
+        height: 24px;
+        color: #ffc107;
+        opacity: 0.3;
+    }
+
+    .star.filled {
+        opacity: 1;
+    }
+
+    .sparkle {
+        font-size: 20px;
+        margin: 0 8px;
+        animation: sparkle 2s infinite;
+    }
+
+    @keyframes sparkle {
+        0%, 100% { opacity: 0.6; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.2); }
+    }
+
     @media (min-width: 768px) and (max-width: 991px) {
         .ct-lesson17 .block-type {
             width: 100%;
@@ -226,41 +489,57 @@
                 </div>
             @endif
         </div>
-        <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
+        <div class="modal fade result-modal" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <div class="modal-body">
-                        @if (isset($acc_score))
-                            <div class="ct-cpl-screen">
-
-                                <div class="info-cpl text-center">
-
-                                    <h4 class="above-text text-primary">Kết quả: {{ $acc_score }} / {{ $max_score }}
-                                        điểm</h4>
-
-                                    <h5 class="below-text {{ $passed < 0.65 ? 'text-danger' : 'text-success' }}">
-                                        {{ $passed < 0.65 ? 'Chưa đạt yêu cầu bài kiểm tra' : 'Đạt yêu cầu bài kiểm tra' }}
-                                    </h5>
-
-                                    @if ($passed < 0.65)
-                                        <div class="d-flex justify-content-center">
-                                            <i class="bi bi-stars text-warning icon-encourage"></i>
-                                            <p class="text-encourage">Bạn đã làm tốt, nhưng hãy thử ôn tập lại kĩ trước khi làm lại nhé!</p>
-                                            <i class="bi bi-stars text-warning icon-encourage"></i>
-                                        </div>
-                                        <a href="{{ route('learning-management.lesson.test-tokutei.store', $params) }}"
-                                            class="btn-nav-les finish-les">
-                                            Làm lại&nbsp; <i class="bi bi-arrow-clockwise bi-spin" aria-hidden="true"></i>
-                                        </a>
-                                    @endif
-
-                                    <div class="score-bg-title"><img
-                                            src="{{ admin_asset('images/exercise/score-bg.png') }}" alt=""></div>
-
-                                </div>
+                    <div class="modal-header {{ (isset($passed) && $passed) ? '' : 'fail' }}">
+                        <span class="close" onclick="closeModal()">&times;</span>
+                        <div class="result-title">Kết quả: {{ isset($acc_score) ? $acc_score : 0 }} / {{ isset($max_score) ? $max_score : 0 }} điểm</div>
+                        @if (isset($passed) && $passed)
+                            <div class="result-score">Chúc mừng! Bạn đã vượt qua bài kiểm tra</div>
+                        @else
+                            <div class="result-score">Chưa đạt yêu cầu bài kiểm tra</div>
                         @endif
+                    </div>
+                    <div class="modal-body">
+                        <div class="section-results">
+                            @php
+                                $sections = $test_structure['section'] ?? [];
+                            @endphp
+                            @foreach ($sections as $section_id => $section)
+                                @php
+                                    $score_by_section = isset($score_by_section) ? $score_by_section : [];
 
+                                    $section_passed = $passed_result_by_section[$section_id] ?? false;
+                                    $css_class = $section_passed ? 'pass' : 'fail';
+                                    $section_label = $section['label'];
+                                    $section_student_score = $score_by_section[$section_id] ?? 0;
+                                    $section_max_score = $section['maxScore'];
+                                    $section_result_label = $section_passed ? 'ĐẬU' : 'TRƯỢT';
+                                @endphp
+                                <div class="section-item {{ $css_class }}">
+                                    <div class="section-title">Phần {{ $section_id }}: {{ $section_label }}</div>
+                                    <div class="section-score">{{ $section_student_score }}/{{ $section_max_score }}</div>
+                                    <div class="section-status">{{ $section_result_label }}</div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        @if (isset($passed) && $passed)
+                            <div class="overall-message success">
+                                <span class="sparkle">✨</span>
+                                Xuất sắc! Bạn đã hoàn thành tốt cả hai phần thi với điểm số tuyệt vời!
+                                <span class="sparkle">✨</span>
+                            </div>
+                        @else
+                            <div class="overall-message fail">
+                                Bạn đã làm tốt, nhưng hãy thử ôn tập lại kĩ trước khi làm lại nhé!
+                            </div>
+
+                            <a class="action-button retry" href="{{ route('learning-management.lesson.test-tokutei.store', $params) }}">
+                                Làm lại 🔄
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -270,6 +549,15 @@
 
 @section('scripts-content')
 <script>
+    function closeModal() {
+        const resultModal = document.querySelector('.result-modal');
+        const backDrop = document.querySelector('.modal-backdrop');
+
+        resultModal.classList.remove('show');
+        resultModal.style.display = 'none';
+        backDrop.remove();
+    }
+
     $('.kg-study.kg-study-cuttom.child-question').each(function(index, element) {
         const zIndex = 9999 - index;
         $(element).css({

@@ -23,6 +23,7 @@ use App\Services\LmsStudentViewService;
 use App\Services\PaymentMethodService;
 use App\Services\UserRoadmapService;
 use App\Services\UserService;
+use App\TokuteiTestQuestion;
 use App\TrafficRuleTestQuestion;
 use Carbon\Carbon;
 use Exception;
@@ -769,6 +770,29 @@ class StudentLmsController extends Controller
         return redirect('home');
     }
 
+    public function showTestTokutei(Request $request, $combo_slug = '', $slug = '', $stt = '') {
+        $this->processLessonContent($combo_slug, $slug, $stt);
+
+        if (Auth::check()) {
+            $view_name = 'client.lesson-detail.test-tokutei';
+            $data = [];
+
+            $data['combo_slug'] = $combo_slug;
+            $data['slug'] = $slug;
+            $data['stt'] = $stt;
+            $data['sections_questions'] = $this->getTokuteiTestQuestionList($stt);
+            $data['test_structure'] = getTokuteitestStructure($stt);
+            $data['test_duration'] = $data['test_structure']['testDurationMinutes'] ?? 30;
+
+            return view($view_name, array_merge(
+                $this->getPreparedContentVariables(),
+                $data
+            ));
+        }
+
+        return redirect('home');
+    }
+
     public function storeTestTraffic(Request $request, $combo_slug = '', $slug = '', $stt = '') {
         if (!Auth::check()) {
             return redirect('home');
@@ -887,6 +911,133 @@ class StudentLmsController extends Controller
         ));
     }
 
+    public function storeTestTokutei(Request $request, $combo_slug = '', $slug = '', $stt = '') {
+        if (!Auth::check()) {
+            return redirect('home');
+        }
+
+        $this->processLessonContent($combo_slug, $slug, $stt);
+
+        $test_stucture = getTokuteitestStructure($stt);
+        $max_score = $test_stucture['maxScore'];
+
+        $passing_scores = [];
+        foreach ($test_stucture['section'] as $key => $item) {
+            $passing_scores[$key] = $item['passingScore'];
+        }
+
+        $data_quest = $request->all();
+
+        unset($data_quest['_token']);
+        unset($data_quest['time']);
+
+        $student_scores = [];
+        $acc_score = 0;
+        $sections_questions = $this->getTokuteiTestQuestionList($stt, true);
+        $result_list = $sections_questions->flatten(2);
+        $result_list->each(function ($question_result) use ($data_quest, &$student_scores, &$acc_score) {
+            $question_id = $question_result->id;
+            $correct_answer = $question_result->answer;
+            $student_answer = $data_quest["quest_$question_id"] ?? null;
+            $question_score = $question_result->point;
+            $section_id = $question_result->section;
+
+            $is_correct_answer = $correct_answer == $student_answer;
+
+            if (isset($student_scores[$section_id]) === false) {
+                $student_scores[$section_id] = 0;
+            }
+            $student_scores[$section_id] += $is_correct_answer ? $question_score : 0;
+            $acc_score += $is_correct_answer ? $question_score : 0;
+
+            $question_result->check = $student_answer;
+            $question_result->correct = $is_correct_answer;
+        });
+
+        // Check passed result by each test section
+        $passed_result_by_section = collect($student_scores)->map(function ($score, $section_id) use ($passing_scores) {
+            return $score >= ($passing_scores[$section_id] ?? 0);
+        });
+        $test_passed = $passed_result_by_section->every(function ($is_passed) {
+            return $is_passed;
+        });
+
+        // Get next content URL
+        $sendUrl = $this->getNextContentUrl($stt, $combo_slug, $slug);
+
+        // Save test result
+        $time = $request->time;
+        DB::table('lms_test_result')->insert([
+            'lmscontent_id' => $stt,
+            'combo_slug' => $combo_slug,
+            'finish' => 1,
+            'total_point' => $max_score,
+            'users_id' => Auth::id(),
+            'point' => $acc_score,
+            'time_result' => $time,
+            'created_by' => Auth::id(),
+        ]);
+
+        $view_name = 'client.lesson-detail.test-tokutei';
+        $data = [];
+
+        $data['combo_slug'] = $combo_slug;
+        $data['slug'] = $slug;
+        $data['stt'] = $stt;
+        $data['sections_questions'] = $sections_questions;
+        $data['acc_score'] = $acc_score;
+        $data['max_score'] = $max_score;
+        $data['passed'] = $test_passed;
+        $data['passed_result_by_section'] = $passed_result_by_section->toArray();
+        $data['score_by_section'] = $student_scores;
+        $data['sendUrl'] = $sendUrl;
+        $data['test_structure'] = $test_stucture;
+        $data['test_duration'] = $test_stucture['testDurationMinutes'] ?? 30;
+
+        return view($view_name, array_merge(
+            $this->getPreparedContentVariables(),
+            $data
+        ));
+    }
+
+    private function getNextContentUrl($stt, $combo_slug, $slug) {
+        $record = DB::table('lmscontents')
+            ->where('id', (int) $stt)
+            ->select('stt', 'lmsseries_id')
+            ->get();
+
+        $recordurl = DB::table('lmscontents')
+            ->where('stt', '>=', ((int) $record[0]->stt + 1))
+            ->where('lmsseries_id', $record[0]->lmsseries_id)
+            ->whereNotIn('type', [0, 8])
+            ->select('id', 'type')
+            ->first();
+
+        if (!empty($recordurl)) {
+            switch ($recordurl->type) {
+                case 1:
+                case 2:
+                case 6:
+                    $sendUrl = PREFIX . 'learning-management/lesson/show/' . $combo_slug . '/' . $slug . '/' . $recordurl->id;
+                    break;
+                case 3:
+                case 4:
+                    $sendUrl = PREFIX . 'learning-management/lesson/exercise/' . $combo_slug . '/' . $slug . '/' . $recordurl->id;
+                    break;
+                case 5:
+                    $sendUrl = PREFIX . 'learning-management/lesson/audit/' . $combo_slug . '/' . $slug . '/' . $recordurl->id;
+                    break;
+                default:
+                    $sendUrl = null;
+                    break;
+            }
+        } else {
+            $sendUrl = null;
+        }
+
+        return $sendUrl;
+    }
+
     private function getTrafficTestQuestionList($stt, $shows_result = false) {
         $result = TrafficRuleTestQuestion::query()
             ->when($shows_result, function ($query) {
@@ -895,20 +1046,39 @@ class StudentLmsController extends Controller
             ->where('is_deleted', 0)
             ->where('lms_content_id', $stt)
             ->get()
-            ->map(function ($question) use ($shows_result) {
+            ->map(function ($question) {
                 $question->options = [
-                    1 => $question->option_1,
-                    2 => $question->option_2
+                    1 => change_furigana($question->option_1, 'return'),
+                    2 => change_furigana($question->option_2, 'return')
                 ];
                 $question->is_single_question = $question->childQuestions->isEmpty();
                 $question->is_parent_question = $question->childQuestions->count() > 0;
                 $question->is_child_question = !!$question->parent_question_id;
 
                 $question->content = change_furigana(trim($question->content), 'return');
-                $question->option_1 = change_furigana($question->option_1, 'return');
-                $question->option_2 = change_furigana($question->option_2, 'return');
 
                 return $question;
+            });
+
+        return $result;
+    }
+
+    private function getTokuteiTestQuestionList($stt) {
+        $result = TokuteiTestQuestion::query()
+            ->where('is_deleted', 0)
+            ->where('lms_content_id', $stt)
+            ->get()
+            ->groupBy(['section', 'category'])
+            ->map(function ($section_questions) {
+                return $section_questions->map(function ($category_questions) {
+                    return $category_questions->map(function ($question) {
+                        $question->content = change_furigana(trim($question->content), 'return');
+                        $question->options = collect($question->options)->mapWithKeys(function ($value, $key) {
+                            return [((int) $key) + 1 => change_furigana($value, 'return')];
+                        });
+                        return $question;
+                    });
+                });
             });
 
         return $result;

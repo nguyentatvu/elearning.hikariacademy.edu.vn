@@ -30,7 +30,7 @@
 
         {{-- Question options --}}
         <div class="d-flex content-image-question noto-san-jp-font" style="justify-content: space-between; align-items: center;">
-            <div class="list-select-les align-self-start-md" style="">
+            <div class="list-select-les align-self-start-md" style="margin-right: 30px;">
                 @foreach ($record->options as $key_option => $option)
                     @php
                         $question_anwser_class = $record->answer == $key_option
@@ -54,6 +54,7 @@
                             <label
                                 for="answers_{{ $record->id }}_{{ $key_option }}"
                                 class="form-kana text-type"
+                                style="display: flex; align-items: center; gap: 15px;"
                             >
                                 <span class="fa-stack icon-input icon-incorrect">
                                     <i class="bi bi-x-square"></i>
@@ -67,9 +68,15 @@
                                 <span class="icon-input icon-correct">
                                     <i class="bi bi-check-square"></i>
                                 </span>
-                                <span class="text-label">
-                                    <p>{!! $option !!}</p>
-                                </span>
+                                @if (preg_match('#^(https?:)?//|^/#', $option))
+                                    <div style="width: 200px; height: 140px; flex-shrink: 0;">
+                                        <img src="{{ $option }}" style="height: 100%; object-fit: contain;" alt="Ảnh của câu trả lời">
+                                    </div>
+                                @else
+                                    <span class="text-label">
+                                        <p>{!! $option !!}</p>
+                                    </span>
+                                @endif
                             </label>
                         </div>
                     </div>

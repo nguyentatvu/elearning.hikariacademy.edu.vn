@@ -184,27 +184,55 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="tokutei_option_1">Lựa chọn 1</label>
-                                <input type="text" class="form-control" id="tokutei_option_1" name="tokutei_options[]" required>
+                                <input type="text" class="form-control" id="tokutei_option_1" name="tokutei_options[]">
+                                <input type="hidden" name="is_image_options[]" id="is_image_options_1" value="0">
+                                <div style="margin-top:10px;">
+                                    <input type="file" accept="image/*" style="display:none;" id="option1_img_input" onchange="previewOptionImage(this, 1)" name="tokutei_image_options[]">
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="document.getElementById('option1_img_input').click()">Upload ảnh</button>
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="clearOptionImage(1)">Huỷ ảnh</button>
+                                </div>
+                                <div id="option1_img_preview" style="margin-top:10px;"></div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="tokutei_option_2">Lựa chọn 2</label>
-                                <input type="text" class="form-control" id="tokutei_option_2" name="tokutei_options[]" required>
+                                <input type="text" class="form-control" id="tokutei_option_2" name="tokutei_options[]">
+                                <input type="hidden" name="is_image_options[]" id="is_image_options_2" value="0">
+                                <div style="margin-top:10px;">
+                                    <input type="file" accept="image/*" style="display:none;" id="option2_img_input" onchange="previewOptionImage(this, 2)" name="tokutei_image_options[]">
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="document.getElementById('option2_img_input').click()">Upload ảnh</button>
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="clearOptionImage(2)">Huỷ ảnh</button>
+                                </div>
+                                <div id="option2_img_preview" style="margin-top:10px;"></div>
                             </div>
                         </div>
                     </div>
                     <div class="row question-options-row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="tokutei_option_1">Lựa chọn 3</label>
-                                <input type="text" class="form-control" id="tokutei_option_3" name="tokutei_options[]" required>
+                                <label for="tokutei_option_3">Lựa chọn 3</label>
+                                <input type="text" class="form-control" id="tokutei_option_3" name="tokutei_options[]">
+                                <input type="hidden" name="is_image_options[]" id="is_image_options_3" value="0">
+                                <div style="margin-top:10px;">
+                                    <input type="file" accept="image/*" style="display:none;" id="option3_img_input" onchange="previewOptionImage(this, 3)" name="tokutei_image_options[]">
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="document.getElementById('option3_img_input').click()">Upload ảnh</button>
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="clearOptionImage(3)">Huỷ ảnh</button>
+                                </div>
+                                <div id="option3_img_preview" style="margin-top:10px;"></div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="tokutei_option_2">Lựa chọn 4</label>
-                                <input type="text" class="form-control" id="tokutei_option_4" name="tokutei_options[]" required>
+                                <label for="tokutei_option_4">Lựa chọn 4</label>
+                                <input type="text" class="form-control" id="tokutei_option_4" name="tokutei_options[]">
+                                <input type="hidden" name="is_image_options[]" id="is_image_options_4" value="0">
+                                <div style="margin-top:10px;">
+                                    <input type="file" accept="image/*" style="display:none;" id="option4_img_input" onchange="previewOptionImage(this, 4)" name="tokutei_image_options[]">
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="document.getElementById('option4_img_input').click()">Upload ảnh</button>
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="clearOptionImage(4)">Huỷ ảnh</button>
+                                </div>
+                                <div id="option4_img_preview" style="margin-top:10px;"></div>
                             </div>
                         </div>
                     </div>
@@ -219,9 +247,11 @@
                             <div class="form-group">
                                 <label for="tokutei_section">Phần thi</label>
                                 <select name="tokutei_section" id="tokutei_section" class="form-control">
-                                    @foreach ($section_category_list['section_list'] as $section_index => $section_label)
-                                        <option value="{{ $section_index }}">{{ $section_label }}</option>
-                                    @endforeach
+                                    @if(isset($section_category_list['section_list']))
+                                        @foreach ($section_category_list['section_list'] as $section_index => $section_label)
+                                            <option value="{{ $section_index }}">{{ $section_label }}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                         </div>
@@ -229,9 +259,11 @@
                             <div class="form-group">
                                 <label for="tokutei_category">Hạng mục</label>
                                 <select name="tokutei_category" id="tokutei_category" class="form-control">
-                                    @foreach ($section_category_list['category_list'][1] as $category_index => $category_label)
-                                        <option value="{{ $category_index }}">{{ $category_label }}</option>
-                                    @endforeach
+                                    @if(isset($section_category_list['category_list']))
+                                        @foreach ($section_category_list['category_list'][1] as $category_index => $category_label)
+                                            <option value="{{ $category_index }}">{{ $category_label }}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                         </div>
@@ -289,7 +321,7 @@
 </div>
 
 <script>
-    const categoryList =  @json($section_category_list['category_list']);
+    const categoryList =  @json($section_category_list['category_list'] ?? []);
     let selectedCategoryIndex = -1;
 
     function openUpdateQuestionModal(event, questionId) {
@@ -308,9 +340,25 @@
 
         const questionOptions = rowData.find('div[data-options]').data('options');
         $('input[name="tokutei_options[]"]').each(function(index) {
-            if (questionOptions[index] !== undefined) {
-                $(this).val(questionOptions[index]);
+            const $input = $(this);
+            const previewDiv = $('#option' + (index + 1) + '_img_preview');
+            const fileInput = $('#option' + (index + 1) + '_img_input');
+            const isImageInput = $('#is_image_options_' + (index + 1));
+            let value = questionOptions[index];
+
+            if (
+                typeof value === 'string' &&
+                (value.startsWith('http://') || value.startsWith('https://') || value.startsWith('/'))
+            ) {
+                $input.hide();
+                previewDiv.html('<img src="' + value + '" style="max-width:100%;max-height:120px;border:1px solid #eee;border-radius:4px;">');
+                isImageInput.val('1');
+            } else {
+                $input.show().val(value !== undefined ? value : '');
+                previewDiv.html('');
+                isImageInput.val('0');
             }
+            fileInput.val('');
         });
 
         $('#updateQuestionForm').attr('action', '{{url('test-tokutei/updateQuestion')}}/' + questionId);
@@ -390,6 +438,46 @@
         previewContainer.classList.remove('has-image');
         fileInput.value = '';
         fileNameElement.textContent = 'Chưa có file nào được chọn';
+    }
+
+    function previewOptionImage(input, optionNumber) {
+        const previewContainer = document.getElementById("option" + optionNumber + "_img_preview");
+        const textInput = document.getElementById("tokutei_option_" + optionNumber);
+        const isImageInput = document.getElementById("is_image_options_" + optionNumber);
+
+        previewContainer.innerHTML = "";
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const imgElement = document.createElement("img");
+                imgElement.src = e.target.result;
+                imgElement.style.maxWidth = "100%";
+                imgElement.style.borderRadius = "4px";
+                imgElement.style.marginTop = "10px";
+
+                previewContainer.appendChild(imgElement);
+
+                // Hide text input, when the option is image
+                if (textInput) textInput.style.display = 'none';
+                if (isImageInput) isImageInput.value = '1';
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function clearOptionImage(optionNumber) {
+        const fileInput = document.getElementById('option' + optionNumber + '_img_input');
+        const previewContainer = document.getElementById('option' + optionNumber + '_img_preview');
+        const textInput = document.getElementById('tokutei_option_' + optionNumber);
+        const isImageInput = document.getElementById('is_image_options_' + optionNumber);
+
+        fileInput.value = '';
+        previewContainer.innerHTML = '';
+        if (textInput) textInput.style.display = '';
+        if (isImageInput) isImageInput.value = '0';
     }
 
     function submitForm() {

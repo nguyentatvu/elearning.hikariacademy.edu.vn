@@ -17,7 +17,10 @@ use App\Services\ImageService;
 use App\Services\LmsContentService;
 use App\Services\LmsFlashcardService;
 use App\Services\PronunciationService;
+use App\TokuteiTestQuestion;
 use App\TrafficRuleTestQuestion;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class LmsContentController extends Controller
 {
@@ -186,6 +189,15 @@ class LmsContentController extends Controller
                     $check = DB::table('traffic_rule_test_question')
                         ->select('id')
                         ->where('lms_content_id', $records->id)
+                        ->where('is_deleted', 0)
+                        ->get();
+                    return (!$check->isEmpty()) ? '<span class="label label-success">Đã có bài kiểm tra</span> ' : '<span class="label label-warning">Chưa có bài kiểm tra</span>';
+                }
+                if (in_array($records->type, ['14', '15', '16'])) {
+                    $check = DB::table('tokutei_test_question')
+                        ->select('id')
+                        ->where('lms_content_id', $records->id)
+                        ->where('is_deleted', 0)
                         ->get();
                     return (!$check->isEmpty()) ? '<span class="label label-success">Đã có bài kiểm tra</span> ' : '<span class="label label-warning">Chưa có bài kiểm tra</span>';
                 }
@@ -199,7 +211,16 @@ class LmsContentController extends Controller
                 // (in_array($records->type,['8']) ?($records->import == 1 ? '<span class="label label-success">Đã import bài tâp</span> ' : '<span class="label label-warning">Chưa import bài tâp</span>') : null);
             })
             ->editColumn('type', function ($records) {
-                $dr_loai = ['0' => 'Menu', '1' => 'Từ vựng', '2' => 'Bài học', '3' => 'Bài tập', '4' => 'Bài tập toàn bài', '5' => 'Bài test', '6' => 'Hán tự', '7' => 'Bài ôn tập', '8' => 'Sub menu', '9' => 'Giới thiệu', '10' => 'Flashcard', '11' => 'Luyện viết', '12' => 'Luyện phát âm', '13' => 'Bài kiểm tra luật lệ giao thông'];
+                $dr_loai = [
+                    '0' => 'Menu', '1' => 'Từ vựng', '2' => 'Bài học', '3' => 'Bài tập',
+                    '4' => 'Bài tập toàn bài', '5' => 'Bài test', '6' => 'Hán tự',
+                    '7' => 'Bài ôn tập', '8' => 'Sub menu', '9' => 'Giới thiệu',
+                    '10' => 'Flashcard', '11' => 'Luyện viết', '12' => 'Luyện phát âm',
+                    '13' => 'Bài kiểm tra luật lệ giao thông',
+                    '14' => 'Bài thi Tokutei - Ngành sản xuất thực phẩm và đồ uống',
+                    '15' => 'Bài thi Tokutei - Ngành nhà hàng',
+                    '16' => 'Bài thi Tokutei - Ngành Kaigo',
+                ];
                 return $dr_loai[$records->type];
             })
             ->editColumn('image', function ($records) {
@@ -286,6 +307,82 @@ class LmsContentController extends Controller
         return $return;
     }
 
+    private function getTokuteiTestQuestionList($stt) {
+        $result = TokuteiTestQuestion::query()
+            ->where('is_deleted', 0)
+            ->where('lms_content_id', $stt)
+            ->select('id', 'question_order','content','point','options','answer','section','category','tokutei_test_type','image_url')
+            ->get()
+            ->groupBy(['section', 'category'])
+            ->map(function ($section_questions) {
+                return $section_questions->map(function ($category_questions) {
+                    return $category_questions->map(function ($question) {
+                        $question->content = change_furigana(trim($question->content), 'return');
+                        $question->options = collect($question->options)->mapWithKeys(function ($value, $key) {
+                            return [((int) $key) + 1 => change_furigana($value, 'return')];
+                        });
+                        return $question;
+                    });
+                });
+            });
+
+        return $result;
+    }
+
+    public function getTestTokuteiDataTable($lms_content_id) {
+        if (!checkRole(getUserGrade(2))) {
+            prepareBlockUserMessage();
+            return back();
+        }
+
+        $section_questions = $this->getTokuteiTestQuestionList($lms_content_id);
+        $test_questions = $section_questions->flatten(2);
+
+        $return_list = DataTables::of($test_questions)
+            ->addColumn('question_order', function ($question) {
+                return '<span data-question-order="' . $question->question_order . '"' . '>' . $question->question_order . '</span>';
+            })
+            ->addColumn('content', function ($question) {
+                return '<span data-content="' . $question->content . '">' . $question->content . '</span>';
+            })
+            ->addColumn('options', function ($question) {
+                $optionsJson = htmlspecialchars(json_encode(array_values($question->options)), ENT_QUOTES, 'UTF-8');
+                return '<div data-options="' . $optionsJson . '">' . $this->getElementListFromOptions($question->options) . '</div>';
+            })
+            ->addColumn('answer', function ($question) {
+                return '<span data-answer="' . $question->answer . '">' . $question->answer . '</span>';
+            })
+            ->addColumn('section', function ($question) {
+                return '<span data-section="' . $question->section . '">' . $question->section . '</span>';
+            })
+            ->addColumn('category', function ($question) {
+                return '<span data-category="' . $question->category . '">' . $question->category . '</span>';
+            })
+            ->addColumn('image', function ($question) {
+                if ($question->image_url) {
+                    return '<img src="' . $question->image_url . '" alt="Image" style="width: 100px; height: 100px;">';
+                }
+                return '';
+            })
+            ->addColumn('update_button', function ($question) {
+                return '<button type="button" class="btn btn-primary btn-sm" onclick="openUpdateQuestionModal(event, ' . $question->id . ')"><i class="fa fa-pencil"></i></button>';
+            })
+            ->rawColumns(['image', 'update_button', 'question_order', 'content', 'options', 'answer', 'section', 'category'])
+            ->make(true);
+
+        return $return_list;
+    }
+
+    private function getElementListFromOptions($options) {
+        $html = '<ul>';
+        foreach ($options as $option) {
+            $html .= '<li>' . htmlspecialchars($option) . '</li>';
+        }
+        $html .= '</ul>';
+
+        return $html;
+    }
+
     public function updateQuestion(Request $request, $questionId) {
         if (!checkRole(getUserGrade(2))) {
             prepareBlockUserMessage();
@@ -332,6 +429,96 @@ class LmsContentController extends Controller
         $question->save();
 
         return response()->json(['message' => 'Cập nhật thành công']);
+    }
+
+    public function updateQuestionTokuteiTest(Request $request, $questionId) {
+        if (!checkRole(getUserGrade(2))) {
+            prepareBlockUserMessage();
+            return back();
+        }
+
+        // dd($request->all());
+
+        $question = TokuteiTestQuestion::find($questionId);
+        if (!$question) {
+            return response()->json(['message' => 'Không tìm thấy câu hỏi'], 404);
+        }
+
+        $question->content = $request->tokutei_content;
+        $question->options = $this->getTokuteiOptionList($questionId, $question);
+        $question->answer = $request->tokutei_answer;
+        $question->section = $request->tokutei_section;
+        $question->category = $request->tokutei_category;
+
+        // Handle image deletion
+        if ($request->delete_image == '1') {
+            if ($question->image_url) {
+                $oldImagePath = public_path(ltrim($question->image_url, '/'));
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+                $question->image_url = null;
+            }
+        }
+
+        if ($request->hasFile('tokutei_image')) {
+            // Delete old image if exists
+            if ($question->image_url) {
+                $oldImagePath = public_path(ltrim($question->image_url, '/'));
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+            }
+
+            // Upload new image
+            $file = $request->file('tokutei_image');
+            $fileName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/tokutei_images'), $fileName);
+            $question->image_url = '/uploads/tokutei_images/' . $fileName;
+        }
+
+        $question->save();
+
+        return response()->json(['message' => 'Cập nhật thành công']);
+    }
+
+    private function getTokuteiOptionList($questionId, $question) {
+        $request = request();
+        $mergedOptions = [];
+
+        $tokuteiOptions = $request->tokutei_options ?? [];
+        $tokuteiImageOptions = $request->file('tokutei_image_options') ?? [];
+        $isImageOptions = $request->is_image_options ?? [];
+
+        foreach ($tokuteiOptions as $index => $text) {
+            $image = $tokuteiImageOptions[$index] ?? null;
+
+            // Skip if the option already is an image, and user does not want to change it
+            if (is_null($text) && is_null($image)) {
+                if ($isImageOptions[$index] == 1) {
+                    $mergedOptions[] = $question->options[$index];
+                } else {
+                    $mergedOptions[] = null;
+                }
+                continue;
+            }
+
+            if ($image && $image->isValid()) {
+                $fileName = $questionId . '_' . $index . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('uploads/tokutei_images/options'), $fileName);
+                $path = '/uploads/tokutei_images/options/' . $fileName;
+
+                $mergedOptions[] = $path;
+            } elseif (!is_null($text)) {
+                $oldImagePath = public_path(ltrim($question->options[$index], '/'));
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+                $mergedOptions[] = $text;
+            }
+        }
+
+        return array_filter($mergedOptions);
     }
 
     /**
@@ -771,7 +958,9 @@ class LmsContentController extends Controller
             $handwritingType = $this->handwritingService->findById($record->japanese_writing_practice_id)->type;
         }
 
-        //dd($series );
+        $test_structure = in_array($record->type, LmsContent::TEST_TOKUTEI_LIST) ? getTokuteitestStructure($record->id) : [];
+        $section_category_list = $this->getTokuteiSectionAndCategoryList($test_structure);
+
         $data['URL_LMS_CONTENT_EDIT'] = PREFIX . "lms/$series/content/edit/" . $slug;
         $data['URL_LMS_CONTENT']      = PREFIX . "lms/$series/content";
         $data['series_slug']          = $series;
@@ -784,11 +973,37 @@ class LmsContentController extends Controller
         $data['active_class']         = 'lms';
         $data['settings']             = json_encode($record);
         $data['layout']               = getLayout();
-        $data['datatable_url']        = PREFIX . "test-traffic/$slug/getList";
+
+
+        $data['section_category_list']             = $section_category_list;
+        $data['datatable_url_test_traffic']        = PREFIX . "test-traffic/$slug/getList";
+        $data['datatable_url_test_tokutei']        = PREFIX . "test-tokutei/$slug/getList";
 
         $view_name = 'admin.lms.lmscontents.add-edit';
         return view($view_name, $data);
     }
+
+    private function getTokuteiSectionAndCategoryList($structure) {
+        if (!isset($structure) || count($structure) === 0) {
+            return [];
+        }
+
+        $section_list = array_map(function ($section) {
+            return $section['label'];
+        }, $structure['section']);
+
+        $category_list = array_map(function ($section) {
+            return array_map(function ($category) {
+                return $category['label'];
+            }, $section['categories']);
+        }, $structure['section']);
+
+        return [
+            'section_list' => $section_list,
+            'category_list' => $category_list,
+        ];
+    }
+
     /**
      * Update record based on slug and reuqest
      * @param  Request $request [Request Object]
@@ -1253,6 +1468,14 @@ class LmsContentController extends Controller
                     $record->save();
                 }
             }
+
+            if (in_array((int) $request->loai, [
+                LmsContent::TEST_TOKUTEI_FOOD_BERVERAGE,
+                LmsContent::TEST_TOKUTEI_RESTAURANT,
+                LmsContent::TEST_TOKUTEI_CAREGIVER,
+            ]) && $request->hasFile('lms_test_tokutei')) {
+                $this->handleTokuteiTestImport($request, $record);
+            }
             # end import bai tap loai 4
             DB::commit();
             flash('success', 'Chỉnh sửa thành công', 'success');
@@ -1268,6 +1491,98 @@ class LmsContentController extends Controller
         // die;
         return redirect(PREFIX . "lms/" . $request->series . '/content');
     }
+
+    /**
+     * Hnale Tokutei test import
+     * @param Request $request
+     * @param LmsContent $current_content
+     * @return void
+     */
+    private function handleTokuteiTestImport($request, $current_content) {
+        $content_type = (int) $request->loai;
+        $file_extension = strtolower($request->file('lms_test_tokutei')->getClientOriginalExtension());
+
+        if (!in_array($file_extension, ['xlsx', 'xls'])) {
+            throw new Exception('File phải là 1 file excel.');
+        }
+
+        $path = $request->file('lms_test_tokutei')->getRealPath();
+        config(['excel.import.startRow' => 2]);
+        $data = Excel::selectSheetsByIndex(0)->load($path, function ($reader) {
+            $reader->noHeading();
+        })->get()->toArray();
+
+        if (empty($data) || count($data) === 0) {
+            return;
+        }
+
+        // Soft delete old Tokutei test questions of current updated content
+        TokuteiTestQuestion::query()
+            ->where('lms_content_id', $current_content->id)
+            ->update(['is_deleted' => 1]);
+
+        $tokutei_test_type = $content_type;
+        $constant_test_structure = implode('.', [
+            'constant',
+            'tokutei_test_structure',
+            $tokutei_test_type,
+        ]);
+        $test_structure = config($constant_test_structure) ?? 0;
+        $section_category_list = collect($test_structure['section'])->map(function ($section, $section_key) {
+            $category_keys = array_keys($section['categories']);
+            return array_map(function ($val) use ($section_key) {
+                return "$section_key.$val";
+            }, $category_keys);
+        })->collapse()->toArray();
+
+        foreach ($data as $row_index => $row_data) {
+            $is_empty_row = collect($row_data)->every(function ($cell_data) {
+                return is_null($cell_data);
+            });
+            if ($is_empty_row) {
+                continue;
+            }
+
+            $lms_content_id = $current_content->id;
+            $question_order = $row_data[0];
+            $content = $row_data[1];
+            $image_url = $row_data[2];
+            $section_category_item = strval($row_data[3]);
+            $options = array_filter(
+                array_slice($row_data, 4, 4), // Extract question content from columns E => H
+                function ($val) {
+                    return !is_null($val);
+                }
+            );
+
+            if (!in_array($section_category_item, $section_category_list)) {
+                $excel_column_index = $row_index + 2;
+                throw new Exception("Lỗi format dòng $excel_column_index.");
+            }
+
+            $question_section = explode('.', $section_category_item)[0];
+            $question_category = explode('.', $section_category_item)[1];
+            $point = $test_structure['section'][$question_section]['categories'][$question_category]['point'] ?? 0;
+            $answer = $row_data[8];
+
+            TokuteiTestQuestion::create([
+                'lms_content_id' => $lms_content_id,
+                'question_order' => $question_order,
+                'content' => $content,
+                'point' => $point,
+                'options' => $options,
+                'answer' => $answer,
+                'section' => $question_section,
+                'category' => $question_category,
+                'tokutei_test_type' => $tokutei_test_type,
+                'image_url' => $image_url,
+                'is_deleted' => 0,
+            ]);
+        }
+
+        $current_content->save();
+    }
+
     /**
      * This method adds record to DB
      * @param  Request $request [Request Object]
