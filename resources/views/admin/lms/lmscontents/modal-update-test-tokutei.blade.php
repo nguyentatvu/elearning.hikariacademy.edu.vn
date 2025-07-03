@@ -331,8 +331,9 @@
         const rowData = $(event.target).closest('tr');
         selectedCategoryIndex = rowData.find('span[data-category]').text();
 
-        $('#tokutei_content').val(rowData.find('span[data-content]').text());
-        $('#tokutei_answer').val(rowData.find('span[data-answer]').text());
+        console.log(rowData.find('span[data-content]').text());
+        $('#tokutei_content').val(rowData.find('span[data-content]').data('content'));
+        $('#tokutei_answer').val(rowData.find('span[data-answer]').data('answer'));
         $('#tokutei_section').val(rowData.find('span[data-section]').text());
         $('#deleteImageBtn').css('display', rowData.find('img').length > 0 ? 'block' : 'none');
 
