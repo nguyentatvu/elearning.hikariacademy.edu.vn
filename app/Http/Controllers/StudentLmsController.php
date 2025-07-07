@@ -368,6 +368,7 @@ class StudentLmsController extends Controller
                 'users_id' => Auth::id(),
                 'finish' => LmsStudentView::NOT_FINISHED,
                 'created_date' => date('Y-m-d H:i:s'),
+                'view_time' => 0
             ]);
 
             $this->userService->updateSeriesViewsHistory(
@@ -375,8 +376,10 @@ class StudentLmsController extends Controller
                 $this->prepContent['series_id']
             );
         } else if ($studentView && Auth::check()) {
+            $view_time = empty($studentView->view_time) ? 0 : $studentView->view_time;
             $studentView->update([
-                'created_date' => date('Y-m-d H:i:s')
+                'created_date' => date('Y-m-d H:i:s'),
+                'view_time' => $view_time + 1,
             ]);
         }
 

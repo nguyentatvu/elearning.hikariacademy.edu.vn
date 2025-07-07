@@ -625,6 +625,8 @@ define('URL_LMS_CONTENT_GETLIST', PREFIX.'lms/content/getList');
 // LMS CLASS
 define('URL_LMS_CLASS', PREFIX.'lms/class');
 
+define('URL_LMSSERIES_CLASS_GET_LIST', PREFIX.'lmsseries/class/getList/');
+
 
 
 //LMS SERIES

@@ -27,6 +27,20 @@ class LmsContent extends Model
     public const TEST_TOKUTEI_RESTAURANT = 15;
     public const TEST_TOKUTEI_CAREGIVER = 16;
 
+    public const TESTS_LIST = [
+        self::TEST,
+        self::TEST_TRAFFIC_RULE,
+        self::TEST_TOKUTEI_FOOD_BERVERAGE,
+        self::TEST_TOKUTEI_RESTAURANT,
+        self::TEST_TOKUTEI_CAREGIVER,
+    ];
+
+    public const EXERCISES_LIST = [
+        self::PARTIAL_EXERCISE,
+        self::SUMMARY_EXERCISE,
+        self::REVIEW_EXERCISE,
+    ];
+
     const TEST_TOKUTEI_LIST = [
         self::TEST_TOKUTEI_FOOD_BERVERAGE,
         self::TEST_TOKUTEI_RESTAURANT,
@@ -95,6 +109,17 @@ class LmsContent extends Model
 
         return $this->belongsTo(LmsSeries::class, 'lmsseries_id')
             ->where('slug', $slug)
+            ->where('delete_status', 0);
+    }
+
+    /**
+     * Define the inverse relationship to LmsSeries through lmsseries_id
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function lmsseriesContent()
+    {
+        return $this->belongsTo(LmsSeries::class, 'lmsseries_id')
             ->where('delete_status', 0);
     }
 

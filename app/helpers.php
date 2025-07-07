@@ -1786,3 +1786,9 @@ function getTokuteitestStructure ($stt) {
 
     return config($test_stucture_constant_key);
 }
+
+function truncateWithEllipsis($text, $limit = 18, $encoding = 'UTF-8') {
+    return mb_strlen($text, $encoding) > $limit
+        ? mb_substr($text, 0, $limit, $encoding) . '..'
+        : $text;
+}

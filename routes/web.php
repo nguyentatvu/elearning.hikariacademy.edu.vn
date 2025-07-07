@@ -1299,6 +1299,19 @@ Route::post('lms/{series_slug}/content/import-mucluc', 'LmsContentController@imp
 
 # 01-10-2020
 
+Route::get('lmsseries/class/getList/{slug}', [
+    'as' => 'lmsclass.dataTable',
+    'uses' => 'ParentsController@lmsseriesClassGetDatatable'
+]);
+
+Route::get('lmsseries/class/{slug}', 'ParentsController@lmsseriesClass');
+
+Route::post('lmsseries/class/delete/{class_id}/{lmsseries_id}', 'ParentsController@lmsseriesClassDelete');
+
+Route::post('lmsseries/class/add/{class_id}', 'ParentsController@lmsseriesClassAdd');
+
+Route::post('/lmsseries/class/export-excel', 'ParentsController@downloadProgressExcel');
+
 Route::get('lms/class/{slug}', 'ParentsController@lmsClass');
 
 Route::get('lms/class/{slug}/add', 'LmsClassController@create');

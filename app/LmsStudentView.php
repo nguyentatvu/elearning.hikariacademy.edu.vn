@@ -29,4 +29,17 @@ class LmsStudentView extends Model
     public function lmsContent() {
         return $this->belongsTo(LmsContent::class, 'lmscontent_id', 'id');
     }
+
+    public function scopeHasLmsContentByTypeAndSeries($query, $types, $seriesIds, $exclude = false)
+    {
+        return $query->whereHas('lmsContent', function ($q) use ($types, $seriesIds, $exclude) {
+            if ($exclude) {
+                $q->whereNotIn('type', $types);
+            } else {
+                $q->whereIn('type', $types);
+            }
+
+            $q->whereIn('lmsseries_id', $seriesIds);
+        });
+    }
 }
