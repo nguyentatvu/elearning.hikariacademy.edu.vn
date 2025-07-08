@@ -1508,9 +1508,19 @@ class LmsContentController extends Controller
 
         $path = $request->file('lms_test_tokutei')->getRealPath();
         config(['excel.import.startRow' => 2]);
-        $data = Excel::selectSheetsByIndex(0)->load($path, function ($reader) {
-            $reader->noHeading();
-        })->get()->toArray();
+
+        $data = Excel::selectSheetsByIndex(0)
+            ->load($path, function ($reader) {
+                $reader->noHeading();
+                $reader->setDateFormat(null);
+            })
+            ->get()
+            ->map(function ($row) {
+                return array_map(function ($cell) {
+                    return $this->parseCell($cell);
+                }, $row->toArray());
+            })
+            ->toArray();
 
         if (empty($data) || count($data) === 0) {
             return;
@@ -1581,6 +1591,19 @@ class LmsContentController extends Controller
         }
 
         $current_content->save();
+    }
+
+    private function parseCell($value)
+    {
+        if (is_numeric($value) && $value > 0 && $value < 1) {
+            $as_percent = $value * 100;
+
+            if (abs(round($as_percent) - $as_percent) < 0.001) {
+                return round($as_percent) . '%';
+            }
+        }
+
+        return $value;
     }
 
     /**
