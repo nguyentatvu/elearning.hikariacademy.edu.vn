@@ -17,6 +17,7 @@ use App\LmsStudentView;
 use App\LmsTestResult;
 use App\QuizResultfinish;
 use App\Services\QuizResultFinishService;
+use App\TestTokuteiResult;
 use App\UserRoadmap;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -808,6 +809,10 @@ public function examListUpdate(Request $request, $slug)
                 $raw_data['lessons_learned_this_month'],
                 $raw_data['general_test_highest_results'],
                 $raw_data['mock_test_highest_results'],
+                $raw_data['test_traffic_highest_results'],
+                $raw_data['test_traffic_attempt_count'],
+                $raw_data['test_tokutei_highest_results'],
+                $raw_data['test_tokutei_attempt_count'],
             ])->map(function ($item) {
                 return is_array($item)
                     ? (count($item) > 0 ? $item : ['Không có'])
@@ -990,6 +995,54 @@ public function examListUpdate(Request $request, $slug)
             })
             ->where('users_id', $user_id)
             ->get();
+        $tokutei_test_results = LmsTestResult::query()
+            ->with('lmsContent')
+            ->whereHas('lmsContent', function ($query) use ($lmsseries_ids) {
+                $query
+                    ->whereIn('type', LmsContent::TEST_TOKUTEI_LIST)
+                    ->whereIn('lmsseries_id', $lmsseries_ids);
+            })
+            ->where('users_id', $user_id)
+            ->get()
+            ->groupBy('lmscontent_id')
+            ->map(function ($group) {
+                $highest_point_result = $group->sortByDesc('point')->first();
+                $lmscontent_title = optional($highest_point_result->lmsContent)->bai ?? '';
+                $student_point = $highest_point_result->point;
+                $total_point = $highest_point_result->total_point;
+                $attempt_count = optional($group)->count() ?? 0;
+
+                return [
+                    'highest_score' => "$lmscontent_title: $student_point/$total_point",
+                    'attempt_count' => "$lmscontent_title: $attempt_count lần",
+                ];
+            })
+            ->toArray();
+
+        $traffic_test_results = LmsTestResult::query()
+            ->with('lmsContent')
+            ->whereHas('lmsContent', function ($query) use ($lmsseries_ids) {
+                $query
+                    ->where('type', LmsContent::TEST_TRAFFIC_RULE)
+                    ->whereIn('lmsseries_id', $lmsseries_ids);
+            })
+            ->where('users_id', $user_id)
+            ->get()
+            ->groupBy('lmscontent_id')
+            ->map(function ($group) {
+                $highest_point_result = $group->sortByDesc('point')->first();
+                $lmscontent_title = optional($highest_point_result->lmsContent)->bai ?? '';
+                $student_point = $highest_point_result->point;
+                $total_point = $highest_point_result->total_point;
+                $attempt_count = optional($group)->count() ?? 0;
+
+                return [
+                    'highest_score' => "$lmscontent_title: $student_point/$total_point",
+                    'attempt_count' => "$lmscontent_title: $attempt_count lần",
+                ];
+            })
+            ->toArray();
+
         $general_test_avg_percentage = $general_test_results
             ->pipe(function ($collection) {
                 $total_point = $collection->count() * 100;
@@ -1068,7 +1121,11 @@ public function examListUpdate(Request $request, $slug)
             "last_test_done_time" => $last_test_done_time,
             "last_exam_done_time" => $last_exam_done_time,
             "lessons_learned_this_month" => strval($lessons_learned_this_month),
-            'missed_contents' => $missed_contents->toArray(),
+            "missed_contents" => $missed_contents->toArray(),
+            "test_traffic_highest_results" => array_column($traffic_test_results, 'highest_score'),
+            "test_traffic_attempt_count" => array_column($traffic_test_results, 'attempt_count'),
+            "test_tokutei_highest_results" => array_column($tokutei_test_results, 'highest_score'),
+            "test_tokutei_attempt_count" => array_column($tokutei_test_results, 'attempt_count'),
         ];
     }
 
