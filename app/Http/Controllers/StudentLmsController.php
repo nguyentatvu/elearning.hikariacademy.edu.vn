@@ -864,10 +864,13 @@ class StudentLmsController extends Controller
             ->first();
 
         $finish = $acc_score >= $passing_score ? LmsStudentView::FINISH : LmsStudentView::NOT_FINISHED;
-        DB::table('lms_student_view')
-            ->where('users_id', Auth::id())
-            ->where('lmscontent_id', $stt)
-            ->update(['finish' => $finish]);
+        if ($finish) {
+            DB::table('lms_student_view')
+                ->where('users_id', Auth::id())
+                ->where('lmscontent_id', $stt)
+                ->update(['finish' => $finish]);
+            $this->getStudentView();
+        }
 
         if (!empty($recordurl)) {
             switch ($recordurl->type) {
@@ -901,7 +904,6 @@ class StudentLmsController extends Controller
             'time_result' => $time,
             'created_by' => Auth::id(),
         ]);
-        $this->getStudentView();
 
         $view_name = 'client.lesson-detail.test-traffic';
         $data = [];
@@ -989,11 +991,13 @@ class StudentLmsController extends Controller
         ]);
 
         $finish = $test_passed ? LmsStudentView::FINISH : LmsStudentView::NOT_FINISHED;
-        DB::table('lms_student_view')
-            ->where('users_id', Auth::id())
-            ->where('lmscontent_id', $stt)
-            ->update(['finish' => $finish]);
-        $this->getStudentView();
+        if ($finish) {
+            DB::table('lms_student_view')
+                ->where('users_id', Auth::id())
+                ->where('lmscontent_id', $stt)
+                ->update(['finish' => $finish]);
+            $this->getStudentView();
+        }
 
         $view_name = 'client.lesson-detail.test-tokutei';
         $data = [];
