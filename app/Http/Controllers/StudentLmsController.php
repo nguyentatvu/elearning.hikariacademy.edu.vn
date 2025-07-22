@@ -863,6 +863,12 @@ class StudentLmsController extends Controller
             ->select('id', 'type')
             ->first();
 
+        $finish = $acc_score >= $passing_score ? LmsStudentView::FINISH : LmsStudentView::NOT_FINISHED;
+        DB::table('lms_student_view')
+            ->where('users_id', Auth::id())
+            ->where('lmscontent_id', $stt)
+            ->update(['finish' => $finish]);
+
         if (!empty($recordurl)) {
             switch ($recordurl->type) {
                 case 1:
@@ -895,6 +901,7 @@ class StudentLmsController extends Controller
             'time_result' => $time,
             'created_by' => Auth::id(),
         ]);
+        $this->getStudentView();
 
         $view_name = 'client.lesson-detail.test-traffic';
         $data = [];
@@ -980,6 +987,13 @@ class StudentLmsController extends Controller
             'time_result' => $time,
             'created_by' => Auth::id(),
         ]);
+
+        $finish = $test_passed ? LmsStudentView::FINISH : LmsStudentView::NOT_FINISHED;
+        DB::table('lms_student_view')
+            ->where('users_id', Auth::id())
+            ->where('lmscontent_id', $stt)
+            ->update(['finish' => $finish]);
+        $this->getStudentView();
 
         $view_name = 'client.lesson-detail.test-tokutei';
         $data = [];
@@ -1329,6 +1343,8 @@ class StudentLmsController extends Controller
                         ->distinct('lms_student_view.lmscontent_id')
                         ->count();
                 }
+
+                $this->getStudentView();
 
                 $data['class'] = 'exams';
                 $data['title'] = 'Khóa học';
