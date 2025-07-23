@@ -2287,6 +2287,12 @@ class UsersController extends Controller
             $user->save();
         }
 
+        if (is_null($user->last_login_date) || $user->login_streak === 0) {
+            $user->last_login_date = now()->startOfDay();
+            $user->login_streak = max(1, $user->login_streak);
+            $user->save();
+        }
+
         // Fetch streak milestones for rewards
         $streakMilestones = collect(getRewardPointRule('daily_login')['milestones'])->pluck('days')->all();
 
