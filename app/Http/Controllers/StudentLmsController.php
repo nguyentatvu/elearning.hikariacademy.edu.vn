@@ -988,6 +988,7 @@ class StudentLmsController extends Controller
             'point' => $acc_score,
             'time_result' => $time,
             'created_by' => Auth::id(),
+            'created_at' => date('Y-m-d H:i:s'),
         ]);
 
         $finish = $test_passed ? LmsStudentView::FINISH : LmsStudentView::NOT_FINISHED;

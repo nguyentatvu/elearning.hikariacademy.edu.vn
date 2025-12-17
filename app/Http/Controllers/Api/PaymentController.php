@@ -105,12 +105,21 @@ class PaymentController extends Controller
     {
         try {
             $params = $request->all();
+            Log::info('Verifying Apple receipt', ['params' => $params, 'time' => date("Y-m-d H:i:s")]);
+
+            $appleProductId = $params['product_id'] ?? '';
+            $courseId = explode('_', $appleProductId)[1];
 
             $callInfo = $this->getAppleCallInfo($params);
             $verifyingResponse = $this->callAppleApi($callInfo['callUrl'], $callInfo['requestBody']);
-            $courseIdAndAppleTransactionId = $this->getCourseIdAndAppleTransactionIdFromApplePurchaseVerification($verifyingResponse);
+            $appleTransactionId = $this->getAppleTransactionIdFromApplePurchaseVerification($verifyingResponse, $appleProductId);
 
-            $this->saveCoursePaymentFromApplePurchase($params, $courseIdAndAppleTransactionId);
+            if ($appleTransactionId !== null) {
+                $this->saveCoursePaymentFromApplePurchase([
+                    'courseId' => $courseId,
+                    'appleTransactionId' => $appleTransactionId
+                ]);
+            }
 
             return response()->json([
                 'success' => true,
@@ -126,7 +135,7 @@ class PaymentController extends Controller
         }
     }
 
-    private function getCourseIdAndAppleTransactionIdFromApplePurchaseVerification($responseBody) {
+    private function getAppleTransactionIdFromApplePurchaseVerification($responseBody, $appleProductId) {
         $hikariBundleId = 'com.hikari.elearning.app';
 
         if (
@@ -134,20 +143,18 @@ class PaymentController extends Controller
             optional($responseBody['receipt'])['bundle_id'] === $hikariBundleId &&
             count(data_get($responseBody, 'receipt.in_app', [])) > 0
         ) {
-            $userAppleTransactionsList = data_get($responseBody, 'receipt.in_app', []);
-            $latestTransactionIndex = count($userAppleTransactionsList) - 1;
+            $inAppList = $responseBody['receipt']['in_app'];
+            $appleTransaction = collect($inAppList)
+                ->where('product_id', $appleProductId)
+                ->where('in_app_ownership_type', 'PURCHASED')
+                ->first();
+            $appleTransactionId = $appleTransaction['transaction_id'] ?? null;
 
-            $appleTransactionId = $responseBody['receipt']['in_app'][$latestTransactionIndex]['transaction_id'];
-            $appleProductId = $responseBody['receipt']['in_app'][$latestTransactionIndex]['product_id'];
-
-            if (PaymentMethod::where('apple_transaction_id', $appleTransactionId)->exists()) {
-                throw new Exception("Payment already exists!", 409);
+            if ($appleTransactionId !== null && PaymentMethod::where('apple_transaction_id', $appleTransactionId)->exists()) {
+                return null;
             }
 
-            return [
-                'courseId' => explode('_', $appleProductId)[1],
-                'appleTransactionId' => $appleTransactionId
-            ];
+            return $appleTransaction['transaction_id'] ?? null;
         } else {
             throw new Exception("Invalid receipt data!", 400);
         }
@@ -198,6 +205,8 @@ class PaymentController extends Controller
                 new Exception("Invalid receipt!", 400);
             }
 
+            Log::info('Apple API response', ['responseBody' => $responseBody]);
+
             return $responseBody;
 
         } catch (RequestException $e) {
@@ -205,7 +214,7 @@ class PaymentController extends Controller
         }
     }
 
-    private function saveCoursePaymentFromApplePurchase(array $params, $courseIdAndAppleTransactionId) {
+    private function saveCoursePaymentFromApplePurchase($courseIdAndAppleTransactionId) {
         $userId = auth()->guard('api')->user()->id;
 
         ['courseId' => $courseId, 'appleTransactionId' => $appleTransactionId] = $courseIdAndAppleTransactionId;
@@ -234,7 +243,7 @@ class PaymentController extends Controller
                 'payType' => self::APPLE_PAY_TYPE,
                 'extraData' => "merchantName=Hikari Academy",
                 'responseTime' => date("Y-m-d H:i:s"),
-                'status' => PaymentMethod::PAYMENT_PENDING,
+                'status' => PaymentMethod::PAYMENT_SUCCESS,
                 'redeemed_point' => 0,
                 'apple_transaction_id' => $appleTransactionId
             ]);
