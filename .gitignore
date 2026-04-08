@@ -38,3 +38,8 @@ gcp_developer_private_key
 
 # Local workspace files
 *.code-workspace
+
+# Heavy GCS-mounted assets (kanji SVG library, ~11k files)
+# These live on Google Cloud Storage on staging/production via gcsfuse,
+# so git operations on them are extremely slow and expensive.
+/public/images
