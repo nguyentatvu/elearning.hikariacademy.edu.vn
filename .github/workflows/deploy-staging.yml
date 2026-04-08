@@ -1,6 +1,6 @@
 name: Deploy to Staging
 
-# Auto-deploy to staging.hikariacademy.edu.vn whenever main is updated.
+# Auto-deploy to staging.hikariacademy.edu.vn whenever main is updated. (v2)
 # The staging server pulls the new code via SSH and clears Laravel caches.
 #
 # Required GitHub repository secrets:
