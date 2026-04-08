@@ -99,21 +99,21 @@
                                 </ul>
                                 {{-- <h6 class="font-weight-semibold mt-5">Thông tin ngân hàng</h6> --}}
                                 <ul class="list-group">
-                                    <li class="listunorder">Ngân hàng: Vietcombank – Chi nhánh Tân Bình</li>
-                                    <li class="listunorder">Số tài khoản: 0441000688321</li>
-                                    <li class="listunorder">Tên tài khoản: TRUNG TAM NHAT NGU QUANG VIET</li>
+                                    <li class="listunorder">Ngân hàng: {{ config('constant.bank.name') }}</li>
+                                    <li class="listunorder">Số tài khoản: {{ config('constant.bank.account_number') }}</li>
+                                    <li class="listunorder">Tên tài khoản: {{ config('constant.bank.account_holder') }}</li>
                                 </ul>
                                 {{-- <dl class="card-text">
                                     <dt>Ngân hàng: </dt>
-                                    <dd> Vietcombank – Chi nhánh Tân Bình</dd>
+                                    <dd> {{ config('constant.bank.name') }}</dd>
                                 </dl>
                                 <dl class="card-text">
                                     <dt>Số tài khoản: </dt>
-                                    <dd> 0441000688321</dd>
+                                    <dd> {{ config('constant.bank.account_number') }}</dd>
                                 </dl>
                                 <dl class="card-text">
                                     <dt>Tên tài khoản: </dt>
-                                    <dd> TRUNG TAM NHAT NGU QUANG VIET</dd>
+                                    <dd> {{ config('constant.bank.account_holder') }}</dd>
                                 </dl> --}}
                                 {{-- <dl class="card-text">
                                     <dt>MST: </dt>

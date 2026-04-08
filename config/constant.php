@@ -98,6 +98,11 @@ return [
     'redeemed_coin' => [
         'vnd_convert_rate' => 1000
     ],
+    'bank' => [
+        'name' => env('BANK_NAME', 'Vietcombank - Chi nhánh Hồ Chí Minh'),
+        'account_number' => env('BANK_ACCOUNT_NUMBER', '0071004193750'),
+        'account_holder' => env('BANK_ACCOUNT_HOLDER', 'CONG TY TNHH TU VAN - DICH VU QUANG VIET'),
+    ],
     'payment' => [
         'status' => [
             '0' => 'Chờ thanh toán',

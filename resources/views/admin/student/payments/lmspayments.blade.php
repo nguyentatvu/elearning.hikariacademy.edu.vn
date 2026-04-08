@@ -293,11 +293,11 @@
 
                                 <ul class="list-group">
 
-                                    <li class="listunorder">Ngân hàng: <strong>Vietcombank – Chi nhánh Tân Bình</strong></li>
+                                    <li class="listunorder">Ngân hàng: <strong>{{ config('constant.bank.name') }}</strong></li>
 
-                                    <li class="listunorder">Số tài khoản: <strong>0441000688321</strong></li>
+                                    <li class="listunorder">Số tài khoản: <strong>{{ config('constant.bank.account_number') }}</strong></li>
 
-                                    <li class="listunorder">Tên thụ hưởng: <strong>TRUNG TAM NHAT NGU QUANG VIET</strong></li>
+                                    <li class="listunorder">Tên thụ hưởng: <strong>{{ config('constant.bank.account_holder') }}</strong></li>
 
                                 </ul>
                                 

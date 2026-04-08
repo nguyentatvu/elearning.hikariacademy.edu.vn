@@ -8,15 +8,15 @@
         <tbody>
           <tr>
             <td width="150px;">Ngân hàng:</td>
-            <td width="400px;"><strong>Vietcombank – Chi nhánh Tân Bình</strong></td>
+            <td width="400px;"><strong>{{ config('constant.bank.name') }}</strong></td>
           </tr>
           <tr>
             <td>Số tài khoản:</td>
-            <td><span class="_3oh- _58nk">0441000688321</span></td>
+            <td><span class="_3oh- _58nk">{{ config('constant.bank.account_number') }}</span></td>
           </tr>
           <tr>
             <td>Tên tài khoản:</td>
-            <td><span class="_3oh- _58nk">TRUNG TAM NHAT NGU QUANG VIET</span></td>
+            <td><span class="_3oh- _58nk">{{ config('constant.bank.account_holder') }}</span></td>
           </tr>
           <tr>
             <td>Ghi chú chuyển khoản:</td>

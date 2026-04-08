@@ -299,11 +299,11 @@
                                 <h6 class="font-weight-semibold mt-5">Thông tin ngân hàng</h6>
                                 <ul class="list-group">
                                     <li class="listunorder">
-                                        Ngân hàng: <strong>Vietcombank – Chi nhánh Tân Bình</strong>
+                                        Ngân hàng: <strong>{{ config('constant.bank.name') }}</strong>
                                     </li>
-                                    <li class="listunorder">Số tài khoản: <strong>0441000688321</strong></li>
+                                    <li class="listunorder">Số tài khoản: <strong>{{ config('constant.bank.account_number') }}</strong></li>
                                     <li class="listunorder">
-                                        Tên thụ hưởng: <strong>TRUNG TAM NHAT NGU QUANG VIET</strong>
+                                        Tên thụ hưởng: <strong>{{ config('constant.bank.account_holder') }}</strong>
                                     </li>
                                 </ul>
                                 <span class="mt-4 d-block"><strong>Ghi chú:</strong> Tùy thuộc vào ngân hàng, hình thức chuyển tiền hay thời điểm thanh toán (ngoài giờ làm việc hay bị trùng ngày
