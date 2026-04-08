@@ -1,0 +1,54 @@
+name: Deploy to Staging
+
+# Auto-deploy to staging.hikariacademy.edu.vn whenever main is updated.
+# The staging server pulls the new code via SSH and clears Laravel caches.
+#
+# Required GitHub repository secrets:
+#   - STAGING_SSH_HOST  (e.g. 35.190.235.118)
+#   - STAGING_SSH_PORT  (e.g. 22222)
+#   - STAGING_SSH_USER  (e.g. developer)
+#   - STAGING_SSH_KEY   (OpenSSH private key, full content)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:        # Allow manual trigger from Actions UI
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false # Wait for previous deploys to finish, never cancel mid-deploy
+
+jobs:
+  deploy:
+    name: Pull and clear cache on staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.STAGING_SSH_HOST }}
+          port: ${{ secrets.STAGING_SSH_PORT }}
+          username: ${{ secrets.STAGING_SSH_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          command_timeout: 10m
+          script_stop: true   # Stop on first failed command
+          script: |
+            set -euo pipefail
+            echo "==> Connected to $(hostname) as $(whoami)"
+            echo "==> Pulling latest main into /home/haeldev/public_html"
+            sudo -u haeldev bash -c '
+              set -euo pipefail
+              cd /home/haeldev/public_html
+              echo "[before] HEAD: $(git rev-parse --short HEAD)"
+              git fetch origin main
+              git reset --hard origin/main
+              echo "[after]  HEAD: $(git rev-parse --short HEAD)"
+              echo "==> Clearing Laravel caches"
+              php artisan config:clear
+              php artisan route:clear
+              php artisan view:clear
+            '
+            echo "==> Deploy completed successfully"
