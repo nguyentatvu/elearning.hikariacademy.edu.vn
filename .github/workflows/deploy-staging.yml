@@ -43,8 +43,11 @@ jobs:
               set -euo pipefail
               cd /home/haeldev/public_html
               echo "[before] HEAD: $(git rev-parse --short HEAD)"
-              git fetch origin main
-              git reset --hard origin/main
+              # Fast-forward only pull. Old git on the host (1.8.x) does not
+              # update refs/remotes/origin/main when fetching a single branch,
+              # so we use `git pull --ff-only` which only writes files that
+              # actually changed in the new commits (delta update).
+              git pull --ff-only origin main
               echo "[after]  HEAD: $(git rev-parse --short HEAD)"
               echo "==> Clearing Laravel caches"
               php artisan config:clear

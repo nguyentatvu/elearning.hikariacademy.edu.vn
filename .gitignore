@@ -39,7 +39,12 @@ gcp_developer_private_key
 # Local workspace files
 *.code-workspace
 
-# Heavy GCS-mounted assets (kanji SVG library, ~11k files)
-# These live on Google Cloud Storage on staging/production via gcsfuse,
-# so git operations on them are extremely slow and expensive.
-/public/images
+# public/ is mounted on gcsfuse (Google Cloud Storage) on staging/production.
+# Tracking these files makes git operations extremely slow and expensive.
+# We exclude everything in public/ except the small set of entry-point files.
+/public/*
+!/public/index.php
+!/public/.htaccess
+!/public/web.config
+!/public/robots.txt
+!/public/favicon.ico
