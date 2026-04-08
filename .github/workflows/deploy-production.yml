@@ -57,9 +57,13 @@ jobs:
               git pull --ff-only origin '$DEPLOY_REF'
               echo \"[after]  HEAD: \$(git rev-parse --short HEAD)\"
               echo \"==> Clearing Laravel caches\"
-              php artisan config:clear
-              php artisan route:clear
-              php artisan view:clear
+              # Production webapp runs on PHP 7.4 (php-fpm74). The default
+              # php in PATH is 8.1 which is incompatible with this Laravel
+              # version, so we invoke 7.4 directly.
+              PHP=/opt/alt/php-fpm74/usr/bin/php
+              \$PHP artisan config:clear
+              \$PHP artisan route:clear
+              \$PHP artisan view:clear
             "
             echo "==> Production deploy completed successfully"
 
