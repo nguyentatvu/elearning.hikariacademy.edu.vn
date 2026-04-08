@@ -1,0 +1,76 @@
+name: Deploy to Production
+
+# Manual deploy to elearning.hikariacademy.edu.vn.
+# This workflow does NOT trigger on push — it only runs when:
+#   1. The user clicks "Run workflow" in the Actions UI (workflow_dispatch), or
+#   2. A locally-run script invokes the GitHub API to dispatch this workflow
+#
+# Reuses the same SSH credentials as staging because both environments live
+# on the same host (35.190.235.118:22222) and we SSH in as `developer`,
+# then `sudo -u hael` to run git operations as the production owner.
+#
+# Required GitHub repository secrets (already configured for staging):
+#   - STAGING_SSH_HOST  (e.g. 35.190.235.118)
+#   - STAGING_SSH_PORT  (e.g. 22222)
+#   - STAGING_SSH_USER  (e.g. developer)
+#   - STAGING_SSH_KEY   (OpenSSH private key, full content)
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Git ref to deploy (branch, tag, or commit SHA). Defaults to main.'
+        required: false
+        default: 'main'
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false # Never cancel a running production deploy
+
+jobs:
+  deploy:
+    name: Pull and clear cache on production
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.STAGING_SSH_HOST }}
+          port: ${{ secrets.STAGING_SSH_PORT }}
+          username: ${{ secrets.STAGING_SSH_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          command_timeout: 10m
+          script_stop: true
+          envs: DEPLOY_REF
+          script: |
+            set -euo pipefail
+            DEPLOY_REF="${{ github.event.inputs.ref || 'main' }}"
+            echo "==> Connected to $(hostname) as $(whoami)"
+            echo "==> Deploying ref '$DEPLOY_REF' into /home/hael/public_html"
+            sudo -u hael bash -c "
+              set -euo pipefail
+              cd /home/hael/public_html
+              echo \"[before] HEAD: \$(git rev-parse --short HEAD)\"
+              git fetch origin '$DEPLOY_REF'
+              git pull --ff-only origin '$DEPLOY_REF'
+              echo \"[after]  HEAD: \$(git rev-parse --short HEAD)\"
+              echo \"==> Clearing Laravel caches\"
+              php artisan config:clear
+              php artisan route:clear
+              php artisan view:clear
+            "
+            echo "==> Production deploy completed successfully"
+
+      - name: Verify production HTTP
+        run: |
+          set -e
+          echo "==> Checking https://elearning.hikariacademy.edu.vn/"
+          status=$(curl -sI -o /dev/null -w "%{http_code}" --max-time 30 https://elearning.hikariacademy.edu.vn/)
+          echo "HTTP status: $status"
+          if [ "$status" != "200" ]; then
+            echo "::error::Production returned non-200 status: $status"
+            exit 1
+          fi
+          echo "==> Production responds with HTTP 200 OK"
