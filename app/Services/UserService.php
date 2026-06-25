@@ -209,7 +209,7 @@ class UserService extends BaseService
                     'username' => $user->username,
                     'to_email' => $user->email,
                     'password' => $password,
-                    'to_email_bcc' => env('TO_EMAIL_CC', 'dev@hikarinetworks.com')
+                    'to_email_bcc' => env('TO_EMAIL_CC', 'info@hikari.edu.vn')
                 )
             );
 

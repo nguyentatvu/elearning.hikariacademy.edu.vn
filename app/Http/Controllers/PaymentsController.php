@@ -2147,7 +2147,7 @@ class PaymentsController extends Controller
                 $thongtinchuyenkhoan = Auth::user()->username . ' ' . $record->code;
 				$log = new Logger(env('MAIL_LOG_PATH'));
 				try{
-					sendEmail('taodonhang', array('to_email' => Auth::user()->email, 'to_email_cc' => env('TO_EMAIL_CC','dev@hikarinetworks.com'), 'name' => Auth::user()->name, 'donhang' => $record->title, 'gia' => $record->cost, 'thongtinchuyenkhoan' => $thongtinchuyenkhoan));
+					sendEmail('taodonhang', array('to_email' => Auth::user()->email, 'to_email_cc' => env('TO_EMAIL_CC','info@hikari.edu.vn'), 'name' => Auth::user()->name, 'donhang' => $record->title, 'gia' => $record->cost, 'thongtinchuyenkhoan' => $thongtinchuyenkhoan));
 				}
 				catch(\Exception $e)
 				{
@@ -2487,7 +2487,7 @@ class PaymentsController extends Controller
             $hocvien = User::find($record->user_id);
 			$log = new Logger(env('MAIL_LOG_PATH'));
 			try{
-				sendEmail('kichhoatkhoahoc', array('to_email' => $hocvien->email, 'to_email_cc' => env('TO_EMAIL_CC','dev@hikarinetworks.com'), 'name' => $hocvien->name, 'donhang' => $record->item_name, 'gia' => $record->amount, 'PTTT' => $record->orderType));
+				sendEmail('kichhoatkhoahoc', array('to_email' => $hocvien->email, 'to_email_cc' => env('TO_EMAIL_CC','info@hikari.edu.vn'), 'name' => $hocvien->name, 'donhang' => $record->item_name, 'gia' => $record->amount, 'PTTT' => $record->orderType));
 			}
 			catch(Exception $ex)
 			{
