@@ -38,10 +38,13 @@ class EmailTemplate extends Model
             Mail::send('emails.template', ['body' => $result], function ($message) use ($template, $data) {
                 $message->from($template->from_email, $template->from_name);
                 $message->to($data['to_email'])->subject($template->subject);
-                if (array_key_exists("to_email_cc", $data)) {
+                // Chỉ set cc/bcc khi có giá trị thật. Nếu key tồn tại nhưng rỗng
+                // (vd: env('TO_EMAIL_CC') không set trong .env trả về null) thì bỏ qua,
+                // vì SwiftMailer sẽ ném exception với địa chỉ rỗng và huỷ cả email.
+                if (!empty($data['to_email_cc'])) {
                     $message->cc($data['to_email_cc']);
                 }
-                if (array_key_exists("to_email_bcc", $data)) {
+                if (!empty($data['to_email_bcc'])) {
                     $message->bcc($data['to_email_bcc']);
                 }
 
